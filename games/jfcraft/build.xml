@@ -1,0 +1,140 @@
+<project name="jfcraft" default="jar" basedir=".">
+  <description>jfcraft</description>
+  <!-- set global properties for this build -->
+  <property name="app" location="jfcraft-client"/>
+  <property name="app2" location="jfcraft-server"/>
+  <property name="home" location="../.."/>
+  <property name="ico" location="jfcraft"/>
+  <property name="msi" location="jfcraft"/>
+  <property name="src" location="src/base"/>
+  <property name="build" location="classes"/>
+  <property name="classpath" location="javaforce.jar"/>
+  <property name="version" value="0.15"/>
+
+  <import file="${home}/base.xml"/>
+
+  <target name="depjars">
+    <jar destfile="javaforce.jar">
+      <zipfileset src="../../jars/javaforce.jar"/>
+      <manifest>
+        <attribute name="Trusted-Library" value="true"/>
+        <attribute name="Permissions" value="all-permissions"/>
+        <attribute name="Codebase" value="jfcraft.sourceforge.net"/>
+      </manifest>
+    </jar>
+    <copy todir=".">
+      <fileset dir="${home}/native" includes="*"/>
+    </copy>
+  </target>
+
+  <target name="compile" depends="depjars" description="compile the source">
+    <!-- Compile the java code from ${src} into ${build} -->
+    <mkdir dir="${build}"/>
+    <javac srcdir="${src}" destdir="${build}" target="1.6" source="1.6" debug="true" includeantruntime="false">
+      <classpath path="${classpath}"/>
+    </javac>
+  </target>
+
+  <target name="jfassets">
+    <zip destfile="jfassets.zip">
+      <fileset dir="jfassets" includes="**/*"/>
+    </zip>
+  </target>
+
+  <target name="jar" depends="compile,depjars,jfassets" description="build jar file">
+    <!-- Build jar file from class files -->
+    <jar destfile="jfcraft.jar" includes="**/*.class" basedir="${build}">
+      <fileset dir="." includes="jfcraft.png"/>
+      <manifest>
+        <attribute name="Main-Class" value="jfcraft.client.Launcher"/>
+        <attribute name="Trusted-Library" value="true"/>
+        <attribute name="Permissions" value="all-permissions"/>
+        <attribute name="Codebase" value="jfcraft.sourceforge.net"/>
+      </manifest>
+    </jar>
+    <!-- build example plugins -->
+    <ant antfile="pluginCreeper.xml" inheritAll="false"/>
+    <ant antfile="pluginDomino.xml" inheritAll="false"/>
+  </target>
+
+  <!-- sudo ant install -->
+  <target name="install" description="install files">
+    <exec command="gcc loader.c -I../../include -o ${app} -ldl -lpthread"/>
+    <move file="${app}" todir="/usr/bin"/>
+    <copy file="jfcraft.jar" todir="/usr/share/java"/>
+    <copy file="jfcraft.desktop" todir="/usr/share/applications"/>
+    <copy file="jfcraft.png" todir="/usr/share/icons/hicolor/48x48/apps"/>
+    <chmod file="/usr/bin/jfcraft" perm="+x"/>
+    <mkdir dir="/usr/lib/jfcraft"/>
+    <copy todir="/usr/lib/jfcraft">
+      <fileset dir=".">
+        <include name="*.zip"/>
+      </fileset>
+    </copy>
+    <copy file="title.png" todir="/usr/lib/jfcraft"/>
+    <mkdir dir="/usr/lib/jfcraft/plugins"/>
+    <copy todir="/usr/lib/jfcraft/plugins">
+      <fileset dir="plugins">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="release-bin" depends="jar,depjars" description="create release zip file">
+    <zip destfile="jfcraft-${version}.zip">
+      <fileset dir="..">
+        <include name="jfcraft/*.jar"/>
+        <include name="jfcraft/*.txt"/>
+        <include name="jfcraft/*.zip"/>
+        <include name="jfcraft/jfcraft.png"/>
+        <include name="jfcraft/title.png"/>
+        <include name="jfcraft/run*.bat"/>
+        <include name="jfcraft/run*.sh"/>
+        <include name="jfcraft/plugins/*.jar"/>
+        <include name="jfcraft/*.dll"/>
+        <include name="jfcraft/*.so"/>
+      </fileset>
+      <fileset dir="../.." includes="license.txt"/>
+    </zip>
+    <move file="jfcraft-${version}.zip" todir="${home}/release"/>
+  </target>
+
+  <target name="release-src" depends="" description="create release zip file">
+    <zip destfile="jfcraft-src-${version}.zip">
+      <fileset dir="../../..">
+        <include name="jf/license.txt"/>
+        <include name="jf/base.xml"/>
+        <include name="jf/games/jfcraft/src/**/*"/>
+        <include name="jf/games/jfcraft/jfassets/**/*"/>
+        <include name="jf/games/jfcraft/deb/*"/>
+        <include name="jf/games/jfcraft/*.desktop"/>
+        <include name="jf/games/jfcraft/*.lst"/>
+        <include name="jf/games/jfcraft/*.zip"/>
+        <include name="jf/games/jfcraft/*.c"/>
+        <include name="jf/games/jfcraft/*.txt"/>
+        <include name="jf/games/jfcraft/*.xml"/>
+        <include name="jf/games/jfcraft/*.png"/>
+        <exclude name="jf/games/jfcraft/*stitched*.png"/>
+        <include name="jf/games/jfcraft/*.ico"/>
+        <include name="jf/games/jfcraft/*.rc"/>
+        <include name="jf/games/jfcraft/run*.*"/>
+        <include name="jf/games/jfcraft/nbproject/*.xml"/>
+        <include name="jf/games/jfcraft/blender/*.blend"/>
+        <include name="jf/games/jfcraft/blender/*.bat"/>
+        <include name="jf/games/jfcraft/blender/*.txt"/>
+        <include name="jf/jars/javaforce.jar"/>
+        <include name="jf/jars/jna.jar"/>
+        <include name="jf/stubs/*"/>
+        <include name="jf/native/*"/>
+      </fileset>
+    </zip>
+    <move file="jfcraft-src-${version}.zip" todir="${home}/release"/>
+  </target>
+
+  <target name="clean" description="deletes compiled files">
+    <delete>
+      <fileset dir="." includes="**/*.class"/>
+      <fileset dir="." includes="**/*.jar"/>
+    </delete>
+  </target>
+</project>

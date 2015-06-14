@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" UpgradeCode="{809FD072-8BEC-488F-BFB0-DB05C98E17BA}" Version="0.15" Language="1033" Name="jfCraft" Manufacturer="Peter Quiring">
+    <Package InstallerVersion="300" Compressed="yes" Platform="x64"/>
+    <Media Id="1" Cabinet="files.cab" EmbedCab="yes" />
+    <UIRef Id="WixUI_Minimal" />
+
+    <Icon Id="icon.ico" SourceFile="jfcraft.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="icon.ico"/>
+
+    <!-- Step 1: Define the directory structure -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="APPLICATIONROOTDIRECTORY" Name="jfcraft">
+          <Directory Id="PLUGINSDIRECTORY" Name="plugins"/>
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+<!-- Use the following if you want Shortcut in its own folder -->
+<!--        <Directory Id="ApplicationProgramsFolder" Name="jfCraft"/> -->
+      </Directory>
+    </Directory>
+
+    <!-- Step 2: Add files to your installer package -->
+    <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
+      <Component Id="appfiles" Guid="{23C922B8-9DE1-4EEC-98C9-AE197881DB55}" Win64="yes">
+        <File Id="jfcraft.jar" Source="jfcraft.jar" KeyPath="yes"/>
+        <File Id="javaforce.jar" Source="javaforce.jar"/>
+        <File Id="base.zip" Source="base.zip"/>
+        <File Id="jfassets.zip" Source="jfassets.zip"/>
+        <File Id="readme.txt" Source="readme.txt"/>
+        <File Id="todo.txt" Source="todo.txt"/>
+        <File Id="whatsnew.txt" Source="whatsnew.txt"/>
+        <File Id="jfcraft_client.exe" Source="jfcraft-client.exe"/>
+        <File Id="jfcraft_server.exe" Source="jfcraft-server.exe"/>
+        <File Id="title.png" Source="title.png"/>
+        <File Id="jfnative64.dll" Source="jfnative64.dll"/>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Step 2: Add files to your installer package -->
+    <DirectoryRef Id="PLUGINSDIRECTORY">
+      <Component Id="pluginfiles" Guid="{A8E4E78B-1113-4654-A96C-56E719842D0A}" Win64="yes">
+        <File Id="creeper.jar" Source="plugins/creeper.jar" KeyPath="yes"/>
+        <File Id="domino.jar" Source="plugins/domino.jar"/>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Step 2b: Add the shortcut to your installer package -->
+<!-- Change Id to ApplicationProgramsFolder if you want Shortcut in its own folder -->
+    <DirectoryRef Id="ProgramMenuFolder">
+      <Component Id="ApplicationShortcutClient" Guid="{5C4535A0-6850-4D47-9B9C-C2DB05BC0D12}">
+        <Shortcut Id="ApplicationStartMenuShortcutClient" Name="jfCraft" Description="Java Game" Target="[APPLICATIONROOTDIRECTORY]jfcraft-client.exe"
+          WorkingDirectory="APPLICATIONROOTDIRECTORY"/>
+<!-- Use the following if you want Shortcut in its own folder -->
+<!--        <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/> -->
+        <RegistryValue Root="HKCU" Key="Software\Microsoft\jfCraft" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Step 2b: Add the shortcut to your installer package -->
+<!-- Change Id to ApplicationProgramsFolder if you want Shortcut in its own folder -->
+    <DirectoryRef Id="ProgramMenuFolder">
+      <Component Id="ApplicationShortcutServer" Guid="{79DFA284-8E37-479B-924D-D2B55751050E}">
+        <Shortcut Id="ApplicationStartMenuShortcutServer" Name="jfCraft (Server)" Description="Java Game" Target="[APPLICATIONROOTDIRECTORY]jfcraft-server.exe"
+          WorkingDirectory="APPLICATIONROOTDIRECTORY"/>
+<!-- Use the following if you want Shortcut in its own folder -->
+<!--        <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/> -->
+        <RegistryValue Root="HKCU" Key="Software\Microsoft\jfCraft" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <!-- Step 3: Tell WiX to install the files -->
+    <Feature Id="MainApplication" Title="Main Application" Level="1">
+      <ComponentRef Id="appfiles" />
+      <ComponentRef Id="pluginfiles" />
+      <ComponentRef Id="ApplicationShortcutClient" />
+      <ComponentRef Id="ApplicationShortcutServer" />
+    </Feature>
+  </Product>
+</Wix>

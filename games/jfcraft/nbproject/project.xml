@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.ant.freeform</type>
+    <configuration>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+            <name>jfcraft</name>
+        </general-data>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/2">
+            <!-- Do not use Project Properties customizer when editing this file manually. 
+ To prevent the customizer from showing, create nbproject/project.properties file and enter 
+auxiliary.show.customizer=false 
+property there. Adding 
+auxiliary.show.customizer.message=<message>
+ will show your customized message when someone attempts to open the customizer.  -->
+            <name>jfcraft</name>
+            <properties/>
+            <folders>
+                <source-folder>
+                    <label>jspacecraft</label>
+                    <location>.</location>
+                    <encoding>windows-1252</encoding>
+                </source-folder>
+                <source-folder>
+                    <label>src\base</label>
+                    <type>java</type>
+                    <location>src/base</location>
+                    <encoding>windows-1252</encoding>
+                </source-folder>
+                <source-folder>
+                    <label>src\plugins\creeper</label>
+                    <type>java</type>
+                    <location>src/plugins/creeper</location>
+                    <encoding>windows-1252</encoding>
+                </source-folder>
+                <source-folder>
+                    <label>src\plugins\domino</label>
+                    <type>java</type>
+                    <location>src/plugins/domino</location>
+                    <encoding>windows-1252</encoding>
+                </source-folder>
+            </folders>
+            <ide-actions>
+                <action name="build">
+                    <target>jar</target>
+                </action>
+                <action name="clean">
+                    <target>clean</target>
+                </action>
+                <action name="rebuild">
+                    <target>clean</target>
+                    <target>jar</target>
+                </action>
+            </ide-actions>
+            <view>
+                <items>
+                    <source-folder style="packages">
+                        <label>src\base</label>
+                        <location>src/base</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>src\plugins\creeper</label>
+                        <location>src/plugins/creeper</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>src\plugins\domino</label>
+                        <location>src/plugins/domino</location>
+                    </source-folder>
+                    <source-file>
+                        <location>build.xml</location>
+                    </source-file>
+                </items>
+                <context-menu>
+                    <ide-action name="build"/>
+                    <ide-action name="rebuild"/>
+                    <ide-action name="clean"/>
+                </context-menu>
+            </view>
+            <subprojects/>
+        </general-data>
+        <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/3">
+            <compilation-unit>
+                <package-root>src/base</package-root>
+                <classpath mode="compile">javaforce.jar</classpath>
+                <source-level>1.6</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>src/plugins/creeper</package-root>
+                <classpath mode="compile">javaforce.jar;jfcraft.jar</classpath>
+                <source-level>1.6</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>src/plugins/domino</package-root>
+                <classpath mode="compile">javaforce.jar;jfcraft.jar</classpath>
+                <source-level>1.6</source-level>
+            </compilation-unit>
+        </java-data>
+    </configuration>
+</project>
