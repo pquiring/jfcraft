@@ -1,0 +1,5 @@
+glViewport() is used to scale the menus into position
+  - but if window size is not square items dragged beyond the viewport are clipped.
+
+If a world is created in dedicated server, the leaves are dark (no light).
+  Does not happen in single player mode.

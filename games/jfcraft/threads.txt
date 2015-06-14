@@ -1,0 +1,13 @@
+Client side: (see Client.initThread())
+ - packet processor
+ - ticks
+ - chunk requestor
+ - chunk worker (lights)
+ - render
+
+Server side: (see Server.initThread())
+ - packet processor (per client)
+ - ticks
+ - chunk saver
+ - chunk generator
+ - teleport worker?

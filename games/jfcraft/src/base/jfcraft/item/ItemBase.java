@@ -1,0 +1,429 @@
+package jfcraft.item;
+
+/** Base class for all registered Items (and Blocks)
+ *
+ * @author pquiring
+ *
+ * Created : May 2, 2014
+ */
+
+import javaforce.*;
+
+import jfcraft.item.Item;
+import jfcraft.opengl.*;
+import jfcraft.client.*;
+import jfcraft.block.*;
+import jfcraft.data.*;
+import jfcraft.item.*;
+
+public class ItemBase {
+  public char id;
+  public String blockName;
+  public char blockID;  //item id -> block id
+  public String seedPlantedName;
+  public char seedPlantedID;
+  public int maxStack = 64;
+  public boolean isDamaged, isTool, isArmor, isFood, isVar, isDir, isDirXZ, isDirFace, isWeapon, isWooden;
+  public boolean isFuel, canBake, isSeeds, isGreen;
+  public boolean canPlace, canPlaceInWater;
+  public boolean cantGive;  //do not give with /give command
+  public int tool, weapon, armor, heat;
+  public String bakeName;
+  public char bakeID;
+  public String name;  //base name
+  public String names[], images[];
+  public AssetImage ai[];
+  public SubTexture textures[];
+  public float attackDmg = 1;
+  public boolean useRelease;  //activate on release (bow)
+
+  public int buffersIdx;  //DEST_NORMAL or DEST_ALPHA
+
+  public float hunger, saturation;
+
+  public ItemBase() {
+  }
+  public ItemBase(String name) {
+    this.name = name;
+  }
+  public ItemBase(String name, String names[]) {
+    this.name = name;
+    this.names = names;
+  }
+  public ItemBase(String name, String names[], String textures[]) {
+    this.name = name;
+    this.names = names;
+    this.images = textures;
+  }
+
+  public ItemBase setMaxStack(int cnt) {
+    maxStack = cnt;
+    return this;
+  }
+  public ItemBase setTool(int type) {
+    isDamaged = true;
+    isTool = true;
+    tool = type;
+    maxStack = 1;
+    return this;
+  }
+  public ItemBase setUseable() {
+    isTool = true;
+    tool = Items.TOOL_OTHER;
+    return this;
+  }
+  public ItemBase setWeapon(int type) {
+    isDamaged = true;
+    isWeapon = true;
+    weapon = type;
+    maxStack = 1;
+    if (type == Items.WEAPON_SWORD)
+      setAniStyle(ANI_STYLE_ATTACK, ANI_STYLE_DEFEND);
+    else if (type == Items.WEAPON_BOW)
+      setAniStyle(ANI_STYLE_ATTACK, ANI_STYLE_BOW);
+    return this;
+  }
+  public ItemBase setArmor(int type) {
+    isDamaged = true;
+    isArmor = true;
+    maxStack = 1;
+    armor = type;
+    return this;
+  }
+  public ItemBase setFood(float h, float s) {
+    isFood = true;
+    hunger = h;
+    saturation = s;
+    useRelease = true;
+    setAniStyle(ANI_STYLE_ATTACK, ANI_STYLE_FOOD);
+    return this;
+  }
+  public ItemBase setVar() {
+    isVar = true;
+    return this;
+  }
+  public ItemBase setWood() {
+    isWooden = true;
+    return this;
+  }
+  public ItemBase setFuel(int heat) {
+    isFuel = true;
+    this.heat = heat * 20;
+    return this;
+  }
+  public ItemBase setBake(String name) {
+    canBake = true;
+    bakeName = name;
+    return this;
+  }
+  public ItemBase setCanPlace() {
+    canPlace = true;
+    return this;
+  }
+  public ItemBase setBlockID(String id) {
+    blockName = id;
+    return this;
+  }
+  public ItemBase setDmg(float dmg) {
+    attackDmg = dmg;
+    return this;
+  }
+  public ItemBase setGreen() {
+    isGreen = true;
+    return this;
+  }
+  public Item bake() {
+    return null;
+  }
+
+  public char getBlockID() {
+    return blockID;
+  }
+
+  /** Add face for item on billboard. */
+  public void addFaceInvItem(RenderBuffers obj, int var, boolean green) {
+    float tx1, ty1, tx2, ty2;
+    if (!isVar) var = 0;
+    tx1 = textures[var].x1;
+    ty1 = textures[var].y1;
+    tx2 = textures[var].x2;
+    ty2 = textures[var].y2;
+    float x1 = 0;
+    float y1 = 0;
+    float x2 = 1;
+    float y2 = 1;
+    obj.addFace2D(x1,y1,x2,y2,tx1,ty1,tx2,ty2,green ? Static.green : Static.white);
+  }
+
+  /** Add face for item as WorldItem. */
+  public void addFaceWorldItem(RenderBuffers obj, int var, boolean green) {
+    float tx1, ty1, tx2, ty2;
+    if (!isVar) var = 0;
+    tx1 = textures[var].x1;
+    ty1 = textures[var].y1;
+    tx2 = textures[var].x2;
+    ty2 = textures[var].y2;
+    float x1 = -0.5f;
+    float y1 = 1.0f;
+    float x2 = 0.5f;
+    float y2 = 0.0f;
+    obj.addFace2D(x1,y1,x2,y2,tx1,ty1,tx2,ty2,green ? Static.green : Static.white);
+    //swap x and redo for other side
+    x1 = x2;
+    x2 = -0.5f;
+    obj.addFace2D(x1,y1,x2,y2,tx1,ty1,tx2,ty2,green ? Static.green : Static.white);
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  /** Returns a class to receive the assigned ID.  The class must contain a public static char with the name of the item/block (all uppercase) */
+  public Class getIDClass() {
+    return Items.class;
+  }
+
+  public String getName(int var) {
+    if (isVar) return names[var]; else return names[0];
+  }
+
+  public String[] getNames() {
+    return names;
+  }
+
+  public boolean canPlace(Coords c) {
+    if (!canPlace) return false;
+    BlockBase block1 = Static.blocks.blocks[c.chunk.getID(c.gx,c.gy,c.gz)];
+    BlockBase block2 = Static.blocks.blocks[c.chunk.getID2(c.gx,c.gy,c.gz)];
+    return block1.canReplace && block2.canReplace;
+  }
+
+  public final boolean equals(Item item) {
+    Static.log("BIBase.equals() not allowed");
+    return false;
+  }
+  public final boolean equals(ItemBase item) {
+    Static.log("BIBase.equals() not allowed");
+    return false;
+  }
+  public void useItem(Client client) {
+    if (isFood) {
+      client.foodCounter++;
+      if (client.foodCounter == 2 * 20) {
+        client.foodCounter = 0;
+        //eat it!
+        Item item = client.player.items[client.activeSlot];
+        item.count--;
+        if (item.count == 0) {
+          item.clear();
+        }
+        client.serverTransport.setInvItem(client.activeSlot, item);
+        client.player.saturation += saturation;
+        client.player.hunger += hunger;
+        if (client.player.hunger > 20) {
+          client.player.hunger = 20;
+        }
+        if (client.player.saturation > client.player.hunger) {
+          client.player.saturation = client.player.hunger;
+        }
+        client.serverTransport.sendHunger(client.player);
+      }
+    }
+  }
+  public void releaseItem(Client client) {
+    if (isFood) {
+      client.foodCounter = 0;
+    }
+  }
+  public boolean place(Client client, Coords c) {
+    if (blockID == 0) return false;
+    BlockBase base = Static.blocks.blocks[blockID];
+    return base.place(client, c);
+  }
+
+  private static final int ANI_STYLE_ATTACK = 0;
+  private static final int ANI_STYLE_DEFEND = 1;
+  private static final int ANI_STYLE_PLACE = 2;
+  private static final int ANI_STYLE_FOOD = 3;
+  private static final int ANI_STYLE_BOW = 4;
+
+  private int aniStyle1 = ANI_STYLE_ATTACK;
+  private int aniStyle2 = ANI_STYLE_PLACE;
+
+  //actions
+  private static final float ANI_SET = 0f;
+  private static final float ANI_ADD = 1f;
+
+  public ItemBase setAniStyle(int b1, int b2) {
+    aniStyle1 = b1;
+    aniStyle2 = b2;
+    return this;
+  }
+
+  private static float[][] aniAttack = {
+    //action, xAngle, yAngle, zAngle, xPos, yPos, zPos, steps, nextIdx, hold
+    {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //idle
+    //move forward and tilt forward, then move down a bit and return
+    {ANI_ADD ,-10,0,0 ,0,0,-0.5f ,5,3,0},  //b1
+    {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //b2 (not used)
+    {ANI_ADD ,10,0,0 ,0,0,0.5f ,5,0,0},  //b1 p2
+  };
+
+  private static float[][] aniDefend = {
+    //action, xAngle, yAngle, zAngle, xPos, yPos, zPos, steps, nextIdx, hold
+    {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //idle
+    //hold in front at 45 deg angle
+    {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //b1 (not used)
+    {ANI_SET ,0,0,90 ,0,0,0 ,1,0,1},  //b2 : -1 steps means hold until b2 released
+  };
+
+  private static float[][] aniPlace = {
+    //action, xAngle, yAngle, zAngle, xPos, yPos, zPos, steps, nextIdx, hold
+    {ANI_SET ,0,0,0 ,0,0,0 ,1,0},  //idle
+    //move left and tilt on z axis to the left 90deg then return
+    {ANI_ADD ,0,0,5 ,0.1f,0,0 ,5,3,0},  //b1 -> p2
+    {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //b2 (not used)
+    {ANI_ADD ,0,0,-5 ,0,-0.1f,0 ,5,0,0},  //b1 p2
+  };
+
+  private static float[][] aniFood = {
+    //action, xAngle, yAngle, zAngle, xPos, yPos, zPos, steps, nextIdx, hold
+    {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //idle
+    //move in front and then move up/down quickly
+    {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //b1 (not used)
+    {ANI_SET ,0,0,0 ,-3f,1f,0 ,1,3,0},  //b2 p1 -> p2
+    {ANI_ADD ,0,0,0 ,0,-0.1f,0 ,5,4,1},  //b2 p2 -> p3
+    {ANI_ADD ,0,0,0 ,0,0.1f,0 ,5,3,1},  //b2 p3 -> p2
+  };
+
+  private static float[][] aniBow = {
+    //action, xAngle, yAngle, zAngle, xPos, yPos, zPos, steps, nextIdx, hold
+    {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //idle
+    //move up to center of screen and stretch
+    {ANI_ADD ,-5,0,0 ,0,0,-0.1f ,10,0,0},  //b1
+    {ANI_ADD ,-5,0,0 ,0,0,-0.1f ,10,0,0},  //b2
+  };
+
+  private int aniIdx, aniStep;
+  private float aniData[][];
+
+  public void animateReset() {
+    aniIdx = 0;
+    aniStep = 0;
+  }
+
+  public void animateItem(XYZ handAngle, XYZ handPos, boolean b1, boolean b2, boolean haveTarget, boolean moving) {
+    switch (aniStyle1) {
+      default:
+      case 0: animateItemDefault(handAngle, handPos, b1, b2, haveTarget, moving);
+    }
+  }
+
+  public void animateItemBobbing(XYZ handAngle, XYZ handPos) {
+    //TODO
+  }
+
+  public void animateItemDefault(XYZ itemAngle, XYZ itemPos, boolean b1, boolean b2, boolean haveTarget, boolean moving) {
+    if (aniIdx == 0) {
+      itemAngle.x = 0;
+      itemAngle.y = 0;
+      itemAngle.z = 0;
+      itemPos.x = 0;
+      itemPos.y = 0;
+      itemPos.z = 0;
+      if (moving)  {
+        if (Settings.current.doViewBobbing) animateItemBobbing(itemAngle, itemPos);
+      }
+      if (aniIdx == 0 && b1) {
+        aniIdx = 1;
+        aniStep = 0;
+        switch (aniStyle1) {
+          case ANI_STYLE_ATTACK: aniData = aniAttack; break;
+          case ANI_STYLE_DEFEND: aniData = aniDefend; break;
+          case ANI_STYLE_PLACE: aniData = aniPlace; break;
+          case ANI_STYLE_FOOD: aniData = aniFood; break;
+          case ANI_STYLE_BOW: aniData = aniBow; break;
+        }
+      }
+      else if (aniIdx == 0 && b2) {
+        aniIdx = 2;
+        aniStep = 0;
+        switch (aniStyle2) {
+          case ANI_STYLE_ATTACK: aniData = aniAttack; break;
+          case ANI_STYLE_DEFEND: aniData = aniDefend; break;
+          case ANI_STYLE_PLACE: aniData = aniPlace; break;
+          case ANI_STYLE_FOOD: aniData = aniFood; break;
+          case ANI_STYLE_BOW: aniData = aniBow; break;
+        }
+      }
+    } else {
+      float ad[] = aniData[aniIdx];
+      float act = ad[0];
+      if (act == ANI_SET) {
+        itemAngle.x = ad[1];
+        itemAngle.y = ad[2];
+        itemAngle.z = ad[3];
+        itemPos.x = ad[4];
+        itemPos.y = ad[5];
+        itemPos.z = ad[6];
+      } else if (act == ANI_ADD) {
+        itemAngle.x += ad[1];
+        itemAngle.y += ad[2];
+        itemAngle.z += ad[3];
+        itemPos.x += ad[4];
+        itemPos.y += ad[5];
+        itemPos.z += ad[6];
+      }
+      float steps = ad[7];
+      if (ad[9] == 1f && !b2) {
+        aniIdx = 0;
+        aniStep = 0;
+      } else {
+        aniStep++;
+        if (aniStep >= steps) {
+          aniIdx = (int)ad[8];
+          aniStep = 0;
+        }
+      }
+    }
+  }
+
+  public ItemBase setDir() {
+    isDir = true;
+    return this;
+  }
+  public ItemBase setDirFace() {
+    isDirFace = true;
+    return this;
+  }
+  public ItemBase setCantGive() {
+    cantGive = true;
+    return this;
+  }
+
+  public void assignID(char id) {
+    this.id = id;
+  }
+
+  /** Called after all IDs have been assigned, retrieve any IDs needed for logic. (server & client side) */
+  public void getIDs() {
+    World world = Static.world();
+    if (bakeName != null) {
+      bakeID = world.getBlockID(bakeName);
+    }
+    if (blockName != null) {
+      blockID = world.getBlockID(blockName);
+    }
+    if (seedPlantedName != null) {
+      seedPlantedID = world.getBlockID(seedPlantedName);
+    }
+  }
+
+  /** Returned preferred dir to show item/block in inventory. */
+  public int getPreferredDir() {
+    if (isDirXZ)
+      return Direction.S;
+    else
+      return Direction.A;
+  }
+}

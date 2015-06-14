@@ -1,0 +1,19 @@
+[Desktop Entry]
+Name=jfCraft
+Comment=Block Based Game
+
+Icon=jfcraft
+
+Type=Application
+Categories=Games
+
+Exec=jfcraft
+Path=/usr/lib/jfcraft
+StartupNotify=false
+Terminal=false
+MimeType=
+
+Title=jfCraft
+
+Action=
+
