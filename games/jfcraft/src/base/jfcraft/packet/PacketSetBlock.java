@@ -41,7 +41,6 @@ public class PacketSetBlock extends Packet {
     if (chunk == null) return;
     chunk.setBlock(gx, gy, gz, id, bits);
     chunk.delCrack(gx, gy, gz);
-    client.chunkWorker.add(Client.LIGHT, chunk, gx,gy,gz);
   }
 
   @Override

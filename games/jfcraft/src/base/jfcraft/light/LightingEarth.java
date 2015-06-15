@@ -19,6 +19,15 @@ public class LightingEarth implements LightingBase {
   private static final int size = 65536;
 
   private Chunk chunk;
+  private Chunk temp = new Chunk();
+  private Chunk tn = new Chunk();
+  private Chunk te = new Chunk();
+  private Chunk ts = new Chunk();
+  private Chunk tw = new Chunk();
+  private Chunk tne = new Chunk();
+  private Chunk tnw = new Chunk();
+  private Chunk tse = new Chunk();
+  private Chunk tsw = new Chunk();
 
   //types
   private static final int SUN_FULL = 1;  //downward full sun
@@ -39,8 +48,13 @@ public class LightingEarth implements LightingBase {
   }
 
   //fills in all block light levels
-  private void reset(Chunk chunk) {
+  private void reset() {
     int lvl;
+    temp.setLights(new byte[256][]);
+    temp.N = chunk.N;
+    temp.E = chunk.E;
+    temp.S = chunk.S;
+    temp.W = chunk.W;
     for(int y=0;y<256;y++) {
       for(int z=0;z<16;z++) {
         for(int x=0;x<16;x++) {
@@ -49,7 +63,7 @@ public class LightingEarth implements LightingBase {
           if (y == 255 && id == 0) {
             lvl |= SUN_LIGHT_MASK;
           }
-          chunk.setLights(x,y,z,lvl);
+          temp.setLights(x,y,z,lvl);
         }
       }
     }
@@ -60,7 +74,7 @@ public class LightingEarth implements LightingBase {
     for(int y=0;y<256;y++) {
       for(int z=0;z<16;z++) {
         for(int x=0;x<16;x++) {
-          lvl = chunk.getBlkLight(x, y, z);
+          lvl = temp.getBlkLight(x, y, z);
           if (lvl > 1) {
             add(BLK, x, y, z);
           }
@@ -77,14 +91,14 @@ public class LightingEarth implements LightingBase {
     //east/west planes
     for(int y=0;y<255;y++) {
       for(int z=0;z<16;z++) {
-        ilvl = chunk.getSunLight(15,y,z);
-        olvl = chunk.E.getSunLight(0,y,z);
+        ilvl = temp.getSunLight(15,y,z);
+        olvl = temp.E.getSunLight(0,y,z);
         if (olvl-1 > ilvl) {
           add(SUN_CAST, 16, y, z);
         }
 
-        ilvl = chunk.getSunLight(0,y,z);
-        olvl = chunk.W.getSunLight(15,y,z);
+        ilvl = temp.getSunLight(0,y,z);
+        olvl = temp.W.getSunLight(15,y,z);
         if (olvl-1 > ilvl) {
           add(SUN_CAST, -1, y, z);
         }
@@ -94,14 +108,14 @@ public class LightingEarth implements LightingBase {
     //north/south planes
     for(int y=0;y<255;y++) {
       for(int x=0;x<16;x++) {
-        ilvl = chunk.getSunLight(x,y,15);
-        olvl = chunk.S.getSunLight(x,y,0);
+        ilvl = temp.getSunLight(x,y,15);
+        olvl = temp.S.getSunLight(x,y,0);
         if (olvl-1 > ilvl) {
           add(SUN_CAST, x, y, 16);
         }
 
-        ilvl = chunk.getSunLight(x,y,0);
-        olvl = chunk.N.getSunLight(x,y,15);
+        ilvl = temp.getSunLight(x,y,0);
+        olvl = temp.N.getSunLight(x,y,15);
         if (olvl-1 > ilvl) {
           add(SUN_CAST, x, y, -1);
         }
@@ -113,7 +127,7 @@ public class LightingEarth implements LightingBase {
     int lvl;
     for(int x=0;x<16;x++) {
       for(int z=0;z<16;z++) {
-        lvl = chunk.getSunLight(x, 255, z);
+        lvl = temp.getSunLight(x, 255, z);
         if (lvl == 15)
           add(SUN_FULL, x, 255, z);
         else if (lvl > 1)
@@ -133,30 +147,73 @@ public class LightingEarth implements LightingBase {
       return;
     }
     synchronized(lock) {
-      tail = head = 0;
       this.chunk = chunk;
-      reset(chunk);
+      tail = head = 0;
+      reset();
       addSunTop();
       addSunEdges();
       addBlkInside();
-      //addBlkEdges();  //not needed in generation
       processQueue();
+      chunk.setLights(temp.getLights());
     }
 
+    chunk.needRelight = false;
     chunk.needLights = false;
+
     chunk.dirty = true;
+    chunk.needBuildBuffers = true;
     chunk.N.dirty = true;
+    chunk.N.needBuildBuffers = true;
     chunk.E.dirty = true;
+    chunk.E.needBuildBuffers = true;
     chunk.S.dirty = true;
+    chunk.S.needBuildBuffers = true;
     chunk.W.dirty = true;
+    chunk.W.needBuildBuffers = true;
     chunk.N.E.dirty = true;
+    chunk.N.E.needBuildBuffers = true;
     chunk.N.W.dirty = true;
+    chunk.N.W.needBuildBuffers = true;
     chunk.S.E.dirty = true;
+    chunk.S.E.needBuildBuffers = true;
     chunk.S.W.dirty = true;
+    chunk.S.W.needBuildBuffers = true;
+  }
+
+  private byte[][] copyLights(byte in[][]) {
+    byte lights[][] = new byte[256][];
+    for(int a=0;a<256;a++) {
+      if (in[a] == null) continue;
+      lights[a] = new byte[16*16];
+      System.arraycopy(in[a],0,lights[a],0,16*16);
+    }
+    return lights;
   }
 
   private void reset(int x1,int y1,int z1,int x2,int y2,int z2) {
     int lvl;
+    temp.setLights(new byte[256][]);
+    temp.N = tn;
+    temp.E = te;
+    temp.S = ts;
+    temp.W = tw;
+    tn.setLights(copyLights(chunk.N.getLights()));
+    te.setLights(copyLights(chunk.E.getLights()));
+    ts.setLights(copyLights(chunk.S.getLights()));
+    tw.setLights(copyLights(chunk.W.getLights()));
+    tn.E = tne;
+    tn.W = tnw;
+    ts.E = tse;
+    ts.W = tsw;
+    te.N = tne;
+    tw.N = tnw;
+    te.S = tse;
+    tw.S = tsw;
+    tne.setLights(copyLights(chunk.N.E.getLights()));
+    tnw.setLights(copyLights(chunk.N.W.getLights()));
+    tse.setLights(copyLights(chunk.S.E.getLights()));
+    tsw.setLights(copyLights(chunk.S.W.getLights()));
+
     for(int y=y1;y<=y2;y++) {
       for(int z=z1;z<=z2;z++) {
         for(int x=x1;x<=x2;x++) {
@@ -165,7 +222,7 @@ public class LightingEarth implements LightingBase {
           if (y == 255 && id == 0) {
             lvl |= SUN_LIGHT_MASK;
           }
-          chunk.setLights(x,y,z,lvl);
+          temp.setLights(x,y,z,lvl);
         }
       }
     }
@@ -190,11 +247,11 @@ public class LightingEarth implements LightingBase {
     //east / west planes
     for(int y=y1;y<=y2;y++) {
       for(int z=z1;z<=z2;z++) {
-        lvl = chunk.getBlkLight(x1-1,y,z);
+        lvl = temp.getBlkLight(x1-1,y,z);
         if (lvl > 1) {
           add(BLK, x1-1, y, z);
         }
-        lvl = chunk.getBlkLight(x2+1,y,z);
+        lvl = temp.getBlkLight(x2+1,y,z);
         if (lvl > 1) {
           add(BLK, x2+1, y, z);
         }
@@ -203,11 +260,11 @@ public class LightingEarth implements LightingBase {
     //north / south planes
     for(int y=y1;y<=y2;y++) {
       for(int x=x1;x<=x2;x++) {
-        lvl = chunk.getBlkLight(x,y,z1-1);
+        lvl = temp.getBlkLight(x,y,z1-1);
         if (lvl > 1) {
           add(BLK, x, y, z1-1);
         }
-        lvl = chunk.getBlkLight(x,y,z2+1);
+        lvl = temp.getBlkLight(x,y,z2+1);
         if (lvl > 1) {
           add(BLK, x, y, z2+1);
         }
@@ -221,7 +278,7 @@ public class LightingEarth implements LightingBase {
     if (y < 255) y++;
     for(int x=x1;x<=x2;x++) {
       for(int z=z1;z<=z2;z++) {
-        lvl = chunk.getSunLight(x, y, z);
+        lvl = temp.getSunLight(x, y, z);
         if (lvl == 15)
           add(SUN_FULL, x, y, z);
         else if (lvl > 1)
@@ -238,14 +295,14 @@ public class LightingEarth implements LightingBase {
     //east/west planes
     for(int y=y1;y<=y2;y++) {
       for(int z=z1;z<=z2;z++) {
-        ilvl = chunk.getSunLight(x1,y,z);
-        olvl = chunk.getSunLight(x1-1,y,z);
+        ilvl = temp.getSunLight(x1,y,z);
+        olvl = temp.getSunLight(x1-1,y,z);
         if (olvl-1 > ilvl) {
           add(SUN_CAST, x1-1, y, z);
         }
 
-        ilvl = chunk.getSunLight(x2,y,z);
-        olvl = chunk.getSunLight(x2+1,y,z);
+        ilvl = temp.getSunLight(x2,y,z);
+        olvl = temp.getSunLight(x2+1,y,z);
         if (olvl-1 > ilvl) {
           add(SUN_CAST, x2+1, y, z);
         }
@@ -255,14 +312,14 @@ public class LightingEarth implements LightingBase {
     //north/south planes
     for(int y=y1;y<=y2;y++) {
       for(int x=x1;x<=x2;x++) {
-        ilvl = chunk.getSunLight(x,y,z1);
-        olvl = chunk.getSunLight(x,y,z1-1);
+        ilvl = temp.getSunLight(x,y,z1);
+        olvl = temp.getSunLight(x,y,z1-1);
         if (olvl-1 > ilvl) {
           add(SUN_CAST, x, y, z1-1);
         }
 
-        ilvl = chunk.getSunLight(x,y,z2);
-        olvl = chunk.getSunLight(x,y,z2+1);
+        ilvl = temp.getSunLight(x,y,z2);
+        olvl = temp.getSunLight(x,y,z2+1);
         if (olvl-1 > ilvl) {
           add(SUN_CAST, x, y, z2+1);
         }
@@ -270,28 +327,18 @@ public class LightingEarth implements LightingBase {
     }
   }
 
-  public void update(Chunk chunk, int x, int y, int z) {
+  public void update(Chunk chunk) {
     if (!chunk.canLights()) {
 //      Static.log("Failed to update light:" + chunk.cx + "," + chunk.cz);
       return;
     }
-    int x1 = x-14;
-    int y1 = 0;  //sun light could change all the way down
-    int z1 = z-14;
-    int x2 = x+14;
-    int y2 = y+14;
-    if (y2 > 255) y2 = 255;
-    int z2 = z+14;
+    int x1 = -14;
+    int y1 = 0;
+    int z1 = -14;
+    int x2 = 15+14;
+    int y2 = 255;
+    int z2 = 15+14;
     synchronized(lock) {
-    synchronized(chunk.lock) {
-    synchronized(chunk.N.lock) {
-    synchronized(chunk.E.lock) {
-    synchronized(chunk.S.lock) {
-    synchronized(chunk.W.lock) {
-    synchronized(chunk.N.E.lock) {
-    synchronized(chunk.N.W.lock) {
-    synchronized(chunk.S.E.lock) {
-    synchronized(chunk.S.W.lock) {
       this.chunk = chunk;
       tail = head = 0;
       reset(x1,y1,z1,x2,y2,z2);
@@ -300,26 +347,37 @@ public class LightingEarth implements LightingBase {
       addBlkInside(x1,y1,z1,x2,y2,z2);
       addBlkEdges(x1,y1,z1,x2,y2,z2);
       processQueue();
+      chunk.setLights(temp.getLights());
+      chunk.N.setLights(tn.getLights());
+      chunk.E.setLights(te.getLights());
+      chunk.S.setLights(ts.getLights());
+      chunk.W.setLights(tw.getLights());
+      chunk.N.E.setLights(tne.getLights());
+      chunk.N.W.setLights(tnw.getLights());
+      chunk.S.E.setLights(tse.getLights());
+      chunk.S.W.setLights(tsw.getLights());
     }
-    }
-    }
-    }
-    }
-    }
-    }
-    }
-    }
-    }
-    chunk.needLights = false;
+
+    chunk.needRelight = false;
+
     chunk.dirty = true;
-    if (z < 14) chunk.N.dirty = true;
-    if (x > 1) chunk.E.dirty = true;
-    if (z > 1) chunk.S.dirty = true;
-    if (x < 14) chunk.W.dirty = true;
-    if ((z < 14) && (x > 1)) chunk.N.E.dirty = true;
-    if ((z < 14) && (x < 14)) chunk.N.W.dirty = true;
-    if ((z > 1) && (x > 1)) chunk.S.E.dirty = true;
-    if ((z > 1) && (x < 14)) chunk.S.W.dirty = true;
+    chunk.needBuildBuffers = true;
+    chunk.N.dirty = true;
+    chunk.N.needBuildBuffers = true;
+    chunk.E.dirty = true;
+    chunk.E.needBuildBuffers = true;
+    chunk.S.dirty = true;
+    chunk.S.needBuildBuffers = true;
+    chunk.W.dirty = true;
+    chunk.W.needBuildBuffers = true;
+    chunk.N.E.dirty = true;
+    chunk.N.E.needBuildBuffers = true;
+    chunk.N.W.dirty = true;
+    chunk.N.W.needBuildBuffers = true;
+    chunk.S.E.dirty = true;
+    chunk.S.E.needBuildBuffers = true;
+    chunk.S.W.dirty = true;
+    chunk.S.W.needBuildBuffers = true;
   }
 
   private void processQueue() {
@@ -333,7 +391,7 @@ public class LightingEarth implements LightingBase {
       if (tail == size) tail = 0;
       switch (t) {
         case SUN_FULL:
-          if (chunk.getSunLight(x,y-1,z) < 15) {
+          if (y > 0 && temp.getSunLight(x,y-1,z) < 15) {
             lvl = getBlock(x, y-1, z).absorbSunLight(15);
             lvl = getBlock2(x, y-1, z).absorbSunLight(lvl);
             if (lvl > 0) {
@@ -342,7 +400,7 @@ public class LightingEarth implements LightingBase {
               }
             }
           }
-          if (chunk.getSunLight(x+1,y,z) < 14) {
+          if (x < 31 && temp.getSunLight(x+1,y,z) < 14) {
             lvl = getBlock(x+1, y, z).absorbLight(15);
             lvl = getBlock2(x+1, y, z).absorbLight(lvl);
             if (lvl > 0) {
@@ -351,7 +409,7 @@ public class LightingEarth implements LightingBase {
               }
             }
           }
-          if (chunk.getSunLight(x-1,y,z) < 14) {
+          if (x > -15 && temp.getSunLight(x-1,y,z) < 14) {
             lvl = getBlock(x-1, y, z).absorbLight(15);
             lvl = getBlock2(x-1, y, z).absorbLight(lvl);
             if (lvl > 0) {
@@ -360,7 +418,7 @@ public class LightingEarth implements LightingBase {
               }
             }
           }
-          if (chunk.getSunLight(x,y,z+1) < 14) {
+          if (z < 31 && temp.getSunLight(x,y,z+1) < 14) {
             lvl = getBlock(x, y, z+1).absorbLight(15);
             lvl = getBlock2(x, y, z+1).absorbLight(lvl);
             if (lvl > 0) {
@@ -368,7 +426,7 @@ public class LightingEarth implements LightingBase {
                 add(SUN_CAST, x,y,z+1); }
               }
           }
-          if (chunk.getSunLight(x,y,z-1) < 14) {
+          if (z > -15 && temp.getSunLight(x,y,z-1) < 14) {
             lvl = getBlock(x, y, z-1).absorbLight(15);
             lvl = getBlock2(x, y, z-1).absorbLight(lvl);
             if (lvl > 0) {
@@ -379,123 +437,147 @@ public class LightingEarth implements LightingBase {
           }
           break;
         case SUN_CAST:
-          lvl = chunk.getSunLight(x,y,z);
-          olvl = chunk.getSunLight(x+1,y,z);
-          if (olvl < lvl) {
-            nlvl = getBlock(x+1, y, z).absorbLight(lvl);
-            nlvl = getBlock2(x+1, y, z).absorbLight(nlvl);
-            if (nlvl > olvl) {
-              if (setSunLight(x+1,y,z, nlvl)) {
-                add(SUN_CAST, x+1,y,z);
+          lvl = temp.getSunLight(x,y,z);
+          if (x < 31) {
+            olvl = temp.getSunLight(x+1,y,z);
+            if (olvl < lvl) {
+              nlvl = getBlock(x+1, y, z).absorbLight(lvl);
+              nlvl = getBlock2(x+1, y, z).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                if (setSunLight(x+1,y,z, nlvl)) {
+                  add(SUN_CAST, x+1,y,z);
+                }
               }
             }
           }
-          olvl = chunk.getSunLight(x-1,y,z);
-          if (olvl < lvl) {
-            nlvl = getBlock(x-1, y, z).absorbLight(lvl);
-            nlvl = getBlock2(x-1, y, z).absorbLight(nlvl);
-            if (nlvl > olvl) {
-              if (setSunLight(x-1,y,z, nlvl)) {
-                add(SUN_CAST, x-1,y,z);
+          if (x > -15) {
+            olvl = temp.getSunLight(x-1,y,z);
+            if (olvl < lvl) {
+              nlvl = getBlock(x-1, y, z).absorbLight(lvl);
+              nlvl = getBlock2(x-1, y, z).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                if (setSunLight(x-1,y,z, nlvl)) {
+                  add(SUN_CAST, x-1,y,z);
+                }
               }
             }
           }
-          olvl = chunk.getSunLight(x,y+1,z);
-          if (olvl < lvl) {
-            nlvl = getBlock(x, y+1, z).absorbLight(lvl);
-            nlvl = getBlock2(x, y+1, z).absorbLight(nlvl);
-            if (nlvl > olvl) {
-              if (setSunLight(x,y+1,z, nlvl)) {
-                add(SUN_CAST, x,y+1,z);
+          if (y < 255) {
+            olvl = temp.getSunLight(x,y+1,z);
+            if (olvl < lvl) {
+              nlvl = getBlock(x, y+1, z).absorbLight(lvl);
+              nlvl = getBlock2(x, y+1, z).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                if (setSunLight(x,y+1,z, nlvl)) {
+                  add(SUN_CAST, x,y+1,z);
+                }
               }
             }
           }
-          olvl = chunk.getSunLight(x,y-1,z);
-          if (olvl < lvl) {
-            nlvl = getBlock(x, y-1, z).absorbLight(lvl);
-            nlvl = getBlock2(x, y-1, z).absorbLight(nlvl);
-            if (nlvl > olvl) {
-              if (setSunLight(x,y-1,z, nlvl)) {
-                add(SUN_CAST, x,y-1,z);
+          if (y > 0) {
+            olvl = temp.getSunLight(x,y-1,z);
+            if (olvl < lvl) {
+              nlvl = getBlock(x, y-1, z).absorbLight(lvl);
+              nlvl = getBlock2(x, y-1, z).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                if (setSunLight(x,y-1,z, nlvl)) {
+                  add(SUN_CAST, x,y-1,z);
+                }
               }
             }
           }
-          olvl = chunk.getSunLight(x,y,z+1);
-          if (olvl < lvl) {
-            nlvl = getBlock(x, y, z+1).absorbLight(lvl);
-            nlvl = getBlock2(x, y, z+1).absorbLight(nlvl);
-            if (nlvl > olvl) {
-              if (setSunLight(x,y,z+1, nlvl)) {
-                add(SUN_CAST, x,y,z+1);
+          if (z < 31) {
+            olvl = temp.getSunLight(x,y,z+1);
+            if (olvl < lvl) {
+              nlvl = getBlock(x, y, z+1).absorbLight(lvl);
+              nlvl = getBlock2(x, y, z+1).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                if (setSunLight(x,y,z+1, nlvl)) {
+                  add(SUN_CAST, x,y,z+1);
+                }
               }
             }
           }
-          olvl = chunk.getSunLight(x,y,z-1);
-          if (olvl < lvl) {
-            nlvl = getBlock(x, y, z-1).absorbLight(lvl);
-            nlvl = getBlock2(x, y, z-1).absorbLight(nlvl);
-            if (nlvl > olvl) {
-              if (setSunLight(x,y,z-1, nlvl)) {
-                add(SUN_CAST, x,y,z-1);
+          if (z > -15) {
+            olvl = temp.getSunLight(x,y,z-1);
+            if (olvl < lvl) {
+              nlvl = getBlock(x, y, z-1).absorbLight(lvl);
+              nlvl = getBlock2(x, y, z-1).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                if (setSunLight(x,y,z-1, nlvl)) {
+                  add(SUN_CAST, x,y,z-1);
+                }
               }
             }
           }
           break;
         case BLK:
-          lvl = chunk.getBlkLight(x,y,z);
+          lvl = temp.getBlkLight(x,y,z);
           if (lvl <= 1) break;
-          olvl = chunk.getBlkLight(x+1,y,z);
-          if (olvl < lvl) {
-            nlvl = getBlock(x+1, y, z).absorbLight(lvl);
-            nlvl = getBlock2(x+1, y, z).absorbLight(nlvl);
-            if (nlvl > olvl) {
-              setBlkLight(x+1,y,z, nlvl);
-              if (nlvl > 1) add(BLK, x+1,y,z);
+          if (x < 31) {
+            olvl = temp.getBlkLight(x+1,y,z);
+            if (olvl < lvl) {
+              nlvl = getBlock(x+1, y, z).absorbLight(lvl);
+              nlvl = getBlock2(x+1, y, z).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                setBlkLight(x+1,y,z, nlvl);
+                if (nlvl > 1) add(BLK, x+1,y,z);
+              }
             }
           }
-          olvl = chunk.getBlkLight(x-1,y,z);
-          if (olvl < lvl) {
-            nlvl = getBlock(x-1, y, z).absorbLight(lvl);
-            nlvl = getBlock2(x-1, y, z).absorbLight(nlvl);
-            if (nlvl > olvl) {
-              setBlkLight(x-1,y,z, nlvl);
-              if (nlvl > 1) add(BLK, x-1,y,z);
+          if (x > -15) {
+            olvl = temp.getBlkLight(x-1,y,z);
+            if (olvl < lvl) {
+              nlvl = getBlock(x-1, y, z).absorbLight(lvl);
+              nlvl = getBlock2(x-1, y, z).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                setBlkLight(x-1,y,z, nlvl);
+                if (nlvl > 1) add(BLK, x-1,y,z);
+              }
             }
           }
-          olvl = chunk.getBlkLight(x,y+1,z);
-          if (olvl < lvl) {
-            nlvl = getBlock(x, y+1, z).absorbLight(lvl);
-            nlvl = getBlock2(x, y+1, z).absorbLight(nlvl);
-            if (nlvl > olvl) {
-              setBlkLight(x,y+1,z, nlvl);
-              if (nlvl > 1) add(BLK, x,y+1,z);
+          if (y < 255) {
+            olvl = temp.getBlkLight(x,y+1,z);
+            if (olvl < lvl) {
+              nlvl = getBlock(x, y+1, z).absorbLight(lvl);
+              nlvl = getBlock2(x, y+1, z).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                setBlkLight(x,y+1,z, nlvl);
+                if (nlvl > 1) add(BLK, x,y+1,z);
+              }
             }
           }
-          olvl = chunk.getBlkLight(x,y-1,z);
-          if (olvl < lvl) {
-            nlvl = getBlock(x, y-1, z).absorbLight(lvl);
-            nlvl = getBlock2(x, y-1, z).absorbLight(nlvl);
-            if (nlvl > olvl) {
-              setBlkLight(x,y-1,z, nlvl);
-              if (nlvl > 1) add(BLK, x,y-1,z);
+          if (y > 0) {
+            olvl = temp.getBlkLight(x,y-1,z);
+            if (olvl < lvl) {
+              nlvl = getBlock(x, y-1, z).absorbLight(lvl);
+              nlvl = getBlock2(x, y-1, z).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                setBlkLight(x,y-1,z, nlvl);
+                if (nlvl > 1) add(BLK, x,y-1,z);
+              }
             }
           }
-          olvl = chunk.getBlkLight(x,y,z+1);
-          if (olvl < lvl) {
-            nlvl = getBlock(x, y, z+1).absorbLight(lvl);
-            nlvl = getBlock2(x, y, z+1).absorbLight(nlvl);
-            if (nlvl > olvl) {
-              setBlkLight(x,y,z+1, nlvl);
-              if (nlvl > 1) add(BLK, x,y,z+1);
+          if (z < 31) {
+            olvl = temp.getBlkLight(x,y,z+1);
+            if (olvl < lvl) {
+              nlvl = getBlock(x, y, z+1).absorbLight(lvl);
+              nlvl = getBlock2(x, y, z+1).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                setBlkLight(x,y,z+1, nlvl);
+                if (nlvl > 1) add(BLK, x,y,z+1);
+              }
             }
           }
-          olvl = chunk.getBlkLight(x,y,z-1);
-          if (olvl < lvl) {
-            nlvl = getBlock(x, y, z-1).absorbLight(lvl);
-            nlvl = getBlock2(x, y, z-1).absorbLight(nlvl);
-            if (nlvl > olvl) {
-              setBlkLight(x,y,z-1, nlvl);
-              if (nlvl > 1) add(BLK, x,y,z-1);
+          if (z > -15) {
+            olvl = temp.getBlkLight(x,y,z-1);
+            if (olvl < lvl) {
+              nlvl = getBlock(x, y, z-1).absorbLight(lvl);
+              nlvl = getBlock2(x, y, z-1).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                setBlkLight(x,y,z-1, nlvl);
+                if (nlvl > 1) add(BLK, x,y,z-1);
+              }
             }
           }
           break;
@@ -505,11 +587,11 @@ public class LightingEarth implements LightingBase {
 
   private void add(int t, int x, int y, int z) {
     if (x > 31) return;
-    if (x < -16) return;
+    if (x < -15) return;
     if (y > 255) return;
     if (y < 0) return;
     if (z > 31) return;
-    if (z < -16) return;
+    if (z < -15) return;
     ta[head] = t;
     xa[head] = x;
     ya[head] = y;
@@ -521,13 +603,15 @@ public class LightingEarth implements LightingBase {
   private BlockBase getBlock(int x, int y, int z) {
     return Static.blocks.blocks[chunk.getID(x,y,z)];
   }
+
   private BlockBase getBlock2(int x, int y, int z) {
     return Static.blocks.blocks[chunk.getID2(x,y,z)];
   }
+
   private boolean setSunLight(int x, int y, int z, int lvl) {
     if (y < 0) return false;
     if (y > 255) return false;
-    Chunk c = chunk;
+    Chunk c = temp;
     while (x < 0) {c = c.W; x += 16;}
     while (x > 15) {c = c.E; x -= 16;}
     while (z < 0) {c = c.N; z += 16;}
@@ -538,10 +622,11 @@ public class LightingEarth implements LightingBase {
     c.setLights(x, y, z, o);
     return true;
   }
+
   private void setBlkLight(int x, int y, int z, int lvl) {
     if (y < 0) return;
     if (y > 255) return;
-    Chunk c = chunk;
+    Chunk c = temp;
     while (x < 0) {c = c.W; x += 16;}
     while (x > 15) {c = c.E; x -= 16;}
     while (z < 0) {c = c.N; z += 16;}

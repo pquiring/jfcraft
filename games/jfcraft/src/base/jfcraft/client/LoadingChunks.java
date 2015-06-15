@@ -61,7 +61,10 @@ public class LoadingChunks extends RenderScreen {
     int cx = Static.floor(client.player.pos.x / 16.0f);
     int cz = Static.floor(client.player.pos.z / 16.0f);
 
-    setupChunks(gl, chunks, client.world, client.player.dim, cx, cz);
+    client.world.chunks.doBuildChunks = true;
+    client.world.chunks.buildChunks(chunks);
+    client.world.chunks.doCopyChunks = true;
+    client.world.chunks.copyChunks(chunks, gl);
 
     reset();
 

@@ -155,6 +155,10 @@ public abstract class CreatureBase extends EntityBase {
         break;
       } else if (!c.block.canSelect) {
         //do not select it (WATER, LAVA, FIRE, etc.)
+        sx = px;
+        sy = py;
+        sz = pz;
+        haveSide = true;
       } else if (c.block.id == Blocks.AIR) {
         sx = px;
         sy = py;

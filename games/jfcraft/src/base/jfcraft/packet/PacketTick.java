@@ -25,10 +25,12 @@ public class PacketTick extends Packet {
 
   //process on client side
   public void process(Client client) {
+//Static.log("tick");
     int cnt = packets.length;
     for(int a=0;a<cnt;a++) {
       packets[a].process(client);
     }
+    client.chunkWorker.process();
   }
 
   //process on server side

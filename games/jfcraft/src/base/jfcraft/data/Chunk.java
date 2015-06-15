@@ -30,7 +30,14 @@ public class Chunk implements SerialClass, SerialCreator {
   //blocks2 is for WATER, LAVA, SNOW, etc. (extra plane)
 
   public long seed;
-  public boolean readOnly, needPhase2, needPhase3, needLights;
+  public boolean readOnly;
+  public boolean needPhase2, needPhase3;
+  public boolean needLights;  //generator phases
+  //flags
+  public boolean dirty;  //need to write to disk
+  public boolean needBuildBuffers, needCopyBuffers, needRelight;
+  public boolean ready;
+  public boolean inRange, isAllEmpty;
 
   //biome data
   public byte biome[] = new byte[16 * 16];
@@ -83,15 +90,12 @@ public class Chunk implements SerialClass, SerialCreator {
     return null;
   }
 
-  public transient Chunk N,E,S,W;  //links : north, east, south, west
-  public transient Object lock = new Object();
-  public transient RenderDest dest;
-  public transient boolean needCopyBuffers, ready;
-  public transient boolean inRange, isAllEmpty;
-  public transient GLMatrix mat;
-  public transient int adjCount;  //# of adj chunks to render (0-6)
-  public transient boolean dirty;  //need to write to disk
-  public transient ArrayList<ExtraCrack> cracks = new ArrayList<ExtraCrack>();
+  public Chunk N,E,S,W;  //links : north, east, south, west
+  public Object lock = new Object();
+  public RenderDest dest;
+  public GLMatrix mat;
+  public int adjCount;  //# of adj chunks to render (0-6)
+  public ArrayList<ExtraCrack> cracks = new ArrayList<ExtraCrack>();
 
   //render dest buffers
   public static final int DEST_NORMAL = 0;  //stitched block
@@ -99,9 +103,10 @@ public class Chunk implements SerialClass, SerialCreator {
   public static final int DEST_TEXT = 2;  //ASCII text
   public static final int buffersCount = 2; //DEST_NORMAL + DEST_ALPHA  (excluding DEST_TEXT)
 
-  public Chunk() {
-  }
+  /** Old Chunk read from file/network. */
+  public Chunk() {}
 
+  /** New Chunk */
   public Chunk(int dim, int cx, int cz) {
     this.dim = dim;
     this.cx = cx;
@@ -109,6 +114,7 @@ public class Chunk implements SerialClass, SerialCreator {
     needPhase2 = true;
     needPhase3 = true;
     needLights = true;
+    dirty = true;
   }
 
   /** Create client side objects. */
@@ -117,6 +123,7 @@ public class Chunk implements SerialClass, SerialCreator {
     mat = new GLMatrix();
     mat.setIdentity();
     mat.setTranslate(cx * 16.0f, 0, cz * 16.0f);
+    needBuildBuffers = true;
   }
 
   public void copyBuffers(GL gl) {
@@ -176,7 +183,7 @@ public class Chunk implements SerialClass, SerialCreator {
         b[p] = id;
         bits[y][p] = (byte)_bits;
       }
-      needLights = true;
+      needRelight = true;
       dirty = true;
     }
   }
@@ -202,7 +209,7 @@ public class Chunk implements SerialClass, SerialCreator {
         blocks[y] = null;
         bits[y] = null;
       }
-      needLights = true;
+      needRelight = true;
       dirty = true;
     }
   }
@@ -228,7 +235,7 @@ public class Chunk implements SerialClass, SerialCreator {
         blocks2[y] = null;
         bits2[y] = null;
       }
-      needLights = true;
+      needRelight = true;
       dirty = true;
     }
   }
@@ -268,7 +275,7 @@ public class Chunk implements SerialClass, SerialCreator {
         blocks[y][p] = id;
         bits[y][p] = (byte)_bits;
       }
-      needLights = true;
+      needRelight = true;
       dirty = true;
     }
   }
@@ -422,7 +429,7 @@ public class Chunk implements SerialClass, SerialCreator {
   public void buildBuffers() {
 //    if (cx == -1 && cz == 0) Static.log("buildBuffers:" + cx + "," + cz);
     synchronized(lock) {
-      dirty = false;
+      needBuildBuffers = false;
       char id, xid;
       int _bits;
       byte _ll;
@@ -808,6 +815,7 @@ public class Chunk implements SerialClass, SerialCreator {
       }
       //do 48 random ticks (suppose to be 3 per 16x16x16 area)
       //does : plants grow or die, fire burns out, ice melts, leaves decay, farmland becomes hydrated, and so on
+      if (Static.debugDisableRandomTicks) return;
       int x,y,z;
       for(int a=0;a<48;a++) {
         x = r.nextInt(16);
@@ -914,6 +922,7 @@ public class Chunk implements SerialClass, SerialCreator {
       } else {
         cracks.add(crack);
       }
+      needBuildBuffers = true;
       dirty = true;
     }
   }
@@ -924,6 +933,7 @@ public class Chunk implements SerialClass, SerialCreator {
         ExtraCrack c = cracks.get(a);
         if (c.x == x && c.y == y && c.z == z) {
           cracks.remove(a);
+          needBuildBuffers = true;
           dirty = true;
           return;
         }
@@ -970,6 +980,14 @@ public class Chunk implements SerialClass, SerialCreator {
     if (getID2(x,y,z) != 0) return false;
     BlockBase base = getBlock(x, y, z);
     return base.canSpawnOn && !base.isComplex;
+  }
+
+  public byte[][] getLights() {
+    return lights;
+  }
+
+  public void setLights(byte newLights[][]) {
+    lights = newLights;
   }
 
   public String toString() {

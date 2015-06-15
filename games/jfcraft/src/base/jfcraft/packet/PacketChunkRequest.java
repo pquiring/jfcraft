@@ -26,7 +26,7 @@ public class PacketChunkRequest extends Packet {
 
   //process on server side
   public void process(Server server, Client client) {
-    server.chunkWorker.add(Server.CHUNK, client.player.dim, i1, i2, client.serverTransport);
+    server.chunkWorker.add(client.player.dim, i1, i2, client.serverTransport);
   }
 
   @Override

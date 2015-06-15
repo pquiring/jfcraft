@@ -19,6 +19,15 @@ public class LightingAmbient implements LightingBase {
   private static final int size = 65536;
 
   private Chunk chunk;
+  private Chunk temp = new Chunk();
+  private Chunk tn = new Chunk();
+  private Chunk te = new Chunk();
+  private Chunk ts = new Chunk();
+  private Chunk tw = new Chunk();
+  private Chunk tne = new Chunk();
+  private Chunk tnw = new Chunk();
+  private Chunk tse = new Chunk();
+  private Chunk tsw = new Chunk();
 
   //types
   private static final int BLK = 1;       //block light in all directions
@@ -41,14 +50,19 @@ public class LightingAmbient implements LightingBase {
   }
 
   //fills in all block light levels
-  private void reset(Chunk chunk) {
+  private void reset() {
+    temp.setLights(new byte[256][]);
+    temp.N = chunk.N;
+    temp.E = chunk.E;
+    temp.S = chunk.S;
+    temp.W = chunk.W;
     int lvl;
     for(int y=0;y<256;y++) {
       for(int z=0;z<16;z++) {
         for(int x=0;x<16;x++) {
           char id = chunk.getID(x,y,z);
           lvl = Static.blocks.blocks[id].emitLight << 4;
-          chunk.setLights(x,y,z,lvl | ambientLvl);
+          temp.setLights(x,y,z,lvl | ambientLvl);
         }
       }
     }
@@ -59,7 +73,7 @@ public class LightingAmbient implements LightingBase {
     for(int y=0;y<256;y++) {
       for(int z=0;z<16;z++) {
         for(int x=0;x<16;x++) {
-          lvl = chunk.getBlkLight(x, y, z);
+          lvl = temp.getBlkLight(x, y, z);
           if (lvl > 1) {
             add(BLK, x, y, z);
           }
@@ -81,33 +95,78 @@ public class LightingAmbient implements LightingBase {
       return;
     }
     synchronized(lock) {
-      reset(chunk);
-      tail = head = 0;
       this.chunk = chunk;
+      reset();
+      tail = head = 0;
       addBlkInside();
       processQueue();
+      chunk.setLights(temp.getLights());
     }
 
+
     chunk.needLights = false;
+    chunk.needRelight = false;
+
     chunk.dirty = true;
+    chunk.needBuildBuffers = true;
     chunk.N.dirty = true;
+    chunk.N.needBuildBuffers = true;
     chunk.E.dirty = true;
+    chunk.E.needBuildBuffers = true;
     chunk.S.dirty = true;
+    chunk.S.needBuildBuffers = true;
     chunk.W.dirty = true;
+    chunk.W.needBuildBuffers = true;
     chunk.N.E.dirty = true;
+    chunk.N.E.needBuildBuffers = true;
     chunk.N.W.dirty = true;
+    chunk.N.W.needBuildBuffers = true;
     chunk.S.E.dirty = true;
+    chunk.S.E.needBuildBuffers = true;
     chunk.S.W.dirty = true;
+    chunk.S.W.needBuildBuffers = true;
+  }
+
+  private byte[][] copyLights(byte in[][]) {
+    byte lights[][] = new byte[256][];
+    for(int a=0;a<256;a++) {
+      if (in[a] == null) continue;
+      lights[a] = new byte[16*16];
+      System.arraycopy(in[a],0,lights[a],0,16*16);
+    }
+    return lights;
   }
 
   private void reset(int x1,int y1,int z1,int x2,int y2,int z2) {
+    temp.setLights(new byte[256][]);
+    temp.N = chunk.N;
+    temp.E = chunk.E;
+    temp.S = chunk.S;
+    temp.W = chunk.W;
+    tn.setLights(copyLights(chunk.N.getLights()));
+    te.setLights(copyLights(chunk.E.getLights()));
+    ts.setLights(copyLights(chunk.S.getLights()));
+    tw.setLights(copyLights(chunk.W.getLights()));
+    tn.E = tne;
+    tn.W = tnw;
+    ts.E = tse;
+    ts.W = tsw;
+    te.N = tne;
+    tw.N = tnw;
+    te.S = tse;
+    tw.S = tsw;
+    tne.setLights(copyLights(chunk.N.E.getLights()));
+    tnw.setLights(copyLights(chunk.N.W.getLights()));
+    tse.setLights(copyLights(chunk.S.E.getLights()));
+    tsw.setLights(copyLights(chunk.S.W.getLights()));
+
     int lvl;
     for(int y=y1;y<=y2;y++) {
       for(int z=z1;z<=z2;z++) {
         for(int x=x1;x<=x2;x++) {
           char id = chunk.getID(x,y,z);
           lvl = Static.blocks.blocks[id].emitLight << 4;
-          chunk.setLights(x,y,z,lvl | ambientLvl);
+          temp.setLights(x,y,z,lvl | ambientLvl);
         }
       }
     }
@@ -118,7 +177,7 @@ public class LightingAmbient implements LightingBase {
     for(int y=y1;y<=y2;y++) {
       for(int z=z1;z<=z2;z++) {
         for(int x=x1;x<=x2;x++) {
-          lvl = chunk.getBlkLight(x, y, z);
+          lvl = temp.getBlkLight(x, y, z);
           if (lvl > 1) {
             add(BLK, x, y, z);
           }
@@ -132,11 +191,11 @@ public class LightingAmbient implements LightingBase {
     //east / west planes
     for(int y=y1;y<=y2;y++) {
       for(int z=z1;z<=z2;z++) {
-        lvl = chunk.getBlkLight(x1-1,y,z);
+        lvl = temp.getBlkLight(x1-1,y,z);
         if (lvl > 0) {
           add(BLK, x1-1, y, z);
         }
-        lvl = chunk.getBlkLight(x2+1,y,z);
+        lvl = temp.getBlkLight(x2+1,y,z);
         if (lvl > 0) {
           add(BLK, x2+1, y, z);
         }
@@ -145,11 +204,11 @@ public class LightingAmbient implements LightingBase {
     //north / south planes
     for(int y=y1;y<=y2;y++) {
       for(int x=x1;x<=x2;x++) {
-        lvl = chunk.getBlkLight(x,y,z1-1);
+        lvl = temp.getBlkLight(x,y,z1-1);
         if (lvl > 0) {
           add(BLK, x, y, z1-1);
         }
-        lvl = chunk.getBlkLight(x,y,z2+1);
+        lvl = temp.getBlkLight(x,y,z2+1);
         if (lvl > 0) {
           add(BLK, x, y, z2+1);
         }
@@ -157,55 +216,56 @@ public class LightingAmbient implements LightingBase {
     }
   }
 
-  public void update(Chunk chunk, int x, int y, int z) {
+  public void update(Chunk chunk) {
     if (!chunk.canLights()) {
 //      Static.log("Failed to update light:" + chunk.cx + "," + chunk.cz);
       return;
     }
-    int x1 = x-15;
-    int y1 = y-15;  //sunlight doesn't matter
-    if (y1 < 0) y1 = 0;
-    int z1 = z-15;
-    int x2 = x+15;
-    int y2 = y+15;
-    if (y2 > 255) y2 = 255;
-    int z2 = z+15;
+    int x1 = -14;
+    int y1 = 0;
+    int z1 = -14;
+    int x2 = 15+14;
+    int y2 = 255;
+    int z2 = 15+14;
     synchronized(lock) {
-    synchronized(chunk.lock) {
-    synchronized(chunk.N.lock) {
-    synchronized(chunk.E.lock) {
-    synchronized(chunk.S.lock) {
-    synchronized(chunk.W.lock) {
-    synchronized(chunk.N.E.lock) {
-    synchronized(chunk.N.W.lock) {
-    synchronized(chunk.S.E.lock) {
-    synchronized(chunk.S.W.lock) {
       this.chunk = chunk;
       tail = head = 0;
       reset(x1,y1,z1,x2,y2,z2);
       addBlkInside(x1,y1,z1,x2,y2,z2);
       addBlkEdges(x1,y1,z1,x2,y2,z2);
       processQueue();
+      chunk.setLights(temp.getLights());
+      chunk.N.setLights(tn.getLights());
+      chunk.E.setLights(te.getLights());
+      chunk.S.setLights(ts.getLights());
+      chunk.W.setLights(tw.getLights());
+      chunk.N.E.setLights(tne.getLights());
+      chunk.N.W.setLights(tnw.getLights());
+      chunk.S.E.setLights(tse.getLights());
+      chunk.S.W.setLights(tsw.getLights());
     }
-    }
-    }
-    }
-    }
-    }
-    }
-    }
-    }
-    }
+
     chunk.needLights = false;
+    chunk.needRelight = false;
+
     chunk.dirty = true;
-    if (z < 14) chunk.N.dirty = true;
-    if (x > 1) chunk.E.dirty = true;
-    if (z > 1) chunk.S.dirty = true;
-    if (x < 14) chunk.W.dirty = true;
-    if ((z < 14) && (x > 1)) chunk.N.E.dirty = true;
-    if ((z < 14) && (x < 14)) chunk.N.W.dirty = true;
-    if ((z > 1) && (x > 1)) chunk.S.E.dirty = true;
-    if ((z > 1) && (x < 14)) chunk.S.W.dirty = true;
+    chunk.needBuildBuffers = true;
+    chunk.N.dirty = true;
+    chunk.N.needBuildBuffers = true;
+    chunk.E.dirty = true;
+    chunk.E.needBuildBuffers = true;
+    chunk.S.dirty = true;
+    chunk.S.needBuildBuffers = true;
+    chunk.W.dirty = true;
+    chunk.W.needBuildBuffers = true;
+    chunk.N.E.dirty = true;
+    chunk.N.E.needBuildBuffers = true;
+    chunk.N.W.dirty = true;
+    chunk.N.W.needBuildBuffers = true;
+    chunk.S.E.dirty = true;
+    chunk.S.E.needBuildBuffers = true;
+    chunk.S.W.dirty = true;
+    chunk.S.W.needBuildBuffers = true;
   }
 
   private void processQueue() {
@@ -219,54 +279,72 @@ public class LightingAmbient implements LightingBase {
       if (tail == size) tail = 0;
       switch (t) {
         case BLK:
-          lvl = chunk.getBlkLight(x,y,z);
+          lvl = temp.getBlkLight(x,y,z);
           if (lvl <= 1) break;
-          olvl = chunk.getBlkLight(x+1,y,z);
-          if (olvl < lvl) {
-            nlvl = getBlock(x+1, y, z).absorbLight((byte)lvl);
-            if (nlvl > olvl) {
-              setBlkLight(x+1,y,z, nlvl);
-              if (nlvl > 1) add(BLK, x+1,y,z);
+          if (x < 31) {
+            olvl = temp.getBlkLight(x+1,y,z);
+            if (olvl < lvl) {
+              nlvl = getBlock(x+1, y, z).absorbLight(lvl);
+              nlvl = getBlock2(x+1, y, z).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                setBlkLight(x+1,y,z, nlvl);
+                if (nlvl > 1) add(BLK, x+1,y,z);
+              }
             }
           }
-          olvl = chunk.getBlkLight(x-1,y,z);
-          if (olvl < lvl) {
-            nlvl = getBlock(x-1, y, z).absorbLight((byte)lvl);
-            if (nlvl > olvl) {
-              setBlkLight(x-1,y,z, nlvl);
-              if (nlvl > 1) add(BLK, x-1,y,z);
+          if (x > -15) {
+            olvl = temp.getBlkLight(x-1,y,z);
+            if (olvl < lvl) {
+              nlvl = getBlock(x-1, y, z).absorbLight(lvl);
+              nlvl = getBlock2(x-1, y, z).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                setBlkLight(x-1,y,z, nlvl);
+                if (nlvl > 1) add(BLK, x-1,y,z);
+              }
             }
           }
-          olvl = chunk.getBlkLight(x,y+1,z);
-          if (olvl < lvl) {
-            nlvl = getBlock(x, y+1, z).absorbLight((byte)lvl);
-            if (nlvl > olvl) {
-              setBlkLight(x,y+1,z, nlvl);
-              if (nlvl > 1) add(BLK, x,y+1,z);
+          if (y < 255) {
+            olvl = temp.getBlkLight(x,y+1,z);
+            if (olvl < lvl) {
+              nlvl = getBlock(x, y+1, z).absorbLight(lvl);
+              nlvl = getBlock2(x, y+1, z).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                setBlkLight(x,y+1,z, nlvl);
+                if (nlvl > 1) add(BLK, x,y+1,z);
+              }
             }
           }
-          olvl = chunk.getBlkLight(x,y-1,z);
-          if (olvl < lvl) {
-            nlvl = getBlock(x, y-1, z).absorbLight((byte)lvl);
-            if (nlvl > olvl) {
-              setBlkLight(x,y-1,z, nlvl);
-              if (nlvl > 1) add(BLK, x,y-1,z);
+          if (y > 0) {
+            olvl = temp.getBlkLight(x,y-1,z);
+            if (olvl < lvl) {
+              nlvl = getBlock(x, y-1, z).absorbLight(lvl);
+              nlvl = getBlock2(x, y-1, z).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                setBlkLight(x,y-1,z, nlvl);
+                if (nlvl > 1) add(BLK, x,y-1,z);
+              }
             }
           }
-          olvl = chunk.getBlkLight(x,y,z+1);
-          if (olvl < lvl) {
-            nlvl = getBlock(x, y, z+1).absorbLight((byte)lvl);
-            if (nlvl > olvl) {
-              setBlkLight(x,y,z+1, nlvl);
-              if (nlvl > 1) add(BLK, x,y,z+1);
+          if (z < 31) {
+            olvl = temp.getBlkLight(x,y,z+1);
+            if (olvl < lvl) {
+              nlvl = getBlock(x, y, z+1).absorbLight(lvl);
+              nlvl = getBlock2(x, y, z+1).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                setBlkLight(x,y,z+1, nlvl);
+                if (nlvl > 1) add(BLK, x,y,z+1);
+              }
             }
           }
-          olvl = chunk.getBlkLight(x,y,z-1);
-          if (olvl < lvl) {
-            nlvl = getBlock(x, y, z-1).absorbLight((byte)lvl);
-            if (nlvl > olvl) {
-              setBlkLight(x,y,z-1, nlvl);
-              if (nlvl > 1) add(BLK, x,y,z-1);
+          if (z > -15) {
+            olvl = temp.getBlkLight(x,y,z-1);
+            if (olvl < lvl) {
+              nlvl = getBlock(x, y, z-1).absorbLight(lvl);
+              nlvl = getBlock2(x, y, z-1).absorbLight(nlvl);
+              if (nlvl > olvl) {
+                setBlkLight(x,y,z-1, nlvl);
+                if (nlvl > 1) add(BLK, x,y,z-1);
+              }
             }
           }
           break;
@@ -292,7 +370,12 @@ public class LightingAmbient implements LightingBase {
   private BlockBase getBlock(int x, int y, int z) {
     return Static.blocks.blocks[chunk.getID(x,y,z)];
   }
+
+  private BlockBase getBlock2(int x, int y, int z) {
+    return Static.blocks.blocks[chunk.getID2(x,y,z)];
+  }
+
   private void setBlkLight(int x, int y, int z, int lvl) {
-    chunk.setLights(x, y, z, (lvl << 4) | ambientLvl);
+    temp.setLights(x, y, z, (lvl << 4) | ambientLvl);
   }
 }

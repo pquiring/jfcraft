@@ -37,15 +37,16 @@ public class Static {
   public static Client client;  //playing client (client side only)
   public static Server server;  //current server (server side only)
   public static int fps;  //current FPS
-  public static int tick;  //last server tick
+  public static int tick;  //last server tick duration (ms)
   public static boolean spawn = true;  //spawn entities (monsters)
   public static GLMatrix identity = new GLMatrix();
 
   public static boolean debugRotate = false;
   public static boolean debugProfile = false;
   public static boolean debugCaves = false;
-
   public static boolean debugBug = false;
+  public static boolean debugDisableRandomTicks = false;
+  public static boolean debugPurgeEntities = false;
 
   public static boolean doSteps = false;
 
@@ -242,13 +243,10 @@ public class Static {
     return id >= 32768;
   }
 
-  public static int floor( float x ) {
-    return (int)Math.floor(x);
-  }
-  public static int ceil( float x ) {
-    return (int)Math.ceil(x);
-  }
+  public static int floor( float x ) { return (int)Math.floor(x); }
+  public static int ceil( float x ) { return (int)Math.ceil(x); }
   public static float abs( float x ) { return x >= 0.0f ? x : -x; }
+  public static int abs(int x) { return x >= 0 ? x : -x; }
   public static int min(int a, int b) { return a < b ? a : b; }
   public static int max(int a, int b) { return a > b ? a : b; }
 

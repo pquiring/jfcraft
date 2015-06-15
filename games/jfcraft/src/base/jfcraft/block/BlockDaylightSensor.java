@@ -64,6 +64,7 @@ public class BlockDaylightSensor extends BlockBase {
     if (lvl > sl) lvl = sl;
     if (er.lvl != lvl) {
       er.lvl = lvl;
+      chunk.needRelight = true;
       chunk.dirty = true;
       Static.server.world.powerChanged(chunk.dim, c.x, c.y, c.z);
     }

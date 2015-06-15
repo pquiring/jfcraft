@@ -866,34 +866,6 @@ public abstract class RenderScreen {
     focus = field;
   }
 
-  public int abs(int x) {
-    if (x >= 0) return x;
-    return -x;
-  }
-
-  private final static int maxbuild = 10;
-  private final static int maxcopy = 10;
-
-  public void setupChunks(GL gl, Chunk chunks[], World world, int dim, int cx, int cz) {
-    int built = 0;
-    int copied = 0;
-    for(int a=0;a<chunks.length;a++) {
-      Chunk chunk = chunks[a];
-      if (!chunk.canRender()) continue;
-      if (chunk.dirty && !chunk.needLights && built < maxbuild) {
-        chunk.buildBuffers();
-        built++;
-      }
-      if (chunk.isAllEmpty) continue;
-      if (abs(chunk.cx - cx) > Settings.current.loadRange) continue;
-      if (abs(chunk.cz - cz) > Settings.current.loadRange) continue;
-      if (chunk.needCopyBuffers && copied < maxcopy) {
-        chunk.copyBuffers(gl);
-        copied++;
-      }
-    }
-  }
-
   public void setScreen(RenderScreen screen) {
     Static.video.setScreen(screen);
   }

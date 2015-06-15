@@ -55,7 +55,6 @@ public class PacketB2E extends Packet {
       client.world.addEntity(mb);
       chunk.addEntity(mb);
     }
-    client.chunkWorker.add(Client.LIGHT, chunk, gx,gy,gz);
   }
 
   public PacketB2E(byte cmd, float f1, float f2, float f3, int i1) {
