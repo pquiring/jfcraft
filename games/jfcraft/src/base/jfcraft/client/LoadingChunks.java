@@ -56,15 +56,10 @@ public class LoadingChunks extends RenderScreen {
       o_back = createMenu(gl);
     }
 
-    Chunk chunks[] = client.world.chunks.getChunks();
-
-    int cx = Static.floor(client.player.pos.x / 16.0f);
-    int cz = Static.floor(client.player.pos.z / 16.0f);
-
-    client.world.chunks.doBuildChunks = true;
-    client.world.chunks.buildChunks(chunks);
-    client.world.chunks.doCopyChunks = true;
-    client.world.chunks.copyChunks(chunks, gl);
+    client.chunkBuilder.signal();
+    client.chunkBuilder.process();
+    client.chunkCopier.signal();
+    client.chunkCopier.process(gl);
 
     reset();
 

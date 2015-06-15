@@ -25,9 +25,9 @@ public class PacketWorld extends Packet {
   //process on client side
   public void process(Client client) {
     client.world = world;
-    client.world.init();
-    client.world.chunks = new Chunks();
     Static.world.set(world);
+    client.world.init();
+    client.world.chunks = new Chunks(true);
     if (!client.clientTransport.isLocal()) {
       client.world.assignIDs();
     }

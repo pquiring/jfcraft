@@ -24,13 +24,13 @@ import jfcraft.plugin.PluginLoader;
 public class RenderEngine implements WindowListener, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener
 , FocusListener, GLInterface {
   public static ArrayList<AssetImage> animatedTextures = new ArrayList<AssetImage>();
-  private java.util.Timer glTimer, fpsTimer;
+  private java.util.Timer frTimer, fpsTimer, hsTimer;
   private final Object fpsLock = new Object();
   private int fpsCounter;
 
   private Component comp, focus;
 
-  private final int FPS = 30 * 2;
+  private final int FPS = 100;
 
   private boolean ready = false;
 
@@ -153,13 +153,19 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
     ready = true;
 
     //setup timers
-    glTimer = new java.util.Timer();
+    frTimer = new java.util.Timer();
     int delay = 1000 / FPS;
-    glTimer.scheduleAtFixedRate(new TimerTask() {
+    frTimer.scheduleAtFixedRate(new TimerTask() {
       public final void run() {
-        frame();
+        nextFrame();
       }
     }, delay, delay);
+    hsTimer = new java.util.Timer();
+    hsTimer.scheduleAtFixedRate(new TimerTask() {
+      public final void run() {
+        repaint();
+      }
+    }, 5, 5);
     fpsTimer = new java.util.Timer();
     fpsTimer.scheduleAtFixedRate(new TimerTask() {
       public void run() {
@@ -183,8 +189,15 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
     }
   }
 
-  private final void frame() {
+  private final void repaint() {
     comp.repaint();
+  }
+
+  private boolean nextFrame;
+  private boolean processed;
+
+  private final void nextFrame() {
+    nextFrame = true;
   }
 
   public void render(GL gl) {
@@ -198,10 +211,16 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
         long start = System.currentTimeMillis();
         gl.glDepthFunc(GL.GL_LEQUAL);
         synchronized(screenLock) {
-          screen.doSwap = true;
-          screen.render(gl, (int)Static.width, (int)Static.height);
-          if (screen.doSwap) {
+          if (nextFrame && processed) {
+            screen.render(gl, (int)Static.width, (int)Static.height);
             gl.swap();
+            nextFrame = false;
+            processed = false;
+          } else {
+            processed = true;
+            if (RenderScreen.game != null) {
+              RenderScreen.game.process(gl);
+            }
           }
         }
         long stop = System.currentTimeMillis();

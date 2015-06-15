@@ -17,10 +17,14 @@ import jfcraft.data.*;
 import jfcraft.server.*;
 import jfcraft.entity.*;
 
-public class Chunks {
+public class Chunks extends ClientServer {
   //cache of all chunks
   private HashMap<ChunkKey, Chunk> cache = new HashMap<ChunkKey, Chunk>();
   private Object lock = new Object();  //lock access to cache
+
+  public Chunks(boolean isClient) {
+    super(isClient);
+  }
 
   //client/server side (may return null)
   public Chunk getChunk(int dim, int cx, int cz) {
@@ -93,8 +97,6 @@ public class Chunks {
   }
 
   public synchronized void addChunk(Chunk chunk) {
-    boolean server = Static.isServer();
-    boolean client = !server;
     ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cz);
 //    Static.log("addChunk:" + cid);
     synchronized(lock) {
@@ -104,14 +106,13 @@ public class Chunks {
         return;
       }
     }
-    if (client) chunk.createObjects();
+    if (isClient) chunk.createObjects();
     //add entities to cache and generate uid's if server
     int cnt = chunk.entities.size();
-    World world = Static.world();
     for(int a=0;a<cnt;) {
       EntityBase e = chunk.entities.get(a);
       e.init();
-      if (server) {
+      if (isServer) {
         if (e.id == Entities.PLAYER) {
           //player saved to disk somehow???
           chunk.entities.remove(a);
@@ -143,6 +144,9 @@ public class Chunks {
     if (N != null) {
       N.S = chunk;
       N.adjCount++;
+      if (isClient && N.adjCount == 8) {
+        Static.client.chunkBuilder.add(N);
+      }
       chunk.N = N;
       chunk.adjCount++;
     }
@@ -150,6 +154,9 @@ public class Chunks {
     if (S != null) {
       S.N = chunk;
       S.adjCount++;
+      if (isClient && S.adjCount == 8) {
+        Static.client.chunkBuilder.add(S);
+      }
       chunk.S = S;
       chunk.adjCount++;
     }
@@ -157,6 +164,9 @@ public class Chunks {
     if (E != null) {
       E.W = chunk;
       E.adjCount++;
+      if (isClient && E.adjCount == 8) {
+        Static.client.chunkBuilder.add(E);
+      }
       chunk.E = E;
       chunk.adjCount++;
     }
@@ -164,6 +174,9 @@ public class Chunks {
     if (W != null) {
       W.E = chunk;
       W.adjCount++;
+      if (isClient && W.adjCount == 8) {
+        Static.client.chunkBuilder.add(W);
+      }
       chunk.W = W;
       chunk.adjCount++;
     }
@@ -171,25 +184,40 @@ public class Chunks {
     Chunk NE = getChunk(chunk.dim, chunk.cx + 1, chunk.cz - 1);
     if (NE != null) {
       NE.adjCount++;
+      if (isClient && NE.adjCount == 8) {
+        Static.client.chunkBuilder.add(NE);
+      }
       chunk.adjCount++;
     }
     Chunk NW = getChunk(chunk.dim, chunk.cx - 1, chunk.cz - 1);
     if (NW != null) {
       NW.adjCount++;
+      if (isClient && NW.adjCount == 8) {
+        Static.client.chunkBuilder.add(NW);
+      }
       chunk.adjCount++;
     }
     Chunk SE = getChunk(chunk.dim, chunk.cx + 1, chunk.cz + 1);
     if (SE != null) {
       SE.adjCount++;
+      if (isClient && SE.adjCount == 8) {
+        Static.client.chunkBuilder.add(SE);
+      }
       chunk.adjCount++;
     }
     Chunk SW = getChunk(chunk.dim, chunk.cx - 1, chunk.cz + 1);
     if (SW != null) {
       SW.adjCount++;
+      if (isClient && SW.adjCount == 8) {
+        Static.client.chunkBuilder.add(SW);
+      }
       chunk.adjCount++;
     }
     synchronized(lock) {
       cache.put(key.clone(), chunk);
+    }
+    if (isClient && chunk.adjCount == 8) {
+      Static.client.chunkBuilder.add(chunk);
     }
     key.free();
   }
@@ -230,7 +258,6 @@ public class Chunks {
     if (SW != null) {
       SW.adjCount--;
     }
-    World world = Static.world();
     int cnt = chunk.entities.size();
     for(int a=0;a<cnt;a++) {
       EntityBase e = chunk.entities.get(a);
@@ -382,95 +409,5 @@ public class Chunks {
     synchronized(lock) {
       cache.clear();
     }
-  }
-
-  public boolean doLightChunks;
-  private boolean lightingChunks;
-  public boolean doBuildChunks;
-  private boolean buildingChunks;
-  public boolean doCopyChunks;
-  private boolean copyingChunks;
-
-  private Object LBC = new Object();
-
-  public boolean lightChunks(Chunk chunks[]) {
-    if (!doLightChunks) return false;
-    synchronized(LBC) {
-      if (buildingChunks) return false;
-      lightingChunks = true;
-    }
-    int cnt = 0;
-//    Static.log("light start");
-    long p1 = System.nanoTime() / 1000000;
-    lightingChunks = true;
-    for(int a=0;a<chunks.length;a++) {
-      Chunk chunk = chunks[a];
-      if (!chunk.canLights()) continue;
-      if (chunk.needRelight) {
-        Static.dims.dims[chunk.dim].getLightingClient().update(chunk);
-        cnt++;
-      }
-    }
-    lightingChunks = false;
-    doLightChunks = false;
-    long p2 = System.nanoTime() / 1000000;
-//    if (cnt > 0) Static.log("light:" + cnt + ",ms=" + (p2-p1));
-    if (cnt == 0) return false;
-    doBuildChunks = true;
-    return true;
-  }
-
-  public boolean buildChunks(Chunk chunks[]) {
-    if (!doBuildChunks) return false;
-    synchronized(LBC) {
-      if (lightingChunks) return false;
-      if (copyingChunks) return false;
-      buildingChunks = true;
-    }
-    int cnt = 0;
-//    Static.log("            build start");
-    long p1 = System.nanoTime() / 1000000;
-    buildingChunks = true;
-    for(int a=0;a<chunks.length;a++) {
-      Chunk chunk = chunks[a];
-      if (!chunk.canRender()) continue;
-      if (chunk.needBuildBuffers) {
-        chunk.buildBuffers();
-        cnt++;
-      }
-    }
-    buildingChunks = false;
-    doBuildChunks = false;
-    long p2 = System.nanoTime() / 1000000;
-//    if (cnt > 0) Static.log("            build:" + cnt + ",ms=" + (p2-p1));
-    if (cnt == 0) return false;
-    doCopyChunks = true;
-    return true;
-  }
-
-  public boolean copyChunks(Chunk chunks[], GL gl) {
-    if (!doCopyChunks) return false;
-    synchronized(LBC) {
-      if (buildingChunks) return false;
-      copyingChunks = true;
-    }
-    int cnt = 0;
-//    Static.log("                               copy start");
-    long p1 = System.nanoTime() / 1000000;
-    copyingChunks = true;
-    for(int a=0;a<chunks.length;a++) {
-      Chunk chunk = chunks[a];
-      if (!chunk.canRender()) continue;
-      if (chunk.needCopyBuffers) {
-//        Static.log("copy:" + chunk);
-        chunk.copyBuffers(gl);
-        cnt++;
-      }
-    }
-    copyingChunks = false;
-    long p2 = System.nanoTime() / 1000000;
-//    if (cnt > 0) Static.log("                            copy:" + cnt + ":ms=" + (p2-p1));
-    doCopyChunks = false;
-    return cnt > 0;
   }
 }

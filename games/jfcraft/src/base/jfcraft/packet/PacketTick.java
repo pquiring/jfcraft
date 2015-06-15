@@ -30,7 +30,7 @@ public class PacketTick extends Packet {
     for(int a=0;a<cnt;a++) {
       packets[a].process(client);
     }
-    client.chunkWorker.process();
+    client.chunkLighter.signal();
   }
 
   //process on server side

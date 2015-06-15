@@ -32,6 +32,7 @@ public class Server {
   public boolean active = true;
 
   private Timer tickTimer, lightTimer, saveTimer;
+  public ChunkQueueLight chunkLighter;
   private static SerialCoder coder = new SerialCoder();  //used to save/load Player (sync)
   private ServerSocket ss;
   private VoIPServer voip_server;
@@ -48,7 +49,7 @@ public class Server {
     world = new World();
     Static.world.set(world);
     world.init();
-    world.chunks = new Chunks();
+    world.chunks = new Chunks(false);
     world.name = worldName;
     world.type = "default";
     world.seed = 0;  //new Random().nextLong();  //use a real seed later
@@ -68,7 +69,7 @@ public class Server {
     if (world == null) return false;
     Static.world.set(world);
     world.init();
-    world.chunks = new Chunks();
+    world.chunks = new Chunks(false);
     world.assignIDs();
     startWorld();
     return true;
@@ -112,23 +113,18 @@ public class Server {
         }
       }
     }, 50, 50);
+    chunkLighter = new ChunkQueueLight(null, false);
     lightTimer = new Timer();
     lightTimer.scheduleAtFixedRate(new TimerTask() {
       private boolean initThread = true;
       public void run() {
         if (initThread) {
-          initTimer("Server lighting", true);
+          initTimer("Server lighting timer", true);
           initThread = false;
         }
         try {
-          long start = System.nanoTime();
-          doLighting();
-          long stop = System.nanoTime();
-          long diff = (stop - start) / 1000000;
-          if (Static.debugProfile && diff > 50) {
-            Static.log("server lighting:" + diff + "ms : nChunks=" + nChunks + ",nThings=" + nThings + ",p=" + (p2-p1) + "," + (p3-p2) + "," + (p4-p3) + "," + (p5-p4) + "," + (p6-p5));
-          }
-          Static.tick = (int)diff;
+          chunkLighter.signal();
+          chunkLighter.process();
         } catch (Throwable t) {
           Static.log(t);
         }
@@ -158,6 +154,9 @@ public class Server {
     if (tickTimer != null) {
       tickTimer.cancel();
       tickTimer = null;
+    }
+    if (chunkLighter != null) {
+      chunkLighter = null;
     }
     if (lightTimer != null) {
       lightTimer.cancel();
@@ -983,16 +982,6 @@ public class Server {
         queue.add(req);
         lock.notify();
       }
-    }
-  }
-
-  private void doLighting() {
-    Chunk chunks[] = world.chunks.getChunks();
-    for(int a=0;a<chunks.length;a++) {
-      Chunk chunk = chunks[a];
-      if (!chunk.needRelight) continue;
-      if (!chunk.canLights()) continue;
-      Static.dims.dims[chunk.dim].getLightingServer().update(chunk);
     }
   }
 

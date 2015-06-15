@@ -46,8 +46,6 @@ public abstract class RenderScreen {
   private static RenderBuffers o_bars50 = new RenderBuffers();
   private static RenderData data = new RenderData();
 
-  public static boolean doSwap;  //swap gl buffers after render() [default = true]
-
   public static GLMatrix identity = new GLMatrix();
 
   public byte id;
@@ -65,6 +63,7 @@ public abstract class RenderScreen {
   }
 
   public abstract void render(GL gl, int width, int height);
+  public void process() {};
   public void resize(GL gl, int width, int height) {}
   public void mousePressed(int x,int y,int but) {
     for(int a=0;a<buttons.size();a++) {
