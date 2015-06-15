@@ -18,7 +18,7 @@ import jfcraft.data.*;
 import jfcraft.entity.*;
 import jfcraft.opengl.*;
 
-public class Chunk implements SerialClass, SerialCreator {
+public class Chunk extends ClientServer implements SerialClass, SerialCreator {
   public int dim,cx,cz;
   //Blocks order : Y Z X
   //char is 16bits unsigned which allows full usage
@@ -104,10 +104,13 @@ public class Chunk implements SerialClass, SerialCreator {
   public static final int buffersCount = 2; //DEST_NORMAL + DEST_ALPHA  (excluding DEST_TEXT)
 
   /** Old Chunk read from file/network. */
-  public Chunk() {}
+  public Chunk() {
+    super(Static.isClient());
+  }
 
-  /** New Chunk */
+  /** New Chunk created on server side only */
   public Chunk(int dim, int cx, int cz) {
+    super(false);
     this.dim = dim;
     this.cx = cx;
     this.cz = cz;
@@ -185,6 +188,14 @@ public class Chunk implements SerialClass, SerialCreator {
       }
       needRelight = true;
       dirty = true;
+      //TODO : calc precise coords
+      if (!needLights) {
+        if (isClient) {
+          Static.client.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+        } else {
+          Static.server.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+        }
+      }
     }
   }
 
@@ -211,6 +222,13 @@ public class Chunk implements SerialClass, SerialCreator {
       }
       needRelight = true;
       dirty = true;
+      if (!needLights) {
+        if (isClient) {
+          Static.client.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+        } else {
+          Static.server.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+        }
+      }
     }
   }
 
@@ -237,6 +255,13 @@ public class Chunk implements SerialClass, SerialCreator {
       }
       needRelight = true;
       dirty = true;
+      if (!needLights) {
+        if (isClient) {
+          Static.client.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+        } else {
+          Static.server.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+        }
+      }
     }
   }
 
@@ -277,6 +302,13 @@ public class Chunk implements SerialClass, SerialCreator {
       }
       needRelight = true;
       dirty = true;
+      if (!needLights) {
+        if (isClient) {
+          Static.client.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+        } else {
+          Static.server.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+        }
+      }
     }
   }
 
@@ -923,6 +955,9 @@ public class Chunk implements SerialClass, SerialCreator {
         cracks.add(crack);
       }
       needBuildBuffers = true;
+      if (isClient) {
+        Static.client.chunkBuilder.add(this);
+      }
       dirty = true;
     }
   }
@@ -934,6 +969,9 @@ public class Chunk implements SerialClass, SerialCreator {
         if (c.x == x && c.y == y && c.z == z) {
           cracks.remove(a);
           needBuildBuffers = true;
+          if (isClient) {
+            Static.client.chunkBuilder.add(this);
+          }
           dirty = true;
           return;
         }

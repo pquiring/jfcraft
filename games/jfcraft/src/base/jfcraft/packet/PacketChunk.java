@@ -29,7 +29,6 @@ public class PacketChunk extends Packet {
     client.removeChunkPending(chunk.cx, chunk.cz);
   }
 
-
   @Override
   public boolean write(SerialBuffer buffer, boolean file) {
     super.write(buffer, file);

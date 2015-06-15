@@ -9,5 +9,5 @@ import jfcraft.data.*;
 
 public interface LightingBase {
   public void light(Chunk chunk);  //generator lighting
-  public void update(Chunk chunk);  //update lighting
+  public void update(Chunk chunk, int x,int y,int z,int dx,int dy, int dz);  //update lighting
 }

@@ -97,6 +97,16 @@ public class Game extends RenderScreen {
 
   private Coords c = new Coords();
 
+  public void process(GL gl) {
+    if (advanceAnimation) {
+      RenderEngine.advanceAnimation(gl);
+      advanceAnimation = false;
+    }
+    client.chunkLighter.process();
+    client.chunkBuilder.process();
+    client.chunkCopier.process(gl);
+  }
+
   public void render(GL gl) {
     setMenuSize(512, 512);
 
@@ -133,17 +143,6 @@ public class Game extends RenderScreen {
     int cz = Static.floor(client.player.pos.z / 16.0f);
 
     Chunk chunks[] = client.world.chunks.getChunks();
-
-    if (frame % 2 == 0) {
-      if (advanceAnimation) {
-        RenderEngine.advanceAnimation(gl);
-        advanceAnimation = false;
-      }
-      world.chunks.copyChunks(chunks, gl);
-      frame++;
-      doSwap = false;
-      return;
-    }
 
     //now render stuff
     gl.glDepthMask(true);

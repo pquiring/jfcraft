@@ -180,9 +180,9 @@ public class Client {
         }
       }
     }, 50, 50);
-    chunkWorker = new ChunkWorker();
-    chunkWorker.client = this;
-    chunkWorker.start();
+    chunkCopier = new ChunkQueueCopy();
+    chunkBuilder = new ChunkQueueBuild(chunkCopier);
+    chunkLighter = new ChunkQueueLight(chunkBuilder, true);
   }
 
   public void stopTimers() {
@@ -195,9 +195,8 @@ public class Client {
       chunkTimer.cancel();
       chunkTimer = null;
     }
-    if (chunkWorker != null) {
-      chunkWorker.close();
-      chunkWorker = null;
+    if (chunkLighter != null) {
+      chunkLighter = null;
     }
   }
 
@@ -603,45 +602,9 @@ public class Client {
     }
   }
 
-  public ChunkWorker chunkWorker;
-
-  public static class ChunkWorker extends Thread {
-    public Object lock = new Object();
-    public boolean active = true;
-    public Client client;
-    public void run() {
-      client.initThread("Client Chunk Worker", true);
-      while (active) {
-//        Static.log("ChunkWorker waiting");
-        synchronized(lock) {
-          try {lock.wait();} catch (Exception e) {}
-        }
-        if (!active) break;
-        Chunk chunks[] = client.world.chunks.getChunks();
-        try {
-          client.world.chunks.doLightChunks = true;
-          client.world.chunks.lightChunks(chunks);
-          client.world.chunks.doBuildChunks = true;
-          client.world.chunks.buildChunks(chunks);
-        } catch (Exception e) {
-          Static.log(e);
-        }
-        client.world.chunks.doCopyChunks = true;
-      }
-      Static.log("Thread ended:" + Thread.currentThread().getName());
-    }
-    public void close() {
-      active = false;
-      synchronized(lock) {
-        lock.notify();
-      }
-    }
-    public void process() {
-      synchronized(lock) {
-        lock.notify();
-      }
-    }
-  }
+  public ChunkQueueLight chunkLighter;
+  public ChunkQueueBuild chunkBuilder;
+  public ChunkQueueCopy chunkCopier;
 
   public void startVoIP(String server) {
     final String _server = server;

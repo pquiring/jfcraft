@@ -40,7 +40,9 @@ public class PauseMenu extends RenderScreen {
       game.client.clientTransport.close();
       game.client.stopTimers();
       game.client.stopVoIP();
-      if (game.client.isLocal) {
+      boolean isLocal = game.client.isLocal;
+      game = null;
+      if (isLocal) {
         WaitMenu wait = (WaitMenu)Static.screens.screens[Client.WAIT];
         wait.setup("Please wait...", "Shutting down server");
         Static.video.setScreen(wait);
