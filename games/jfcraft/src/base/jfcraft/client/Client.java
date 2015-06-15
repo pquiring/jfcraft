@@ -7,7 +7,6 @@ package jfcraft.client;
  * Created : Mar 25, 2014
  */
 
-import jfcraft.packet.Packet;
 import java.util.*;
 import java.awt.event.*;
 
@@ -605,49 +604,29 @@ public class Client {
   }
 
   public ChunkWorker chunkWorker;
-  public static final int LIGHT = 0;
-
-  public static class ChunkRequest {
-    public Chunk chunk;
-    public int type;
-    public int x,y,z;
-    public boolean equals(ChunkRequest req) {
-      if (req.chunk != chunk) return false;
-      if (req.type != type) return false;
-      if (req.x != x) return false;
-      if (req.y != y) return false;
-      if (req.z != z) return false;
-      return true;
-    }
-  }
 
   public static class ChunkWorker extends Thread {
     public Object lock = new Object();
     public boolean active = true;
-    public ArrayList<ChunkRequest> queue = new ArrayList<ChunkRequest>();
     public Client client;
     public void run() {
       client.initThread("Client Chunk Worker", true);
-      ChunkRequest request;
       while (active) {
+//        Static.log("ChunkWorker waiting");
         synchronized(lock) {
-          if (queue.isEmpty()) {
-            try {lock.wait();} catch (Exception e) {}
-            continue;
-          }
-          request = queue.remove(0);
+          try {lock.wait();} catch (Exception e) {}
         }
+        if (!active) break;
+        Chunk chunks[] = client.world.chunks.getChunks();
         try {
-          switch (request.type) {
-            case LIGHT: {
-              Chunk chunk = request.chunk;
-              Static.dims.dims[chunk.dim].getLightingClient().update(chunk, request.x, request.y, request.z);
-              break;
-            }
-          }
+          client.world.chunks.doLightChunks = true;
+          client.world.chunks.lightChunks(chunks);
+          client.world.chunks.doBuildChunks = true;
+          client.world.chunks.buildChunks(chunks);
         } catch (Exception e) {
           Static.log(e);
         }
+        client.world.chunks.doCopyChunks = true;
       }
       Static.log("Thread ended:" + Thread.currentThread().getName());
     }
@@ -657,23 +636,8 @@ public class Client {
         lock.notify();
       }
     }
-    private boolean hasRequest(ChunkRequest req) {
-      int cnt = queue.size();
-      for(int a=0;a<cnt;a++) {
-        if (queue.get(a).equals(req)) return true;
-      }
-      return false;
-    }
-    public void add(int type, Chunk chunk, int x,int y,int z) {
-      ChunkRequest req = new ChunkRequest();
-      req.type = type;
-      req.chunk = chunk;
-      req.x = x;
-      req.y = y;
-      req.z = z;
+    public void process() {
       synchronized(lock) {
-        if (hasRequest(req)) return;
-        queue.add(req);
         lock.notify();
       }
     }

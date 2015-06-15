@@ -45,7 +45,6 @@ public class PacketE2B extends Packet {
       chunk.delEntity(mb);
       client.world.delEntity(uid);
     }
-    client.chunkWorker.add(Client.LIGHT, chunk, gx,gy,gz);
   }
 
   @Override

@@ -11,6 +11,7 @@ import java.io.*;
 import java.util.*;
 
 import javaforce.*;
+import javaforce.gl.*;
 
 import jfcraft.data.*;
 import jfcraft.server.*;
@@ -51,7 +52,7 @@ public class Chunks {
         chunk = Static.dims.dims[dim].getGeneratorPhase1().generate(dim,cx,cz);
       } else {
         //test - delete all entities from disk
-        if (false && chunk.entities.size() > 0) {
+        if (Static.debugPurgeEntities && chunk.entities.size() > 0) {
           chunk.entities.clear();
           chunk.dirty = true;
         }
@@ -138,7 +139,6 @@ public class Chunks {
       a++;
     }
     //update links
-    if (client) chunk.dirty = true;
     Chunk N = getChunk(chunk.dim, chunk.cx, chunk.cz - 1);
     if (N != null) {
       N.S = chunk;
@@ -254,7 +254,7 @@ public class Chunks {
     Chunk chunks[];
 //    long p1 = System.nanoTime() / 1000000;
     synchronized(lock) {
-      chunks = cache.values().toArray(new Chunk[0]);
+      chunks = cache.values().toArray(new Chunk[cache.size()]);
     }
 //    long p2 = System.nanoTime() / 1000000;
 //    long diff = p2 - p1;
@@ -382,5 +382,95 @@ public class Chunks {
     synchronized(lock) {
       cache.clear();
     }
+  }
+
+  public boolean doLightChunks;
+  private boolean lightingChunks;
+  public boolean doBuildChunks;
+  private boolean buildingChunks;
+  public boolean doCopyChunks;
+  private boolean copyingChunks;
+
+  private Object LBC = new Object();
+
+  public boolean lightChunks(Chunk chunks[]) {
+    if (!doLightChunks) return false;
+    synchronized(LBC) {
+      if (buildingChunks) return false;
+      lightingChunks = true;
+    }
+    int cnt = 0;
+//    Static.log("light start");
+    long p1 = System.nanoTime() / 1000000;
+    lightingChunks = true;
+    for(int a=0;a<chunks.length;a++) {
+      Chunk chunk = chunks[a];
+      if (!chunk.canLights()) continue;
+      if (chunk.needRelight) {
+        Static.dims.dims[chunk.dim].getLightingClient().update(chunk);
+        cnt++;
+      }
+    }
+    lightingChunks = false;
+    doLightChunks = false;
+    long p2 = System.nanoTime() / 1000000;
+//    if (cnt > 0) Static.log("light:" + cnt + ",ms=" + (p2-p1));
+    if (cnt == 0) return false;
+    doBuildChunks = true;
+    return true;
+  }
+
+  public boolean buildChunks(Chunk chunks[]) {
+    if (!doBuildChunks) return false;
+    synchronized(LBC) {
+      if (lightingChunks) return false;
+      if (copyingChunks) return false;
+      buildingChunks = true;
+    }
+    int cnt = 0;
+//    Static.log("            build start");
+    long p1 = System.nanoTime() / 1000000;
+    buildingChunks = true;
+    for(int a=0;a<chunks.length;a++) {
+      Chunk chunk = chunks[a];
+      if (!chunk.canRender()) continue;
+      if (chunk.needBuildBuffers) {
+        chunk.buildBuffers();
+        cnt++;
+      }
+    }
+    buildingChunks = false;
+    doBuildChunks = false;
+    long p2 = System.nanoTime() / 1000000;
+//    if (cnt > 0) Static.log("            build:" + cnt + ",ms=" + (p2-p1));
+    if (cnt == 0) return false;
+    doCopyChunks = true;
+    return true;
+  }
+
+  public boolean copyChunks(Chunk chunks[], GL gl) {
+    if (!doCopyChunks) return false;
+    synchronized(LBC) {
+      if (buildingChunks) return false;
+      copyingChunks = true;
+    }
+    int cnt = 0;
+//    Static.log("                               copy start");
+    long p1 = System.nanoTime() / 1000000;
+    copyingChunks = true;
+    for(int a=0;a<chunks.length;a++) {
+      Chunk chunk = chunks[a];
+      if (!chunk.canRender()) continue;
+      if (chunk.needCopyBuffers) {
+//        Static.log("copy:" + chunk);
+        chunk.copyBuffers(gl);
+        cnt++;
+      }
+    }
+    copyingChunks = false;
+    long p2 = System.nanoTime() / 1000000;
+//    if (cnt > 0) Static.log("                            copy:" + cnt + ":ms=" + (p2-p1));
+    doCopyChunks = false;
+    return cnt > 0;
   }
 }

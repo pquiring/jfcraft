@@ -129,18 +129,17 @@ public class Game extends RenderScreen {
       recreateMenu(gl, o_active, 75 + client.activeSlot * 40,470, 1,45, 46,46);
     }
 
-    Chunk chunks[] = client.world.chunks.getChunks();
-
     int cx = Static.floor(client.player.pos.x / 16.0f);
     int cz = Static.floor(client.player.pos.z / 16.0f);
 
-    //light/build/copy as needed every other frame
+    Chunk chunks[] = client.world.chunks.getChunks();
+
     if (frame % 2 == 0) {
       if (advanceAnimation) {
         RenderEngine.advanceAnimation(gl);
         advanceAnimation = false;
       }
-      setupChunks(gl, chunks, world, dim, cx, cz);
+      world.chunks.copyChunks(chunks, gl);
       frame++;
       doSwap = false;
       return;
@@ -197,8 +196,8 @@ public class Game extends RenderScreen {
       chunk.inRange = false;
       if (!chunk.canRender()) continue;
       if (chunk.isAllEmpty) continue;
-      if (abs(chunk.cx - cx) > Settings.current.loadRange) continue;
-      if (abs(chunk.cz - cz) > Settings.current.loadRange) continue;
+      if (Static.abs(chunk.cx - cx) > Settings.current.loadRange) continue;
+      if (Static.abs(chunk.cz - cz) > Settings.current.loadRange) continue;
       if (!chunk.ready) continue;
       chunk.inRange = true;
       obj = chunk.dest.getBuffers(Chunk.DEST_NORMAL);

@@ -176,7 +176,6 @@ public class PacketPos extends Packet {
               client.crack.dmg = 0.0f;
               client.s1.block.destroy(client, client.s1, true);
               //??? might need broadcastDelCrack() if destroy() does not call broadcastSetBlock() ???
-              server.chunkWorker.add(Server.LIGHT, client.s1.chunk, client.s1.gx, client.s1.gy, client.s1.gz);
               server.broadcastSound(client.player.dim, client.player.pos.x, client.player.pos.y, client.player.pos.z, Sounds.SOUND_BREAK, 1);
             } else {
               server.broadcastAddCrack(client.s1.chunk.dim, client.s1.x, client.s1.y, client.s1.z, client.crack.dmg);
@@ -260,8 +259,6 @@ public class PacketPos extends Packet {
                     item.clear();
                   }
                   client.serverTransport.setInvItem((client.activeSlot), item);
-                  //redo lighting on chunk
-                  server.chunkWorker.add(Server.LIGHT, client.s1.chunk, client.s1.gx, client.s1.gy, client.s1.gz);
                   return;
                 }
               }
@@ -286,7 +283,6 @@ public class PacketPos extends Packet {
                     item.clear();
                   }
                   client.serverTransport.setInvItem((client.activeSlot), item);
-                  server.chunkWorker.add(Server.LIGHT, client.s1.chunk, client.s1.gx, client.s1.gy, client.s1.gz);
                 }
               }
             }

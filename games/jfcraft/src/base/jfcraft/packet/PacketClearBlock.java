@@ -38,7 +38,6 @@ public class PacketClearBlock extends Packet {
     if (chunk == null) return;
     chunk.clearBlock(gx, gy, gz);
     chunk.delCrack(gx, gy, gz);
-    client.chunkWorker.add(Client.LIGHT, chunk, gx,gy,gz);
   }
 
   @Override

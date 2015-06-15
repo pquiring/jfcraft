@@ -108,7 +108,6 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
     }
   }
 
-
   public Chunk generate(int dim, int cx, int cz) {
     if (world == null) {
       world = Static.server.world;
@@ -134,7 +133,6 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
 
   public void generate_custom() {
     //TODO
-    chunk.dirty = true;
   }
 
   public void generate_default() {

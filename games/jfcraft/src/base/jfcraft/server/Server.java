@@ -31,7 +31,7 @@ public class Server {
   public Object clientsLock = new Object();  //lock to remove client
   public boolean active = true;
 
-  private Timer tickTimer, saveTimer;
+  private Timer tickTimer, lightTimer, saveTimer;
   private static SerialCoder coder = new SerialCoder();  //used to save/load Player (sync)
   private ServerSocket ss;
   private VoIPServer voip_server;
@@ -112,6 +112,28 @@ public class Server {
         }
       }
     }, 50, 50);
+    lightTimer = new Timer();
+    lightTimer.scheduleAtFixedRate(new TimerTask() {
+      private boolean initThread = true;
+      public void run() {
+        if (initThread) {
+          initTimer("Server lighting", true);
+          initThread = false;
+        }
+        try {
+          long start = System.nanoTime();
+          doLighting();
+          long stop = System.nanoTime();
+          long diff = (stop - start) / 1000000;
+          if (Static.debugProfile && diff > 50) {
+            Static.log("server lighting:" + diff + "ms : nChunks=" + nChunks + ",nThings=" + nThings + ",p=" + (p2-p1) + "," + (p3-p2) + "," + (p4-p3) + "," + (p5-p4) + "," + (p6-p5));
+          }
+          Static.tick = (int)diff;
+        } catch (Throwable t) {
+          Static.log(t);
+        }
+      }
+    }, 50, 50);
     saveTimer = new Timer();
     saveTimer.schedule(new TimerTask() {
       private boolean initThread = true;
@@ -136,6 +158,10 @@ public class Server {
     if (tickTimer != null) {
       tickTimer.cancel();
       tickTimer = null;
+    }
+    if (lightTimer != null) {
+      lightTimer.cancel();
+      lightTimer = null;
     }
     if (saveTimer != null) {
       saveTimer.cancel();
@@ -907,8 +933,6 @@ public class Server {
   }
 
   public ChunkWorker chunkWorker;
-  public static final int CHUNK = 0;
-  public static final int LIGHT = 1;
 
   public static class ChunkRequest {
     public int dim;
@@ -916,7 +940,6 @@ public class Server {
     public int x,y,z;  //update
     public ServerTransport transport;
     public Chunk chunk;
-    public int type;
   }
 
   public static class ChunkWorker extends Thread {
@@ -936,17 +959,8 @@ public class Server {
           request = queue.remove(0);
         }
         try {
-          switch (request.type) {
-            case CHUNK: {
-              Chunk chunk = world.chunks.getChunk2(request.dim, request.cx, request.cz, true, true, true);
-              request.transport.sendChunk(chunk);
-              break;
-            }
-            case LIGHT: {
-              Static.dims.dims[request.dim].getLightingServer().update(request.chunk, request.x, request.y, request.z);
-              break;
-            }
-          }
+          Chunk chunk = world.chunks.getChunk2(request.dim, request.cx, request.cz, true, true, true);
+          request.transport.sendChunk(chunk);
         } catch (Exception e) {
           Static.log(e);
         }
@@ -959,9 +973,8 @@ public class Server {
         lock.notify();
       }
     }
-    public void add(int type, int dim, int cx, int cz, ServerTransport transport) {
+    public void add(int dim, int cx, int cz, ServerTransport transport) {
       ChunkRequest req = new ChunkRequest();
-      req.type = type;
       req.dim = dim;
       req.cx = cx;
       req.cz = cz;
@@ -971,17 +984,15 @@ public class Server {
         lock.notify();
       }
     }
-    public void add(int type, Chunk chunk, int x,int y,int z) {
-      ChunkRequest req = new ChunkRequest();
-      req.type = type;
-      req.chunk = chunk;
-      req.x = x;
-      req.y = y;
-      req.z = z;
-      synchronized(lock) {
-        queue.add(req);
-        lock.notify();
-      }
+  }
+
+  private void doLighting() {
+    Chunk chunks[] = world.chunks.getChunks();
+    for(int a=0;a<chunks.length;a++) {
+      Chunk chunk = chunks[a];
+      if (!chunk.needRelight) continue;
+      if (!chunk.canLights()) continue;
+      Static.dims.dims[chunk.dim].getLightingServer().update(chunk);
     }
   }
 
