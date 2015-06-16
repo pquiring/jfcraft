@@ -36,7 +36,7 @@ public class PacketTeleport1 extends Packet {
     client.world.chunks.removeAll();
     client.spawnAreaChunksTodo = 1;
     client.spawnAreaChunksDone = 0;
-    LoadingChunks menu = (LoadingChunks)Static.screens.screens[Client.LOADING];
+    LoadingChunks menu = (LoadingChunks)Static.screens.screens[Client.LOADINGCHUNKS];
     menu.setup(client);
     Static.video.setScreen(menu);
   }

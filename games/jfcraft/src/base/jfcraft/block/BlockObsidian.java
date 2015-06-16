@@ -34,11 +34,12 @@ public class BlockObsidian extends BlockOpaque {
   //portal can be 21x21 max (inside dimensions) and must be rectangle in shape
   private boolean makePortal(Coords c) {
     Coords p = c.clone();
+    p.otherSide();
     p.adjacentBlock();  //air block that fire was set in
     int gx = p.gx;
     int gy = p.gy;
     int gz = p.gz;
-    Static.log("air=" + gx + "," + gy + "," + gz);
+//    Static.log("air=" + gx + "," + gy + "," + gz);
     int dx,dy,dz;
     char i;
     char f[] = new char[45*45];
@@ -91,7 +92,7 @@ public class BlockObsidian extends BlockOpaque {
         if (c.chunk.getID(gx+dx, gy+y, gz) != Blocks.OBSIDIAN) return false;
       }
       //we have a portal - fill it in with portal block
-      Static.log("portal:xy@" + gx + "," + gy + "," + gz);
+//      Static.log("portal:xy@" + gx + "," + gy + "," + gz);
       int bits = Chunk.makeBits(N, 0);
       for(int x=0;x<dx;x++) {
         for(int y=0;y<dy;y++) {
@@ -140,7 +141,7 @@ public class BlockObsidian extends BlockOpaque {
         if (c.chunk.getID(gx, gy+y, gz+dz) != Blocks.OBSIDIAN) return false;
       }
       //we have a portal - fill it in with portal block
-      Static.log("portal:zy@" + gx + "," + gy + "," + gz);
+//      Static.log("portal:zy@" + gx + "," + gy + "," + gz);
       int bits = Chunk.makeBits(E, 0);
       for(int z=0;z<dz;z++) {
         for(int y=0;y<dy;y++) {
