@@ -22,13 +22,13 @@ public class Player extends CreatureBase {
 
   public ExtraChest enderChest = new ExtraChest(0,0,0,3*9);
 
-  public transient Client client;
-  public transient EntityBase vehicle;
+  public Client client;
+  public EntityBase vehicle;
 
-  public transient int gainedLife, tookHungerDmg;
+  public int gainedLife, tookHungerDmg;
 
-  public transient float walkAngle;  //angle of legs/arms as walking
-  public transient float walkAngleDelta;
+  public float walkAngle;  //angle of legs/arms as walking
+  public float walkAngleDelta;
 
   //would like to move Render Assets to Entity, but it's static!!!
   //render assets
@@ -206,9 +206,11 @@ public class Player extends CreatureBase {
     mat.addTranslate(pos.x, pos.y, pos.z);
     gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
     if (moving) {
-      walkAngle += walkAngleDelta;
-      if ((walkAngle < -45.0) || (walkAngle > 45.0)) {
-        walkAngleDelta *= -1;
+      if (Static.advanceFrame) {
+        walkAngle += walkAngleDelta;
+        if ((walkAngle < -45.0) || (walkAngle > 45.0)) {
+          walkAngleDelta *= -1;
+        }
       }
     } else {
       walkAngle = 0.0f;

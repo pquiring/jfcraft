@@ -50,6 +50,7 @@ public class RenderData {
   public float rotate;
   public float rotate2;  //this fixes some objects upright
   public boolean yrotate;  //rotate on y-axis by rotate ang instead (ignores isDir)
+  public boolean doubleSided;
 
   public RenderData() {
     reset();

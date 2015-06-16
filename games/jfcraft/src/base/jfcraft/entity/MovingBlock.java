@@ -19,9 +19,9 @@ public class MovingBlock extends EntityBase {
   public int type;  //FALL or PUSH
   public int dir;
 
-  public transient RenderDest obj;
-  public transient int buffersIdx;
-  public transient Texture texture;
+  public RenderDest obj;
+  public int buffersIdx;
+  public Texture texture;
 
   //types
   public static final byte FALL = 0;

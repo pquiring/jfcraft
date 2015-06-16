@@ -12,8 +12,8 @@ import jfcraft.item.*;
 import jfcraft.opengl.*;
 
 public class EnderChest extends BlockEntity {
-  public transient float lidAngle;
-  public transient RenderDest dest;  //can not be static since chest can be damaged
+  public float lidAngle;
+  public RenderDest dest;  //can not be static since chest can be damaged
   public static GLModel model;
 
   //render assets

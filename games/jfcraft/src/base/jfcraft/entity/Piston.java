@@ -18,8 +18,8 @@ public class Piston extends BlockEntity {
   //persistent data
   public boolean sticky;
 
-  public transient float extend;
-  public transient RenderDest dest;  //can not be static, can be damaged
+  public float extend;
+  public RenderDest dest;  //can not be static, can be damaged
   public static GLModel model;
 
   public Piston() {

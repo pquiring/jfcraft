@@ -115,6 +115,12 @@ public class Game extends RenderScreen {
     setMenuSize(512, 512);
 
     gui_position = CENTER;
+    if (Static.tickFrame) {
+      Static.advanceFrame = true;
+      Static.tickFrame = false;
+    } else {
+      Static.advanceFrame = false;
+    }
 
     int dim = client.player.dim;
     if (!dim_env_inited[dim]) {

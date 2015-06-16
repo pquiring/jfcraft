@@ -16,10 +16,10 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.X;
 
 public class Domino extends BlockEntity {
-  public transient boolean fall;
-  public transient float dir;
+  public boolean fall;
+  public float dir;
 
-  public transient RenderDest dest;  //can not be static, can be damaged
+  public RenderDest dest;  //can not be static, can be damaged
   public static GLModel model;
   private static Texture texture;
   protected static String textureName;

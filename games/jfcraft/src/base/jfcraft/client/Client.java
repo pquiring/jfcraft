@@ -147,6 +147,7 @@ public class Client {
           initThread = false;
         }
         try {
+          Static.tickFrame = true;
           long start = System.currentTimeMillis();
           tick();
           long stop = System.currentTimeMillis();

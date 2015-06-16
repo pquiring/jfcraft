@@ -425,7 +425,7 @@ public class RenderBuffers implements Cloneable {
     addFace(f, data);
   }
 
-  /** Adds complex face for Blocks/Entities. */
+  /** Adds complex face for Blocks. */
   public void addFace(Face f, RenderData data) {
     f.rotate(data);
 
@@ -469,6 +469,9 @@ public class RenderBuffers implements Cloneable {
       addBlockLight(data.bl[data.adjLight ? data.dirSide : X]);
     }
     addPoly(new int[] {off+3,off+2,off+1,off+0});
+    if (data.doubleSided) {
+      addPoly(new int[] {off+0,off+1,off+2,off+3});
+    }
   }
 
   public int getVertexCount() {

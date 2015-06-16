@@ -18,8 +18,8 @@ import jfcraft.item.Item;
 import jfcraft.opengl.*;
 
 public class Cow extends CreatureBase {
-  public transient float walkAngle;  //angle of legs/arms as walking
-  public transient float walkAngleDelta;
+  public float walkAngle;  //angle of legs/arms as walking
+  public float walkAngleDelta;
   public static RenderDest dest;
 
   //render assets
@@ -138,9 +138,11 @@ public class Cow extends CreatureBase {
     mat.addTranslate(pos.x, pos.y, pos.z);
     gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
     if (moving) {
-      walkAngle += walkAngleDelta;
-      if ((walkAngle < -45.0) || (walkAngle > 45.0)) {
-        walkAngleDelta *= -1;
+      if (Static.advanceFrame) {
+        walkAngle += walkAngleDelta;
+        if ((walkAngle < -45.0) || (walkAngle > 45.0)) {
+          walkAngleDelta *= -1;
+        }
       }
     } else {
       walkAngle = 0.0f;
@@ -156,7 +158,7 @@ public class Cow extends CreatureBase {
     }
   }
 
-  public transient int walkLength;
+  public int walkLength;
 
   public void tick() {
     super.tick();

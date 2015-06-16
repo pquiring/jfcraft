@@ -37,7 +37,7 @@ public class World implements SerialClass, SerialCreator {
   public ArrayList<String> extraMap = new ArrayList<String>();
   //screen sound ??? -> not saved in world
 
-  public transient Chunks chunks;
+  public Chunks chunks;
 
   public static SerialCoder coder = new SerialCoder();  //used to save/load World (sync)
 
@@ -405,7 +405,7 @@ public class World implements SerialClass, SerialCreator {
   }
 
   //cache of all entities within chunks
-  private transient HashMap<Integer, EntityBase> entities;
+  private HashMap<Integer, EntityBase> entities;
 
   public void init() {
     entities = new HashMap<Integer, EntityBase>();
@@ -442,7 +442,7 @@ public class World implements SerialClass, SerialCreator {
     }
   }
 
-  private transient int uid;
+  private int uid;
   /** Generate unique ID for entity. */
   public synchronized int generateUID() {
     return uid++;
