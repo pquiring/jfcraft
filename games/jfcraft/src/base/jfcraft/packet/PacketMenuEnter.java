@@ -25,7 +25,7 @@ public class PacketMenuEnter extends Packet {
 
   //process on client side
   public void process(Client client) {
-    RenderScreen.game.enterMenu(b1);
+    Static.game.enterMenu(b1);
   }
 
   @Override

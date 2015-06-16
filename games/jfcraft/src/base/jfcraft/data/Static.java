@@ -36,6 +36,7 @@ public class Static {
   public static Dims dims = new Dims();
   public static Client client;  //playing client (client side only)
   public static Server server;  //current server (server side only)
+  public static Game game;  //main screen for rendering game
   public static int fps;  //current FPS
   public static int tick;  //last server tick duration (ms)
   public static boolean spawn = true;  //spawn entities (monsters)

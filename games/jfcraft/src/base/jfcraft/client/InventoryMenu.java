@@ -32,13 +32,13 @@ public class InventoryMenu extends RenderScreen {
 
   public void setup() {
     setCursor();
-    game.client.clientTransport.enterInvMenu();
+    Static.client.clientTransport.enterInvMenu();
     player = (Player)Static.entities.entities[Entities.PLAYER];
     player.ang.y = 180.0f;  //face the "real" player
   }
 
   public void render(GL gl, int width, int height) {
-    game.render(gl, width, height);
+    Static.game.render(gl, width, height);
     setMenuSize(gui_width, gui_height);
 
     if (t_menu == null) {
@@ -98,7 +98,7 @@ public class InventoryMenu extends RenderScreen {
         x = 16;
         y += 36;
       }
-      Item item = game.client.player.items[a];
+      Item item = Static.client.player.items[a];
       if (item.id != 0) {
         renderItem(gl,item,x,y);
       }
@@ -108,7 +108,7 @@ public class InventoryMenu extends RenderScreen {
     x = 16;
     y = (int)(gui_height - 11);
     for(int a=0;a<9;a++) {
-      Item item = game.client.player.items[a];
+      Item item = Static.client.player.items[a];
       if (item.id != 0) {
         renderItem(gl,item,x,y);
       }
@@ -125,7 +125,7 @@ public class InventoryMenu extends RenderScreen {
         x = 175;
         y += 36;
       }
-      item = game.client.craft[a];
+      item = Static.client.craft[a];
       if (item.id != 0) {
         renderItem(gl,item,x,y);
       }
@@ -133,7 +133,7 @@ public class InventoryMenu extends RenderScreen {
     }
 
     //render crafted item
-    item = game.client.crafted;
+    item = Static.client.crafted;
     if (item != null) {
       x = 287;
       y = 70 + 36;
@@ -141,7 +141,7 @@ public class InventoryMenu extends RenderScreen {
     }
 
     //render item in hand
-    item = game.client.hand;
+    item = Static.client.hand;
     if (item != null) {
       renderItem(gl,item,mx,my);
     }
@@ -164,14 +164,14 @@ public class InventoryMenu extends RenderScreen {
     switch (vk) {
       case KeyEvent.VK_E:
       case KeyEvent.VK_ESCAPE:
-        game.client.clientTransport.leaveMenu();
+        Static.client.clientTransport.leaveMenu();
         leaveMenu();
         break;
     }
   }
 
   public void resize(GL gl, int width, int height) {
-    game.resize(gl, width, height);
+    Static.game.resize(gl, width, height);
   }
 
   public void mousePressed(int x, int y, int button) {
@@ -183,7 +183,7 @@ public class InventoryMenu extends RenderScreen {
         by += 36;
       }
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
-        game.client.clickInventory(a, button == 1);
+        Static.client.clickInventory(a, button == 1);
       }
       bx += 36;
     }
@@ -192,7 +192,7 @@ public class InventoryMenu extends RenderScreen {
     by = (int)(gui_height - 11) - 36;
     for(byte a=0;a<9;a++) {
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
-        game.client.clickInventory(a, button == 1);
+        Static.client.clickInventory(a, button == 1);
       }
       bx += 36;
     }
@@ -201,7 +201,7 @@ public class InventoryMenu extends RenderScreen {
     by = 15;
     for(byte a=0;a<4;a++) {
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
-        game.client.clickArmor(a, button == 1);
+        Static.client.clickArmor(a, button == 1);
       }
       by += 36;
     }
@@ -214,7 +214,7 @@ public class InventoryMenu extends RenderScreen {
         by += 36;
       }
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
-        game.client.clickCraftlInput(a, button == 1);
+        Static.client.clickCraftlInput(a, button == 1);
       }
       bx += 36;
     }
@@ -222,12 +222,12 @@ public class InventoryMenu extends RenderScreen {
     bx = 287;
     by = 70;
     if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
-      game.client.clickCraftOutput(button == 1);
+      Static.client.clickCraftOutput(button == 1);
     }
   }
 
   public void mouseReleased(int x, int y, int button) {
-    game.mouseReleased(x, y, button);
+    Static.game.mouseReleased(x, y, button);
   }
 
   public void mouseMoved(int x, int y, int button) {

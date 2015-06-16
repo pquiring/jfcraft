@@ -218,8 +218,8 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
             }
           } else {
             processed = true;
-            if (RenderScreen.game != null) {
-              RenderScreen.game.process(gl);
+            if (Static.game != null) {
+              Static.game.process(gl);
             }
           }
         }

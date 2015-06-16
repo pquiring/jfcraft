@@ -90,7 +90,7 @@ public class ConfirmMenu extends RenderScreen {
   }
 
   public void mouseReleased(int x, int y, int button) {
-    if (game != null) game.mouseReleased(x, y, button);
+    if (Static.game != null) Static.game.mouseReleased(x, y, button);
   }
 
   public void mouseMoved(int x, int y, int button) {

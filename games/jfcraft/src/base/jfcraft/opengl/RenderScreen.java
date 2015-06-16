@@ -22,8 +22,6 @@ import jfcraft.entity.*;
 import static jfcraft.data.Direction.*;
 
 public abstract class RenderScreen {
-  public static Game game;
-  public static Client client;
   public static float gui_height = 512;
   public static float gui_width = 512;
 
@@ -32,7 +30,7 @@ public abstract class RenderScreen {
   public static Texture t_text;
   public static Texture t_white;  //single white pixel
   public static Texture t_white50;  //single white pixel (50% alpha)
-  public static Timer timer;
+  private static Timer cursorTimer;
 
   private static RenderBuffers o_text;
   private static GLMatrix ortho = new GLMatrix();
@@ -138,9 +136,9 @@ public abstract class RenderScreen {
       t_white50 = new Texture();
       t_white50.load(gl, pixel);
     }
-    if (timer == null) {
-      timer = new Timer();
-      timer.schedule(new TimerTask() {
+    if (cursorTimer == null) {
+      cursorTimer = new Timer();
+      cursorTimer.schedule(new TimerTask() {
         public void run() {
           showCursor = !showCursor;
         }
@@ -535,8 +533,8 @@ public abstract class RenderScreen {
   }
 
   public void leaveMenu() {
-    Static.video.setScreen(game);
-    game.setCursor();
+    Static.video.setScreen(Static.game);
+    Static.game.setCursor();
     Static.inGame = true;
   }
 

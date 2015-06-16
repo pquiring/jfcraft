@@ -28,8 +28,8 @@ public class SignMenu extends RenderScreen {
       for(int a=0;a<4;a++) {
         txt[a] = fields.get(a).getText();
       }
-      client.clientTransport.setSign(txt);
-      client.clientTransport.leaveMenu();
+      Static.client.clientTransport.setSign(txt);
+      Static.client.clientTransport.leaveMenu();
       leaveMenu();
     }});
     for(int a=0;a<4;a++) {
@@ -50,7 +50,7 @@ public class SignMenu extends RenderScreen {
     setCursor();
     Static.inGame = false;
 
-    game.render(gl, width, height);
+    Static.game.render(gl, width, height);
     setMenuSize(512, 512);
     reset();
     gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, Static.identity.m);  //view matrix
@@ -66,7 +66,7 @@ public class SignMenu extends RenderScreen {
   }
 
   public void resize(GL gl, int width, int height) {
-    game.resize(gl, width, height);
+    Static.game.resize(gl, width, height);
   }
 
   public void mousePressed(int x, int y, int button) {

@@ -15,7 +15,6 @@ import javaforce.gl.*;
 //import jfcraft.server.*;
 import jfcraft.opengl.*;
 import jfcraft.data.*;
-import static jfcraft.opengl.RenderScreen.game;
 
 public class ChatMenu extends RenderScreen {
   public ChatMenu() {
@@ -50,7 +49,7 @@ public class ChatMenu extends RenderScreen {
       idx = history.size();
       initTxt = null;
     }
-    game.render(gl, width, height);
+    Static.game.render(gl, width, height);
     setMenuSize(512, 512);
     reset();
     gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, identity.m);  //view matrix
@@ -59,7 +58,7 @@ public class ChatMenu extends RenderScreen {
     renderFields(gl);
     renderText(gl);
 
-    client.chatTime = 5 * 20;
+    Static.client.chatTime = 5 * 20;
   }
 
   public void keyPressed(int vk) {
@@ -88,18 +87,18 @@ public class ChatMenu extends RenderScreen {
       case KeyEvent.VK_ENTER:
         String msg = chat.getText();
         if (msg.length() > 0) {
-          client.clientTransport.sendMsg(msg);
+          Static.client.clientTransport.sendMsg(msg);
           history.add(msg);
         }
-        Static.video.setScreen(game);
-        game.setCursor();
+        Static.video.setScreen(Static.game);
+        Static.game.setCursor();
         Static.inGame = true;
         break;
     }
   }
 
   public void resize(GL gl, int width, int height) {
-    game.resize(gl, width, height);
+    Static.game.resize(gl, width, height);
   }
 
   public void mousePressed(int x, int y, int button) {

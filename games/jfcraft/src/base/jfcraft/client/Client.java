@@ -196,9 +196,6 @@ public class Client {
       chunkTimer.cancel();
       chunkTimer = null;
     }
-    if (chunkLighter != null) {
-      chunkLighter = null;
-    }
   }
 
   private ArrayList<Coords> pendingChunks = new ArrayList<Coords>();
