@@ -38,8 +38,6 @@ public class Game extends RenderScreen {
 
   public static boolean advanceAnimation;
 
-  public int frame;
-
   public Game() {
     id = Client.GAME;
     try {
@@ -81,6 +79,9 @@ public class Game extends RenderScreen {
     if (view == null) {
       view = new GLMatrix();
     }
+    if (o_active == null) {
+      o_active = createMenu(gl, 75, 470, 1,45, 46,46);
+    }
   }
 
   private float sunLight;
@@ -107,7 +108,10 @@ public class Game extends RenderScreen {
     client.chunkCopier.process(gl);
   }
 
+  private Profiler pro = new Profiler("r:");
+
   public void render(GL gl) {
+    pro.start();
     setMenuSize(512, 512);
 
     gui_position = CENTER;
@@ -133,14 +137,11 @@ public class Game extends RenderScreen {
       return;
     }
 
-    if (o_active == null) {
-      o_active = createMenu(gl, 75 + client.activeSlot * 40,470, 1,45, 46,46);
-    } else {
-      recreateMenu(gl, o_active, 75 + client.activeSlot * 40,470, 1,45, 46,46);
-    }
+    recreateMenu(gl, o_active, 75 + client.activeSlot * 40,470, 1,45, 46,46);
 
     int cx = Static.floor(client.player.pos.x / 16.0f);
     int cz = Static.floor(client.player.pos.z / 16.0f);
+    pro.next();
 
     Chunk chunks[] = client.world.chunks.getChunks();
 
@@ -189,6 +190,8 @@ public class Game extends RenderScreen {
     RenderBuffers obj;
     String dmsg = "";
 
+    pro.next();
+
     //render main stitched objects
     for(int a=0;a<chunks.length;a++) {
       Chunk chunk = chunks[a];
@@ -206,6 +209,8 @@ public class Game extends RenderScreen {
       obj.render(gl);
       cnt++;
     }
+
+    pro.next();
 
     //render box around block
     client.player.findBlock(-1, BlockHitTest.Type.SELECTION, client.selection);
@@ -243,6 +248,8 @@ public class Game extends RenderScreen {
       gl.glUniform1i(Static.uniformEnableTextures, 1);
     }
 
+    pro.next();
+
     //render entities
     //these will change the view/model matrix
     for(int a=0;a<chunks.length;a++) {
@@ -275,6 +282,8 @@ public class Game extends RenderScreen {
     }
     gl.glUniform1f(Static.uniformSunLight, sunLight);
 
+    pro.next();
+
     //render text
     t_text.bind(gl);
     for(int a=0;a<chunks.length;a++) {
@@ -292,6 +301,8 @@ public class Game extends RenderScreen {
     gl.glDepthMask(false);  //turn off depth buffer updates
     Static.blocks.stitched.bind(gl);
 
+    pro.next();
+
     //render stitched chunks (alpha) (ie: iceblock)
     for(int a=0;a<chunks.length;a++) {
       Chunk chunk = chunks[a];
@@ -305,6 +316,7 @@ public class Game extends RenderScreen {
     }
 
     //TODO : render particles, etc.
+    pro.next();
 
     if (showControls) {
       gl.glDepthMask(true);  //turn on depth buffer updates
@@ -522,7 +534,7 @@ public class Game extends RenderScreen {
 
     gui_position = CENTER;
 
-    frame++;
+//    pro.print();
   }
 
   public void keyPressed(int vk) {

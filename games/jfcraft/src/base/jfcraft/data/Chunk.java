@@ -144,6 +144,136 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     obj.render(gl);
   }
 
+  /** Determines if lighting if different around a block. */
+  private boolean doesLightingDiffer(int x,int y,int z) {
+    int ll = -1;
+    BlockBase base1, base2;
+    if (y < 255) {
+      base1 = Static.blocks.blocks[getID(x,y+1,z)];
+      base2 = Static.blocks.blocks[getID2(x,y+1,z)];
+      if (!base1.isOpaque && !base2.isOpaque) {
+        int la = getLights(x, y+1, z);
+        if (ll != -1 && ll != la) {
+          return true;
+        }
+        ll = la;
+      }
+    }
+    if (y > 0) {
+      base1 = Static.blocks.blocks[getID(x,y-1,z)];
+      base2 = Static.blocks.blocks[getID2(x,y-1,z)];
+      if (!base1.isOpaque && !base2.isOpaque) {
+        int lb = getLights(x, y-1, z);
+        if (ll != -1 && ll != lb) {
+          return true;
+        }
+        ll = lb;
+      }
+    }
+    base1 = Static.blocks.blocks[getID(x,y,z-1)];
+    base2 = Static.blocks.blocks[getID2(x,y,z-1)];
+    if (!base1.isOpaque && !base2.isOpaque) {
+      int ln = getLights(x, y, z-1);
+      if (ll != -1 && ll != ln) {
+        return true;
+      }
+      ll = ln;
+    }
+    base1 = Static.blocks.blocks[getID(x+1,y,z)];
+    base2 = Static.blocks.blocks[getID2(x+1,y,z)];
+    if (!base1.isOpaque && !base2.isOpaque) {
+      int le = getLights(x+1, y, z);
+      if (ll != -1 && ll != le) {
+        return true;
+      }
+      ll = le;
+    }
+    base1 = Static.blocks.blocks[getID(x,y,z+1)];
+    base2 = Static.blocks.blocks[getID2(x,y,z+1)];
+    if (!base1.isOpaque && !base2.isOpaque) {
+      int ls = getLights(x, y, z+1);
+      if (ll != -1 && ll != ls) {
+        return true;
+      }
+      ll = ls;
+    }
+    base1 = Static.blocks.blocks[getID(x-1,y,z)];
+    base2 = Static.blocks.blocks[getID2(x-1,y,z)];
+    if (!base1.isOpaque && !base2.isOpaque) {
+      int lw = getLights(x-1, y, z);
+      if (ll != -1 && ll != lw) {
+        return true;
+      }
+      ll = lw;
+    }
+    return false;
+  }
+
+  /** Determines what area of the lighting will be effected. */
+  private int[] getLightCoordsSet(int x,int y,int z, BlockBase newBlock, BlockBase oldBlock) {
+    //check how lighting will change
+    int xyz[] = new int[6];
+    if (doesLightingDiffer(x,y,z)) {
+      xyz[0] = x-14;
+      xyz[1] = 0;
+      xyz[2] = z-14;
+      xyz[3] = x+14;
+      xyz[4] = y+14;
+      xyz[5] = z+14;
+    } else {
+      if (newBlock.emitLight > 0 || oldBlock.emitLight > 0) {
+        int el = newBlock.emitLight;
+        if (oldBlock.emitLight > el) el = oldBlock.emitLight;
+        xyz[0] = x - el;
+        xyz[1] = y - el;
+        xyz[2] = z - el;
+        xyz[3] = x + el;
+        xyz[4] = y + el;
+        xyz[5] = z + el;
+      } else {
+        xyz[0] = x;
+        xyz[1] = y;
+        xyz[2] = z;
+        xyz[3] = x;
+        xyz[4] = y;
+        xyz[5] = z;
+      }
+    }
+    return xyz;
+  }
+
+  /** Determines what area of the lighting will be effected. */
+  private int[] getLightCoordsClear(int x,int y,int z, BlockBase oldBlock) {
+    //check how lighting will change
+    int xyz[] = new int[6];
+    if (doesLightingDiffer(x,y,z)) {
+      xyz[0] = x-14;
+      xyz[1] = 0;
+      xyz[2] = z-14;
+      xyz[3] = x+14;
+      xyz[4] = y+14;
+      xyz[5] = z+14;
+    } else {
+      if (oldBlock.emitLight > 0) {
+        int el = oldBlock.emitLight;
+        xyz[0] = x - el;
+        xyz[1] = y - el;
+        xyz[2] = z - el;
+        xyz[3] = x + el;
+        xyz[4] = y + el;
+        xyz[5] = z + el;
+      } else {
+        xyz[0] = x;
+        xyz[1] = y;
+        xyz[2] = z;
+        xyz[3] = x;
+        xyz[4] = y;
+        xyz[5] = z;
+      }
+    }
+    return xyz;
+  }
+
   public void setBlock(int x,int y,int z,char id, int _bits) {
     if (x > 15) {E.setBlock(x-16, y, z, id, _bits); return;}
     if (x < 0) {W.setBlock(x+16, y, z, id, _bits); return;}
@@ -159,6 +289,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     int p = z * 16 + x;
     BlockBase newBlock = Static.blocks.blocks[id];
     char b[];
+    char oldid;
     synchronized(lock) {
       if (newBlock.isBlocks2) {
         b = blocks2[y];
@@ -167,6 +298,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
           blocks2[y] = b;
           bits2[y] = new byte[16*16];
         }
+        oldid = b[p];
         b[p] = id;
         bits2[y][p] = (byte)_bits;
       } else {
@@ -183,6 +315,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
           blocks[y] = b;
           bits[y] = new byte[16*16];
         }
+        oldid = b[p];
         b[p] = id;
         bits[y][p] = (byte)_bits;
       }
@@ -190,10 +323,11 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       dirty = true;
       //TODO : calc precise coords
       if (!needLights) {
+        int xyz[] = getLightCoordsSet(x,y,z, newBlock, Static.blocks.blocks[oldid]);
         if (isClient) {
-          Static.client.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+          Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
         } else {
-          Static.server.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+          Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
         }
       }
     }
@@ -209,7 +343,9 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     int p = z * 16 + x;
     char b[] = blocks[y];
     if (b == null) return;
+    char oldid;
     synchronized(lock) {
+      oldid = b[p];
       b[p] = 0;
       bits[y][p] = 0;
       boolean empty = true;
@@ -223,10 +359,11 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       needRelight = true;
       dirty = true;
       if (!needLights) {
+        int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
         if (isClient) {
-          Static.client.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+          Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
         } else {
-          Static.server.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+          Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
         }
       }
     }
@@ -242,9 +379,12 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     int p = z * 16 + x;
     char b[] = blocks2[y];
     if (b == null) return;
+    char oldid;
     synchronized(lock) {
+      oldid = b[p];
       b[p] = 0;
       bits2[y][p] = 0;
+
       boolean empty = true;
       for(p=0;p<16*16;p++) {
         if (b[p] != 0) {empty = false; break;}
@@ -253,13 +393,15 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
         blocks2[y] = null;
         bits2[y] = null;
       }
+
       needRelight = true;
       dirty = true;
       if (!needLights) {
+        int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
         if (isClient) {
-          Static.client.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+          Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
         } else {
-          Static.server.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+          Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
         }
       }
     }
@@ -274,6 +416,8 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     if (z < 0) {N.setBlockIfEmpty(x, y, z+16, id, _bits); return;}
     int p = z * 16 + x;
     BlockBase newBlock = Static.blocks.blocks[id];
+    char b[];
+    char oldid;
     synchronized(lock) {
       if (newBlock.isBlocks2) {
         if (blocks2[y] == null) {
@@ -282,6 +426,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
         } else {
           if (blocks2[y][p] != 0) return;
         }
+        oldid = blocks2[y][p];
         blocks2[y][p] = id;
         bits2[y][p] = (byte)_bits;
       } else {
@@ -297,16 +442,18 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
             bits2[y][p] = 0;
           }
         }
+        oldid = blocks[y][p];
         blocks[y][p] = id;
         bits[y][p] = (byte)_bits;
       }
       needRelight = true;
       dirty = true;
       if (!needLights) {
+        int xyz[] = getLightCoordsSet(x,y,z, newBlock, Static.blocks.blocks[oldid]);
         if (isClient) {
-          Static.client.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+          Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
         } else {
-          Static.server.chunkLighter.add(this, x-14, 0, z-14, x+14, y+14, z+14);
+          Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
         }
       }
     }
@@ -410,6 +557,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     synchronized(lock) {
       byte plane[] = lights[y];
       if (plane == null) {
+        if (v == 0) return;
         plane = new byte[16*16];
         lights[y] = plane;
       }

@@ -19,7 +19,8 @@ public class ChunkQueueLight {
   private int tail, head1, head2;
   private ChunkQueueBuild next;
   private boolean isClient;
-  private static final int max = 5;
+  private static final int max = 3;
+  private Profiler pro = new Profiler("lp:");
 
   public ChunkQueueLight(ChunkQueueBuild next, boolean isClient) {
     this.next = next;
@@ -30,7 +31,7 @@ public class ChunkQueueLight {
     try {
       int cnt = 0;
       int pos = tail;
-      while (pos != head1 && cnt < 5) {
+      while (pos != head1 && cnt < max) {
         Chunk chunk = chunks[pos];
         int x1 = x1s[pos];
         int y1 = y1s[pos];
@@ -38,10 +39,13 @@ public class ChunkQueueLight {
         int x2 = x2s[pos];
         int y2 = y2s[pos];
         int z2 = z2s[pos];
+        pro.start();
         if (isClient)
           Static.dims.dims[chunk.dim].getLightingClient().update(chunk, x1,y1,z1, x2,y2,z2);
         else
           Static.dims.dims[chunk.dim].getLightingServer().update(chunk, x1,y1,z1, x2,y2,z2);
+        pro.next();
+//        pro.print();
         if (next != null) {
           next.add(chunk);
           if (z1 < 0) next.add(chunk.N);
@@ -58,6 +62,7 @@ public class ChunkQueueLight {
         tail = pos;
         cnt++;
       }
+//if (cnt > 0) Static.log("l:" + cnt);
       if (next != null) next.signal();
     } catch (Exception e) {
       Static.log(e);
@@ -65,8 +70,24 @@ public class ChunkQueueLight {
   }
 
   public void add(Chunk chunk,int x1,int y1,int z1,int x2, int y2, int z2) {
+    //scan head1->head2
+    int pos;
+    pos = head1;
+    while (pos != head2) {
+      if (chunks[pos] == chunk) {
+        //combine ranges
+        if (x1 < x1s[pos]) x1s[pos] = x1;
+        if (y1 < y1s[pos]) y1s[pos] = y1;
+        if (z1 < z1s[pos]) z1s[pos] = z1;
+        if (x2 > x2s[pos]) x2s[pos] = x2;
+        if (y2 > y2s[pos]) y2s[pos] = y2;
+        if (z2 > z2s[pos]) z2s[pos] = z2;
+        return;
+      }
+      pos++;
+      if (pos == BUFSIZ) pos = 0;
+    }
     //add to queue
-    int pos = head2;
     chunks[pos] = chunk;
     x1s[pos] = x1;
     y1s[pos] = y1;

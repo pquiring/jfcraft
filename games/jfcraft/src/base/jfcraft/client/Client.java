@@ -331,13 +331,13 @@ public class Client {
     int cx = Static.floor(player.pos.x / 16.0f);
     int cz = Static.floor(player.pos.z / 16.0f);
     Coords c = Coords.alloc();
-    int loadRange2 = Settings.current.loadRange / 2;
+    int loadRange = Settings.current.loadRange;
     int cnt = 0;
     int request = 0;
     int pendingChunk = 0;
-    for(int z=-loadRange2;z<=loadRange2;z++) {
+    for(int z=-loadRange;z<=loadRange;z++) {
       c.z = cz + z;
-      for(int x=-loadRange2;x<=loadRange2;x++) {
+      for(int x=-loadRange;x<=loadRange;x++) {
         c.x = cx + x;
         cnt++;
         if (!world.chunks.hasChunk(player.dim, c.x, c.z)) {
@@ -368,7 +368,7 @@ public class Client {
     }
     //remove chunks that are +2 beyond loadRange
     Chunk chunkList[] = world.chunks.getChunks();
-    int maxDist = Settings.current.loadRange+2;
+    int maxDist = Settings.current.loadRange*2+2;
     for(int a=0;a<chunkList.length;a++) {
       Chunk chunk = chunkList[a];
       int dx = chunk.cx - cx;

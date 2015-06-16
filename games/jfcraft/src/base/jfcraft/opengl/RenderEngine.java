@@ -30,7 +30,7 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
 
   private Component comp, focus;
 
-  private final int FPS = 100;
+  private final int FPS = 200;
 
   private boolean ready = false;
 
@@ -165,7 +165,7 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
       public final void run() {
         repaint();
       }
-    }, 5, 5);
+    }, 1, 1);
     fpsTimer = new java.util.Timer();
     fpsTimer.scheduleAtFixedRate(new TimerTask() {
       public void run() {
@@ -202,9 +202,6 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
 
   public void render(GL gl) {
     if (!ready) return;
-    synchronized(fpsLock) {
-      fpsCounter++;
-    }
     RenderBuffers.freeBuffers(gl);
     if (screen != null) {
       try {
@@ -216,6 +213,9 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
             gl.swap();
             nextFrame = false;
             processed = false;
+            synchronized(fpsLock) {
+              fpsCounter++;
+            }
           } else {
             processed = true;
             if (RenderScreen.game != null) {

@@ -16,7 +16,7 @@ public class Settings {
 
   public String player = "Player";  //player name
   public String pass = "";  //password (not used yet)
-  public int loadRange = 11;  //# chunks client loads
+  public int loadRange = 6;  //# chunks client loads (radius)
   public boolean isFancy = true;  //use fancy graphics (else solid)
   public int tcpPort = 25565 + 1;
   public boolean doSteps = true;  //enable steps land (smooth) (experimental)

@@ -142,7 +142,7 @@ long p1 = System.nanoTime() / 1000;
       addBlkInside();
       processQueue();
 long p2 = System.nanoTime() / 1000;
-Static.log("light:" + (p2-p1));
+//Static.log("light:" + (p2-p1));
       chunk.setLights(chunk.getLights());
     }
 
@@ -307,21 +307,21 @@ Static.log("light:" + (p2-p1));
     synchronized(lock) {
       this.chunk = chunk;
       tail = head = 0;
-long p1 = System.nanoTime() / 1000;
+//long p1 = System.nanoTime() / 1000;
       reset(x1,y1,z1,x2,y2,z2);
-long p2 = System.nanoTime() / 1000;
+//long p2 = System.nanoTime() / 1000;
       addSunTop(x1,y1,z1,x2,y2,z2);
-long p3 = System.nanoTime() / 1000;
+//long p3 = System.nanoTime() / 1000;
       addSunEdges(x1,y1,z1,x2,y2,z2);
-long p4 = System.nanoTime() / 1000;
+//long p4 = System.nanoTime() / 1000;
       addBlkInside(x1,y1,z1,x2,y2,z2);
-long p5 = System.nanoTime() / 1000;
+//long p5 = System.nanoTime() / 1000;
       addBlkEdges(x1,y1,z1,x2,y2,z2);
-long p6 = System.nanoTime() / 1000;
+//long p6 = System.nanoTime() / 1000;
       processQueue();
-long p7 = System.nanoTime() / 1000;
-long p8 = System.nanoTime() / 1000;
-Static.log("times:" + (p2-p1) + ","  + (p3-p2) + ","  + (p4-p3) + ","  + (p5-p4) + ","  + (p6-p5) + ","  + (p7-p6) + "," + (p8-p7));
+//long p7 = System.nanoTime() / 1000;
+//long p8 = System.nanoTime() / 1000;
+//Static.log("times:" + (p2-p1) + ","  + (p3-p2) + ","  + (p4-p3) + ","  + (p5-p4) + ","  + (p6-p5) + ","  + (p7-p6) + "," + (p8-p7));
     }
 
     chunk.needRelight = false;
