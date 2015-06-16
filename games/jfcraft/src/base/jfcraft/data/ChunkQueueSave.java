@@ -1,6 +1,6 @@
 package jfcraft.data;
 
-/**
+/** Not in use
  *
  * @author pquiring
  *

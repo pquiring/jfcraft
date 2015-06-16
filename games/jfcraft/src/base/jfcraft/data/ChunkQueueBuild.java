@@ -12,7 +12,7 @@ public class ChunkQueueBuild {
   private Chunk[] chunks = new Chunk[BUFSIZ];
   private int tail, head1, head2;
   private ChunkQueueCopy next;
-  private static final int max = 5;
+  private static final int max = 9;
 
   public ChunkQueueBuild(ChunkQueueCopy next) {
     this.next = next;
@@ -22,7 +22,7 @@ public class ChunkQueueBuild {
     try {
       int cnt = 0;
       int pos = tail;
-      while (pos != head1 && cnt < 5) {
+      while (pos != head1 && cnt < max) {
         Chunk chunk = chunks[pos];
         if (chunk.canRender()) {
           chunk.buildBuffers();
@@ -33,6 +33,7 @@ public class ChunkQueueBuild {
         tail = pos;
         cnt++;
       }
+//if (cnt > 0) Static.log("     b:" + cnt);
       next.signal();
     } catch (Exception e) {
       Static.log(e);

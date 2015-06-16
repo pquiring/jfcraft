@@ -13,7 +13,7 @@ public class ChunkQueueCopy {
   private static final int BUFSIZ = 1024 * 4;
   private Chunk[] chunks = new Chunk[BUFSIZ];
   private int tail, head1, head2;
-  private static final int max = 5;
+  private static final int max = 9;
 
   public ChunkQueueCopy() {}
 
@@ -21,7 +21,7 @@ public class ChunkQueueCopy {
     try {
       int cnt = 0;
       int pos = tail;
-      while (pos != head1 && cnt < 5) {
+      while (pos != head1 && cnt < max) {
         Chunk chunk = chunks[pos];
         chunk.copyBuffers(gl);
         pos++;
@@ -29,6 +29,7 @@ public class ChunkQueueCopy {
         tail = pos;
         cnt++;
       }
+//if (cnt > 0) Static.log("              c:" + cnt);
     } catch (Exception e) {
       Static.log(e);
     }

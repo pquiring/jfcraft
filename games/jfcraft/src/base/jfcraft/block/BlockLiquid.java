@@ -375,27 +375,29 @@ wxe
       chunk.delTick(tick);
       return;
     }
-    if (dn < depth && canFill(chunk,x,y,z-1)) {
-      int xbits = Chunk.makeBits(getDesiredDir(chunk, x, y, z-1), depth2var(depth));
-      chunk.setBlock(x, y, z-1, id, xbits);
-      Static.server.broadcastSetBlock(chunk.dim, c.x, c.y, c.z-1, id, xbits);
-    }
-    if (de < depth && canFill(chunk,x+1,y,z)) {
-      int xbits = Chunk.makeBits(getDesiredDir(chunk, x+1, y, z), depth2var(depth));
-      chunk.setBlock(x+1, y, z, id, xbits);
-      Static.server.broadcastSetBlock(chunk.dim, c.x+1, c.y, c.z, id, xbits);
-    }
-    if (ds < depth && canFill(chunk,x,y,z+1)) {
-      int xbits = Chunk.makeBits(getDesiredDir(chunk, x, y, z+1), depth2var(depth));
-      chunk.setBlock(x, y, z+1, id, xbits);
-      Static.server.broadcastSetBlock(chunk.dim, c.x, c.y, c.z+1, id, xbits);
-    }
-    if (dw < depth && canFill(chunk,x-1,y,z)) {
-      int xbits = Chunk.makeBits(getDesiredDir(chunk, x-1, y, z), depth2var(depth));
-      chunk.setBlock(x-1, y, z, id, xbits);
-      Static.server.broadcastSetBlock(chunk.dim, c.x-1, c.y, c.z, id, xbits);
-    }
     if (y > 0) {
+      if (Static.blocks.blocks[chunk.getID(x, y-1, z)].isSolid) {
+        if (dn < depth && canFill(chunk,x,y,z-1)) {
+          int xbits = Chunk.makeBits(getDesiredDir(chunk, x, y, z-1), depth2var(depth));
+          chunk.setBlock(x, y, z-1, id, xbits);
+          Static.server.broadcastSetBlock(chunk.dim, c.x, c.y, c.z-1, id, xbits);
+        }
+        if (de < depth && canFill(chunk,x+1,y,z)) {
+          int xbits = Chunk.makeBits(getDesiredDir(chunk, x+1, y, z), depth2var(depth));
+          chunk.setBlock(x+1, y, z, id, xbits);
+          Static.server.broadcastSetBlock(chunk.dim, c.x+1, c.y, c.z, id, xbits);
+        }
+        if (ds < depth && canFill(chunk,x,y,z+1)) {
+          int xbits = Chunk.makeBits(getDesiredDir(chunk, x, y, z+1), depth2var(depth));
+          chunk.setBlock(x, y, z+1, id, xbits);
+          Static.server.broadcastSetBlock(chunk.dim, c.x, c.y, c.z+1, id, xbits);
+        }
+        if (dw < depth && canFill(chunk,x-1,y,z)) {
+          int xbits = Chunk.makeBits(getDesiredDir(chunk, x-1, y, z), depth2var(depth));
+          chunk.setBlock(x-1, y, z, id, xbits);
+          Static.server.broadcastSetBlock(chunk.dim, c.x-1, c.y, c.z, id, xbits);
+        }
+      }
       if (db < 1f && canFill(chunk,x,y-1,z)) {
         int xbits = Chunk.makeBits(A, depth2var(1f));  //dir=A means full flowing (not static)
         chunk.setBlock(x, y-1, z, id, xbits);
