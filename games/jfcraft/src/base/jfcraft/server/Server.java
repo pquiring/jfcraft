@@ -1278,6 +1278,7 @@ public class Server {
       }
     }
     public void add(int type, EntityBase e, Coords c, int newdim) {
+      Static.log("teleport:" + c);
       TeleportRequest req = new TeleportRequest();
       req.type = type;
       req.e = e;

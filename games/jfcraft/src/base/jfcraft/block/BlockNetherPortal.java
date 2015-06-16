@@ -44,6 +44,7 @@ public class BlockNetherPortal extends BlockBase {
   }
 
   public ArrayList<Box> getBoxes(Coords c, Type type) {
+    if (type == Type.ENTITY) return boxListEmpty;
     int bits = c.chunk.getBits(c.gx, c.gy, c.gz);
     int dir = Chunk.getDir(bits);
     if (dir == N || dir == S) {
@@ -61,7 +62,7 @@ public class BlockNetherPortal extends BlockBase {
     int bits = c.chunk.getBits(c.gx, c.gy, c.gz);
     int dir = Chunk.getDir(bits);
     int dx,dy,dz;
-    if (dir == E) {
+    if (dir == N) {
       //xy plane
       while (c.chunk.getID(p.gx-1, p.gy, p.gz) == id) {
         p.gx--;
@@ -163,28 +164,34 @@ public class BlockNetherPortal extends BlockBase {
     if (e.teleportTimer > 0) {
       e.teleportTimer = 20;
     } else {
-      Static.server.teleport(e, c, 2);
+      Coords p = c.clone();
+      Static.log("teleport:" + c);
+      Static.server.teleport(e, p, Dims.NETHER);
     }
   }
 
-  /** Find or create portal in current dim. */
+  /** Find or create portal in current dim.
+   * @param e = entity already in new dim
+   * @param c = coords of portal block from old dimension
+   */
   public void teleport(EntityBase e, Coords c) {
+    Static.log("teleport:" + e + "@" + c);
     Coords p = c.clone();
     int dir = Chunk.getDir(p.bits);
     //for now just convert coords as is
-    if (e.pos.z < 0 && p.gz != 0) p.gz = 16 + p.gz;
     Chunk chunk = Static.server.world.chunks.getChunk2(e.dim, p.cx, p.cz, true, true, true);
     if (chunk.getID(p.gx, p.gy, p.gz) == Blocks.PORTAL) {
       //found existing portal
       while (chunk.getID(p.gx, p.gy-1, p.gz) == Blocks.PORTAL) {
         p.gy--;
         p.y--;
-        e.pos.y--;
+        e.pos.y-=1.0f;
       }
     } else {
       //create portal at entity coords
+      Static.log("no portal found in other dim, creating new portal");
       p.gy--;
-      if (dir == E) {
+      if (dir == N) {
         //xy plane
         p.gx--;
         for(int x=0;x<=3;x++) {
