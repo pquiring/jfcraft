@@ -35,33 +35,33 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public int age;
   public int teleportTimer;
 
-  public transient float width, width2, height, height2, depth, depth2;
-  public transient float eyeHeight, jumpVelocity, reach;
-  public transient float walkSpeed, runSpeed, sneakSpeed, swimSpeed;
-  public transient float yDrag, xzDrag;
-  public transient boolean inWater, inLava;  //whole body
-  public transient boolean underWater, underLava;  //camera view
-  public transient boolean creative;
-  public transient boolean moving, flying, riding, jumping;
-  public transient float floatRad;
-  public transient float jumpPos, jumpStart;  //for debug only I think (max height of last jump)
-  public transient float attackDmg, attackRange;
-  public transient boolean wasInLiquid;
-  public transient Object lock;
-  public transient boolean offline;  //player only
-  public transient int attackCount, attackDelay;
-  public transient boolean isBlock;
-  public transient boolean instanceInited;
-  public transient int sound;
-  public transient int maxAge;
-  public transient CreatureBase target;
-  public transient boolean onGround, onWater;
-  public transient int mode;  //IDLE, WALK, RUN, SNEAK, BOWCHARGE, etc.
-  public transient float scale;  //# parts
-  public transient boolean isStatic;  //one static instance for all instances
-  public transient boolean dirty, needCopyBuffers;
-  public transient Player occupant;
-  public transient int path[];
+  public float width, width2, height, height2, depth, depth2;
+  public float eyeHeight, jumpVelocity, reach;
+  public float walkSpeed, runSpeed, sneakSpeed, swimSpeed;
+  public float yDrag, xzDrag;
+  public boolean inWater, inLava;  //whole body
+  public boolean underWater, underLava;  //camera view
+  public boolean creative;
+  public boolean moving, flying, riding, jumping;
+  public float floatRad;
+  public float jumpPos, jumpStart;  //for debug only I think (max height of last jump)
+  public float attackDmg, attackRange;
+  public boolean wasInLiquid;
+  public Object lock;
+  public boolean offline;  //player only
+  public int attackCount, attackDelay;
+  public boolean isBlock;
+  public boolean instanceInited;
+  public int sound;
+  public int maxAge;
+  public CreatureBase target;
+  public boolean onGround, onWater;
+  public int mode;  //IDLE, WALK, RUN, SNEAK, BOWCHARGE, etc.
+  public float scale;  //# parts
+  public boolean isStatic;  //one static instance for all instances
+  public boolean dirty, needCopyBuffers;
+  public Player occupant;
+  public int path[];
 
   //bits used in Packet.MOVE
   public static final int MOVING = 1;
@@ -448,7 +448,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return ret;
   }
 
-  private transient float fallBlocks;
+  private float fallBlocks;
 
   /** Applies gravity to entity.
    *

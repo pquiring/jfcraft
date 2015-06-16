@@ -18,8 +18,8 @@ import jfcraft.item.Item;
 import jfcraft.opengl.*;
 
 public class Slime extends CreatureBase {
-  private transient float walkAngle;  //angle of legs/arms as walking
-  private transient float walkAngleDelta;
+  private float walkAngle;  //angle of legs/arms as walking
+  private float walkAngleDelta;
 
   //render assets
   private static RenderDest dest;

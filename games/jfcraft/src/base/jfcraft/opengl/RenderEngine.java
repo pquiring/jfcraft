@@ -30,7 +30,7 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
 
   private Component comp, focus;
 
-  private final int FPS = 200;
+  private final int FPS = 60;
 
   private boolean ready = false;
 

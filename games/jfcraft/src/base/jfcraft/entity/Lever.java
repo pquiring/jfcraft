@@ -13,8 +13,8 @@ import jfcraft.item.*;
 import jfcraft.opengl.*;
 
 public class Lever extends BlockEntity {
-  public transient RenderDest dest;  //can not be static, can be damaged
-  public transient boolean active;
+  public RenderDest dest;  //can not be static, can be damaged
+  public boolean active;
   public static GLModel model;
 
   public Lever() {

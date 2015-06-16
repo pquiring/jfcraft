@@ -16,8 +16,8 @@ import jfcraft.item.Item;
 import jfcraft.opengl.*;
 
 public class Creeper extends CreatureBase {
-  private transient float walkAngle;  //angle of legs/arms as walking
-  private transient float walkAngleDelta;
+  private float walkAngle;  //angle of legs/arms as walking
+  private float walkAngleDelta;
   public static RenderDest dest;
 
   //render assets
@@ -162,8 +162,8 @@ public class Creeper extends CreatureBase {
     }
   }
 
-  public transient boolean walking;
-  public transient int walkLength;
+  public boolean walking;
+  public int walkLength;
 
   public void tick() {
     boolean fell = gravity(0);

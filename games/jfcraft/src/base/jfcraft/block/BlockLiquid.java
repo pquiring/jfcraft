@@ -22,6 +22,8 @@ import static jfcraft.data.Direction.*;
 
 public class BlockLiquid extends BlockAlpha {
   private static Face face = new Face();
+  private float flowRate;  //1 for water, 3 for lava
+  private boolean canRenew;  //true for water, false for lava
   public BlockLiquid(String id, String names[], String images[]) {
     super(id,names,images);
     canReplace = true;
@@ -108,6 +110,7 @@ public class BlockLiquid extends BlockAlpha {
     return dir;
   }
   public void buildBuffers(RenderDest dest, RenderData data) {
+    data.doubleSided = true;
     RenderBuffers buf = dest.getBuffers(buffersIdx);
     SubTexture st = textures[0];
     int x = (int)data.x;
@@ -309,6 +312,7 @@ wxe
         buf.addFace(face, data);
       }
     }
+    data.doubleSided = false;
   }
   private Coords c = new Coords();
   public void tick(Chunk chunk, Tick tick) {
@@ -341,17 +345,17 @@ wxe
       //check if source is gone/lower
       float newDepth = 0;
       if (da > newDepth) {newDepth = 1f; dir = A;}
-      if (dn > newDepth) newDepth = dn - Static._1_16;
-      if (de > newDepth) newDepth = de - Static._1_16;
-      if (ds > newDepth) newDepth = ds - Static._1_16;
-      if (dw > newDepth) newDepth = dw - Static._1_16;
+      if (dn - Static._1_16 * flowRate > newDepth) newDepth = dn - Static._1_16 * flowRate;
+      if (de - Static._1_16 * flowRate > newDepth) newDepth = de - Static._1_16 * flowRate;
+      if (ds - Static._1_16 * flowRate > newDepth) newDepth = ds - Static._1_16 * flowRate;
+      if (dw - Static._1_16 * flowRate > newDepth) newDepth = dw - Static._1_16 * flowRate;
       int cnt = 0;
       if (dn == 1f && isStatic(chunk,x,y,z-1)) cnt++;
       if (de == 1f && isStatic(chunk,x+1,y,z)) cnt++;
       if (ds == 1f && isStatic(chunk,x,y,z+1)) cnt++;
       if (dw == 1f && isStatic(chunk,x-1,y,z)) cnt++;
       //check if flowing -> static (requires 2 static around it)
-      if (cnt > 1) {
+      if (canRenew && cnt > 1) {
         //convert this block to static liquid
         chunk.setBits2(x, y, z, 0);
         Static.server.broadcastSetBlock(chunk.dim, c.x, c.y, c.z, id, 0);
@@ -370,7 +374,7 @@ wxe
       }
     }
     //push liquid to adj blocks
-    depth -= Static._1_16;  //set adj blocks to this depth
+    depth -= Static._1_16 * flowRate;  //set adj blocks to this depth
     if (depth <= 0.001f) {  //depth == 0f (rounding error?)
       chunk.delTick(tick);
       return;
@@ -405,5 +409,15 @@ wxe
       }
     }
     chunk.delTick(tick);
+  }
+
+  public BlockLiquid setFlowRate(float rate) {
+    flowRate = rate;
+    return this;
+  }
+
+  public BlockLiquid setRenews(boolean state) {
+    canRenew = state;
+    return this;
   }
 }

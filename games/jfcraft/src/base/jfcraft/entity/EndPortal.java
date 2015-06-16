@@ -14,7 +14,7 @@ import jfcraft.opengl.*;
 public class EndPortal extends BlockEntity {
   public float dia;
 
-  public transient RenderDest dest;
+  public RenderDest dest;
 
   //render assets
   public static Texture texture;

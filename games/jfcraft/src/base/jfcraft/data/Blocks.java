@@ -244,8 +244,8 @@ public class Blocks {
       .setFuel(5).setWood()
     );
     registerBlock(new BlockOpaque("BEDROCK", new String[] {"Bedrock"}, new String[] {"bedrock"}));
-    registerBlock(new BlockLiquid("WATER", new String[] {"Water"}, new String[] {"water_still", "water_flow"}));
-    registerBlock(new BlockLiquid("LAVA", new String[] {"Lava"}, new String[] {"lava_still", "lava_flow"}));
+    registerBlock(new BlockLiquid("WATER", new String[] {"Water"}, new String[] {"water_still", "water_flow"}).setFlowRate(1).setRenews(true));
+    registerBlock(new BlockLiquid("LAVA", new String[] {"Lava"}, new String[] {"lava_still", "lava_flow"}).setFlowRate(3).setRenews(false));
     registerBlock(new BlockFalling("SAND", new String[] {"Sand", "Red Sand"}, new String[] {"sand", "red_sand"})
       .setBake("GLASSBLOCK").setVar()
     );

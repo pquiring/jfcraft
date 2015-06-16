@@ -18,8 +18,8 @@ import jfcraft.item.Item;
 import jfcraft.opengl.*;
 
 public class Enderman extends CreatureBase {
-  private transient float walkAngle;  //angle of legs/arms as walking
-  private transient float walkAngleDelta;
+  private float walkAngle;  //angle of legs/arms as walking
+  private float walkAngleDelta;
 
   //render assets
   private static RenderDest dest;
@@ -151,9 +151,11 @@ public class Enderman extends CreatureBase {
     mat.addTranslate(pos.x, pos.y, pos.z);
     gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
     if (moving) {
-      walkAngle += walkAngleDelta;
-      if ((walkAngle < -45.0) || (walkAngle > 45.0)) {
-        walkAngleDelta *= -1;
+      if (Static.advanceFrame) {
+        walkAngle += walkAngleDelta;
+        if ((walkAngle < -45.0) || (walkAngle > 45.0)) {
+          walkAngleDelta *= -1;
+        }
       }
     } else {
       walkAngle = 0.0f;

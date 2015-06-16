@@ -12,8 +12,8 @@ import jfcraft.item.*;
 import jfcraft.opengl.*;
 
 public class Arrow extends EntityBase {
-  public transient CreatureBase owner;
-  public transient boolean armed;
+  public CreatureBase owner;
+  public boolean armed;
 
   //render assets
   public static RenderDest dest;

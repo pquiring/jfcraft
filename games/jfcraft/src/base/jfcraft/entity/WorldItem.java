@@ -18,10 +18,10 @@ import static jfcraft.data.Direction.*;
 public class WorldItem extends EntityBase {
   public Item item;
 
-  public transient RenderDest obj;
-  public transient int buffersIdx;
-  public transient Texture texture;
-  public transient EntityBase entity;
+  public RenderDest obj;
+  public int buffersIdx;
+  public Texture texture;
+  public EntityBase entity;
 
   public WorldItem() {
     id = Entities.WORLDITEM;

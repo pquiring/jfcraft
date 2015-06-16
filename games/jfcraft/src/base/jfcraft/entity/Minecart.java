@@ -29,7 +29,7 @@ public class Minecart extends CreatureBase {
   private static final float pushSpeed = 3.0f;
   private static final float maxSpeed = 10.0f;
 
-  public transient RenderDest dest;
+  public RenderDest dest;
 
   public Minecart() {
     id = Entities.MINECART;

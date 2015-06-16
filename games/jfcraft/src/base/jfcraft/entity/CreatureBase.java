@@ -288,7 +288,7 @@ public abstract class CreatureBase extends EntityBase {
     ang.x = (float)-Math.toDegrees(Math.atan(dy / dist));
   }
 
-  public transient int walkLength, runCount;
+  public int walkLength, runCount;
 
   public void randomWalking() {
     //random walking

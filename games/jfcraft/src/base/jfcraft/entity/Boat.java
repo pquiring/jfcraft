@@ -19,8 +19,8 @@ public class Boat extends CreatureBase {
   private static GLModel model;
   private static int initHealth = 5;
 
-  public transient float waterSpeed, fastWaterSpeed, landSpeed;
-  public transient RenderDest dest;
+  public float waterSpeed, fastWaterSpeed, landSpeed;
+  public RenderDest dest;
 
   public Boat() {
     id = Entities.BOAT;
