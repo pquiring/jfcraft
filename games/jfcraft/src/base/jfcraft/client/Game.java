@@ -678,7 +678,7 @@ public class Game extends RenderScreen {
 
   private void renderItemInHand(GL gl, Item item) {
     o_items.resetAll();
-    Texture texture;
+    Texture texture = null;
     boolean isBlock = false;
     boolean isBlockEntity = false;
     int buffersIdx = -1;
@@ -687,7 +687,6 @@ public class Game extends RenderScreen {
 
     if (Static.isBlock(item.id)) {
       block = Static.blocks.blocks[item.id];
-      texture = block.textures[0].texture;
       if (block.renderAsEntity) {
         isBlockEntity = true;
         eb = Static.entities.entities[block.entityID];
@@ -697,9 +696,11 @@ public class Game extends RenderScreen {
         eb.ang.y = 180;
         eb.setScale(1.0f);
       } else if (block.renderAsItem) {
+        texture = block.textures[0].texture;
         buffersIdx = 0;
         block.addFaceWorldItem(o_items.getBuffers(0), item.var, block.isGreen);
       } else {
+        texture = block.textures[0].texture;
         isBlock = true;
         data.x = 0;
         data.y = 0;

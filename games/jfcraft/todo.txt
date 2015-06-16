@@ -22,7 +22,6 @@ support ogg audio files (JCraft:JOrbis/0.0.17) or MP3 (ffmpeg)
 XP
 suffication
 Keep track of client chunks loaded.
-flowing water/lava
 fire
 web : move slow
 trip line
