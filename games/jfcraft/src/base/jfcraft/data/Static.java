@@ -48,7 +48,7 @@ public class Static {
   public static boolean debugProfile = false;
   public static boolean debugCaves = false;
   public static boolean debugBug = false;
-  public static boolean debugDisableRandomTicks = true;
+  public static boolean debugDisableRandomTicks = false;
   public static boolean debugPurgeEntities = false;
 
   public static boolean doSteps = false;

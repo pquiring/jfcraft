@@ -101,7 +101,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
   public static final int DEST_NORMAL = 0;  //stitched block
   public static final int DEST_ALPHA = 1;  //stitched block (ALPHA)
   public static final int DEST_TEXT = 2;  //ASCII text
-  public static final int buffersCount = 2; //DEST_NORMAL + DEST_ALPHA  (excluding DEST_TEXT)
+  public static final int buffersCount = 3; //DEST_NORMAL + DEST_ALPHA + DEST_TEXT
 
   /** Old Chunk read from file/network. */
   public Chunk() {

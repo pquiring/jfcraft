@@ -35,10 +35,7 @@ public class PacketSetExtra extends Packet {
     if (chunk != null) {
       chunk.addExtra(extra);
     }
-    if (extra instanceof ExtraSign) {
-      ExtraSign es = (ExtraSign)extra;
-      Static.log("txt=" + es.txt[0] + "," + es.txt[1] + "," + es.txt[2] + "," + es.txt[3]);
-    }
+    client.chunkBuilder.add(chunk);
   }
 
   @Override
