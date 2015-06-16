@@ -25,7 +25,7 @@ public class LoadingChunks extends RenderScreen {
 
   public void setup(Client client) {
     this.client = client;
-    this.game = game;
+    Static.game = Static.game;
     client.spawnAreaChunksDone = 0;
     client.spawnAreaChunksTodo = 0;
     client.loadedSpawnArea = false;

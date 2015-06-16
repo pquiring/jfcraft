@@ -48,7 +48,7 @@ public class Game extends RenderScreen {
   }
 
   public void setup() {
-    game = this;
+    Static.game = this;
     world = Static.world();
     setCursor();
     Static.inGame = true;
@@ -103,9 +103,9 @@ public class Game extends RenderScreen {
       RenderEngine.advanceAnimation(gl);
       advanceAnimation = false;
     }
-    client.chunkLighter.process();
-    client.chunkBuilder.process();
-    client.chunkCopier.process(gl);
+    Static.client.chunkLighter.process();
+    Static.client.chunkBuilder.process();
+    Static.client.chunkCopier.process(gl);
   }
 
   private Profiler pro = new Profiler("r:");
@@ -122,34 +122,35 @@ public class Game extends RenderScreen {
       Static.advanceFrame = false;
     }
 
-    int dim = client.player.dim;
+    int dim = Static.client.player.dim;
     if (!dim_env_inited[dim]) {
       Static.log("Environment init:" + dim);
       Static.dims.dims[dim].getEnvironment().init(gl);
       dim_env_inited[dim] = true;
     }
 
-    if (Static.inGame && client.player.health == 0) {
+    if (Static.inGame && Static.client.player.health == 0) {
       Static.video.setScreen(Static.screens.screens[Client.DEAD]);
       return;
     }
 
-    if (client.error != null) {
-      client.stopTimers();
-      client.stopVoIP();
+    if (Static.client.error != null) {
+      Static.client.stopTimers();
+      Static.client.stopVoIP();
       MessageMenu message = (MessageMenu)Static.screens.screens[Client.MESSAGE];
-      message.setup("Error", client.error.toString(), Static.screens.screens[Client.MAIN]);
+      message.setup("Error", Static.client.error.toString(), Static.screens.screens[Client.MAIN]);
       Static.video.setScreen(message);
+      Static.game = null;
       return;
     }
 
-    recreateMenu(gl, o_active, 75 + client.activeSlot * 40,470, 1,45, 46,46);
+    recreateMenu(gl, o_active, 75 + Static.client.activeSlot * 40,470, 1,45, 46,46);
 
-    int cx = Static.floor(client.player.pos.x / 16.0f);
-    int cz = Static.floor(client.player.pos.z / 16.0f);
+    int cx = Static.floor(Static.client.player.pos.x / 16.0f);
+    int cz = Static.floor(Static.client.player.pos.z / 16.0f);
     pro.next();
 
-    Chunk chunks[] = client.world.chunks.getChunks();
+    Chunk chunks[] = Static.client.world.chunks.getChunks();
 
     //now render stuff
     gl.glDepthMask(true);
@@ -181,14 +182,14 @@ public class Game extends RenderScreen {
     gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, perspective.m);  //perspective matrix
 
     gl.glUniform1f(Static.uniformSunLight, 1.0f);
-    Static.dims.dims[dim].getEnvironment().render(gl, world.time, sunLight, client);
+    Static.dims.dims[dim].getEnvironment().render(gl, world.time, sunLight, Static.client);
 
     view.setIdentity();
-    synchronized(client.ang) {
-      view.addRotate(client.ang.x, 1, 0, 0);
-      view.addRotate(client.ang.y, 0, 1, 0);
+    synchronized(Static.client.ang) {
+      view.addRotate(Static.client.ang.x, 1, 0, 0);
+      view.addRotate(Static.client.ang.y, 0, 1, 0);
     }
-    view.addTranslate2(-client.player.pos.x, -client.player.pos.y -client.player.eyeHeight, -client.player.pos.z);
+    view.addTranslate2(-Static.client.player.pos.x, -Static.client.player.pos.y -Static.client.player.eyeHeight, -Static.client.player.pos.z);
     gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, view.m);  //view matrix
 
     Static.blocks.stitched.bind(gl);
@@ -219,14 +220,14 @@ public class Game extends RenderScreen {
     pro.next();
 
     //render box around block
-    client.player.findBlock(-1, BlockHitTest.Type.SELECTION, client.selection);
-    if (client.selection.block != null) {
+    Static.client.player.findBlock(-1, BlockHitTest.Type.SELECTION, Static.client.selection);
+    if (Static.client.selection.block != null) {
       if (o_box == null) {
         o_box = new RenderBuffers();
         o_box.type = GL.GL_LINES;
       }
       o_box.reset();
-      ArrayList<Box> boxes = client.selection.block.getBoxes(client.selection, BlockHitTest.Type.SELECTION);
+      ArrayList<Box> boxes = Static.client.selection.block.getBoxes(Static.client.selection, BlockHitTest.Type.SELECTION);
       int boxcnt = boxes.size();
       for(int a=0;a<boxcnt;a++) {
         Box box = boxes.get(a);
@@ -246,7 +247,7 @@ public class Game extends RenderScreen {
         o_box.addPoly(new int[] {0,1, 2,3, 0,2, 1,3, 4,5, 6,7, 4,6, 5,7, 0,4, 1,5, 2,6, 3,7});
       }
       o_box.copyBuffers(gl);
-      o_box.mat.setTranslate(client.selection.x, client.selection.y, client.selection.z);
+      o_box.mat.setTranslate(Static.client.selection.x, Static.client.selection.y, Static.client.selection.z);
       gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, o_box.mat.m);  //model matrix
       o_box.bindBuffers(gl);
       gl.glUniform1i(Static.uniformEnableTextures, 0);
@@ -266,7 +267,7 @@ public class Game extends RenderScreen {
       data.reset();
       for(int b=0;b<ne;b++) {
         EntityBase e = es[b];
-        if (e.uid == client.player.uid) continue;  //do not render self
+        if (e.uid == Static.client.player.uid) continue;  //do not render self
         if (!e.instanceInited) {
           e.initInstance(gl);
         }
@@ -351,20 +352,20 @@ public class Game extends RenderScreen {
       int x = 75;
       int y = 512 - 2;
       for(int a=0;a<9;a++) {
-        Item item = client.player.items[a];
+        Item item = Static.client.player.items[a];
         if (item.id != -1) {
           renderItem(gl,item,x,y);
         }
         x += 40;
       }
 
-      if (client.chatTime > 0) {
+      if (Static.client.chatTime > 0) {
         //render chat
         int dx = 0;
         int dy = 512 - fontSize * 7;
-        synchronized(client.chat) {
-          for(int a=client.chat.size()-1;a>=0;a--) {
-            addText(dx, dy, client.chat.get(a));
+        synchronized(Static.client.chat) {
+          for(int a=Static.client.chat.size()-1;a>=0;a--) {
+            addText(dx, dy, Static.client.chat.get(a));
             dy -= fontSize;
           }
         }
@@ -374,8 +375,8 @@ public class Game extends RenderScreen {
         addText(512 - 4 * fontSize, 512, "Talk");
       }
 
-      if (client.itemTextTime > 0) {
-        Item item = client.player.items[client.activeSlot];
+      if (Static.client.itemTextTime > 0) {
+        Item item = Static.client.player.items[Static.client.activeSlot];
         if (item.id != 0) {
           ItemBase itembase = Static.items.items[item.id];
           if (item != null) {
@@ -391,16 +392,16 @@ public class Game extends RenderScreen {
       if (debug) {
         reset();
         gui_position = TOP;
-        int gx = Static.floor(client.player.pos.x % 16.0f);
-        if (client.player.pos.x < 0 && gx != 0) gx = 16 + gx;
-        int gy = Static.floor(client.player.pos.y);
-        int gz = Static.floor(client.player.pos.z % 16.0f);
-        if (client.player.pos.z < 0 && gz != 0) gz = 16 + gz;
+        int gx = Static.floor(Static.client.player.pos.x % 16.0f);
+        if (Static.client.player.pos.x < 0 && gx != 0) gx = 16 + gx;
+        int gy = Static.floor(Static.client.player.pos.y);
+        int gz = Static.floor(Static.client.player.pos.z % 16.0f);
+        if (Static.client.player.pos.z < 0 && gz != 0) gz = 16 + gz;
         int dx = 0;
         int dy = fontSize;
-        addText(dx,dy,"Pos:" + client.player.pos.x + "," + client.player.pos.y + "," + client.player.pos.z);
+        addText(dx,dy,"Pos:" + Static.client.player.pos.x + "," + Static.client.player.pos.y + "," + Static.client.player.pos.z);
         dy += fontSize;
-        addText(dx,dy,"Ang:" + client.player.ang.x + "," + client.player.ang.y + "," + client.player.ang.z);
+        addText(dx,dy,"Ang:" + Static.client.player.ang.x + "," + Static.client.player.ang.y + "," + Static.client.player.ang.z);
         dy += fontSize;
         addText(dx,dy,"Chunk:" + cx + "," + cz + " Block:" + gx + "," + gy + "," + gz);
         dy += fontSize;
@@ -412,7 +413,7 @@ public class Game extends RenderScreen {
         dy += fontSize;
         addText(dx,dy,"FPS=" + Static.fps);
         dy += fontSize;
-        Chunk chunk = client.player.getChunk();
+        Chunk chunk = Static.client.player.getChunk();
         if (chunk != null) {
           int gp = (gz << 4) + gx;
           addText(dx,dy,"Biome:" + Chunk.getBiomeName(chunk.biome[gp]));
@@ -425,15 +426,15 @@ public class Game extends RenderScreen {
           dy += fontSize;
         }
 
-        if (client.clientTransport instanceof LocalClientTransport) {
-          addText(dx,dy,"Queue:S=" + client.clientTransport.getServerQueueSize() + ",C=" + client.clientTransport.getClientQueueSize());
+        if (Static.client.clientTransport instanceof LocalClientTransport) {
+          addText(dx,dy,"Queue:S=" + Static.client.clientTransport.getServerQueueSize() + ",C=" + Static.client.clientTransport.getClientQueueSize());
           dy += fontSize;
         }
         addText(dx,dy,"Tick:" + Static.tick);
         dy += fontSize;
         addText(dx,dy,"Time:" + world.time);
         dy += fontSize;
-        client.player.findBlock(-1, BlockHitTest.Type.SELECTION, c);
+        Static.client.player.findBlock(-1, BlockHitTest.Type.SELECTION, c);
         if (c.block != null && c.chunk != null) {
           addText(dx,dy,"Hit:" + c);
           dy += fontSize;
@@ -471,7 +472,7 @@ public class Game extends RenderScreen {
       o_cross.bindBuffers(gl);
       o_cross.render(gl);
       o_icons.reset();
-      float health = client.player.health;
+      float health = Static.client.player.health;
       for(int a=0;a<10;a++) {
         if (health >= 2) {
           //full heart
@@ -486,7 +487,7 @@ public class Game extends RenderScreen {
         }
         health -= 2;
       }
-      float ar = client.player.ar;
+      float ar = Static.client.player.ar;
       if (ar > 0) {
         for(int a=0;a<10;a++) {
           if (ar >= 2) {
@@ -502,7 +503,7 @@ public class Game extends RenderScreen {
           ar -= 2;
         }
       }
-      float air = client.player.air;
+      float air = Static.client.player.air;
       if (air != 20f) {
         for(int a=0;a<10;a++) {
           if (air >= 2) {
@@ -517,7 +518,7 @@ public class Game extends RenderScreen {
           air -= 2;
         }
       }
-      int food = (int)client.player.hunger;
+      int food = (int)Static.client.player.hunger;
       for(int a=0;a<10;a++) {
         if (food >= 2) {
           //full heart
@@ -591,12 +592,12 @@ public class Game extends RenderScreen {
       case KeyEvent.VK_8:
       case KeyEvent.VK_9:
         int idx = vk - KeyEvent.VK_1;
-        client.clientTransport.changeActiveSlot((byte)idx);
+        Static.client.clientTransport.changeActiveSlot((byte)idx);
         break;
       case KeyEvent.VK_F12:
         int cnt = 0;
-        for(int a=0;a<client.player.enderChest.items.length;a++) {
-          cnt += client.player.enderChest.items[a].count;
+        for(int a=0;a<Static.client.player.enderChest.items.length;a++) {
+          cnt += Static.client.player.enderChest.items[a].count;
         }
         Static.log("# items in ender chest=" + cnt);
         break;
@@ -628,7 +629,7 @@ public class Game extends RenderScreen {
     } else {
       int dx = x - lastx;
       int dy = y - lasty;
-      client.look(dx, dy);
+      Static.client.look(dx, dy);
       lastx = x;
       lasty = y;
     }
@@ -643,10 +644,10 @@ public class Game extends RenderScreen {
   }
 
   public void mouseWheel(int delta) {
-    int activeSlot = client.activeSlot + delta;
+    int activeSlot = Static.client.activeSlot + delta;
     while (activeSlot < 0) activeSlot += 9;
     while (activeSlot > 8) activeSlot -= 9;
-    client.clientTransport.changeActiveSlot((byte)activeSlot);
+    Static.client.clientTransport.changeActiveSlot((byte)activeSlot);
   }
 
   public void enterMenu(byte idx) {
@@ -659,7 +660,7 @@ public class Game extends RenderScreen {
   private GLMatrix handMat = new GLMatrix();
 
   private void renderItemInHand(GL gl) {
-    Item item = client.player.items[client.activeSlot];
+    Item item = Static.client.player.items[Static.client.activeSlot];
     gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
 
     gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, perspective.m);  //perspective matrix
@@ -721,9 +722,9 @@ public class Game extends RenderScreen {
     }
 
     handMat.setIdentity();
-    handMat.addRotate(client.handAngle.x, 1, 0, 0);
-    handMat.addRotate(client.handAngle.y, 0, 1, 0);
-    handMat.addRotate(client.handAngle.z, 0, 0, 1);
+    handMat.addRotate(Static.client.handAngle.x, 1, 0, 0);
+    handMat.addRotate(Static.client.handAngle.y, 0, 1, 0);
+    handMat.addRotate(Static.client.handAngle.z, 0, 0, 1);
 
     if (isBlock) {
       handMat.addRotate(baseHandAngle.x, 1, 0, 0);
@@ -732,7 +733,7 @@ public class Game extends RenderScreen {
       handMat.addTranslate(-0.5f, -0.5f, 0);
     }
     handMat.addTranslate(baseHandPos.x, baseHandPos.y, baseHandPos.z);
-    handMat.addTranslate(client.handPos.x, client.handPos.y, client.handPos.z);
+    handMat.addTranslate(Static.client.handPos.x, Static.client.handPos.y, Static.client.handPos.z);
 
     gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, handMat.m);  //view matrix
 
@@ -753,13 +754,13 @@ public class Game extends RenderScreen {
     handMat.addTranslate(hand.org.x, hand.org.y, hand.org.z);
     handMat.addScale(2, 2, 2);
     handMat.addRotate2(-170, 0, 0, 1);
-    handMat.addRotate4(client.handAngle.x, 1, 0, 0);
-    handMat.addRotate4(client.handAngle.y, 0, 1, 0);
-    handMat.addRotate4(client.handAngle.z, 0, 0, 1);
+    handMat.addRotate4(Static.client.handAngle.x, 1, 0, 0);
+    handMat.addRotate4(Static.client.handAngle.y, 0, 1, 0);
+    handMat.addRotate4(Static.client.handAngle.z, 0, 0, 1);
     handMat.addTranslate2(-hand.org.x, -hand.org.y, -hand.org.z);
     handMat.addTranslate(-0.5f,-1.5f,0);
     handMat.addTranslate(baseHandPos.x, baseHandPos.y, baseHandPos.z);
-    handMat.addTranslate(client.handPos.x, client.handPos.y, client.handPos.z);
+    handMat.addTranslate(Static.client.handPos.x, Static.client.handPos.y, Static.client.handPos.z);
     gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, handMat.m);  //view matrix
     Static.entities.entities[Entities.PLAYER].bindTexture(gl);
     hand.bindBuffers(gl);

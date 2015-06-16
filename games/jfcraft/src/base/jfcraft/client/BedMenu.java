@@ -23,13 +23,13 @@ public class BedMenu extends RenderScreen {
   public void init(GL gl) {
     super.init(gl);
     addButton(gl, "Leave Bed", 56, 390, 400, new Runnable() {public void run() {
-      client.clientTransport.leaveMenu();
+      Static.client.clientTransport.leaveMenu();
       leaveMenu();
     }});
   }
 
   public void render(GL gl, int width, int height) {
-    game.render(gl, width, height);
+    Static.game.render(gl, width, height);
     setMenuSize(512, 512);
     reset();
     gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, Static.identity.m);  //view matrix
@@ -41,7 +41,7 @@ public class BedMenu extends RenderScreen {
   }
 
   public void resize(GL gl, int width, int height) {
-    game.resize(gl, width, height);
+    Static.game.resize(gl, width, height);
   }
 
   public void mousePressed(int x, int y, int button) {

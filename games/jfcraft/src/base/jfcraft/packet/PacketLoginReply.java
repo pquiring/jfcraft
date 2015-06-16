@@ -8,7 +8,6 @@ package jfcraft.packet;
 import jfcraft.client.Client;
 import jfcraft.client.MessageMenu;
 import jfcraft.data.*;
-import static jfcraft.opengl.RenderScreen.client;
 
 public class PacketLoginReply extends Packet {
   public String s1;

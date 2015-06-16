@@ -25,7 +25,7 @@ public class Login extends RenderScreen {
 
   public void setup(Client client) {
     //assume already logged in
-    this.client = client;
+    Static.client = client;
     Static.client = client;
     client.clientTransport.start();
     client.clientTransport.login();
@@ -58,10 +58,10 @@ public class Login extends RenderScreen {
 
     reset();
 
-    if (!client.auth) {
+    if (!Static.client.auth) {
       addText(250, 200, "Login...");
     } else {
-      if (client.world != null && client.spawnAreaDonePercent != 100)
+      if (Static.client.world != null && Static.client.spawnAreaDonePercent != 100)
         addText(150, 200, "Generating spawn area...");
       else
         addText(150, 200, "Loading...");
@@ -74,22 +74,22 @@ public class Login extends RenderScreen {
 
     renderText(gl);
 
-    if (client.auth) {
-      if (client.world == null && client.player == null && !reqWorld) {
-        client.clientTransport.getWorld();
+    if (Static.client.auth) {
+      if (Static.client.world == null && Static.client.player == null && !reqWorld) {
+        Static.client.clientTransport.getWorld();
         reqWorld = true;
         return;
       }
-      if (client.world != null && client.spawnAreaDonePercent == 100 && client.player == null && !reqPlayer) {
-        client.clientTransport.getPlayer();
+      if (Static.client.world != null && Static.client.spawnAreaDonePercent == 100 && Static.client.player == null && !reqPlayer) {
+        Static.client.clientTransport.getPlayer();
         reqPlayer = true;
         return;
       }
-      if (client.world != null && client.player != null) {
-        Static.initClientThread(client.world, "Client render (EDT)", true, false);  //actually EDT
-        client.startTimers();
+      if (Static.client.world != null && Static.client.player != null) {
+        Static.initClientThread(Static.client.world, "Client render (EDT)", true, false);  //actually EDT
+        Static.client.startTimers();
         LoadingChunks loading = (LoadingChunks)Static.screens.screens[Client.LOADINGCHUNKS];
-        loading.setup(client);
+        loading.setup(Static.client);
         Static.video.setScreen(loading);
         return;
       }

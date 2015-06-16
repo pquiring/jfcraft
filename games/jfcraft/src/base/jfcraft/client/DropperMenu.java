@@ -32,7 +32,7 @@ public class DropperMenu extends RenderScreen {
   }
 
   public void render(GL gl, int width, int height) {
-    game.render(gl, width, height);
+    Static.game.render(gl, width, height);
     setMenuSize(gui_width, gui_height);
 
     if (t_menu == null) {
@@ -43,7 +43,7 @@ public class DropperMenu extends RenderScreen {
       o_menu = createMenu(gl);
     }
 
-    ExtraContainer dropper = game.client.container;
+    ExtraContainer dropper = Static.client.container;
 
     gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, identity.m);  //view matrix
     gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, identity.m);  //model matrix
@@ -67,7 +67,7 @@ public class DropperMenu extends RenderScreen {
         x = 16;
         y += 36;
       }
-      Item item = game.client.player.items[a];
+      Item item = Static.client.player.items[a];
       if (item.id != 0) {
         renderItem(gl,item,x,y);
       }
@@ -77,7 +77,7 @@ public class DropperMenu extends RenderScreen {
     x = 16;
     y = (int)(gui_height - 11);
     for(int a=0;a<9;a++) {
-      Item item = game.client.player.items[a];
+      Item item = Static.client.player.items[a];
       if (item.id != 0) {
         renderItem(gl,item,x,y);
       }
@@ -102,7 +102,7 @@ public class DropperMenu extends RenderScreen {
     }
 
     //render item in hand
-    Item item = game.client.hand;
+    Item item = Static.client.hand;
     if (item != null) {
       renderItem(gl,item,mx,my);
     }
@@ -125,14 +125,14 @@ public class DropperMenu extends RenderScreen {
     switch (vk) {
       case KeyEvent.VK_E:
       case KeyEvent.VK_ESCAPE:
-        game.client.clientTransport.leaveMenu();
+        Static.client.clientTransport.leaveMenu();
         leaveMenu();
         break;
     }
   }
 
   public void resize(GL gl, int width, int height) {
-    game.resize(gl, width, height);
+    Static.game.resize(gl, width, height);
   }
 
   public void mousePressed(int x, int y, int button) {
@@ -144,7 +144,7 @@ public class DropperMenu extends RenderScreen {
         by += 36;
       }
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
-        game.client.clickInventory(a, button == 1);
+        Static.client.clickInventory(a, button == 1);
       }
       bx += 36;
     }
@@ -153,7 +153,7 @@ public class DropperMenu extends RenderScreen {
     by = (int)(gui_height - 11) - 36;
     for(byte a=0;a<9;a++) {
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
-        game.client.clickInventory(a, button == 1);
+        Static.client.clickInventory(a, button == 1);
       }
       bx += 36;
     }
@@ -166,14 +166,14 @@ public class DropperMenu extends RenderScreen {
         by += 36;
       }
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
-        game.client.clickContainer(a, button == 1);
+        Static.client.clickContainer(a, button == 1);
       }
       bx += 36;
     }
   }
 
   public void mouseReleased(int x, int y, int button) {
-    game.mouseReleased(x, y, button);
+    Static.game.mouseReleased(x, y, button);
   }
 
   public void mouseMoved(int x, int y, int button) {
