@@ -275,20 +275,21 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     return isSolid;
   }
   private static Coords supportingBlock = new Coords();
-  //Note: this func is called from multiple threads so needs sync due to supportingBlock is static
-  public synchronized boolean checkSupported(Coords thisBlock) {
+  public boolean checkSupported(Coords thisBlock) {
     //get this block
-    supportingBlock.copy(thisBlock);
-    if (thisBlock.block.isDir || thisBlock.block.isDirFace) {
-      supportingBlock.adjacentBlock();
-    } else {
-      supportingBlock.y--;
-    }
-    //get supporting block
-    Static.world().getBlock(thisBlock.chunk.dim, supportingBlock.x, supportingBlock.y, supportingBlock.z, supportingBlock);
-    if ((thisBlock.block.isPlant && !supportingBlock.block.canPlantOn) || (!supportingBlock.block.canSupportBlock(thisBlock))) {
-      //supporting block gone
-      return false;
+    synchronized(supportingBlock) {
+      supportingBlock.copy(thisBlock);
+      if (thisBlock.block.isDir || thisBlock.block.isDirFace) {
+        supportingBlock.adjacentBlock();
+      } else {
+        supportingBlock.y--;
+      }
+      //get supporting block
+      Static.world().getBlock(thisBlock.chunk.dim, supportingBlock.x, supportingBlock.y, supportingBlock.z, supportingBlock);
+      if ((thisBlock.block.isPlant && !supportingBlock.block.canPlantOn) || (!supportingBlock.block.canSupportBlock(thisBlock))) {
+        //supporting block gone
+        return false;
+      }
     }
     return true;
   }
@@ -300,6 +301,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
       tick.toWorldCoords(chunk, c);
       Static.world().getBlock(chunk.dim, c.x, c.y, c.z, c);
       if (!checkSupported(c)) {
+        c.block = this;
         destroy(null, c, true);
       }
     }

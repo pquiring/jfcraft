@@ -146,13 +146,13 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
 
   /** Determines if lighting if different around a block. */
   private boolean doesLightingDiffer(int x,int y,int z) {
-    int ll = -1;
+    int ll = -1, la = -1, lb = -1, ln = -1, le = -1, ls = -1, lw = -1; //light levels around block
     BlockBase base1, base2;
     if (y < 255) {
       base1 = Static.blocks.blocks[getID(x,y+1,z)];
       base2 = Static.blocks.blocks[getID2(x,y+1,z)];
       if (!base1.isOpaque && !base2.isOpaque) {
-        int la = getLights(x, y+1, z);
+        la = getLights(x, y+1, z);
         if (ll != -1 && ll != la) {
           return true;
         }
@@ -163,7 +163,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       base1 = Static.blocks.blocks[getID(x,y-1,z)];
       base2 = Static.blocks.blocks[getID2(x,y-1,z)];
       if (!base1.isOpaque && !base2.isOpaque) {
-        int lb = getLights(x, y-1, z);
+        lb = getLights(x, y-1, z);
         if (ll != -1 && ll != lb) {
           return true;
         }
@@ -173,7 +173,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     base1 = Static.blocks.blocks[getID(x,y,z-1)];
     base2 = Static.blocks.blocks[getID2(x,y,z-1)];
     if (!base1.isOpaque && !base2.isOpaque) {
-      int ln = getLights(x, y, z-1);
+      ln = getLights(x, y, z-1);
       if (ll != -1 && ll != ln) {
         return true;
       }
@@ -182,7 +182,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     base1 = Static.blocks.blocks[getID(x+1,y,z)];
     base2 = Static.blocks.blocks[getID2(x+1,y,z)];
     if (!base1.isOpaque && !base2.isOpaque) {
-      int le = getLights(x+1, y, z);
+      le = getLights(x+1, y, z);
       if (ll != -1 && ll != le) {
         return true;
       }
@@ -191,7 +191,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     base1 = Static.blocks.blocks[getID(x,y,z+1)];
     base2 = Static.blocks.blocks[getID2(x,y,z+1)];
     if (!base1.isOpaque && !base2.isOpaque) {
-      int ls = getLights(x, y, z+1);
+      ls = getLights(x, y, z+1);
       if (ll != -1 && ll != ls) {
         return true;
       }
@@ -200,11 +200,15 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     base1 = Static.blocks.blocks[getID(x-1,y,z)];
     base2 = Static.blocks.blocks[getID2(x-1,y,z)];
     if (!base1.isOpaque && !base2.isOpaque) {
-      int lw = getLights(x-1, y, z);
+      lw = getLights(x-1, y, z);
       if (ll != -1 && ll != lw) {
         return true;
       }
       ll = lw;
+    }
+    if (la > 0 && lb > 0) {
+      //sunlight might get blocked
+      return true;
     }
     return false;
   }
@@ -213,6 +217,24 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
   private int[] getLightCoordsSet(int x,int y,int z, BlockBase newBlock, BlockBase oldBlock) {
     //check how lighting will change
     int xyz[] = new int[6];
+    //set min area
+    if (newBlock.emitLight > 0 || oldBlock.emitLight > 0) {
+      int el = newBlock.emitLight;
+      if (oldBlock.emitLight > el) el = oldBlock.emitLight;
+      xyz[0] = x - el;
+      xyz[1] = y - el;
+      xyz[2] = z - el;
+      xyz[3] = x + el;
+      xyz[4] = y + el;
+      xyz[5] = z + el;
+    } else {
+      xyz[0] = x;
+      xyz[1] = y;
+      xyz[2] = z;
+      xyz[3] = x;
+      xyz[4] = y;
+      xyz[5] = z;
+    }
     if (doesLightingDiffer(x,y,z)) {
       xyz[0] = x-14;
       xyz[1] = 0;
@@ -220,24 +242,6 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       xyz[3] = x+14;
       xyz[4] = y+14;
       xyz[5] = z+14;
-    } else {
-      if (newBlock.emitLight > 0 || oldBlock.emitLight > 0) {
-        int el = newBlock.emitLight;
-        if (oldBlock.emitLight > el) el = oldBlock.emitLight;
-        xyz[0] = x - el;
-        xyz[1] = y - el;
-        xyz[2] = z - el;
-        xyz[3] = x + el;
-        xyz[4] = y + el;
-        xyz[5] = z + el;
-      } else {
-        xyz[0] = x;
-        xyz[1] = y;
-        xyz[2] = z;
-        xyz[3] = x;
-        xyz[4] = y;
-        xyz[5] = z;
-      }
     }
     return xyz;
   }
@@ -246,6 +250,23 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
   private int[] getLightCoordsClear(int x,int y,int z, BlockBase oldBlock) {
     //check how lighting will change
     int xyz[] = new int[6];
+    //set min area
+    if (oldBlock.emitLight > 0) {
+      int el = oldBlock.emitLight;
+      xyz[0] = x - el;
+      xyz[1] = y - el;
+      xyz[2] = z - el;
+      xyz[3] = x + el;
+      xyz[4] = y + el;
+      xyz[5] = z + el;
+    } else {
+      xyz[0] = x;
+      xyz[1] = y;
+      xyz[2] = z;
+      xyz[3] = x;
+      xyz[4] = y;
+      xyz[5] = z;
+    }
     if (doesLightingDiffer(x,y,z)) {
       xyz[0] = x-14;
       xyz[1] = 0;
@@ -253,23 +274,6 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       xyz[3] = x+14;
       xyz[4] = y+14;
       xyz[5] = z+14;
-    } else {
-      if (oldBlock.emitLight > 0) {
-        int el = oldBlock.emitLight;
-        xyz[0] = x - el;
-        xyz[1] = y - el;
-        xyz[2] = z - el;
-        xyz[3] = x + el;
-        xyz[4] = y + el;
-        xyz[5] = z + el;
-      } else {
-        xyz[0] = x;
-        xyz[1] = y;
-        xyz[2] = z;
-        xyz[3] = x;
-        xyz[4] = y;
-        xyz[5] = z;
-      }
     }
     return xyz;
   }
@@ -876,12 +880,12 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     }
   }
 
-  private boolean hasTick(int x,int y,int z, boolean extra) {
+  private boolean hasTick(int x,int y,int z, boolean isBlocks2) {
     synchronized(lock) {
       int size = ticks.size();
       for(int a=0;a<size;a++) {
         Tick tick = ticks.get(a);
-        if (tick.x == x && tick.y == y && tick.z == z && tick.isBlocks2 == extra) {
+        if (tick.x == x && tick.y == y && tick.z == z && tick.isBlocks2 == isBlocks2) {
 //          Static.log("hasTick:" + tick.x + "," + tick.y + "," + tick.z);
           return true;
         }
@@ -889,38 +893,38 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     }
     return false;
   }
-  public void addTick(Coords c, boolean extra) {
+  public void addTick(Coords c, boolean isBlocks2) {
     synchronized(lock) {
-      if (hasTick(c.gx, c.gy, c.gz, extra)) return;
+      if (hasTick(c.gx, c.gy, c.gz, isBlocks2)) return;
       Tick tick = new Tick();
       tick.x = (short)c.gx;
       tick.y = (short)c.gy;
       tick.z = (short)c.gz;
-      tick.isBlocks2 = extra;
+      tick.isBlocks2 = isBlocks2;
 //    Static.log("addTick:" + tick.x + "," + tick.y + "," + tick.z);
       ticks.add(tick);
     }
     dirty = true;
   }
-  public void addTick(int x,int y,int z, boolean extra) {
+  public void addTick(int x,int y,int z, boolean isBlocks2) {
     synchronized(lock) {
-      if (hasTick(x, y, z, extra)) return;
+      if (hasTick(x, y, z, isBlocks2)) return;
       Tick tick = new Tick();
       tick.x = (short)x;
       tick.y = (short)y;
       tick.z = (short)z;
-      tick.isBlocks2 = extra;
+      tick.isBlocks2 = isBlocks2;
 //    Static.log("addTick:" + tick.x + "," + tick.y + "," + tick.z);
       ticks.add(tick);
     }
     dirty = true;
   }
-  public void delTick(int x,int y,int z, boolean extra) {
+  public void delTick(int x,int y,int z, boolean isBlocks2) {
     synchronized(lock) {
       int size = ticks.size();
       for(int a=0;a<size;a++) {
         Tick tick = ticks.get(a);
-        if (tick.x == x && tick.y == y && tick.z == z && tick.isBlocks2 == extra) {
+        if (tick.x == x && tick.y == y && tick.z == z && tick.isBlocks2 == isBlocks2) {
 //          Static.log("delTick:" + tick.x + "," + tick.y + "," + tick.z);
           ticks.remove(a);
           return;
@@ -936,26 +940,12 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     }
     dirty = true;
   }
-  public void delTick(Coords c) {
+  public Tick getTick(int x,int y,int z, boolean isBlocks2) {
     synchronized(lock) {
       int size = ticks.size();
       for(int a=0;a<size;a++) {
         Tick tick = ticks.get(a);
-        if (tick.x == c.gx && tick.y == c.gy && tick.z == c.gz) {
-//          Static.log("delTick:" + tick.x + "," + tick.y + "," + tick.z);
-          ticks.remove(a);
-          return;
-        }
-      }
-    }
-    dirty = true;
-  }
-  public Tick getTick(int x,int y,int z, boolean extra) {
-    synchronized(lock) {
-      int size = ticks.size();
-      for(int a=0;a<size;a++) {
-        Tick tick = ticks.get(a);
-        if (tick.x == x && tick.y == y && tick.z == z && tick.isBlocks2 == extra) {
+        if (tick.x == x && tick.y == y && tick.z == z && tick.isBlocks2 == isBlocks2) {
           return tick;
         }
       }
