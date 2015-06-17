@@ -594,6 +594,7 @@ public class Client {
     boolean fup, boolean fdn)
   {
     if (player.vehicle != null) {
+      Static.log("move:veh");
       player.vehicle.move(up, dn, lt, rt, jump, sneak, run, b1, b2, fup, fdn);
     } else {
       player.move(up, dn, lt, rt, jump, sneak, run, b1, b2, fup, fdn);
