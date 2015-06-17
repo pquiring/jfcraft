@@ -8,9 +8,10 @@ package jfcraft.recipe;
  *   3x3
  *   3x2
  *   3x1
- *   1x3
+ *   2x3
  *   2x2
  *   2x1
+ *   1x3
  *   1x2
  *   1x1
  *
@@ -28,7 +29,7 @@ public abstract class Recipe {
     this.height = height;
   }
   /** Returns an item if the recipe can make it from input items.
-   @param items - list of items that is width x height (or all items if -1)
+   @param items - list of items that is width x height (or all items if width/height == -1)
    */
   public abstract Item make(Item items[]);
 }

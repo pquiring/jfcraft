@@ -12,22 +12,25 @@ import jfcraft.data.*;
 
 public class RecipeHoe extends Recipe {
   public RecipeHoe() {
-    super(3,3);
+    super(2,3);
   }
 
   public Item make(Item items[]) {
-    char id = items[1].id;
+    char id = items[0].id;
 
-    if (((items[0].id != id) || (items[2].id != Blocks.AIR)) &&
-     ((items[2].id != id) || (items[0].id != Blocks.AIR))) return null;
+    if (items[1].id != id) return null;
 
-    if (items[3].id != Blocks.AIR) return null;
-    if (items[4].id != Items.STICK) return null;
-    if (items[5].id != Blocks.AIR) return null;
-
-    if (items[6].id != Blocks.AIR) return null;
-    if (items[7].id != Items.STICK) return null;
-    if (items[8].id != Blocks.AIR) return null;
+    if (items[2].id == Blocks.AIR) {
+      if (items[3].id != Items.STICK) return null;
+      if (items[4].id != Blocks.AIR) return null;
+      if (items[5].id != Items.STICK) return null;
+    } else if (items[2].id == Items.STICK) {
+      if (items[3].id != Blocks.AIR) return null;
+      if (items[4].id != Items.STICK) return null;
+      if (items[5].id != Blocks.AIR) return null;
+    } else {
+      return null;
+    }
 
     if (id == Items.DIAMOND) return new Item(Items.DIAMOND_HOE, 1.0f);
     if (id == Items.GOLD_INGOT) return new Item(Items.GOLD_HOE, 1.0f);

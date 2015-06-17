@@ -106,6 +106,9 @@ public class Recipes {
   }
 
   public Item make3x3(Item items[]) {
+    for(int a=0;a<9;a++) {
+      if (items[a].count == 0) items[a].id = 0;
+    }
     Item item;
     if ((items[0].id == 0) && items[1].id == 0 && items[2].id == 0) {
       //top row empty
@@ -175,7 +178,7 @@ public class Recipes {
         item = r.make(items);
         if (item != null) return item;
       }
-      if (r.width == 3 && r.height == 3) {
+      else if (r.width == 3 && r.height == 3) {
         item = r.make(items);
         if (item != null) return item;
       }
@@ -191,7 +194,7 @@ public class Recipes {
         item = r.make(items);
         if (item != null) return item;
       }
-      if (r.width == 3 && r.height == 2) {
+      else if (r.width == 3 && r.height == 2) {
         item = r.make(items);
         if (item != null) return item;
       }
@@ -207,7 +210,7 @@ public class Recipes {
         item = r.make(items);
         if (item != null) return item;
       }
-      if (r.width == 2 && r.height == 3) {
+      else if (r.width == 2 && r.height == 3) {
         item = r.make(items);
         if (item != null) return item;
       }
@@ -229,7 +232,7 @@ public class Recipes {
         item = r.make(items);
         if (item != null) return item;
       }
-      if (r.width == 3 && r.height == 1) {
+      else if (r.width == 3 && r.height == 1) {
         item = r.make(items);
         if (item != null) return item;
       }
@@ -251,7 +254,7 @@ public class Recipes {
         item = r.make(items);
         if (item != null) return item;
       }
-      if (r.width == 1 && r.height == 3) {
+      else if (r.width == 1 && r.height == 3) {
         item = r.make(items);
         if (item != null) return item;
       }
@@ -259,6 +262,9 @@ public class Recipes {
     return null;
   }
   public Item make2x2(Item items[]) {
+    for(int a=0;a<4;a++) {
+      if (items[a].count == 0) items[a].id = 0;
+    }
     Item item;
     if (items[0].id == 0 && items[2].id == 0) {
       return make1x2(new Item[] {items[1], items[3]});
@@ -279,7 +285,7 @@ public class Recipes {
         item = r.make(items);
         if (item != null) return item;
       }
-      if (r.width == 2 && r.height == 2) {
+      else if (r.width == 2 && r.height == 2) {
         item = r.make(items);
         if (item != null) return item;
       }
@@ -301,7 +307,7 @@ public class Recipes {
         item = r.make(items);
         if (item != null) return item;
       }
-      if (r.width == 2 && r.height == 1) {
+      else if (r.width == 2 && r.height == 1) {
         item = r.make(items);
         if (item != null) return item;
       }
@@ -323,7 +329,7 @@ public class Recipes {
         item = r.make(items);
         if (item != null) return item;
       }
-      if (r.width == 1 && r.height == 2) {
+      else if (r.width == 1 && r.height == 2) {
         item = r.make(items);
         if (item != null) return item;
       }
@@ -339,7 +345,7 @@ public class Recipes {
         item = r.make(items);
         if (item != null) return item;
       }
-      if (r.width == 1 && r.height == 1) {
+      else if (r.width == 1 && r.height == 1) {
         item = r.make(items);
         if (item != null) return item;
       }

@@ -20,16 +20,11 @@ public class RecipeShovel extends Recipe {
     if (items[1].id != Items.STICK) return null;
     if (items[2].id != Items.STICK) return null;
 
-    if (id == Items.DIAMOND)
-      return new Item(Items.DIAMOND_PICKAXE, 1.0f);
-    if (id == Items.GOLD_INGOT)
-      return new Item(Items.GOLD_PICKAXE, 1.0f);
-    if (id == Items.IRON_INGOT)
-      return new Item(Items.IRON_PICKAXE, 1.0f);
-    if (id == Blocks.COBBLESTONE)
-      return new Item(Items.STONE_PICKAXE, 1.0f);
-    if (id == Blocks.PLANKS)
-      return new Item(Items.WOOD_PICKAXE, 1.0f);
+    if (id == Items.DIAMOND) return new Item(Items.DIAMOND_SHOVEL, 1.0f);
+    if (id == Items.GOLD_INGOT) return new Item(Items.GOLD_SHOVEL, 1.0f);
+    if (id == Items.IRON_INGOT) return new Item(Items.IRON_SHOVEL, 1.0f);
+    if (id == Blocks.COBBLESTONE) return new Item(Items.STONE_SHOVEL, 1.0f);
+    if (id == Blocks.PLANKS) return new Item(Items.WOOD_SHOVEL, 1.0f);
     return null;
   }
 }
