@@ -7,7 +7,6 @@ package jfcraft.recipe;
  * Created : May 6, 2014
  */
 
-import jfcraft.item.Item;
 import jfcraft.data.*;
 import jfcraft.item.*;
 
