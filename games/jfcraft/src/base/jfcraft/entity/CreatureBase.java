@@ -125,6 +125,10 @@ public abstract class CreatureBase extends EntityBase {
     float py = iy;
     float pz = iz;
 
+    c.block = null;
+    c.entity = null;
+    c.chunk = null;
+
 //    Static.log("find:" + dx +"," +dy +","+ dz );
 
     int side = -1;
