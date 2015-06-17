@@ -19,7 +19,6 @@ public class BlockAlpha extends BlockBase {
     isOpaque = false;
     isAlpha = true;
     canReplace = false;
-    resetBoxes(Type.BOTH);
   }
   public void buildBuffers(RenderDest dest, RenderData data) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
