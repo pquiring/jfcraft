@@ -139,7 +139,7 @@ public class BlockDoor extends BlockBase {
     c.chunk.clearBlock(c.gx,c.gy,c.gz);
     Static.server.broadcastClearBlock(c.chunk.dim,c.x,c.y,c.z);
     c.chunk.delExtra(c, Extras.REDSTONE);
-    Static.server.broadcastExtra(c.chunk.dim, c.x, c.y, c.z, null, true);
+    Static.server.broadcastDelExtra(c.chunk.dim, c.x, c.y, c.z, Extras.REDSTONE, true);
   }
   public void activate(Client client, Coords c) {
 //    Static.log("door activate:" + c);

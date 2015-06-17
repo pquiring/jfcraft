@@ -147,7 +147,7 @@ public class BlockSign extends BlockBase {
     }
     if (c.block != null && c.block.isRedstone) {
       c.chunk.delExtra(c, Extras.REDSTONE);
-      Static.server.broadcastExtra(c.chunk.dim, c.x, c.y, c.z, null, true);
+      Static.server.broadcastDelExtra(c.chunk.dim, c.x, c.y, c.z, Extras.REDSTONE, true);
       Static.server.world.powerChanged(c.chunk.dim,c.x,c.y,c.z);
     }
   }

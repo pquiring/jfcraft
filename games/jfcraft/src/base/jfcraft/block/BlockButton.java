@@ -63,7 +63,7 @@ public class BlockButton extends BlockBase {
 //    Static.log("button:tick:" + tick.t1);
     //check supported
     tick.toWorldCoords(chunk, c);
-    c.block = this;
+    Static.world().getBlock(chunk.dim, c.x, c.y, c.z, c);
     if (!checkSupported(c)) {
       destroy(null, c, true);
       chunk.delTick(tick);
