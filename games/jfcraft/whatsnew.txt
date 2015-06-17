@@ -4,7 +4,7 @@ ChangeLog
 Jun 16, 2015 : v0.15 released!
   - water/lava now flow
   - animations and cracks are now built into the main stitched texture and updated on the tick timer
-  - many performance issues fixed
+  - many performance issues and bugs fixed
 
 Jun 11, 2015 : v0.14 released!
   - 2 days to implement the Sign

@@ -438,10 +438,36 @@ public class Server {
     int cx = Static.floor(x / 16.0f);
     int cz = Static.floor(z / 16.0f);
     Packet update;
-    if (extra != null)
-      update = new PacketSetExtra(Packets.SETEXTRA, cx,cz,extra);
-    else
-      update = new PacketDelExtra(Packets.DELEXTRA,x,y,z,extra.id);
+    update = new PacketSetExtra(Packets.SETEXTRA, cx,cz,extra);
+    synchronized(clientsLock) {
+      int cnt = clients.size();
+      for(int a=0;a<cnt;a++) {
+        Client client = clients.get(a);
+        if (client.player == null) continue;
+        if (client.player.dim != dim) continue;
+        int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
+        int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
+        if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
+        if (dz > Static.maxLoadRange || dz < -Static.maxLoadRange) continue;
+        client.serverTransport.addUpdate(update);
+      }
+    }
+    if (addTicks) {
+      world.addTick(dim,x, y, z);
+      world.addTick(dim,x+1, y, z);
+      world.addTick(dim,x-1, y, z);
+      if (y < 255) world.addTick(dim,x, y+1, z);
+      if (y > 0) world.addTick(dim,x, y-1, z);
+      world.addTick(dim,x, y, z+1);
+      world.addTick(dim,x, y, z-1);
+    }
+  }
+
+  public void broadcastDelExtra(int dim,float x, float y, float z,byte type, boolean addTicks) {
+    int cx = Static.floor(x / 16.0f);
+    int cz = Static.floor(z / 16.0f);
+    Packet update;
+    update = new PacketDelExtra(Packets.DELEXTRA,x,y,z,type);
     synchronized(clientsLock) {
       int cnt = clients.size();
       for(int a=0;a<cnt;a++) {
