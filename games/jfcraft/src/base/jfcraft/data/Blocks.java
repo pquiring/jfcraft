@@ -314,7 +314,36 @@ public class Blocks {
       , new String[] {"deadbush"}).setSupported().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION)
     );
     registerBlock(new BlockPiston("PISTON", new String[] {"Piston"}, new String[] {"piston_bottom", "piston_side", "piston_inner", "piston_side", "piston_top_normal", "piston_side", "piston_top_normal"}));
-    registerBlock(new BlockOpaque("WOOL", new String[] {"Wool"}, new String[] {"wool_colored_white"})); //todo var
+    registerBlock(new BlockOpaque("WOOL",
+      new String[] {
+        "Wool White", "Wool Orange",
+        "Wool Magenta", "Wool Light Blue",
+        "Wool Yellow", "Wool Lime",
+        "Wool Pink", "Wool Gray",
+        "Wool Light Gray", "Wool Cyan",
+        "Wool Purple", "Wool Blue",
+        "Wool Brown", "Wool Green",
+        "Wool Red", "Wool Black"
+      },
+      new String[] {
+        "wool_colored_white",
+        "wool_colored_orange",
+        "wool_colored_magenta",
+        "wool_colored_light_blue",
+        "wool_colored_yellow",
+        "wool_colored_lime",
+        "wool_colored_pink",
+        "wool_colored_gray",
+        "wool_colored_silver",
+        "wool_colored_cyan",
+        "wool_colored_purple",
+        "wool_colored_blue",
+        "wool_colored_brown",
+        "wool_colored_green",
+        "wool_colored_red",
+        "wool_colored_black"
+      }
+    ).setVar());
     registerBlock(new BlockXVar("FLOWER"
       , new String[] {"Flower",           "Flower",        "Flower",             "Flower",           "Flower",             "Flower",         "Flower",      "Flower",              "Flower",            "Flower",           "Flower"}
       , new String[] {"flower_dandelion", "flower_allium", "flower_blue_orchid", "flower_houstonia", "flower_oxeye_daisy", "flower_paeonia", "flower_rose", "flower_tulip_orange", "flower_tulip_pink", "flower_tulip_red", "flower_tulip_white"})
@@ -406,7 +435,7 @@ public class Blocks {
         "hardened_clay_stained_red",
         "hardened_clay_stained_black"
       }
-    ));
+    ).setVar());
     registerBlock(new BlockLiquid("OIL", new String[] {"Oil"}, new String[] {"water_still"}));  //TODO
     registerBlock(new BlockOpaque("MUSIC_BOX", new String[] {"Music Box"}, new String[] {"planks_oak"}));
     registerBlock(new BlockOpaque("PUMPKIN", new String[] {"Pumpkin"}, new String[] {"pumpkin_top", "pumpkin_face_off", "pumpkin_side", "pumpkin_side"}));
