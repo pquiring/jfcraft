@@ -52,6 +52,10 @@ public class SinglePlayerMenu extends RenderScreen {
     sb = addScrollBar(gl, 452, 33, 10, 336, worlds.size() * 4 * fontSize);
   }
 
+  public void setup() {
+    selectedWorld = -1;
+  }
+
   public void render(GL gl, int width, int height) {
     setMenuSize(512, 512);
     reset();
