@@ -20,4 +20,8 @@ public class BlockNetherPortal extends BlockPortal {
   public char getFrameBlock() {
     return Blocks.OBSIDIAN;
   }
+
+  public char getPortalBlock() {
+    return Blocks.NETHER_PORTAL;
+  }
 }

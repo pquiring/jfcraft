@@ -12,7 +12,7 @@ public class Portal {
    * @param c - where flint&steel was used on portal border
    * @return if portal was created
    */
-  public static boolean makePortal(Coords c, char frameID) {
+  public static boolean makePortal(Coords c, char frameID, char portalID) {
     Coords p = c.clone();
     p.otherSide();
     p.adjacentBlock();
@@ -102,8 +102,8 @@ public class Portal {
       int bits = Chunk.makeBits(Direction.N, 0);
       for (int x = 0; x < dx; x++) {
         for (int y = 0; y < dy; y++) {
-          c.chunk.setBlock(gx + x, gy + y, gz, Blocks.PORTAL, bits);
-          Static.server.broadcastSetBlock(c.chunk.dim, p.x + x, p.y + y, p.z, Blocks.PORTAL, bits);
+          c.chunk.setBlock(gx + x, gy + y, gz, portalID, bits);
+          Static.server.broadcastSetBlock(c.chunk.dim, p.x + x, p.y + y, p.z, portalID, bits);
         }
       }
       return true;
@@ -173,8 +173,8 @@ public class Portal {
       int bits = Chunk.makeBits(Direction.E, 0);
       for (int z = 0; z < dz; z++) {
         for (int y = 0; y < dy; y++) {
-          c.chunk.setBlock(gx, gy + y, gz + z, Blocks.PORTAL, bits);
-          Static.server.broadcastSetBlock(c.chunk.dim, p.x, p.y + y, p.z + z, Blocks.PORTAL, bits);
+          c.chunk.setBlock(gx, gy + y, gz + z, portalID, bits);
+          Static.server.broadcastSetBlock(c.chunk.dim, p.x, p.y + y, p.z + z, portalID, bits);
         }
       }
       return true;

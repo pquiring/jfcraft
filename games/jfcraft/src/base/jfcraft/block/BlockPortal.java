@@ -127,38 +127,39 @@ public abstract class BlockPortal extends BlockBase {
     int dir = Chunk.getDir(bits);
     char tid;
     char frameID = getFrameBlock();
+    char portalID = getPortalBlock();
     if (dir == N || dir == S) {
       //xy plane
       tid = chunk.getID(tick.x+1, tick.y, tick.z);
-      if (tid != Blocks.PORTAL && tid != frameID) {
+      if (tid != portalID && tid != frameID) {
         destroy(null, tick.toWorldCoords(chunk, c), true);
         return;
       }
       tid = chunk.getID(tick.x-1, tick.y, tick.z);
-      if (tid != Blocks.PORTAL && tid != frameID) {
+      if (tid != portalID && tid != frameID) {
         destroy(null, tick.toWorldCoords(chunk, c), true);
         return;
       }
     } else {
       //zy plane
       tid = chunk.getID(tick.x, tick.y, tick.z+1);
-      if (tid != Blocks.PORTAL && tid != frameID) {
+      if (tid != portalID && tid != frameID) {
         destroy(null, tick.toWorldCoords(chunk, c), true);
         return;
       }
       tid = chunk.getID(tick.x, tick.y, tick.z-1);
-      if (tid != Blocks.PORTAL && tid != frameID) {
+      if (tid != portalID && tid != frameID) {
         destroy(null, tick.toWorldCoords(chunk, c), true);
         return;
       }
     }
     tid = chunk.getID(tick.x, tick.y-1, tick.z);
-    if (tid != Blocks.PORTAL && tid != frameID) {
+    if (tid != portalID && tid != frameID) {
       destroy(null, tick.toWorldCoords(chunk, c), true);
       return;
     }
     tid = chunk.getID(tick.x, tick.y+1, tick.z);
-    if (tid != Blocks.PORTAL && tid != frameID) {
+    if (tid != portalID && tid != frameID) {
       destroy(null, tick.toWorldCoords(chunk, c), true);
       return;
     }
@@ -169,6 +170,8 @@ public abstract class BlockPortal extends BlockBase {
   public abstract int getDimension();
 
   public abstract char getFrameBlock();
+
+  public abstract char getPortalBlock();
 
   public void etick(EntityBase e, Coords c) {
     if (e.teleportTimer > 0) {
@@ -191,9 +194,10 @@ public abstract class BlockPortal extends BlockBase {
     //for now just convert coords as is
     Chunk chunk = Static.server.world.chunks.getChunk2(e.dim, p.cx, p.cz, true, true, true);
     char frameID = getFrameBlock();
-    if (chunk.getID(p.gx, p.gy, p.gz) == Blocks.PORTAL) {
+    char portalID = getPortalBlock();
+    if (chunk.getID(p.gx, p.gy, p.gz) == portalID) {
       //found existing portal
-      while (chunk.getID(p.gx, p.gy-1, p.gz) == Blocks.PORTAL) {
+      while (chunk.getID(p.gx, p.gy-1, p.gz) == portalID) {
         p.gy--;
         p.y--;
         e.pos.y-=1.0f;
@@ -212,7 +216,7 @@ public abstract class BlockPortal extends BlockBase {
                 if (x == 0 || x == 3 || y == 0 || y == 4) {
                   chunk.setBlock(p.gx + x, p.gy + y, p.gz, frameID, 0);
                 } else {
-                  chunk.setBlock(p.gx + x, p.gy + y, p.gz, Blocks.PORTAL, Chunk.makeBits(dir, 0));
+                  chunk.setBlock(p.gx + x, p.gy + y, p.gz, portalID, Chunk.makeBits(dir, 0));
                 }
               } else {
                 if (x != 0 && x != 3 && y != 0 && y != 4) {
@@ -232,7 +236,7 @@ public abstract class BlockPortal extends BlockBase {
                 if (z == 0 || z == 3 || y == 0 || y == 4) {
                   chunk.setBlock(p.gx, p.gy + y, p.gz + z, frameID, 0);
                 } else {
-                  chunk.setBlock(p.gx, p.gy + y, p.gz + z, Blocks.PORTAL, Chunk.makeBits(dir, 0));
+                  chunk.setBlock(p.gx, p.gy + y, p.gz + z, portalID, Chunk.makeBits(dir, 0));
                 }
               } else {
                 if (z != 0 && z != 3 && y != 0 && y != 4) {
