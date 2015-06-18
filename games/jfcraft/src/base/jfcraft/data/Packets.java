@@ -16,13 +16,14 @@ public class Packets implements SerialCreator {
 
   private byte nextID = 0;
 
-  public void registerPacket(Packet p, String name, Class cls) {
+  public void registerPacket(Packet p, String name) {
     if (nextID < 0) {
       JF.showError("Error", "Too many packets registered!");
       System.exit(1);
     }
     p.cmd = nextID++;
     packets[p.cmd] = p;
+    Class cls = p.getIDClass();
     try {
       Field f = cls.getField(name);
       f.setByte(null, p.cmd);
@@ -32,78 +33,77 @@ public class Packets implements SerialCreator {
   }
 
   public void registerDefault() {
-    Class cls = this.getClass();
     Static.log("Packets.registerDefault()");
-    registerPacket(new PacketLoginRequest(), "LOGIN_REQUEST", cls);  //must be 1st packet registered
-    registerPacket(new PacketLoginReply(), "LOGIN_REPLY", cls);
-    registerPacket(new PacketLogout(), "LOGOUT", cls);
-    registerPacket(new PacketPlayerRequest(), "PLAYER_REQUEST", cls);
-    registerPacket(new PacketPlayer(), "PLAYER_REPLY", cls);
-    registerPacket(new PacketWorldRequest(), "WORLD_REQUEST", cls);
-    registerPacket(new PacketWorld(), "WORLD_REPLY", cls);
-    registerPacket(new PacketChunkRequest(), "CHUNK_REQUEST", cls);
-    registerPacket(new PacketChunk(), "CHUNK_REPLY", cls);
-    registerPacket(new PacketTick(), "TICK", cls);
-    registerPacket(new PacketSetActiveSlot(), "SETACTIVESLOT", cls);
-    registerPacket(new PacketRespawnRequest(), "RESPAWN_REQUEST", cls);
-    registerPacket(new PacketRespawn(), "RESPAWN", cls);
-    registerPacket(new PacketMsg(), "MSG", cls);
-    registerPacket(new PacketOnline(), "ONLINE", cls);
-    registerPacket(new PacketSetMode(), "SETMODE", cls);
-    registerPacket(new PacketPos(), "POS", cls);
-    registerPacket(new PacketInvPut(), "INVPUT", cls);
-    registerPacket(new PacketInvGet(), "INVGET", cls);
-    registerPacket(new PacketInvExchange(), "INVEXCHANGE", cls);
-    registerPacket(new PacketArmorPut(), "ARMORPUT", cls);
-    registerPacket(new PacketArmorGet(), "ARMORGET", cls);
-    registerPacket(new PacketArmorExchange(), "ARMOREXCHANGE", cls);
-    registerPacket(new PacketCraftPut(), "CRAFTPUT", cls);
-    registerPacket(new PacketCraftGet(), "CRAFTGET", cls);
-    registerPacket(new PacketCraftExchange(), "CRAFTEXCHANGE", cls);
-    registerPacket(new PacketCraftOne(), "CRAFTONE", cls);
-    registerPacket(new PacketCraftAll(), "CRAFTALL", cls);
-    registerPacket(new PacketContainerPut(), "CONTAINERPUT", cls);
-    registerPacket(new PacketContainerGet(), "CONTAINERGET", cls);
-    registerPacket(new PacketContainerExchange(), "CONTAINEREXCHANGE", cls);
-    registerPacket(new PacketDrop(), "DROP", cls);
-    registerPacket(new PacketMenuEnter(), "MENUENTER", cls);
-    registerPacket(new PacketMenuLeave(), "MENULEAVE", cls);
-    registerPacket(new PacketMenuInv(), "MENUINV", cls);
-    registerPacket(new PacketOpenToLan(), "OPENTOLAN", cls);
-    registerPacket(new PacketToggleGameMode(), "TOGGLEGAMEMODE", cls);
-    registerPacket(new PacketSetBlock(), "SETBLOCK", cls);
-    registerPacket(new PacketClearBlock(), "CLEARBLOCK", cls);
-    registerPacket(new PacketSetInv(), "SETINV", cls);
-    registerPacket(new PacketSetHand(), "SETHAND", cls);
-    registerPacket(new PacketSetArmor(), "SETARMOR", cls);
-    registerPacket(new PacketSetCraft(), "SETCRAFT", cls);
-    registerPacket(new PacketSetCrafted(), "SETCRAFTED", cls);
-    registerPacket(new PacketSetContainer(), "SETCONTAINER", cls);
-    registerPacket(new PacketSetContainerItem(), "SETCONTAINERITEM", cls);
-    registerPacket(new PacketMove(), "MOVE", cls);
-    registerPacket(new PacketSpawn(), "SPAWN", cls);
-    registerPacket(new PacketDespawn(), "DESPAWN", cls);
-    registerPacket(new PacketHealth(), "HEALTH", cls);
-    registerPacket(new PacketTime(), "TIME", cls);
-    registerPacket(new PacketBedTime(), "BEDTIME", cls);
-    registerPacket(new PacketB2E(), "B2E", cls);
-    registerPacket(new PacketE2B(), "E2B", cls);
-    registerPacket(new PacketMoveBlock(), "MOVEBLOCK", cls);
-    registerPacket(new PacketSetExtra(), "SETEXTRA", cls);
-    registerPacket(new PacketDelExtra(), "DELEXTRA", cls);
-    registerPacket(new PacketSound(), "SOUND", cls);
-    registerPacket(new PacketSheepSheared(), "SHEEPSHEARED", cls);
-    registerPacket(new PacketKnockBack(), "KNOCKBACK", cls);
-    registerPacket(new PacketGenSpawnArea(), "GENSPAWNAREA", cls);
-    registerPacket(new PacketClearBlock2(), "CLEARBLOCK2", cls);
-    registerPacket(new PacketTeleport1(), "TELEPORT1", cls);
-    registerPacket(new PacketTeleport2(), "TELEPORT2", cls);
-    registerPacket(new PacketHunger(), "HUNGER", cls);
-    registerPacket(new PacketAir(), "AIR", cls);
-    registerPacket(new PacketRiding(), "RIDING", cls);
-    registerPacket(new PacketMoveBack(), "MOVEBACK", cls);
-    registerPacket(new PacketEnderChest(), "ENDERCHEST", cls);
-    registerPacket(new PacketSetSign(), "SETSIGN", cls);
+    registerPacket(new PacketLoginRequest(), "LOGIN_REQUEST");  //must be 1st packet registered
+    registerPacket(new PacketLoginReply(), "LOGIN_REPLY");
+    registerPacket(new PacketLogout(), "LOGOUT");
+    registerPacket(new PacketPlayerRequest(), "PLAYER_REQUEST");
+    registerPacket(new PacketPlayer(), "PLAYER_REPLY");
+    registerPacket(new PacketWorldRequest(), "WORLD_REQUEST");
+    registerPacket(new PacketWorld(), "WORLD_REPLY");
+    registerPacket(new PacketChunkRequest(), "CHUNK_REQUEST");
+    registerPacket(new PacketChunk(), "CHUNK_REPLY");
+    registerPacket(new PacketTick(), "TICK");
+    registerPacket(new PacketSetActiveSlot(), "SETACTIVESLOT");
+    registerPacket(new PacketRespawnRequest(), "RESPAWN_REQUEST");
+    registerPacket(new PacketRespawn(), "RESPAWN");
+    registerPacket(new PacketMsg(), "MSG");
+    registerPacket(new PacketOnline(), "ONLINE");
+    registerPacket(new PacketSetMode(), "SETMODE");
+    registerPacket(new PacketPos(), "POS");
+    registerPacket(new PacketInvPut(), "INVPUT");
+    registerPacket(new PacketInvGet(), "INVGET");
+    registerPacket(new PacketInvExchange(), "INVEXCHANGE");
+    registerPacket(new PacketArmorPut(), "ARMORPUT");
+    registerPacket(new PacketArmorGet(), "ARMORGET");
+    registerPacket(new PacketArmorExchange(), "ARMOREXCHANGE");
+    registerPacket(new PacketCraftPut(), "CRAFTPUT");
+    registerPacket(new PacketCraftGet(), "CRAFTGET");
+    registerPacket(new PacketCraftExchange(), "CRAFTEXCHANGE");
+    registerPacket(new PacketCraftOne(), "CRAFTONE");
+    registerPacket(new PacketCraftAll(), "CRAFTALL");
+    registerPacket(new PacketContainerPut(), "CONTAINERPUT");
+    registerPacket(new PacketContainerGet(), "CONTAINERGET");
+    registerPacket(new PacketContainerExchange(), "CONTAINEREXCHANGE");
+    registerPacket(new PacketDrop(), "DROP");
+    registerPacket(new PacketMenuEnter(), "MENUENTER");
+    registerPacket(new PacketMenuLeave(), "MENULEAVE");
+    registerPacket(new PacketMenuInv(), "MENUINV");
+    registerPacket(new PacketOpenToLan(), "OPENTOLAN");
+    registerPacket(new PacketToggleGameMode(), "TOGGLEGAMEMODE");
+    registerPacket(new PacketSetBlock(), "SETBLOCK");
+    registerPacket(new PacketClearBlock(), "CLEARBLOCK");
+    registerPacket(new PacketSetInv(), "SETINV");
+    registerPacket(new PacketSetHand(), "SETHAND");
+    registerPacket(new PacketSetArmor(), "SETARMOR");
+    registerPacket(new PacketSetCraft(), "SETCRAFT");
+    registerPacket(new PacketSetCrafted(), "SETCRAFTED");
+    registerPacket(new PacketSetContainer(), "SETCONTAINER");
+    registerPacket(new PacketSetContainerItem(), "SETCONTAINERITEM");
+    registerPacket(new PacketMove(), "MOVE");
+    registerPacket(new PacketSpawn(), "SPAWN");
+    registerPacket(new PacketDespawn(), "DESPAWN");
+    registerPacket(new PacketHealth(), "HEALTH");
+    registerPacket(new PacketTime(), "TIME");
+    registerPacket(new PacketBedTime(), "BEDTIME");
+    registerPacket(new PacketB2E(), "B2E");
+    registerPacket(new PacketE2B(), "E2B");
+    registerPacket(new PacketMoveBlock(), "MOVEBLOCK");
+    registerPacket(new PacketSetExtra(), "SETEXTRA");
+    registerPacket(new PacketDelExtra(), "DELEXTRA");
+    registerPacket(new PacketSound(), "SOUND");
+    registerPacket(new PacketSheepSheared(), "SHEEPSHEARED");
+    registerPacket(new PacketKnockBack(), "KNOCKBACK");
+    registerPacket(new PacketGenSpawnArea(), "GENSPAWNAREA");
+    registerPacket(new PacketClearBlock2(), "CLEARBLOCK2");
+    registerPacket(new PacketTeleport1(), "TELEPORT1");
+    registerPacket(new PacketTeleport2(), "TELEPORT2");
+    registerPacket(new PacketHunger(), "HUNGER");
+    registerPacket(new PacketAir(), "AIR");
+    registerPacket(new PacketRiding(), "RIDING");
+    registerPacket(new PacketMoveBack(), "MOVEBACK");
+    registerPacket(new PacketEnderChest(), "ENDERCHEST");
+    registerPacket(new PacketSetSign(), "SETSIGN");
   }
 
   public static byte RIDING;
@@ -184,7 +184,7 @@ public class Packets implements SerialCreator {
   @Override
   public SerialClass create(SerialBuffer buffer) {
     byte cmd = buffer.peekByte();
-//    Static.log(), ""packets.create(), ")cmd=" + cmd + ",name=" + packets[cmd].getClass(), ").getName(), "", cls);
+//    Static.log(), ""packets.create(), ")cmd=" + cmd + ",name=" + packets[cmd].getClass(), ").getName(), "");
     try {
       return packets[cmd].getClass().newInstance();
     } catch (Exception e) {

@@ -1,4 +1,4 @@
-/** Creeper plugin
+/** Domino plugin
  *
  * @author pquiring
  */
