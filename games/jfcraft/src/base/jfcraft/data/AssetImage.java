@@ -13,6 +13,7 @@ public class AssetImage extends Asset {
   public int x, y;  //position : used in Blocks.stitchTiles() or Items.stitchTiles()
   public int w, h;  //width, height
   public boolean isAnimated;
+  public boolean isCrack;
 
   //animation images
   public JFImage images[];

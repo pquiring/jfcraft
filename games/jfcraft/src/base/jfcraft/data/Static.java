@@ -156,6 +156,8 @@ public class Static {
   public static int uniformEnableTextures;
   public static int uniformEnableFog;
   public static int uniformFogColor;
+  public static int uniformTexture;
+  public static int uniformCrack;
 
   //colors : R G B
   public static final float white[] = new float[] {1,1,1};

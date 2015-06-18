@@ -26,7 +26,8 @@ public class FragmentShader {
 "uniform bool uUseTextures;\n" +
 "uniform bool uUseFog;\n" +
 "uniform vec3 uFogColor;\n" +
-"uniform sampler2D uTexture;\n" +
+"uniform sampler2D uTexture;\n" +  //unit 0
+"uniform sampler2D uCrack;\n" +  //unit 1
 "\n" +
 "void main() {\n" +
 "  float sunPercent = vSunLightPercent * uSunLightNow;\n" +
@@ -39,7 +40,7 @@ public class FragmentShader {
 "    textureColor = texture2D(uTexture, vTextureCoord);\n" +
 "    if (textureColor.a == 0.0) discard;\n" +
 "    if (vTextureCoord2.x != 0.0 && vTextureCoord2.y != 0.0) {\n" +
-"      textureColor2 = texture2D(uTexture, vTextureCoord2);\n" +
+"      textureColor2 = texture2D(uCrack, vTextureCoord2);\n" +
 "      if (textureColor2.a != 0.0) {\n" +
 "        textureColor = textureColor2;\n" +
 "      }\n" +

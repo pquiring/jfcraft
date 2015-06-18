@@ -25,6 +25,8 @@ public class Blocks {
   public BlockBase[] blocks = new BlockBase[MAX_ID];  //blocks (in order of id)
   public BlockBase[] regBlocks = new BlockBase[MAX_ID];  //registered blocks (not in order of id)
   public Texture stitched;  //main stitched texture (including animated textures and cracks)
+  public Texture cracks;  //cracks
+  public SubTexture subcracks[];
 
   public boolean valid;
 
@@ -196,7 +198,6 @@ public class Blocks {
   public static char WHEAT;
 
   public static char TEST_ARROW;
-  public static char CRACK;
 
   //wood vars
   public static final byte VAR_OAK = 0;
@@ -458,7 +459,6 @@ public class Blocks {
     );
 
     registerBlock(new BlockBarrier("BARRIER", new String[] {"Barrier"}, new String[] {}));
-    registerBlock(new BlockOpaque("CRACK", new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}, new String[] {"destroy_stage_0", "destroy_stage_1", "destroy_stage_2", "destroy_stage_3", "destroy_stage_4", "destroy_stage_5", "destroy_stage_6", "destroy_stage_7", "destroy_stage_8", "destroy_stage_9"}).setDir().setVar());
 
     //items as blocks
 
@@ -502,6 +502,10 @@ public class Blocks {
     stitched = new Texture();
     stitched.initImage(512, 512);
     stitched.initUsage();
+    cracks = new Texture();
+    cracks.unit = 1;
+    cracks.initImage(64, 64);
+    cracks.initUsage();
     for(int idx=0;idx<MAX_ID;idx++) {
       if (regBlocks[idx] == null) continue;
       BlockBase block = regBlocks[idx];
@@ -517,6 +521,11 @@ public class Blocks {
       for(int i=0;i<block.images2.length;i++) {
         addSubTexture(block, block.images2[i]);
       }
+    }
+    for(int a=0;a<=9;a++) {
+      AssetImage ai = Assets.getImage("blocks/destroy_stage_" + a);
+      ai.isCrack = true;
+      tiles.add(ai);
     }
     //sort list big to small (animated first)
     //NOTE:tiles.sort(Comparator) is only available in JDK8+
@@ -537,6 +546,12 @@ public class Blocks {
       AssetImage ai = tiles.get(a);
       int w = ai.image.getWidth();
       int h = ai.image.getHeight();
+      Texture texture;
+      if (ai.isCrack) {
+        texture = cracks;
+      } else {
+        texture = stitched;
+      }
       if (ai.isAnimated) {
         //animation
         int cnt = h / w;
@@ -551,7 +566,7 @@ public class Blocks {
           frame.putPixels(px, 0, 0, w, w, 0);
           ai.images[b] = frame;
         }
-        int loc[] = stitched.placeSubTexture(ai.images[0].getPixels(), w, w);
+        int loc[] = texture.placeSubTexture(ai.images[0].getPixels(), w, w);
         if (loc == null) {
           JF.showError("Error", "Your texture pack size can not fit into your video cards max texture size\nPlease remove high resolution packs and restart.");
           valid = false;
@@ -564,7 +579,7 @@ public class Blocks {
         //normal
         ai.w = w;
         ai.h = h;
-        int loc[] = stitched.placeSubTexture(ai.image.getPixels(), w, h);
+        int loc[] = texture.placeSubTexture(ai.image.getPixels(), w, h);
         if (loc == null) {
           JF.showError("Error", "Your texture pack size can not fit into your video cards max texture size\nPlease remove high resolution packs and restart.");
           valid = false;
@@ -589,20 +604,27 @@ public class Blocks {
         block.textures2[i] = getSubTexture(block.images2[i]);
       }
     }
+    subcracks = new SubTexture[10];
+    for(int a=0;a<=9;a++) {
+      subcracks[a] = getSubTexture("destroy_stage_" + a);
+    }
   }
 
   private Face face = new Face();
 
   private SubTexture getSubTexture(String name) {
     name = "blocks/" + name;
-    float sx = stitched.sx;
-    float sy = stitched.sy;
     for(int a=0;a<tiles.size();a++) {
       AssetImage ai = tiles.get(a);
       if (ai.name.equals(name)) {
         boolean isFlow = ai.name.endsWith("_flow");
         SubTexture st = new SubTexture();
-        st.texture = stitched;
+        Texture texture;
+        if (ai.isCrack)
+          texture = cracks;
+        else
+          texture = stitched;
+        st.texture = texture;
         st.isAnimated = ai.isAnimated;
         float x, y;
         float w, h;
@@ -617,12 +639,12 @@ public class Blocks {
           w = ai.w;
           h = ai.h;
         }
-        st.x1 = x / stitched.sx;
-        st.y1 = y / stitched.sy;
-        st.x2 = (x + w - 1) / stitched.sx;
-        st.y2 = (y + h - 1) / stitched.sy;
-        st.width = st.x2 - st.x1 + (1.0f/stitched.sx);
-        st.height = st.y2 - st.y1 + (1.0f/stitched.sy);
+        st.x1 = x / texture.sx;
+        st.y1 = y / texture.sy;
+        st.x2 = (x + w - 1) / texture.sx;
+        st.y2 = (y + h - 1) / texture.sy;
+        st.width = st.x2 - st.x1 + (1.0f/texture.sx);
+        st.height = st.y2 - st.y1 + (1.0f/texture.sy);
         if (isFlow) {
           //calc 45 degree coords
           //this is why the flow's are 2x2 of the same subimage
@@ -672,6 +694,7 @@ public class Blocks {
 
   public void initTexture(GL gl) {
     stitched.load(gl);
+    cracks.load(gl);
   }
 
   public void initPerf() {
