@@ -413,7 +413,7 @@ public class Blocks {
     registerBlock(new BlockOpaque("NETHER_RACK", new String[] {"Nether Rack"}, new String[] {"netherrack"}));
     registerBlock(new BlockOpaque("SOUL_SAND", new String[] {"Soul Sand"}, new String[] {"soul_sand"}));
     registerBlock(new BlockOpaque("GLOWSTONE", new String[] {"Glowstone"}, new String[] {"glowstone"}));
-    registerBlock(new BlockNetherPortal("PORTAL", new String[] {"Portal"}, new String[] {"portal"}));
+    registerBlock(new BlockNetherPortal("NETHERPORTAL", new String[] {"Nether Portal"}, new String[] {"portal"}));
     registerBlock(new BlockOpaque("PUMPKIN_LIT", new String[] {"Pumpkin Lit"}, new String[] {"pumpkin_top", "pumpkin_face_on", "pumpkin_side", "pumpkin_side"}));
     registerBlock(new BlockRedStoneRepeater("REDSTONE_REPEATER", new String[] {"-item-"}, new String[] {"repeater_off", "repeater_on", "stone", "redstone_torch_off", "redstone_torch_on"}));
     registerBlock(new BlockOpaque("GLASSBLOCK_COLOR", new String[] {"Glass Block"}, new String[] {"glass"}));
