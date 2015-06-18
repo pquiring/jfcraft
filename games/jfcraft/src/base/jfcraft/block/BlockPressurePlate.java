@@ -35,10 +35,11 @@ public class BlockPressurePlate extends BlockCarpet {
       return;
     }
     if (er.active) {
-      Tick tick = c.chunk.getTick(c.gx, c.gy, c.gz, false);
       er.t1 = 0;  //reset timer
     } else {
       er.active = true;
+      er.t1 = 0;
+      er.t2 = 0;
       c.chunk.addTick(c.gx, c.gy, c.gz, isBlocks2);
       Static.server.broadcastExtra(c.chunk.dim, c.x, c.y, c.z, er, true);
       Static.world().powerChanged(c.chunk.dim, c.x,c.y,c.z);
@@ -55,7 +56,6 @@ public class BlockPressurePlate extends BlockCarpet {
       super.tick(chunk, tick);
       return;
     }
-//    int bits = chunk.getBits(c.gx, c.gy, c.gz);
     if (er.t1 < 10) er.t1++;  //delay time on
     if (er.t2 < 20) er.t2++;  //min time on
     if (er.t1 < 10 || er.t2 < 20) {

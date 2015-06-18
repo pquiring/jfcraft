@@ -148,7 +148,6 @@ public class BlockDoor extends BlockBase {
       return;
     }
     if (er.active) {
-      Static.log("door still active");
       return;  //already active
     }
     er.active = true;
