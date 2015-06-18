@@ -2,7 +2,13 @@ package jfcraft.block;
 
 /** Portal.
  *
- * To create a new portal derive from this class and override getDimension() and getFrameBlock()
+ * To create a new portal :
+ *  - derive from this class
+ *  - implement getDimension()
+ *  - implement getFrameBlock()
+ *  - implement getPortalBlock()
+ *
+ * See : BlockNetherPortal
  *
  * @author pquiring
  *
@@ -190,22 +196,28 @@ public abstract class BlockPortal extends BlockBase {
   public void teleport(EntityBase e, Coords c) {
     Static.log("teleport:" + e + "@" + c);
     Coords p = c.clone();
-    int dir = Chunk.getDir(p.bits);
     //for now just convert coords as is
     Chunk chunk = Static.server.world.chunks.getChunk2(e.dim, p.cx, p.cz, true, true, true);
     char frameID = getFrameBlock();
     char portalID = getPortalBlock();
-    if (chunk.getID(p.gx, p.gy, p.gz) == portalID) {
-      //found existing portal
-      while (chunk.getID(p.gx, p.gy-1, p.gz) == portalID) {
-        p.gy--;
-        p.y--;
-        e.pos.y-=1.0f;
+    boolean found = false;
+    for(int y = 0;y < 256;y++) {
+      if (chunk.getID(p.gx, y, p.gz) == portalID) {
+        e.pos.y = y;
+        found = true;
+        break;
       }
-    } else {
+    }
+    if (!found) {
+      int dir = Chunk.getDir(p.bits);
       //create portal at entity coords
-      Static.log("no portal found in other dim, creating new portal");
-      p.gy--;
+      for(int y = 255;y > 0;y--) {
+        if (chunk.getID(p.gx, y, p.gz) != 0) {
+          p.gy = y+1;
+          break;
+        }
+      }
+      Static.log("no portal found in other dim, creating new portal @ " + p);
       if (dir == N) {
         //xy plane
         p.gx--;

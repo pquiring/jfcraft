@@ -269,27 +269,25 @@ public class Static {
 
   public static void registerAll(boolean client) {
     PluginLoader.loadPlugins();
-    Static.registerDefault(client);
+    Static.registerDefault();
+    PluginLoader.registerPlugins();
     if (client) {
       Static.audio = new AudioEngine();
       Static.audio.start();
       Static.audio.registerDefault();
       Static.screens.registerDefault();
-    }
-    PluginLoader.registerPlugins();
-    packets.registerDefault();
-    extras.registerDefault();
-  }
-
-  public static void registerDefault(boolean client) {
-    Static.blocks.registerDefault();
-    Static.items.registerDefault();
-    Static.dims.registerDefault();
-    if (client) {
       Static.blocks.stitchTiles();
       Static.items.stitchTiles();
       Static.blocks.initPerf();  //must redo this if fancy/fast is toggled
     }
+    packets.registerDefault();
+    extras.registerDefault();
+  }
+
+  public static void registerDefault() {
+    Static.blocks.registerDefault();
+    Static.items.registerDefault();
+    Static.dims.registerDefault();
     Static.recipes.registerDefault();
     Static.entities.registerDefault();
   }

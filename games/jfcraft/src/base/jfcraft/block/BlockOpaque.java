@@ -13,8 +13,5 @@ public class BlockOpaque extends BlockBase {
     super(id, names, images);
     isOpaque = true;
     isAlpha = false;
-    if (names != null && names.length == 1 && images != null && images.length == 4) {
-      isDir = true;  //TODO : might not always be correct, may need a setDir()
-    }
   }
 }
