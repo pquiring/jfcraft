@@ -214,6 +214,7 @@ public abstract class BlockPortal extends BlockBase {
       for(int y = 255;y > 0;y--) {
         if (chunk.getID(p.gx, y, p.gz) != 0) {
           p.gy = y+1;
+          e.pos.y = p.gy;
           break;
         }
       }
