@@ -38,6 +38,12 @@ auxiliary.show.customizer.message=<message>
                     <location>src/plugins/domino</location>
                     <encoding>windows-1252</encoding>
                 </source-folder>
+                <source-folder>
+                    <label>src\plugins\marioworld</label>
+                    <type>java</type>
+                    <location>src/plugins/marioworld</location>
+                    <encoding>windows-1252</encoding>
+                </source-folder>
             </folders>
             <ide-actions>
                 <action name="build">
@@ -65,6 +71,10 @@ auxiliary.show.customizer.message=<message>
                         <label>src\plugins\domino</label>
                         <location>src/plugins/domino</location>
                     </source-folder>
+                    <source-folder style="packages">
+                        <label>src\plugins\marioworld</label>
+                        <location>src/plugins/marioworld</location>
+                    </source-folder>
                     <source-file>
                         <location>build.xml</location>
                     </source-file>
@@ -90,6 +100,11 @@ auxiliary.show.customizer.message=<message>
             </compilation-unit>
             <compilation-unit>
                 <package-root>src/plugins/domino</package-root>
+                <classpath mode="compile">javaforce.jar;jfcraft.jar</classpath>
+                <source-level>1.6</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>src/plugins/marioworld</package-root>
                 <classpath mode="compile">javaforce.jar;jfcraft.jar</classpath>
                 <source-level>1.6</source-level>
             </compilation-unit>

@@ -218,7 +218,7 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
               if (block.id != Blocks.GRASS && block.id != Blocks.DIRT) {
                 System.out.println("canPlantOn != soil:" + (int)block.id);
               }
-              if (r.nextInt() % 20 == 0) {
+              else if (r.nextInt() % 20 == 0) {
                 addTree(x, elev+1, z, trees[r.nextInt(2)], bt == Chunk.TAIGA);
               }
               else if (r.nextInt() % 10 == 0) {

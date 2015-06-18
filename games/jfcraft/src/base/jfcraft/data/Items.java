@@ -130,7 +130,7 @@ public class Items {
   public static char LEATHER;
   public static char BUCKET_MILK;
   public static char BRICK_ITEM;  //dup? remove?
-  public static char CLAY_ITEM;   //dup? remove?
+  public static char CLAY_BALL;
   public static char SUGAR_CANE;
   public static char PAPER;
   public static char BOOK;
@@ -324,7 +324,7 @@ public class Items {
     registerItem(new ItemBase("LEATHER", new String[]{"Leather"},  new String[]{"leather"}));
     registerItem(new ItemBase("BUCKET_MILK", new String[]{"Bucket Milk"},  new String[]{"bucket_milk"}));
     registerItem(new ItemBase("BRICK_ITEM", new String[]{"Brick"},  new String[]{"brick"}));
-    registerItem(new ItemBase("CLAY_ITEM", new String[]{"Clay"},  new String[]{"clay_ball"}));
+    registerItem(new ItemBase("CLAY_BALL", new String[]{"Clay"},  new String[]{"clay_ball"}));
     registerItem(new ItemBase("SUGAR_CANE", new String[]{"Sugar Cane"},  new String[]{"reeds"}));
     registerItem(new ItemBase("PAPER", new String[]{"Paper"},  new String[]{"paper"}));
     registerItem(new ItemBase("BOOK", new String[]{"Book"},  new String[]{"book_normal"}));

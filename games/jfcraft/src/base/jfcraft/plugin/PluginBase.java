@@ -30,8 +30,8 @@ public abstract class PluginBase {
   public void registerSound(int id, AssetAudio sound) {
     Static.audio.registerSound(id, sound);
   }
-  public void registerPacket(Packet packet, String name, Class cls) {
-    Static.packets.registerPacket(packet, name, cls);
+  public void registerPacket(Packet packet, String name) {
+    Static.packets.registerPacket(packet, name);
   }
   public void registerScreen(RenderScreen screen) {
     Static.screens.registerScreen(screen);

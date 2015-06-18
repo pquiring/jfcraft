@@ -76,6 +76,8 @@ public class Blocks {
   public static char LAVA;
   public static char SAND;
   public static char CLAY;
+  public static char HARDENED_CLAY;
+  public static char STAINED_CLAY;
   public static char OIL;
   public static char GRAVEL;
   public static char STONE;
@@ -216,6 +218,25 @@ public class Blocks {
   public static final byte VAR_BUTTON_WOOD = 0;
   public static final byte VAR_BUTTON_STONE = 1;
 
+  //color vars
+  public static final byte VAR_WHITE = 0;
+  public static final byte VAR_ORANGE = 1;
+  public static final byte VAR_MAGENTA = 2;
+  public static final byte VAR_LIGHT_BLUE = 3;
+  public static final byte VAR_YELLOW = 4;
+  public static final byte VAR_LIME = 5;
+  public static final byte VAR_PINK = 6;
+  public static final byte VAR_GRAY = 7;
+  public static final byte VAR_SILVER = 8;  //light gray
+  public static final byte VAR_CYAN = 9;
+  public static final byte VAR_PURPLE = 10;
+  public static final byte VAR_BLUE = 11;
+  public static final byte VAR_BROWN = 12;
+  public static final byte VAR_GREEN = 13;
+  public static final byte VAR_RED = 14;
+  public static final byte VAR_BLACK = 15;
+  //...
+
   public void registerDefault() {
     registerBlock(new BlockAir("AIR"));
     registerBlock(new BlockOpaque("STONE", new String[] {"Stone"}, new String[] {"stone"})
@@ -354,7 +375,38 @@ public class Blocks {
       new String[] {"Oak Wood Fence", "Spruce Wood Fence", "Birch Wood Fence", "Jungle Wood Fence", "Acacia Wood Fence", "Dark Oak Wood Fence"},
       new String[] {"planks_oak", "planks_spruce", "planks_birch", "planks_jungle", "planks_acacia", "planks_big_oak"})
     );
-    registerBlock(new BlockOpaque("CLAY", new String[] {"Clay"}, new String[] {"clay"}));
+    registerBlock(new BlockOpaque("CLAY", new String[] {"Clay Block"}, new String[] {"clay"}).setDrop("CLAY_BALL", 4));
+    registerBlock(new BlockOpaque("HARDENED_CLAY", new String[] {"Hardened Clay"}, new String[] {"hardened_clay"}));
+    registerBlock(new BlockOpaque("STAINED_CLAY",
+      new String[] {
+        "Stained Clay White", "Stained Clay Orange",
+        "Stained Clay Magenta", "Stained Clay Light Blue",
+        "Stained Clay Yellow", "Stained Clay Lime",
+        "Stained Clay Pink", "Stained Clay Gray",
+        "Stained Clay Light Gray", "Stained Clay Cyan",
+        "Stained Clay Purple", "Stained Clay Blue",
+        "Stained Clay Brown", "Stained Clay Green",
+        "Stained Clay Red", "Stained Clay Black"
+      },
+      new String[] {
+        "hardened_clay_stained_white",
+        "hardened_clay_stained_orange",
+        "hardened_clay_stained_magenta",
+        "hardened_clay_stained_light_blue",
+        "hardened_clay_stained_yellow",
+        "hardened_clay_stained_lime",
+        "hardened_clay_stained_pink",
+        "hardened_clay_stained_gray",
+        "hardened_clay_stained_silver",
+        "hardened_clay_stained_cyan",
+        "hardened_clay_stained_purple",
+        "hardened_clay_stained_blue",
+        "hardened_clay_stained_brown",
+        "hardened_clay_stained_green",
+        "hardened_clay_stained_red",
+        "hardened_clay_stained_black"
+      }
+    ));
     registerBlock(new BlockLiquid("OIL", new String[] {"Oil"}, new String[] {"water_still"}));  //TODO
     registerBlock(new BlockOpaque("MUSIC_BOX", new String[] {"Music Box"}, new String[] {"planks_oak"}));
     registerBlock(new BlockOpaque("PUMPKIN", new String[] {"Pumpkin"}, new String[] {"pumpkin_top", "pumpkin_face_off", "pumpkin_side", "pumpkin_side"}));

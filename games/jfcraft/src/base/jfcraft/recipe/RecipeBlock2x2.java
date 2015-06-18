@@ -23,6 +23,7 @@ public class RecipeBlock2x2 extends Recipe {
       if (items[a].var != 0) return null;  //charcoal doesn't work
     }
     if (id == Items.QUARTZ) return new Item(Blocks.QUARTZ_BLOCK);
+    if (id == Items.CLAY_BALL) return new Item(Blocks.CLAY);
     return null;
   }
 }

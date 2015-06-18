@@ -81,6 +81,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public char dropID;
   public String dropName;
   public boolean dropVar = true;
+  public int dropCount = 1;
   public int emitLight = 0;  //0-14 (15 = sunLight)
   public int absorbLight = 1;
   public int absorbSunLight = 0;
@@ -245,6 +246,11 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   }
   public BlockBase setDrop(String id) {
     dropName = id;
+    return this;
+  }
+  public BlockBase setDrop(String id, int cnt) {
+    dropName = id;
+    dropCount = cnt;
     return this;
   }
   public BlockBase setSupported() {
@@ -423,7 +429,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   }
   public Item[] drop(Coords c, int var) {
     if (dropID == 0) return new Item[0];
-    return new Item[] {new Item(dropID, isVar && dropVar ? var : 0)};
+    return new Item[] {new Item(dropID, isVar && dropVar ? var : 0, dropCount)};
   }
   public BlockBase setFuel(int heat) {
     super.setFuel(heat);
