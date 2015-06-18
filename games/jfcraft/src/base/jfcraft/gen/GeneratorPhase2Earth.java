@@ -38,7 +38,7 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
       if (r.nextInt(100) == 0) {
         addCaves();
       }
-      if ((chunk.cx == 0 && chunk.cz == 0) || r.nextInt(1000) == 0) {
+      if (r.nextInt(1000) == 0) {
         addRavine();
       }
       if (r.nextInt(10000) == 0) {
