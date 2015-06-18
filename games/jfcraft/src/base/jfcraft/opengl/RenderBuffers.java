@@ -430,7 +430,7 @@ public class RenderBuffers implements Cloneable {
     f.rotate(data);
 
     if (data.crack != -1) {
-      SubTexture crack = Static.blocks.blocks[Blocks.CRACK].textures[data.crack];
+      SubTexture crack = Static.blocks.subcracks[data.crack];
 
       f.u2[0] = crack.x1;
       f.v2[0] = crack.y1;
@@ -587,6 +587,6 @@ public class RenderBuffers implements Cloneable {
 
   /** Adjust UV coords for cracking */
   public static void adjustCrack(float uv[], int crack) {
-    adjustTexture(uv, Static.blocks.blocks[Blocks.CRACK].textures[crack]);
+    adjustTexture(uv, Static.blocks.subcracks[crack]);
   }
 }

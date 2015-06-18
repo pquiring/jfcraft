@@ -143,12 +143,16 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
     Static.uniformEnableTextures = gl.glGetUniformLocation(program, "uUseTextures");
     Static.uniformEnableFog = gl.glGetUniformLocation(program, "uUseFog");
     Static.uniformFogColor = gl.glGetUniformLocation(program, "uFogColor");
+    Static.uniformTexture = gl.glGetUniformLocation(program, "uTexture");
+    Static.uniformCrack = gl.glGetUniformLocation(program, "uCrack");
 
     gl.glUniform1f(Static.uniformSunLight, 1.0f);
     gl.glUniform1f(Static.uniformAlphaFactor, 1.0f);
     gl.glUniform1i(Static.uniformEnableTextures, 1);
     gl.glUniform1i(Static.uniformEnableFog, 0);
     gl.glUniform3fv(Static.uniformFogColor, 1, new float[] {0.0f, 0.0f, 0.0f});
+    gl.glUniform1i(Static.uniformTexture, 0);
+    gl.glUniform1i(Static.uniformCrack, 1);
 
     ready = true;
 

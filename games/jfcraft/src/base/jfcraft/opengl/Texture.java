@@ -18,6 +18,7 @@ public class Texture {
 
   public int glid = -1;
   public String name;
+  public int unit = 0;
 
   public int tilesIdx = -1;  //tiles idx
 
@@ -125,6 +126,7 @@ public class Texture {
       System.exit(0);
     }
     glid = ids[0];
+    gl.glActiveTexture(GL.GL_TEXTURE0 + unit);
     gl.glBindTexture(GL.GL_TEXTURE_2D, glid);
     gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
     gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
