@@ -198,6 +198,7 @@ public abstract class BlockPortal extends BlockBase {
     Coords p = c.clone();
     //for now just convert coords as is
     Chunk chunk = Static.server.world.chunks.getChunk2(e.dim, p.cx, p.cz, true, true, true);
+    Static.server.world.chunks.loadSurroundingChunks(e.dim,p.cx,p.cz);  //ensure surrounding chunks are present
     char frameID = getFrameBlock();
     char portalID = getPortalBlock();
     boolean found = false;

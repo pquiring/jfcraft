@@ -173,6 +173,9 @@ public class Static {
   public static final float _1_32 = 1.0f/32.0f;
   public static final float _1_48 = 1.0f/48.0f;
   public static final float _1_64 = 1.0f/64.0f;
+  public static final float _0_75_15 = 0.75f/15.0f;
+  public static final float _0_5_15 = 0.5f/15.0f;
+  public static final float _0_25_15 = 0.25f/15.0f;
   public static final float PIx2 = (float)Math.PI * 2f;
 
   public static int glver[]; //OpenGL Version : ie:3.3.0
