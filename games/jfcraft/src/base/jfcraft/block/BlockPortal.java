@@ -211,13 +211,28 @@ public abstract class BlockPortal extends BlockBase {
     if (!found) {
       int dir = Chunk.getDir(p.bits);
       //create portal at entity coords
-      for(int y = 255;y > 0;y--) {
+      boolean foundAir = false;
+      for(int y = 64;y < 256;y++) {
         if (chunk.getID(p.gx, y, p.gz) != 0) {
           p.gy = y+1;
-          e.pos.y = p.gy;
+          foundAir = true;
           break;
         }
       }
+      if (!foundAir) {
+        for(int y = 64;y > 0;y--) {
+          if (chunk.getID(p.gx, y, p.gz) != 0) {
+            p.gy = y+1;
+            foundAir = true;
+            break;
+          }
+        }
+      }
+      if (!foundAir) {
+        //solid world? put portal at sea level
+        p.gy = 64;
+      }
+      e.pos.y = p.gy + 1;
       Static.log("no portal found in other dim, creating new portal @ " + p);
       if (dir == N) {
         //xy plane
