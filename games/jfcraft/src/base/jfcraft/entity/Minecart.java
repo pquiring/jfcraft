@@ -596,7 +596,6 @@ public class Minecart extends CreatureBase {
       occupant.pos.y = pos.y;
       occupant.pos.z = pos.z;
     }
-    occupant.mode = EntityBase.RIDING;
     if (Static.isServer() && sneak) {
       //eject occupant
       occupant.vehicle = null;

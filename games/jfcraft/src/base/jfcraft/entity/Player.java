@@ -181,7 +181,7 @@ public class Player extends CreatureBase {
         mat.addTranslate2(0, -buf.org.y, 0);
         break;
       case L_LEG:
-        if (!riding) {
+        if (vehicle == null) {
           mat.addTranslate(0, buf.org.y, 0);
           mat.addRotate2(-walkAngle, 1, 0, 0);
           mat.addTranslate2(0, -buf.org.y, 0);
@@ -192,7 +192,7 @@ public class Player extends CreatureBase {
         }
         break;
       case R_LEG:
-        if (!riding) {
+        if (vehicle == null) {
           mat.addTranslate(0, buf.org.y, 0);
           mat.addRotate2(walkAngle, 1, 0, 0);
           mat.addTranslate2(0, -buf.org.y, 0);
@@ -205,15 +205,28 @@ public class Player extends CreatureBase {
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
     gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
-    if (moving) {
-      if (Static.advanceFrame) {
-        walkAngle += walkAngleDelta;
-        if ((walkAngle < -45.0) || (walkAngle > 45.0)) {
-          walkAngleDelta *= -1;
-        }
-      }
-    } else {
-      walkAngle = 0.0f;
+  }
+
+  public void ctick() {
+    float delta = 0;
+    switch (mode) {
+      case MODE_IDLE:
+        walkAngle = 0.0f;
+        return;
+      case MODE_RUN:
+        delta = walkAngleDelta * 2f;
+        break;
+      case MODE_SWIM:
+      case MODE_WALK:
+        delta = walkAngleDelta;
+        break;
+      case MODE_SNEAK:
+        delta = walkAngleDelta / 2f;
+        break;
+    }
+    walkAngle += delta;
+    if ((walkAngle < -45.0) || (walkAngle > 45.0)) {
+      walkAngleDelta *= -1;
     }
   }
 

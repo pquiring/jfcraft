@@ -7,6 +7,7 @@ package jfcraft.packet;
 
 import jfcraft.client.Client;
 import jfcraft.data.*;
+import jfcraft.entity.*;
 import jfcraft.server.Server;
 
 public class PacketToggleGameMode extends Packet {
@@ -25,7 +26,10 @@ public class PacketToggleGameMode extends Packet {
 
   //process on server side
   public void process(Server server, Client client) {
-    client.player.flying = !client.player.flying;
+    if (client.player.mode == EntityBase.MODE_FLYING)
+      client.player.mode = EntityBase.MODE_IDLE;
+    else
+      client.player.mode = EntityBase.MODE_FLYING;
   }
 
   @Override

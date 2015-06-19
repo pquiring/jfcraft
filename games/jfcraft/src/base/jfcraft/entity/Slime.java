@@ -133,7 +133,7 @@ public class Slime extends CreatureBase {
   public void tick() {
     updateFlags();
     boolean fell;
-    if (inWater && !jumping) {
+    if (inWater && mode != MODE_FLYING) {
       fell = gravity(0.5f + (float)Math.sin(floatRad) * 0.25f);
       floatRad += 0.314f;
       if (floatRad > Static.PIx2) floatRad = 0f;
@@ -147,28 +147,28 @@ public class Slime extends CreatureBase {
         target = null;
       }
     }
-    boolean wasMoving = moving;
+    boolean wasMoving = mode != MODE_IDLE;
     if (Static.debugRotate) {
       //test rotate in a spot
       ang.y += 1.0f;
       if (ang.y > 180f) { ang.y = -180f; }
       ang.x += 1.0f;
       if (ang.x > 45.0f) { ang.x = -45.0f; }
-      moving = true;
+      mode = MODE_WALK;
     } else {
       if (target != null) {
         moveToTarget();
       } else {
         randomWalking();
       }
-      if (moving) {
+      if (mode != MODE_IDLE) {
         moveEntity();
       } else {
         vel.x = 0;
         vel.z = 0;
       }
     }
-    if (fell || target != null || moving || wasMoving) Static.server.broadcastEntityMove(this);
+    if (fell || target != null || mode != MODE_IDLE || wasMoving) Static.server.broadcastEntityMove(this);
     super.tick();
   }
 

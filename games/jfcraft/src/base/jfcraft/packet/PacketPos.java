@@ -82,7 +82,6 @@ public class PacketPos extends Packet {
       client.player.pos.y = f2;
       client.player.pos.z = f3;
     }
-    client.player.moving = moving;
     if (client.player.underWater) {
       if (client.underwaterCounter < 2 * 20) {
         client.underwaterCounter++;

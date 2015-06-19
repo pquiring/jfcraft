@@ -34,7 +34,6 @@ public class PacketMove extends Packet {
   //process on client side
   public void process(Client client) {
     int uid = i1;
-    int bits = i2;
     if (client.player.vehicle != null && client.player.vehicle.uid == uid) {
       return;
     }
@@ -64,9 +63,7 @@ public class PacketMove extends Packet {
       e.ang.x = f4;
       e.ang.y = f5;
       e.ang.z = f6;
-      e.flying = (bits & EntityBase.FLYING) != 0;  //to animate wings??? (TODO)
-      e.moving = (bits & EntityBase.MOVING) != 0;  //to animate legs
-      e.riding = (bits & EntityBase.RIDING) != 0;
+      e.mode = i2;
     }
   }
 

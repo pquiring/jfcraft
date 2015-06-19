@@ -41,8 +41,6 @@ public class Static {
   public static int tick;  //last server tick duration (ms)
   public static boolean spawn = true;  //spawn entities (monsters)
   public static GLMatrix identity = new GLMatrix();
-  public static boolean tickFrame;  //tick frame to advance animation
-  public static boolean advanceFrame;  //tick frame to advance animation
 
   public static boolean debugRotate = false;
   public static boolean debugProfile = false;

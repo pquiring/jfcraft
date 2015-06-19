@@ -42,7 +42,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public boolean inWater, inLava;  //whole body
   public boolean underWater, underLava;  //camera view
   public boolean creative;
-  public boolean moving, flying, riding, jumping;
   public float floatRad;
   public float jumpPos, jumpStart;  //for debug only I think (max height of last jump)
   public float attackDmg, attackRange;
@@ -62,11 +61,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public boolean dirty, needCopyBuffers;
   public Player occupant;
   public int path[];
-
-  //bits used in Packet.MOVE
-  public static final int MOVING = 1;
-  public static final int FLYING = 2;
-  public static final int RIDING = 4;
 
   public static Random r = new Random();
   public static GLMatrix mat = new GLMatrix(); //for rendering only (client side render only)
@@ -464,8 +458,9 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
       }
       c.free();
     }
-    if (flying) {
+    if (mode == MODE_FLYING) {
       fallBlocks = 0;
+      vel.y = 0;
       return false;
     }
     if (depth == 0) {
@@ -537,7 +532,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
         //falling
         fallBlocks += -stepY;
         if (onGround(0, 0, 0, (char)0)) {
-          jumping = false;
+          if (mode == MODE_JUMPING) mode = MODE_IDLE;
           if (!inWater && !inLava && fallBlocks > 3 && this instanceof CreatureBase) {
             if (Static.isServer()) {
               //deal falling dmg
@@ -581,7 +576,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   }
 
   public boolean jump() {
-    if (!flying) {
+    if (mode != MODE_FLYING) {
       if (inWater || inLava) {
         vel.y = jumpVelocity / 3.0f;
       } else {
@@ -589,7 +584,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
           vel.y = jumpVelocity;
           jumpPos = 0.0f;
           jumpStart = pos.y;
-          jumping = true;
+          mode = MODE_JUMPING;
           return true;
         }
       }
@@ -626,10 +621,10 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     int ret = -1;
     boolean moved = false;
     //try to move in one step
-    if (vel.x < 1 && vel.z < 1 && !flying && !usePath) {
+    if (vel.x < 1 && vel.z < 1 && mode != MODE_FLYING && !usePath) {
       ret = inBlock(vel.x,0,vel.z, sneak, maxFall);
     }
-    if (flying) ret = 0;  //TODO : creative mode
+    if (mode == MODE_FLYING) ret = 0;  //TODO : creative mode
     switch (ret) {
       default:
         pos.y += ret * Static._1_16;
@@ -855,6 +850,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     updateFlags();
     gravity(0);
     float speed = 0;
+    boolean flying = mode == MODE_FLYING;
     if (inWater || inLava) {
       mode = EntityBase.MODE_SWIM;
       speed = swimSpeed;
@@ -898,10 +894,11 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     if (jump) {
       jump();
     }
-    if (flying && fup) {
+    if (flying) mode = MODE_FLYING;  //reset flying mode (creative)
+    if (mode == MODE_FLYING && fup) {
       pos.y += 1.0f;
     }
-    if (flying && fdn) {
+    if (mode == MODE_FLYING && fdn) {
       pos.y -= 1.0f;
     }
     move(sneak, false, false, -1);
@@ -927,7 +924,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public synchronized Vectors calcVectors(float speed, Vectors v) {
     cvmat.setIdentity();
     cvmat.addRotate(ang.y, 0, 1, 0);
-    if (flying) speed *= 2.0f;  //test
+    if (mode == MODE_FLYING) speed *= 2.0f;  //test
     v.forward.set(0,0,-speed);
     cvmat.mult(v.forward);
     v.left.set(-speed,0,0);
@@ -974,6 +971,8 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public static final int MODE_RUN = 2;
   public static final int MODE_SNEAK = 3;
   public static final int MODE_SWIM = 4;
+  public static final int MODE_FLYING = 5;
+  public static final int MODE_JUMPING = 6;
 
   //bit states for player input
   public static final int JUMP = 0x10;
