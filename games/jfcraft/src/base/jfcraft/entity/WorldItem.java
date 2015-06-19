@@ -117,7 +117,7 @@ public class WorldItem extends EntityBase {
     ctick();
     boolean moved = false;
     if (gravity(0)) moved = true;
-    if (move(false, false, false, -1)) moved = true;
+    if (move(false, false, false, -1, AVOID_NONE)) moved = true;
     if (moved) Static.server.broadcastEntityMove(this);
     if (age > 3 * 20) {
       //check if player is overlapping me

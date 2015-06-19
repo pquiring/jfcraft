@@ -147,7 +147,7 @@ public class Arrow extends EntityBase {
         }
       }
     }
-    if (inBlock(0,0,0,false,-1) == -1) {
+    if (inBlock(0,0,0,false,-1, AVOID_NONE) == -1) {
       armed = false;
       vel.x = 0;
       vel.y = 0;
@@ -158,7 +158,7 @@ public class Arrow extends EntityBase {
     updateFlags();
     boolean fell = gravity(0);
     //TODO : adjust xAngle based on gravity to create ballistic arc
-    boolean moved = move(false, true, false, -1);
+    boolean moved = move(false, true, false, -1, AVOID_NONE);
     if (fell || moved) {
       Static.server.broadcastEntityMove(this);
     }

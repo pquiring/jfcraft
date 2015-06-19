@@ -48,7 +48,7 @@ public class Pig extends CreatureBase {
     height2 = height/2;
     depth = 1.3f;
     depth2 = depth/2;
-    walkAngleDelta = 1.0f;
+    walkAngleDelta = 5.0f;
     if (Static.isServer()) {
       eyeHeight = 0.5f;
       jumpVelocity = 0.58f;  //results in jump of 1.42

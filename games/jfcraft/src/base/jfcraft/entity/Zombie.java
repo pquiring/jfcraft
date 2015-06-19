@@ -51,7 +51,7 @@ public class Zombie extends CreatureBase {
     height2 = height/2;
     depth = width;
     depth2 = width2;
-    walkAngleDelta = 1.0f;
+    walkAngleDelta = 5.0f;
     if (Static.isServer()) {
       ar = initArmor;
       eyeHeight = 1.3f;

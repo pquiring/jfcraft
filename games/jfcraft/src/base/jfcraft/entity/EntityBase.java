@@ -391,7 +391,9 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
    * @param dx,dy,dz = delta movement
    * @param sneak = sneak mode (do not fall off block)
    * @param maxFall = max blocks entity can fall (-1 = ignore)
+   * @param avoid = avoid certain blocks (water, lava)
    *
+   * @return -5=would move into avoided block type
    * @return -4=would fall too far (maxFall)
    * @return -3=would fall off block (sneak mode)
    * @return -2=can jump up
@@ -399,10 +401,34 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
    * @return 0=!inBlock
    * @return 0-16=canStepUp(*_1_16)
    */
-  public int inBlock(float dx, float dy, float dz, boolean sneak, int maxFall) {
+  public int inBlock(float dx, float dy, float dz, boolean sneak, int maxFall, int avoid) {
     float px = pos.x + dx;
     float py = pos.y + dy + height2;
     float pz = pos.z + dz;
+
+    if (avoid != AVOID_NONE) {
+      Coords[] list = getBlocks(dx,dy-0.5f,dz);
+      boolean avoided = false;
+      for(int a=0;a<list.length;a++) {
+        char id = list[a].block.id;
+        if ((avoid & AVOID_WATER) == AVOID_WATER) {
+          if (id == Blocks.WATER) {
+            avoided = true;
+            break;
+          }
+        }
+        if ((avoid & AVOID_LAVA) == AVOID_LAVA) {
+          if (id == Blocks.LAVA) {
+            avoided = true;
+            break;
+          }
+        }
+      }
+      freeBlocks(list);
+      if (avoided) {
+        return -5;
+      }
+    }
 
     Coords[] list = getBlocks(dx,dy,dz);
 
@@ -592,15 +618,22 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return false;
   }
 
+  public static final int AVOID_NONE = 0;
+  public static final int AVOID_LAVA = 1;
+  public static final int AVOID_WATER = 2;
+  public static final int AVOID_LAVA_WATER = 3;
+
   /** Attempt to walk in x/z (may move up steps)
    * @param sneak : sneak mode (do not fall off block)
    * @param stick : stick into blocks (arrows)
    * @param usePath : use path
+   * @param maxFall : max dist to call
+   * @param avoid : avoid certain blocks (water, lava, etc.)
    *
    * @return entity moved?
    */
 
-  public boolean move(boolean sneak, boolean stick, boolean usePath, int maxFall) {
+  public boolean move(boolean sneak, boolean stick, boolean usePath, int maxFall, int avoid) {
     boolean server = Static.isServer();
     if (vel.x == 0.0f && vel.z == 0.0f) return false;
     long p1,p2,p3,p4;
@@ -622,7 +655,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     boolean moved = false;
     //try to move in one step
     if (vel.x < 1 && vel.z < 1 && mode != MODE_FLYING && !usePath) {
-      ret = inBlock(vel.x,0,vel.z, sneak, maxFall);
+      ret = inBlock(vel.x,0,vel.z, sneak, maxFall, avoid);
     }
     if (mode == MODE_FLYING) ret = 0;  //TODO : creative mode
     switch (ret) {
@@ -634,6 +667,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
         pos.z += vel.z;
         moved = true;
         break;
+      case -5:  //avoidance
       case -4:  //move closer to edge
       case -3:  //move as close as possible to edge
       case -2:  //do not jump here (get closer first)
@@ -645,7 +679,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
           if (xVel < -0.01f) {
             //move west
             if (xVel < -Static._1_32) step = -Static._1_32; else step = xVel;
-            ret = inBlock(step,0,0, sneak, maxFall);
+            ret = inBlock(step,0,0, sneak, maxFall, avoid);
             switch (ret) {
               default:
                 pos.y += ret * Static._1_16;
@@ -671,6 +705,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
                 break;
               case -3:
               case -4:
+              case -5:
                 //TODO : move close to edge without falling
                 xVel = 0.0f;
                 vel.x = 0.0f;
@@ -679,7 +714,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
           } else if (xVel > 0.01f) {
             //move east
             if (xVel > Static._1_32) step = Static._1_32; else step = xVel;
-            ret = inBlock(step,0,0, sneak, maxFall);
+            ret = inBlock(step,0,0, sneak, maxFall, avoid);
             switch (ret) {
               default:
                 pos.y += ret * Static._1_16;
@@ -705,6 +740,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
                 break;
               case -3:
               case -4:
+              case -5:
                 //TODO : move close to edge without falling
                 xVel = 0.0f;
                 vel.x = 0.0f;
@@ -716,7 +752,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
           if (zVel < -0.01f) {
             //move north
             if (zVel < -Static._1_32) step = -Static._1_32; else step = zVel;
-            ret = inBlock(0,0,step, sneak, maxFall);
+            ret = inBlock(0,0,step, sneak, maxFall, avoid);
             switch (ret) {
               default:
                 pos.y += ret * Static._1_16;
@@ -742,6 +778,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
                 break;
               case -3:
               case -4:
+              case -5:
                 //TODO : move close to edge without falling
                 zVel = 0.0f;
                 vel.z = 0.0f;
@@ -750,7 +787,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
           } else if (zVel > 0.01f) {
             //move south
             if (zVel > Static._1_32) step = Static._1_32; else step = zVel;
-            ret = inBlock(0,0,step, sneak, maxFall);
+            ret = inBlock(0,0,step, sneak, maxFall, avoid);
             switch (ret) {
               default:
                 pos.y += ret * Static._1_16;
@@ -776,6 +813,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
                 break;
               case -3:
               case -4:
+              case -5:
                 //TODO : move close to edge without falling
                 zVel = 0.0f;
                 vel.z = 0.0f;
@@ -901,7 +939,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     if (mode == MODE_FLYING && fdn) {
       pos.y -= 1.0f;
     }
-    move(sneak, false, false, -1);
+    move(sneak, false, false, -1, AVOID_NONE);
   }
 
   public void rotateY(float angle) {
@@ -1003,6 +1041,32 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
       Static.log("EB:getChunk:" + (p2-p1) + "," + (p3-p2) + "," + (p4-p3));
     }
     return chunk;
+  }
+
+  public BlockBase getBlock(float dx, float dy, float dz) {
+    Chunk chunk = getChunk();
+
+    int gx = Static.floor(pos.x % 16.0f);
+    if (pos.x < 0 && gx != 0) gx = 16 + gx;
+    int gy = Static.floor(pos.y);
+    int gz = Static.floor(pos.z % 16.0f);
+    if (pos.z < 0 && gz != 0) gz = 16 + gz;
+
+    char id = chunk.getID(gx, gy, gz);
+    return Static.blocks.blocks[id];
+  }
+
+  public BlockBase getBlock2(float dx, float dy, float dz) {
+    Chunk chunk = getChunk();
+
+    int gx = Static.floor(pos.x % 16.0f);
+    if (pos.x < 0 && gx != 0) gx = 16 + gx;
+    int gy = Static.floor(pos.y);
+    int gz = Static.floor(pos.z % 16.0f);
+    if (pos.z < 0 && gz != 0) gz = 16 + gz;
+
+    char id = chunk.getID2(gx, gy, gz);
+    return Static.blocks.blocks[id];
   }
 
   /** Checks if entity is within valid chunk. */
