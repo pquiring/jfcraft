@@ -193,7 +193,6 @@ public class Boat extends CreatureBase {
       occupant.pos.z = pos.z;
     }
 //    Static.log(Static.CS() + ":a:" + x + "," + y + "," + z);
-    occupant.mode = EntityBase.RIDING;
     if (Static.isServer() && sneak) {
       //eject occupant
       occupant.vehicle = null;

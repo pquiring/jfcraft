@@ -27,13 +27,11 @@ public class PacketRiding extends Packet {
   public void process(Client client) {
     int uid = i1;
     if (uid == -1) {
-      client.player.riding = false;
       client.player.vehicle = null;
     } else {
       EntityBase e = client.world.getEntity(uid);
       if (e == null) return;
       e.occupant = client.player;
-      client.player.riding = true;
       client.player.vehicle = e;
       client.player.pos.x = e.pos.x;
       client.player.pos.y = e.pos.y;

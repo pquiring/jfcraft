@@ -619,17 +619,9 @@ public class Server {
   }
 
   public void broadcastEntityMove(EntityBase e) {
-    int bits = 0;
-    if (e.flying) bits |= EntityBase.FLYING;
-    if (e.moving) bits |= EntityBase.MOVING;
-    if (e instanceof Player) {
-      if ( ((Player)e).vehicle != null) {
-        bits |= EntityBase.RIDING;
-      }
-    }
     Packet update = new PacketMove(Packets.MOVE,
       e.pos.x, e.pos.y, e.pos.z, e.ang.x, e.ang.y, e.ang.z,
-      e.uid, bits
+      e.uid, e.mode
     );
     synchronized(clientsLock) {
       int cnt = clients.size();

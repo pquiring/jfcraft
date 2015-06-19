@@ -275,11 +275,9 @@ public abstract class CreatureBase extends EntityBase {
       }
     }
     if (dist > attackRange) {
-      moving = true;
       mode = MODE_WALK;
     } else {
       mode = MODE_IDLE;
-      moving = false;
       //attack!!!
       if (attackCount == 0) {
         target.takeDmg(attackDmg, this);
@@ -299,8 +297,7 @@ public abstract class CreatureBase extends EntityBase {
     walkLength--;
     if (walkLength < 0) {
       walkLength = r.nextInt(5 * 20);  //walk upto 5 secs
-      moving = runCount > 0 || r.nextInt(10) == 0;  //walk 5% of the time
-      if (moving) {
+      if (runCount > 0 || r.nextInt(10) == 0) {  //walk 5% of the time
         ang.y += (r.nextFloat() - 0.5f) * 90.0f;
         if (ang.y > 180.0f) ang.y -= 180.0f;
         else if (ang.y < -180.0f) ang.y += 180.0f;
@@ -310,6 +307,8 @@ public abstract class CreatureBase extends EntityBase {
         } else {
           mode = MODE_WALK;
         }
+      } else {
+        mode = MODE_IDLE;
       }
     }
     ang.x = 0;

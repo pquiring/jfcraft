@@ -147,7 +147,6 @@ public class Client {
           initThread = false;
         }
         try {
-          Static.tickFrame = true;
           long start = System.currentTimeMillis();
           tick();
           long stop = System.currentTimeMillis();
@@ -296,7 +295,10 @@ public class Client {
         if (Static.keys[KeyEvent.VK_C]) {
           Static.keys[KeyEvent.VK_C] = false;
           clientTransport.gamemode();
-          player.flying = !player.flying;
+          if (player.mode == EntityBase.MODE_FLYING)
+            player.mode = EntityBase.MODE_WALK;
+          else
+            player.mode = EntityBase.MODE_FLYING;
         }
       }
       move(up, dn, lt, rt, jump, sneak, run, b1, b2, fup, fdn);

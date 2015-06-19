@@ -137,15 +137,28 @@ public class Pig extends CreatureBase {
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
     gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
-    if (moving) {
-      if (Static.advanceFrame) {
-        walkAngle += walkAngleDelta;
-        if ((walkAngle < -45.0) || (walkAngle > 45.0)) {
-          walkAngleDelta *= -1;
-        }
-      }
-    } else {
-      walkAngle = 0.0f;
+  }
+
+  public void ctick() {
+    float delta = 0;
+    switch (mode) {
+      case MODE_IDLE:
+        walkAngle = 0.0f;
+        return;
+      case MODE_RUN:
+        delta = walkAngleDelta * 2f;
+        break;
+      case MODE_SWIM:
+      case MODE_WALK:
+        delta = walkAngleDelta;
+        break;
+      case MODE_SNEAK:
+        delta = walkAngleDelta / 2f;
+        break;
+    }
+    walkAngle += delta;
+    if ((walkAngle < -45.0) || (walkAngle > 45.0)) {
+      walkAngleDelta *= -1;
     }
   }
 
@@ -166,14 +179,14 @@ public class Pig extends CreatureBase {
     //do AI
     updateFlags();
     boolean fell;
-    if (inWater && !jumping) {
+    if (inWater && mode != MODE_FLYING) {
       fell = gravity(0.5f + (float)Math.sin(floatRad) * 0.25f);
       floatRad += 0.314f;
       if (floatRad > Static.PIx2) floatRad = 0f;
     } else {
       fell = gravity(0);
     }
-    boolean wasMoving = moving;
+    boolean wasMoving = mode != MODE_IDLE;
     //random walking
     if (Static.debugRotate) {
       //test rotate in a spot
@@ -181,17 +194,19 @@ public class Pig extends CreatureBase {
       if (ang.y > 180f) { ang.y = -180f; }
       ang.x += 1.0f;
       if (ang.x > 45.0f) { ang.x = -45.0f; }
-      moving = true;
+      mode = MODE_WALK;
     } else {
       randomWalking();
-      if (moving) {
+      if (mode != MODE_IDLE) {
         moveEntity();
       } else {
-        vel.x = 0;
-        vel.z = 0;
+        if (onGround) {
+          vel.x = 0;
+          vel.z = 0;
+        }
       }
     }
-    if (fell || moving || wasMoving) Static.server.broadcastEntityMove(this);
+    if (fell || mode != MODE_IDLE || wasMoving) Static.server.broadcastEntityMove(this);
   }
 
   private static Random r = new Random();
