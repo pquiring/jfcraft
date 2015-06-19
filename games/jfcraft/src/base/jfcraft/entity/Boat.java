@@ -132,7 +132,7 @@ public class Boat extends CreatureBase {
     if (occupant != null) return;
     updateFlags();
     boolean fell = gravity(0.25f);
-    boolean moved = move(false, true, false, -1);
+    boolean moved = move(false, true, false, -1, AVOID_NONE);
     if (fell || moved) {
       Static.server.broadcastEntityMove(this);
     }
@@ -187,7 +187,7 @@ public class Boat extends CreatureBase {
 //    Static.log(Static.CS() + ":b:" + x + "," + y + "," + z + ":" + speed + ":" + v.forward.v[0] + "," + v.forward.v[2] + ":" + xv + "," + zv + ":" + up + dn + ":" + occupant.yAngle);
     //to keep the boat and player synced this must be synced with render engine
     synchronized(Static.renderLock) {
-      move(sneak, false, false, -1);
+      move(sneak, false, false, -1, AVOID_NONE);
       occupant.pos.x = pos.x;
       occupant.pos.y = pos.y;
       occupant.pos.z = pos.z;

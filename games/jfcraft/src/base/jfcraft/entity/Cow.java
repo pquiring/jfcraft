@@ -171,8 +171,6 @@ public class Cow extends CreatureBase {
     }
   }
 
-  public int walkLength;
-
   public void tick() {
     super.tick();
     //do AI

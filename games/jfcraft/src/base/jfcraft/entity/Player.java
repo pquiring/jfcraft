@@ -72,7 +72,7 @@ public class Player extends CreatureBase {
     sneakSpeed = 1.3f;
     swimSpeed = (walkSpeed / 2.0f);
     reach = 5.0f;
-    walkAngleDelta = 1.0f;
+    walkAngleDelta = 5.0f;
     yDrag = Static.dragSpeed;
     xzDrag = yDrag * 4.0f;
     attackDmg = 1.0f;  //base damage (fists)

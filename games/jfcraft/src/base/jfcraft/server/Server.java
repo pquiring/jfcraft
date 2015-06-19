@@ -913,7 +913,7 @@ public class Server {
       cx = Static.floor(player.pos.x / 16.0f);
       cz = Static.floor(player.pos.z / 16.0f);
       world.chunks.getChunk2(player.dim, cx, cz, true, true, false);
-      if (player.inBlock(0, 0, 0, false, 0) == 0) break;
+      if (player.inBlock(0, 0, 0, false, 0, EntityBase.AVOID_NONE) == 0) break;
       player.pos.y += 1.0f;
       if (player.pos.y > 250) break;  //OHOH
     } while (true);

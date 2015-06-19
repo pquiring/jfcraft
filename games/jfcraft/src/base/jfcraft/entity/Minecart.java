@@ -193,7 +193,7 @@ public class Minecart extends CreatureBase {
     if (!moved) {
       offRail();
       fell = gravity(-1);
-      moved = move(false, false, false, -1);
+      moved = move(false, false, false, -1, AVOID_NONE);
     }
     Chunk chunk2 = getChunk();
     if (chunk2 != chunk1) {
@@ -537,7 +537,7 @@ public class Minecart extends CreatureBase {
 //        if (Static.isClient()) Static.log("new pos=" + x + "," + y + "," + z);
         return moveOnRails();
       }
-      if (inBlock(0, up | dn ? 1f : 0, 0, false, -1) != 0) {
+      if (inBlock(0, up | dn ? 1f : 0, 0, false, -1, AVOID_NONE) != 0) {
         dir = Direction.opposite(dir);
       }
     }
@@ -585,7 +585,7 @@ public class Minecart extends CreatureBase {
       } else {
         offRail();
         gravity(-1);
-        move(false, false, false, -1);
+        move(false, false, false, -1, AVOID_NONE);
       }
       Chunk chunk2 = getChunk();
       if (chunk2 != chunk1) {
