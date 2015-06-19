@@ -213,7 +213,7 @@ public abstract class BlockPortal extends BlockBase {
       //create portal at entity coords
       boolean foundAir = false;
       for(int y = 64;y < 256;y++) {
-        if (chunk.getID(p.gx, y, p.gz) != 0) {
+        if (chunk.getID(p.gx, y, p.gz) == 0) {
           p.gy = y+1;
           foundAir = true;
           break;
@@ -221,7 +221,7 @@ public abstract class BlockPortal extends BlockBase {
       }
       if (!foundAir) {
         for(int y = 64;y > 0;y--) {
-          if (chunk.getID(p.gx, y, p.gz) != 0) {
+          if (chunk.getID(p.gx, y, p.gz) == 0) {
             p.gy = y+1;
             foundAir = true;
             break;
