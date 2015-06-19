@@ -198,6 +198,7 @@ public class Blocks {
   public static char BARRIER;
   public static char RED_STONE;
   public static char WHEAT;
+  public static char SOLID;  //solid color block
 
   public static char TEST_ARROW;
 
@@ -551,6 +552,45 @@ public class Blocks {
     registerBlock(new BlockRedStoneDust("RED_STONE", new String[] {"Red Stone Dust"}, new String[] {"redstone_dust_cross", "redstone_dust_line"}));
 
     registerBlock(new BlockSign("SIGN", new String[] {"Sign"}, new String[] {"planks_oak"}));
+
+    registerBlock(new BlockOpaque("SOLID",
+      new String[] {
+        "Solid Block White",
+        "Solid Block Ornage",
+        "Solid Block Magenta",
+        "Solid Block Light Blue",
+        "Solid Block Yellow",
+        "Solid Block Lime",
+        "Solid Block Pink",
+        "Solid Block Gray",
+        "Solid Block Light Gray",
+        "Solid Block Cyan",
+        "Solid Block Purple",
+        "Solid Block Blue",
+        "Solid Block Brown",
+        "Solid Block Green",
+        "Solid Block Red",
+        "Solid Block Black"
+      },
+      new String[] {
+        "solid_white",
+        "solid_orange",
+        "solid_magenta",
+        "solid_light_blue",
+        "solid_yellow",
+        "solid_lime",
+        "solid_pink",
+        "solid_gray",
+        "solid_silver",
+        "solid_cyan",
+        "solid_purple",
+        "solid_blue",
+        "solid_brown",
+        "solid_green",
+        "solid_red",
+        "solid_black"
+      }
+    ).setVar());
 
     registerBlock(new BlockOpaque("TEST_ARROW", new String[] {"test"}, new String[] {"arrow"}).setDir());
 
