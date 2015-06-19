@@ -86,6 +86,18 @@ public class Chunks extends ClientServer {
     return chunk;
   }
 
+  /** Loads surrounding chunks. */
+  public void loadSurroundingChunks(int dim, int cx, int cz) {
+    getChunk2(dim,cx+1,cz+1,true,true,true);
+    getChunk2(dim,cx  ,cz+1,true,true,true);
+    getChunk2(dim,cx+1,cz-1,true,true,true);
+    getChunk2(dim,cx  ,cz-1,true,true,true);
+    getChunk2(dim,cx-1,cz+1,true,true,true);
+    getChunk2(dim,cx  ,cz+1,true,true,true);
+    getChunk2(dim,cx-1,cz-1,true,true,true);
+    getChunk2(dim,cx  ,cz-1,true,true,true);
+  }
+
   public boolean hasChunk(int dim,int cx,int cz) {
     ChunkKey key = ChunkKey.alloc(dim, cx, cz);
     boolean contains;

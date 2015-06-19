@@ -463,10 +463,31 @@ public class RenderBuffers implements Cloneable {
     addVertex(new float[] {f.x[2],f.y[2],f.z[2]}, new float[] {f.u1[2],f.v1[2]}, new float[] {f.u2[2],f.v2[2]});
     addVertex(new float[] {f.x[3],f.y[3],f.z[3]}, new float[] {f.u1[3],f.v1[3]}, new float[] {f.u2[3],f.v2[3]});
 
+    float sl = data.sl[data.adjLight ? data.dirSide : X];
+    float bl = data.bl[data.adjLight ? data.dirSide : X];
+    //fade the light slightly on sides and bottom
+    switch (data.side) {
+//      case A:
+//        break;
+      case N:
+      case S:
+        if (sl > 0) sl -= Static._0_5_15;
+        if (bl > 0) bl -= Static._0_5_15;
+        break;
+      case E:
+      case W:
+        if (sl > 0) sl -= Static._0_25_15;
+        if (bl > 0) bl -= Static._0_25_15;
+        break;
+      case B:
+        if (sl > 0) sl -= Static._0_75_15;
+        if (bl > 0) bl -= Static._0_75_15;
+        break;
+    }
     for(int a=0;a<4;a++) {
       addColor(data);
-      addSunLight(data.sl[data.adjLight ? data.dirSide : X]);
-      addBlockLight(data.bl[data.adjLight ? data.dirSide : X]);
+      addSunLight(sl);
+      addBlockLight(bl);
     }
     addPoly(new int[] {off+3,off+2,off+1,off+0});
     if (data.doubleSided) {
