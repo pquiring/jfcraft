@@ -155,7 +155,7 @@ public class Arrow extends EntityBase {
 //      Static.log("Arrow stuck on block");
       return;  //stuck on block
     }
-    updateFlags();
+    updateFlags(0,0,0);
     boolean fell = gravity(0);
     //TODO : adjust xAngle based on gravity to create ballistic arc
     boolean moved = move(false, true, false, -1, AVOID_NONE);
