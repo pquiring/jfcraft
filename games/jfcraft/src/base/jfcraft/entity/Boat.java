@@ -130,7 +130,7 @@ public class Boat extends CreatureBase {
   public void tick() {
     super.tick();
     if (occupant != null) return;
-    updateFlags();
+    updateFlags(0,0,0);
     boolean fell = gravity(0.25f);
     boolean moved = move(false, true, false, -1, AVOID_NONE);
     if (fell || moved) {
@@ -157,7 +157,6 @@ public class Boat extends CreatureBase {
     boolean jump, boolean sneak, boolean run, boolean b1, boolean b2,
     boolean fup, boolean fdn)
   {
-    updateFlags();
     gravity(0.25f);
     float speed = 0;
     if (onWater) {

@@ -185,7 +185,7 @@ public class Minecart extends CreatureBase {
   public void tick() {
     super.tick();
     if (occupant != null) return;
-    updateFlags();
+    updateFlags(0,0,0);
     boolean fell = false;
     boolean moved;
     Chunk chunk1 = getChunk();
@@ -563,7 +563,7 @@ public class Minecart extends CreatureBase {
     boolean jump, boolean sneak, boolean run, boolean b1, boolean b2,
     boolean fup, boolean fdn)
   {
-    updateFlags();
+    updateFlags(0,0,0);
     //to keep the minecart and player synced this must be synced with render engine
     synchronized(Static.renderLock) {
       Chunk chunk1 = getChunk();
