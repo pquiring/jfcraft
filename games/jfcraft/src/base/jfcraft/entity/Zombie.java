@@ -238,6 +238,7 @@ public class Zombie extends CreatureBase {
         py -= 1.0f;
         Zombie e = new Zombie();
         e.init();
+        e.dim = chunk.dim;
         e.health = initHealth;
         e.pos.x = px;
         e.pos.y = py;

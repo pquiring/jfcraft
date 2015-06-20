@@ -206,7 +206,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       }
       ll = lw;
     }
-    if (la > 0 && lb > 0) {
+    if ((la & SUN_LIGHT_MASK) == 15 && lb != -1) {
       //sunlight might get blocked
       return true;
     }
