@@ -31,7 +31,7 @@ public class BlockHopper extends BlockBase {
     isSolid = false;
     canUse = true;
     cantGive = true;
-    dropName = "HOPPER_ITEM";
+    dropBlock = "HOPPER_ITEM";
     model = Assets.getModel("hopper").model;
   }
 

@@ -23,7 +23,7 @@ public class BlockFire extends BlockBase {
     isComplex = true;
     isSolid = false;
     canSelect = false;
-    dropID = 0;
+    dropBlock = "AIR";
     model = Assets.getModel("fire").model;
     resetBoxes(Type.BOTH);
   }

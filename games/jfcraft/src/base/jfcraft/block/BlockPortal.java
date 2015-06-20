@@ -26,7 +26,6 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 
 public abstract class BlockPortal extends BlockBase {
-  private static ArrayList<Box> xyBoxes, zyBoxes;
   private static GLModel model;
   public BlockPortal(String id, String names[], String images[]) {
     super(id, names, images);
@@ -37,14 +36,10 @@ public abstract class BlockPortal extends BlockBase {
     isDir = true;
     isDirXZ = true;
     emitLight = 15;
-    dropID = 0;
+    dropBlock = "AIR";
     resetBoxes(Type.BOTH);
     if (model == null) {
       model = Assets.getModel("portal").model;
-      xyBoxes = new ArrayList<Box>();
-      xyBoxes.add(new Box(0,0,4, 16,16,16-4));
-      zyBoxes = new ArrayList<Box>();
-      zyBoxes.add(new Box(4,0,0, 16-4,16,16));
     }
   }
 
@@ -53,18 +48,6 @@ public abstract class BlockPortal extends BlockBase {
     buildBuffers(model.getObject("PORTAL"), buf, data, textures[0]);
   }
 
-  public ArrayList<Box> getBoxes(Coords c, Type type) {
-    if (type == Type.ENTITY) return boxListEmpty;
-    int bits = c.chunk.getBits(c.gx, c.gy, c.gz);
-    int dir = Chunk.getDir(bits);
-    if (dir == N || dir == S) {
-      //xy plane
-      return xyBoxes;
-    } else {
-      //zy plane
-      return zyBoxes;
-    }
-  }
   private static final int maxSize = 15;
   public void destroy(Client client, Coords c, boolean doDrop) {
     //must destroy all adjacent portal blocks
@@ -215,7 +198,7 @@ public abstract class BlockPortal extends BlockBase {
       boolean foundAir = false;
       for(int y = 64;y < 256;y++) {
         if (chunk.getID(p.gx, y, p.gz) == 0) {
-          p.gy = y+1;
+          p.gy = y;
           foundAir = true;
           break;
         }
@@ -223,7 +206,7 @@ public abstract class BlockPortal extends BlockBase {
       if (!foundAir) {
         for(int y = 64;y > 0;y--) {
           if (chunk.getID(p.gx, y, p.gz) == 0) {
-            p.gy = y+1;
+            p.gy = y;
             foundAir = true;
             break;
           }

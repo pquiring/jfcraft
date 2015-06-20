@@ -27,7 +27,7 @@ public class BlockStep extends BlockBase {
     isVar = true;
     varMask = 0x7;  //remove VAR_UPPER
 //    setGreenTop();  //test
-//    dropID = 0;
+//    dropBlock = "AIR";
   }
 
   public static final int VAR_UPPER = 8;
