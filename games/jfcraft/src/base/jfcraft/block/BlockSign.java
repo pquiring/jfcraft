@@ -33,7 +33,7 @@ public class BlockSign extends BlockBase {
     isSolid = false;
     isDirFace = true;
     isDirXZ = true;  //only if dir != B (needed so Faces.rotate() rotates properly)
-    dropName = "SIGN_ITEM";
+    dropBlock = "SIGN_ITEM";
     cantGive = true;  //must give item
     isSupported = true;
     resetBoxes(Type.ENTITY);

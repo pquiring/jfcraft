@@ -19,7 +19,7 @@ public class BlockEndPortal extends BlockBase {
     isComplex = true;
     isSolid = false;
     emitLight = 15;
-    dropID = 0;
+    dropBlock = "AIR";
     resetBoxes(Type.BOTH);
     addBox(0,0,0, 16,4,16,Type.BOTH);
   }

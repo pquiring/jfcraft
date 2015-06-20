@@ -42,13 +42,13 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public void getIDs() {
     super.getIDs();
     World world = Static.world();
-    if (dropName == null) dropName = name;
-    dropID = world.getBlockID(dropName);
-    if (dropID == 0 && !dropName.toLowerCase().equals("air")) {
-      Static.log("Error:dropID == 0 for " + dropName);
+    if (dropBlock == null) dropBlock = name;
+    dropID = world.getBlockID(dropBlock);
+    if (dropID == 0 && !dropBlock.toLowerCase().equals("air")) {
+      Static.log("Error:dropID == 0 for " + dropBlock);
     }
-    if (stepName != null) {
-      stepID = world.getBlockID(stepName);
+    if (stepBlock != null) {
+      stepID = world.getBlockID(stepBlock);
     }
   }
 
@@ -77,9 +77,9 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public boolean canSelect;
   public boolean canSpawnOn;
   public char stepID;  //step to smooth block type
-  public String stepName;
+  public String stepBlock;
   public char dropID;
-  public String dropName;
+  public String dropBlock;
   public boolean dropVar = true;
   public int dropCount = 1;
   public int emitLight = 0;  //0-14 (15 = sunLight)
@@ -245,11 +245,11 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     return this;
   }
   public BlockBase setDrop(String id) {
-    dropName = id;
+    dropBlock = id;
     return this;
   }
   public BlockBase setDrop(String id, int cnt) {
-    dropName = id;
+    dropBlock = id;
     dropCount = cnt;
     return this;
   }
@@ -458,7 +458,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   }
   public BlockBase setSmooth(String id) {
     this.canSmooth = true;
-    this.stepName = id;
+    this.stepBlock = id;
     return this;
   }
   public BlockBase setShowAsItem() {

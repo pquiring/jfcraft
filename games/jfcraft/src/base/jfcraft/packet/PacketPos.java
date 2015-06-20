@@ -37,6 +37,7 @@ public class PacketPos extends Packet {
 
   //process on server side
   public void process(Server server, Client client) {
+    if (client.player.offline) return;  //player in limbo
     int bits = i1;
     boolean up = (bits & Player.MOVE_UP) != 0;
     boolean dn = (bits & Player.MOVE_DN) != 0;
