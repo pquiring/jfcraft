@@ -291,13 +291,14 @@ public abstract class CreatureBase extends EntityBase {
   }
 
   public int walkLength, runCount;
+  public int walkDutyCycle = 10;  //walk 5% of the time
 
   public void randomWalking() {
     //random walking
     walkLength--;
     if (walkLength < 0) {
       walkLength = r.nextInt(5 * 20);  //walk upto 5 secs
-      if (runCount > 0 || r.nextInt(10) == 0) {  //walk 5% of the time
+      if (runCount > 0 || r.nextInt(walkDutyCycle) == 0) {
         ang.y += (r.nextFloat() - 0.5f) * 90.0f;
         if (ang.y > 180.0f) ang.y -= 180.0f;
         else if (ang.y < -180.0f) ang.y += 180.0f;
@@ -321,9 +322,10 @@ public abstract class CreatureBase extends EntityBase {
    *
    */
   public void moveEntity() {
-    if (!onGround && !inWater) return;
+    if (!onGround && !inWater && mode != MODE_JUMPING) return;
     float speed;
     switch (mode) {
+      case MODE_JUMPING:
       case MODE_WALK: speed = walkSpeed / 20.0f; break;
       case MODE_RUN: speed = runSpeed / 20.0f; break;
       default: return;
