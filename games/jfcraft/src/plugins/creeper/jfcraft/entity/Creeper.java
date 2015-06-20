@@ -181,7 +181,7 @@ public class Creeper extends CreatureBase {
   public int walkLength;
 
   public void tick() {
-    updateFlags();
+    updateFlags(0,0,0);
     boolean fell;
     if (inWater && mode != MODE_FLYING) {
       fell = gravity(0.5f + (float)Math.sin(floatRad) * 0.25f);
