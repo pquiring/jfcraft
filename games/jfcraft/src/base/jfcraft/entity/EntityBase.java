@@ -10,7 +10,6 @@ package jfcraft.entity;
  * Created : Mar 24, 2014
  */
 
-import java.io.*;
 import java.util.*;
 
 import javaforce.gl.*;
@@ -104,21 +103,25 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     float py = pos.y + dy;
     float pz = pos.z + dz - depth2;
 
-    int cx = Static.ceil(width);
-    int cy = Static.ceil(height);
-    int cz = Static.ceil(depth);
+    float tx = pos.x + dx;
+    float ty = pos.y + dy + height2;
+    float tz = pos.z + dz;
+
+    int ix = Static.ceil(width);
+    int iy = Static.ceil(height);
+    int iz = Static.ceil(depth);
 
     synchronized(coords) {
-      for(int x=0;x<=cx;x++) {
-        for(int y=0;y<=cy;y++) {
-          for(int z=0;z<=cz;z++) {
-            float tx = px;
-            if (x > width) tx += width; else tx += x;
-            float ty = py;
-            if (y > height) ty += height; else ty += y;
-            float tz = pz;
-            if (z > depth) tz += depth; else tz += z;
-            world.getBlock(dim,tx,ty,tz,coords);
+      for(int x=0;x<=ix;x++) {
+        for(int y=0;y<=iy;y++) {
+          for(int z=0;z<=iz;z++) {
+            float cx = px;
+            if (x > width) cx += width; else cx += x;
+            float cy = py;
+            if (y > height) cy += height; else cy += y;
+            float cz = pz;
+            if (z > depth) cz += depth; else cz += z;
+            world.getBlock(dim,cx,cy,cz,coords);
             if (coords.block.hitBox(tx, ty, tz, width2, height2, depth2, coords, BlockHitTest.Type.ENTITY)) {
               return true;
             }
@@ -279,11 +282,11 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   private int canStepUp(float dx,float dy,float dz) {
     int ret = 0;
-    float px = pos.x + dx;
-    float py = pos.y + dy + height2;
-    float pz = pos.z + dz;
     for(float step=Static._1_16;step<=1.0f;step+=Static._1_16) {
-      if (hitTest(dx,dy+step,dz)) continue;
+      if (hitTest(dx,dy+step,dz)) {
+        ret++;
+        continue;
+      }
       return ret;
     }
     return -1;
