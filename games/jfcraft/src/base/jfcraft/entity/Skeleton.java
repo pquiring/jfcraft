@@ -245,6 +245,7 @@ public class Skeleton extends CreatureBase {
         e.pos.x = px;
         e.pos.y = py;
         e.pos.z = pz;
+        e.ang.y = r.nextInt(360);
         return e;
       }
     }
