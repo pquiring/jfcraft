@@ -241,6 +241,7 @@ public class ZombiePigman extends CreatureBase {
         py -= 1.0f;
         ZombiePigman e = new ZombiePigman();
         e.init();
+        e.dim = chunk.dim;
         e.health = initHealth;
         e.pos.x = px;
         e.pos.y = py;

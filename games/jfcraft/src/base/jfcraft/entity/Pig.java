@@ -223,6 +223,7 @@ public class Pig extends CreatureBase {
         py -= 1.0f;
         Pig e = new Pig();
         e.init();
+        e.dim = chunk.dim;
         e.health = initHealth;
         e.pos.x = px;
         e.pos.y = py;

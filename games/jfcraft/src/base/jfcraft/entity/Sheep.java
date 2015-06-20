@@ -235,6 +235,7 @@ public class Sheep extends CreatureBase {
         py -= 1;
         Sheep e = new Sheep();
         e.init();
+        e.dim = chunk.dim;
         e.health = initHealth;
         e.hasFur = true;
         e.pos.x = px;

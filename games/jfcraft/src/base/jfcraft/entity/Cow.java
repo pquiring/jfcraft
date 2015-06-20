@@ -220,6 +220,7 @@ public class Cow extends CreatureBase {
         py -= 1.0f;
         Cow e = new Cow();
         e.init();
+        e.dim = chunk.dim;
         e.health = initHealth;
         e.pos.x = px;
         e.pos.y = py;

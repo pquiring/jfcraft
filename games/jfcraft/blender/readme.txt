@@ -4,6 +4,8 @@ To edit these files:
 
  - Unzip base.zip and jfassets.zip into this folder (assets folder should be in this folder)
 
+ - Unzip assets folder for each plugins\*.jar into the folder
+
  - In user preferences:
    - under input tab change orbit mode to trackball (to make rotating with Y up easier)
    - under file tab set texture path to this folder (NOTE: It's case sensitive - even in Windows)

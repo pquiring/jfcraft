@@ -241,6 +241,7 @@ public class Enderman extends CreatureBase {
         py -= 1.0f;
         Enderman e = new Enderman();
         e.init();
+        e.dim = chunk.dim;
         e.health = initHealth;
         e.pos.x = px;
         e.pos.y = py;
