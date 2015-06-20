@@ -129,7 +129,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return false;
   }
 
-  /** Tests if entity is in IDs. */
+  /** Tests if entity is in water/lava. */
   private void checkLiquids(float dx, float dy, float dz) {
     World world = Static.world();
     float px = pos.x + dx - width2;
@@ -195,11 +195,11 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     }
   }
 
-  public void updateFlags() {
-    onGround = onGround(0,0,0, (char)0);
-    onWater = onGround(0,0,0, Blocks.WATER);
+  public void updateFlags(float dx, float dy, float dz) {
+    onGround = onGround(dx,dy,dz, (char)0);
+    onWater = onGround(dx,dy,dz, Blocks.WATER);
 
-    checkLiquids(0,0,0);
+    checkLiquids(dx,dy,dz);
 
     //check right at camera position
     char id = Static.world().getID2(dim, pos.x, pos.y + eyeHeight, pos.z);
@@ -305,14 +305,12 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
    * @return 0-16=canStepUp(*_1_16)
    */
   public int inBlock(float dx, float dy, float dz, boolean sneak, int maxFall, int avoid) {
-    if (avoid != AVOID_NONE) {
-      boolean wasInWater = inWater;
-      boolean wasInLava = inLava;
+    if (avoid != AVOID_NONE && !inWater && !inLava) {
       checkLiquids(dx,dy-0.5f,dz);
-      if ((avoid & AVOID_WATER) == AVOID_WATER && inWater && !wasInWater) {
+      if ((avoid & AVOID_WATER) == AVOID_WATER && inWater) {
         return -5;
       }
-      if ((avoid & AVOID_LAVA) == AVOID_LAVA && inLava && !wasInLava) {
+      if ((avoid & AVOID_LAVA) == AVOID_LAVA && inLava) {
         return -5;
       }
     }
@@ -328,7 +326,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
         for(float a=0;a<=maxFall;a+=Static._1_16) {
           if (onGround(dx,dy - a,dz, (char)0)) return 0;
         }
-//        Static.log("maxFall:" + this);
         return -4;
       }
       return 0;
@@ -353,7 +350,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
    */
   public boolean gravity(float depth) {
     onGround = onGround(0, 0, 0, (char)0);
-    updateFlags();
+    updateFlags(0,0,0);
     if (mode == MODE_FLYING) {
       fallBlocks = 0;
       vel.y = 0;
@@ -415,7 +412,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
           return true;
         }
         if (depth != 0) {
-          updateFlags();
+          updateFlags(0,0,0);
           if (onWater && !inWater) {
             vel.y = 0.0f;
             return true;
@@ -752,7 +749,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     boolean jump, boolean sneak, boolean run, boolean b1, boolean b2,
     boolean fup, boolean fdn)
   {
-    updateFlags();
     gravity(0);
     float speed = 0;
     boolean flying = mode == MODE_FLYING;
