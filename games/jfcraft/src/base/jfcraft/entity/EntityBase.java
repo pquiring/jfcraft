@@ -95,140 +95,111 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return Assets.getModel(fn).model;
   }
 
-  /** Returns all blocks entity is within. */
-  private Coords[] getBlocks(float dx, float dy, float dz) {
+  private Coords coords = new Coords();
+
+  /** Tests all blocks. */
+  private boolean hitTest(float dx, float dy, float dz) {
     World world = Static.world();
-    ArrayList<Coords> list = new ArrayList<Coords>();
     float px = pos.x + dx - width2;
     float py = pos.y + dy;
     float pz = pos.z + dz - depth2;
 
-    //grid pos in chunk
-    int gx1 = Static.floor(px % 16.0f);
-    if (px < 0 && gx1 != 0) gx1 = 16 + gx1;
-    int gy1 = Static.floor(py);
-    int gz1 = Static.floor(pz % 16.0f);
-    if (pz < 0 && gz1 != 0) gz1 = 16 + gz1;
+    int cx = Static.ceil(width);
+    int cy = Static.ceil(height);
+    int cz = Static.ceil(depth);
 
-    int gx2,gy2,gz2;
-
-    list.add(world.getBlock(dim,px,py,pz,Coords.alloc()));
-
-    px += width;
-    gx2 = Static.floor(px % 16.0f);
-    if (px < 0 && gx2 != 0) gx2 = 16 + gx2;
-    if (gx2 != gx1) {
-      list.add(world.getBlock(dim,px,py,pz,Coords.alloc()));
-    }
-
-    pz += depth;
-    gz2 = Static.floor(pz % 16.0f);
-    if (pz < 0 && gz2 != 0) gz2 = 16 + gz2;
-    if (gz2 != gz1) {
-      list.add(world.getBlock(dim,px,py,pz,Coords.alloc()));
-    }
-
-    px -= width;
-    gx2 = Static.floor(px % 16.0f);
-    if (px < 0 && gx2 != 0) gx2 = 16 + gx2;
-    if (gx2 != gx1 || gz2 != gz1) {
-      list.add(world.getBlock(dim,px,py,pz,Coords.alloc()));
-    }
-
-    pz -= depth;  //back where we started
-
-    if (height > 1.0f) {
-      py += height2;
-      gy2 = Static.floor(py);
-
-      if (gy2 != gy1) {
-
-        list.add(world.getBlock(dim,px,py,pz,Coords.alloc()));
-
-        px += width;
-        gx2 = Static.floor(px % 16.0f);
-        if (px < 0 && gx2 != 0) gx2 = 16 + gx2;
-        if (gx2 != gx1) {
-          list.add(world.getBlock(dim,px,py,pz,Coords.alloc()));
+    synchronized(coords) {
+      for(int x=0;x<=cx;x++) {
+        for(int y=0;y<=cy;y++) {
+          for(int z=0;z<=cz;z++) {
+            float tx = px;
+            if (x > width) tx += width; else tx += x;
+            float ty = py;
+            if (y > height) ty += height; else ty += y;
+            float tz = pz;
+            if (z > depth) tz += depth; else tz += z;
+            world.getBlock(dim,tx,ty,tz,coords);
+            if (coords.block.hitBox(tx, ty, tz, width2, height2, depth2, coords, BlockHitTest.Type.ENTITY)) {
+              return true;
+            }
+          }
         }
-
-        pz += depth;
-        gz2 = Static.floor(pz % 16.0f);
-        if (pz < 0 && gz2 != 0) gz2 = 16 + gz2;
-        if (gz2 != gz1) {
-          list.add(world.getBlock(dim,px,py,pz,Coords.alloc()));
-        }
-
-        px -= width;
-        gx2 = Static.floor(px % 16.0f);
-        if (px < 0 && gx2 != 0) gx2 = 16 + gx2;
-        if (gx2 != gx1 || gz2 != gz1) {
-          list.add(world.getBlock(dim,px,py,pz,Coords.alloc()));
-        }
-
-        pz -= depth;  //back where we started
       }
-
-      py += height2;
-    } else {
-      py += height;
-      gy2 = 0;
     }
-
-    int gy3 = Static.floor(py);
-
-    if (gy3 != gy1 || (height > 2.0f && gy3 != gy2)) {
-      list.add(world.getBlock(dim,px,py,pz,Coords.alloc()));
-
-      px += width;
-      gx2 = Static.floor(px % 16.0f);
-      if (px < 0 && gx2 != 0) gx2 = 16 + gx2;
-      if (gx2 != gx1) {
-        list.add(world.getBlock(dim,px,py,pz,Coords.alloc()));
-      }
-
-      pz += depth;
-      gz2 = Static.floor(pz % 16.0f);
-      if (pz < 0 && gz2 != 0) gz2 = 16 + gz2;
-      if (gz2 != gz1) {
-        list.add(world.getBlock(dim,px,py,pz,Coords.alloc()));
-      }
-
-      px -= width;
-      gx2 = Static.floor(px % 16.0f);
-      if (px < 0 && gx2 != 0) gx2 = 16 + gx2;
-      if (gx2 != gx1 || gz2 != gz1) {
-        list.add(world.getBlock(dim,px,py,pz,Coords.alloc()));
-      }
-
-      pz -= depth;  //back where we started
-    }
-
-    return list.toArray(new Coords[list.size()]);
+    return false;
   }
 
-  private void freeBlocks(Coords list[]) {
-    if (list == null) return;
-    for(int a=0;a<list.length;a++) {
-      list[a].free();
+  /** Tests if entity is in IDs. */
+  private void checkLiquids(float dx, float dy, float dz) {
+    World world = Static.world();
+    float px = pos.x + dx - width2;
+    float py = pos.y + dy;
+    float pz = pos.z + dz - depth2;
+
+    int cx = Static.ceil(width);
+    int cy = Static.ceil(height);
+    int cz = Static.ceil(depth);
+
+    inWater = false;
+    inLava = false;
+
+    synchronized(coords) {
+      for(int x=0;x<=cx;x++) {
+        for(int y=0;y<=cy;y++) {
+          for(int z=0;z<=cz;z++) {
+            float tx = px;
+            if (x > width) tx += width; else tx += x;
+            float ty = py;
+            if (y > height) ty += height; else ty += y;
+            float tz = pz;
+            if (z > depth) tz += depth; else tz += z;
+            world.getBlock(dim,tx,ty,tz,coords);
+            if (coords.block.id == Blocks.WATER) {
+              inWater = true;
+            }
+            if (coords.block.id == Blocks.LAVA) {
+              inLava = true;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /** Tick all blocks within entity. */
+  private void tickBlocks(float dx, float dy, float dz) {
+    World world = Static.world();
+    float px = pos.x + dx - width2;
+    float py = pos.y + dy;
+    float pz = pos.z + dz - depth2;
+
+    int cx = Static.ceil(width);
+    int cy = Static.ceil(height);
+    int cz = Static.ceil(depth);
+
+    synchronized(coords) {
+      for(int x=0;x<=cx;x++) {
+        for(int y=0;y<=cy;y++) {
+          for(int z=0;z<=cz;z++) {
+            float tx = px;
+            if (x > width) tx += width; else tx += x;
+            float ty = py;
+            if (y > height) ty += height; else ty += y;
+            float tz = pz;
+            if (z > depth) tz += depth; else tz += z;
+            world.getBlock(dim,tx,ty,tz,coords);
+            coords.block.etick(this, coords);
+          }
+        }
+      }
     }
   }
 
   public void updateFlags() {
-    inWater = false;
-    inLava = false;
-
     onGround = onGround(0,0,0, (char)0);
     onWater = onGround(0,0,0, Blocks.WATER);
 
-    Coords[] c = getBlocks(0,0,0);
-
-    for(int a=0;a<c.length;a++) {
-      if (c[a].block.id == Blocks.WATER) inWater = true;
-      if (c[a].block.id == Blocks.LAVA) inLava = true;
-    }
-
-    freeBlocks(c);
+    checkLiquids(0,0,0);
 
     //check right at camera position
     char id = Static.world().getID2(dim, pos.x, pos.y + eyeHeight, pos.z);
@@ -236,131 +207,73 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     underLava = id == Blocks.LAVA;
   }
 
-  public boolean onGround(float dx, float dy, float dz, char tid) {
-    Coords c = Coords.alloc();
-    boolean state = onGround(dx,dy,dz,tid,c);
-    c.free();
-    return state;
-  }
-
   /** Checks if entity is on ground (tid=0) or on block with id == tid (tid != 0)
    *
    * @param tid = target id (0=check for any solid block to stand on)
    */
-  public boolean onGround(float dx, float dy, float dz, char tid, Coords c) {
+  public boolean onGround(float dx, float dy, float dz, char tid) {
     World world = Static.world();
-    float px = pos.x + dx - width2;
-    float py = pos.y + dy - Static._1_16;
-    float pz = pos.z + dz - depth2;
 
     float tx = pos.x + dx;
     float ty = pos.y + dy + height2 - Static._1_16;
     float tz = pos.z + dz;
 
-    //grid pos in chunk
-    int gx1 = Static.floor(px % 16.0f);
-    if (px < 0 && gx1 != 0) gx1 = 16 + gx1;
-    int gz1 = Static.floor(pz % 16.0f);
-    if (pz < 0 && gz1 != 0) gz1 = 16 + gz1;
+    float px = pos.x + dx - width2;
+    float py = pos.y + dy - Static._1_16;
+    float pz = pos.z + dz - depth2;
 
-    int gx2,gy2,gz2;
+    int cx = Static.ceil(width);
+    int cy = Static.ceil(height);
+    int cz = Static.ceil(depth);
 
-    world.getBlock(dim,px,py,pz,c);
-    if (tid == 0) {
-      if (c.block.hitBox(tx, ty, tz, width2, height2, depth2, c, BlockHitTest.Type.ENTITY)) return true;
-    } else {
-      if (c.block.id == tid) return true;
-    }
-
-    px += width;
-    gx2 = Static.floor(px % 16.0f);
-    if (px < 0 && gx2 != 0) gx2 = 16 + gx2;
-    if (gx2 != gx1) {
-      world.getBlock(dim,px,py,pz,c);
-      if (tid == 0) {
-        if (c.block.hitBox(tx, ty, tz, width2, height2, depth2, c, BlockHitTest.Type.ENTITY)) return true;
-      } else {
-        if (c.block.id == tid) return true;
+    synchronized(coords) {
+      for(int x=0;x<=cx;x++) {
+        for(int z=0;z<=cz;z++) {
+          float sx = px;
+          if (x > width) sx += width; else sx += x;
+          float sy = py;
+          float sz = pz;
+          if (z > depth) sz += depth; else sz += z;
+          world.getBlock(dim,sx,sy,sz,coords);
+          if (tid == 0) {
+            if (coords.block.hitBox(tx, ty, tz, width2, height2, depth2, coords, BlockHitTest.Type.ENTITY)) return true;
+          } else {
+            if (coords.block.id == tid) return true;
+          }
+        }
       }
     }
-
-    pz += depth;
-    gz2 = Static.floor(pz % 16.0f);
-    if (pz < 0 && gz2 != 0) gz2 = 16 + gz2;
-    if (gz2 != gz1) {
-      world.getBlock(dim,px,py,pz,c);
-      if (tid == 0) {
-        if (c.block.hitBox(tx, ty, tz, width2, height2, depth2, c, BlockHitTest.Type.ENTITY)) return true;
-      } else {
-        if (c.block.id == tid) return true;
-      }
-    }
-
-    px -= width;
-    gx2 = Static.floor(px % 16.0f);
-    if (px < 0 && gx2 != 0) gx2 = 16 + gx2;
-    if (gx2 != gx1 || gz2 != gz1) {
-      world.getBlock(dim,px,py,pz,c);
-      if (tid == 0) {
-        if (c.block.hitBox(tx, ty, tz, width2, height2, depth2, c, BlockHitTest.Type.ENTITY)) return true;
-      } else {
-        if (c.block.id == tid) return true;
-      }
-    }
-
-  //    pz -= depth;  //back where we started
-      return false;
+    return false;
   }
 
   public boolean hitHead() {
-    Coords c = Coords.alloc();
-    boolean state = hitHead(c);
-    c.free();
-    return state;
-  }
-
-  public boolean hitHead(Coords c) {
     World world = Static.world();
+
+    float tx = pos.x;
+    float ty = pos.y + height2;
+    float tz = pos.z;
+
     float px = pos.x - width2;
     float py = pos.y + height;
     float pz = pos.z - depth2;
 
-    //grid pos in chunk
-    int gx1 = Static.floor(px % 16.0f);
-    if (px < 0 && gx1 != 0) gx1 = 16 + gx1;
-    int gz1 = Static.floor(pz % 16.0f);
-    if (pz < 0 && gz1 != 0) gz1 = 16 + gz1;
+    int cx = Static.ceil(width);
+    int cy = Static.ceil(height);
+    int cz = Static.ceil(depth);
 
-    int gx2,gy2,gz2;
-
-    world.getBlock(dim,px,py,pz,c);
-    if (c.block.hitBox(pos.x, pos.y + height2, pos.z, width2, height2, depth2, c, BlockHitTest.Type.ENTITY)) return true;
-
-    px += width;
-    gx2 = Static.floor(px % 16.0f);
-    if (px < 0 && gx2 != 0) gx2 = 16 + gx2;
-    if (gx2 != gx1) {
-      world.getBlock(dim,px,py,pz,c);
-      if (c.block.hitBox(pos.x, pos.y + height2, pos.z, width2, height2, depth2, c, BlockHitTest.Type.ENTITY)) return true;
+    synchronized(coords) {
+      for(int x=0;x<=cx;x++) {
+        for(int z=0;z<=cz;z++) {
+          float sx = px;
+          if (x > width) sx += width; else sx += x;
+          float sy = py;
+          float sz = pz;
+          if (z > depth) sz += depth; else sz += z;
+          world.getBlock(dim,sx,sy,sz,coords);
+          if (coords.block.hitBox(tx, ty, tz, width2, height2, depth2, coords, BlockHitTest.Type.ENTITY)) return true;
+        }
+      }
     }
-
-    pz += depth;
-    gz2 = Static.floor(pz % 16.0f);
-    if (pz < 0 && gz2 != 0) gz2 = 16 + gz2;
-    if (gz2 != gz1) {
-      world.getBlock(dim,px,py,pz,c);
-      if (c.block.hitBox(pos.x, pos.y + height2, pos.z, width2, height2, depth2, c, BlockHitTest.Type.ENTITY)) return true;
-    }
-
-    px -= width;
-    gx2 = Static.floor(px % 16.0f);
-    if (px < 0 && gx2 != 0) gx2 = 16 + gx2;
-    if (gx2 != gx1 || gz2 != gz1) {
-      world.getBlock(dim,px,py,pz,c);
-      if (c.block.hitBox(pos.x, pos.y + height2, pos.z, width2, height2, depth2, c, BlockHitTest.Type.ENTITY)) return true;
-    }
-
-//    pz -= depth;  //back where we started
     return false;
   }
 
@@ -370,17 +283,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     float py = pos.y + dy + height2;
     float pz = pos.z + dz;
     for(float step=Static._1_16;step<=1.0f;step+=Static._1_16) {
-      ret++;
-      Coords[] list = getBlocks(dx, dy + step, dz);
-      boolean hit = false;
-      for(int a=0;a<list.length;a++) {
-        if (list[a].block.hitBox(px, py + step, pz, width2, height2, depth2, list[a], BlockHitTest.Type.ENTITY)) {
-          hit = true;
-          break;
-        }
-      }
-      freeBlocks(list);
-      if (hit) continue;
+      if (hitTest(dx,dy+step,dz)) continue;
       return ret;
     }
     return -1;
@@ -402,45 +305,19 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
    * @return 0-16=canStepUp(*_1_16)
    */
   public int inBlock(float dx, float dy, float dz, boolean sneak, int maxFall, int avoid) {
-    float px = pos.x + dx;
-    float py = pos.y + dy + height2;
-    float pz = pos.z + dz;
-
     if (avoid != AVOID_NONE) {
-      Coords[] list = getBlocks(dx,dy-0.5f,dz);
-      boolean avoided = false;
-      for(int a=0;a<list.length;a++) {
-        char id = list[a].block.id;
-        if ((avoid & AVOID_WATER) == AVOID_WATER) {
-          if (id == Blocks.WATER) {
-            avoided = true;
-            break;
-          }
-        }
-        if ((avoid & AVOID_LAVA) == AVOID_LAVA) {
-          if (id == Blocks.LAVA) {
-            avoided = true;
-            break;
-          }
-        }
+      boolean wasInWater = inWater;
+      boolean wasInLava = inLava;
+      checkLiquids(dx,dy-0.5f,dz);
+      if ((avoid & AVOID_WATER) == AVOID_WATER && inWater && !wasInWater) {
+        return -5;
       }
-      freeBlocks(list);
-      if (avoided) {
+      if ((avoid & AVOID_LAVA) == AVOID_LAVA && inLava && !wasInLava) {
         return -5;
       }
     }
 
-    Coords[] list = getBlocks(dx,dy,dz);
-
-    boolean hit = false;
-    for(int a=0;a<list.length;a++) {
-      if (list[a].block.hitBox(px, py, pz, width2, height2, depth2, list[a], BlockHitTest.Type.ENTITY)) {
-        hit = true;
-        break;
-      }
-    }
-
-    freeBlocks(list);
+    boolean hit = hitTest(dx,dy,dz);
 
     if (sneak && onGround && !hit && !onGround(dx,dy,dz, (char)0)) {
       return -3;
@@ -476,14 +353,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
    */
   public boolean gravity(float depth) {
     onGround = onGround(0, 0, 0, (char)0);
-    {
-      Coords c = Coords.alloc();
-      if (depth != 0) {
-        inWater = Static.world().getBlock(dim, pos.x, pos.y + depth, pos.z, c).block.isLiquid;
-        onWater = Static.world().getBlock(dim, pos.x, pos.y + depth - Static._1_16, pos.z, c).block.isLiquid;
-      }
-      c.free();
-    }
+    updateFlags();
     if (mode == MODE_FLYING) {
       fallBlocks = 0;
       vel.y = 0;
@@ -545,10 +415,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
           return true;
         }
         if (depth != 0) {
-          Coords c = Coords.alloc();
-          inWater = Static.world().getBlock(dim, pos.x, pos.y - depth, pos.z, c).block.isLiquid;
-          onWater = Static.world().getBlock(dim, pos.x, pos.y - depth - Static._1_16, pos.z, c).block.isLiquid;
-          c.free();
+          updateFlags();
           if (onWater && !inWater) {
             vel.y = 0.0f;
             return true;
@@ -1129,13 +996,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
       teleportTimer--;
     }
     if (this instanceof CreatureBase) {
-      Coords c[] = getBlocks(0, 0, 0);
-      for(int a=0;a<c.length;a++) {
-//      if (c[a].block.hitBox(x, y, z, width2, height2, depth2, c[a])) {  //BUG : checks canWalkThru and always returns false on portal blocks
-          c[a].block.etick(this, c[a]);
-//      }
-      }
-      freeBlocks(c);
+      tickBlocks(0,0,0);
     }
   }
   /** Client side tick. */
