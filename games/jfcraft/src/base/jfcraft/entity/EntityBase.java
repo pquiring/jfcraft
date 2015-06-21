@@ -503,8 +503,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public boolean move(boolean sneak, boolean stick, boolean usePath, int maxFall, int avoid) {
     boolean server = Static.isServer();
     if (vel.x == 0.0f && vel.z == 0.0f) return false;
-    long p1,p2,p3,p4;
-    p1 = System.nanoTime() / 1000000;
     Chunk chunk1 = null, chunk2;
     float ox=0, oy=0, oz=0;  //org pos
 
@@ -515,7 +513,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
       oy = pos.y;
       oz = pos.z;
     }
-    p2 = System.nanoTime() / 1000000;
 
     float step;
     int ret = -1;
@@ -693,8 +690,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
       break;
     }
 
-    p3 = System.nanoTime() / 1000000;
-
     if (server) {
       chunk2 = getChunk();
       if (chunk2 == null) {
@@ -709,13 +704,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
         chunk2.addEntity(this);
         Static.server.broadcastEntitySpawn(this);  //in case moves into area that is now visible to a client
       }
-    }
-
-    p4 = System.nanoTime() / 1000000;
-
-    long diff = p4 - p1;
-    if (Static.debugProfile && diff > 2) {
-      Static.log("move:" + (p2-p1) + "," + (p3-p2) + "," + (p4-p3));
     }
 
     //apply drag
@@ -895,17 +883,9 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public Chunk getChunk() {
     int cx = Static.floor(pos.x / 16.0f);
     int cz = Static.floor(pos.z / 16.0f);
-    long p1 = System.nanoTime() / 1000000;
     Chunks chunks = Static.world().chunks;
-    long p2 = System.nanoTime() / 1000000;
     Chunk chunk;
-    long p3 = System.nanoTime() / 1000000;
     chunk = chunks.getChunk(dim, cx, cz);
-    long p4 = System.nanoTime() / 1000000;
-    long diff = p4 - p1;
-    if (Static.debugProfile && diff > 2) {
-      Static.log("EB:getChunk:" + (p2-p1) + "," + (p3-p2) + "," + (p4-p3));
-    }
     return chunk;
   }
 

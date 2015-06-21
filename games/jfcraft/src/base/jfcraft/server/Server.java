@@ -753,39 +753,22 @@ public class Server {
     world.time++;
     if (world.time == 24000) world.time = 0; //midnight
     //do chunk ticks
-    p1 = System.nanoTime() / 1000000;
     Chunk list[] = world.chunks.getChunks();
-    p2 = System.nanoTime() / 1000000;
     nChunks = list.length;
     for(int a=0;a<list.length;a++) {
       if (!list[a].canRender()) continue;
-      long p1 = System.nanoTime() / 1000000;
       list[a].doTicks();
-      long p2 = System.nanoTime() / 1000000;
-      long diff = p2 - p1;
-      if (Static.debugProfile && diff > 2) {
-        Static.log("Chunk tick:" + diff);
-      }
     }
-    p3 = System.nanoTime() / 1000000;
     //do entity ticks
     EntityBase things[] = world.getEntities();
-    p4 = System.nanoTime() / 1000000;
     nThings = things.length;
     for(int a=0;a<things.length;a++) {
       EntityBase e = things[a];
       if (e.offline) continue;
-      long p1 = System.nanoTime() / 1000000;
       synchronized(things[a].lock) {
         e.tick();
       }
-      long p2 = System.nanoTime() / 1000000;
-      long diff = p2 - p1;
-      if (Static.debugProfile && diff > 2) {
-        Static.log("Entity tick:" + diff);
-      }
     }
-    p5 = System.nanoTime() / 1000000;
     //check if bedtime
     synchronized(clientsLock) {
       int cnt = clients.size();
@@ -835,7 +818,6 @@ public class Server {
         db.spawnMonsters(list);
       }
     }
-    p6 = System.nanoTime() / 1000000;
   }
 
   private synchronized void doSave() {

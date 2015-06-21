@@ -958,13 +958,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
   public void doTicks() {
     char id;
     BlockBase block;
-    long p1 = System.nanoTime() / 1000000;
     synchronized(lock) {
-      long p2 = System.nanoTime() / 1000000;
-      long diff = p2 - p1;
-      if (Static.debugProfile && diff > 1) {
-        Static.log("Chunk tick lock:" + diff);
-      }
       int cnt = ticks.size();
       if (cnt == 0) return;
       Tick list[] = ticks.toArray(new Tick[cnt]);
