@@ -345,7 +345,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return ret;
   }
 
-  private float fallBlocks;
+  private float fallBlocks;  //# blocks entity has fallen (to calc fall dmg)
 
   /** Applies gravity to entity.
    *
@@ -735,8 +735,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   public static Vectors move_vectors = new Vectors();
   /** Player move. */
-  // must be sync'ed because uses static 'v'
-  public synchronized void move(boolean up, boolean dn, boolean lt, boolean rt,
+  public void move(boolean up, boolean dn, boolean lt, boolean rt,
     boolean jump, boolean sneak, boolean run, boolean b1, boolean b2,
     boolean fup, boolean fdn)
   {
@@ -760,26 +759,28 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
       speed = walkSpeed;
     }
     if (lt || rt || up || dn) {
-      calcVectors(speed / 20.0f, move_vectors);
-      float x = 0, z = 0;
-      if (lt) {
-        x += move_vectors.left.v[0];
-        z += move_vectors.left.v[2];
+      synchronized(move_vectors) {
+        calcVectors(speed / 20.0f, move_vectors);
+        float x = 0, z = 0;
+        if (lt) {
+          x += move_vectors.left.v[0];
+          z += move_vectors.left.v[2];
+        }
+        if (rt) {
+          x += -move_vectors.left.v[0];
+          z += -move_vectors.left.v[2];
+        }
+        if (up) {
+          x += move_vectors.forward.v[0];
+          z += move_vectors.forward.v[2];
+        }
+        if (dn) {
+          x += -move_vectors.forward.v[0];
+          z += -move_vectors.forward.v[2];
+        }
+        if (x != 0) setXVel(x);
+        if (z != 0) setZVel(z);
       }
-      if (rt) {
-        x += -move_vectors.left.v[0];
-        z += -move_vectors.left.v[2];
-      }
-      if (up) {
-        x += move_vectors.forward.v[0];
-        z += move_vectors.forward.v[2];
-      }
-      if (dn) {
-        x += -move_vectors.forward.v[0];
-        z += -move_vectors.forward.v[2];
-      }
-      if (x != 0) setXVel(x);
-      if (z != 0) setZVel(z);
     } else {
       mode = EntityBase.MODE_IDLE;
     }
@@ -967,7 +968,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
       sound--;
     }
     age++;
-    if (maxAge != -1 && age >= maxAge && target == null) {
+    if ((maxAge != -1 && age >= maxAge && target == null) || (pos.y < -128 && id != Entities.PLAYER)) {
       despawn();
       return;
     }
