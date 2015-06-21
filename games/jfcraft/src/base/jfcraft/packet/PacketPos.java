@@ -298,7 +298,7 @@ public class PacketPos extends Packet {
       }
     } else {
       if (client.placeCounter > 0) {
-        client.placeCounter--;
+        client.placeCounter = 0;
       }
       client.action[0] = Client.ACTION_IDLE;
       client.action[1] = Client.ACTION_IDLE;
