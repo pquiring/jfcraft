@@ -4,6 +4,7 @@ ChangeLog
 Jun ?, 2015 : v0.16 released!
   - fixed cracking boat/minecart (cracks must be on their own texture unit)
 
+
 Jun 16, 2015 : v0.15 released!
   - water/lava now flow
   - animations and cracks are now built into the main stitched texture and updated on the tick timer
