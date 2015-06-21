@@ -55,6 +55,7 @@
     <!-- build example plugins -->
     <ant antfile="pluginCreeper.xml" inheritAll="false"/>
     <ant antfile="pluginDomino.xml" inheritAll="false"/>
+    <ant antfile="pluginMarioWorld.xml" inheritAll="false"/>
   </target>
 
   <!-- sudo ant install -->
