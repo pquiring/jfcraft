@@ -43,6 +43,7 @@
       <Component Id="pluginfiles" Guid="{A8E4E78B-1113-4654-A96C-56E719842D0A}">
         <File Id="creeper.jar" Source="plugins/creeper.jar" KeyPath="yes"/>
         <File Id="domino.jar" Source="plugins/domino.jar"/>
+        <File Id="marioworld.jar" Source="plugins/marioworld.jar"/>
       </Component>
     </DirectoryRef>
 
