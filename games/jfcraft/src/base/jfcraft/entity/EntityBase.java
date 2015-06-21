@@ -352,8 +352,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
    * @param depth = buoyant depth (floating entity) (0=not buoyant)
    */
   public boolean gravity(float depth) {
-    onGround = onGround(0, 0, 0, (char)0);
-    updateFlags(0,0,0);
+    updateFlags(0,depth,0);
     if (mode == MODE_FLYING) {
       fallBlocks = 0;
       vel.y = 0;
