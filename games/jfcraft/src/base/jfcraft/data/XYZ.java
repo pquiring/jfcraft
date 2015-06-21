@@ -18,4 +18,7 @@ public class XYZ {
     this.y = in.y;
     this.z = in.z;
   }
+  public String toString() {
+    return "{" + x + "," + y + "," + z + "}";
+  }
 }

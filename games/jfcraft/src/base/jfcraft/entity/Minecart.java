@@ -15,6 +15,7 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 
 public class Minecart extends CreatureBase {
+  //TODO : sync these with client or get rid of them
   public float speed;  //current speed
   public int dir;  //current direction (N,E,S,W,NE,NW,SE,SW,A=none)
   public float dist;  //distance travel on current rail in dir
@@ -47,7 +48,7 @@ public class Minecart extends CreatureBase {
   public void init() {
     super.init();
     yDrag = Static.dragSpeed;
-    xzDrag = 0.1f;
+    xzDrag = 0.0f;  //TEST : 0.1f
     width = 1.0f;
     width2 = width/2f;
     height = 1.0f;
@@ -140,6 +141,7 @@ public class Minecart extends CreatureBase {
   }
 
   private void offRail() {
+    //convert dir/speed -> velocity
     dist = 0f;
     if (dir != 0) {
       //set xVel/zVel based on current speed/dir
@@ -182,25 +184,52 @@ public class Minecart extends CreatureBase {
     speed = 0;
   }
 
+  private void onRail() {
+    //convert velocity -> dir/speed
+    if (ang.y < 0) ang.y += 360f;
+    if (ang.y > 360f) ang.y -= 360f;
+
+    if (ang.y >= 45f && ang.y <= 135f) {
+      dir = E;
+    } else if (ang.y >= 135f && ang.y <= 225f) {
+      dir = S;
+    } else if (ang.y >= 225f && ang.y <= 315f) {
+      dir = W;
+    } else {
+      dir = N;
+    }
+    speed = vel.x * 20f + vel.y * 20f;
+    //TODO : calc dist
+    pos.y = (float)Math.floor(pos.y);
+  }
+
+  private boolean onRail;
+
   public void tick() {
     super.tick();
     if (occupant != null) return;
     updateFlags(0,0,0);
     boolean fell = false;
-    boolean moved;
+    boolean moved = false;
     Chunk chunk1 = getChunk();
-    moved = moveOnRails();
-    if (!moved) {
-      offRail();
-      fell = gravity(-1);
-      moved = move(false, false, false, -1, AVOID_NONE);
+    boolean wasOnRail = onRail;
+    switch (moveOnRails()) {
+      case 0:
+        break;
+      case 1:
+        moved = true;
+        break;
+      case -1:
+        fell = gravity(0);
+        moved = move(false, false, false, -1, AVOID_NONE);
+        break;
     }
     Chunk chunk2 = getChunk();
     if (chunk2 != chunk1) {
       chunk1.delEntity(this);
       chunk2.addEntity(this);
     }
-    if (fell || moved) {
+    if (fell || moved || (wasOnRail != onRail)) {
       Static.server.broadcastEntityMove(this);
     }
   }
@@ -212,10 +241,17 @@ public class Minecart extends CreatureBase {
 
   private static final float gravity = 0.05f;
 
-  private boolean moveOnRails() {
+  /** Move minecart on rails.
+   *
+   * @return 0 = on rail, no movement
+   *         1 = on rail, movement
+   *        -1 = off rail
+   *        -2 = error
+   */
+  private int moveOnRails() {
     Chunk chunk = this.getChunk();
     if (chunk == null) {
-      return false;
+      return -2;
     }
 
     int gx = Static.floor(pos.x % 16.0f);
@@ -234,10 +270,16 @@ public class Minecart extends CreatureBase {
 
     char rid = chunk.getID(gx, gy, gz);
     if (!BlockRail.isRail(rid)) {
-      return false;
+      if (onRail) {
+        offRail();
+      }
+      onRail = false;
+      return -1;
     }
-
-//    if (Static.isClient()) Static.log("pos=" + x + "," + y + "," + z);
+    if (!onRail) {
+      onRail();
+      onRail = true;
+    }
 
     onGround = true;
     vel.x = 0;
@@ -268,18 +310,18 @@ public class Minecart extends CreatureBase {
           case E:  //SE or NW
             if (isS() || isE()) {dir = SE;}
             else if (isN() || isW()) {dir = NW;}
-            else dir = 0;
+            else {dir = 0; speed = 0;}
             break;
           default:
           case S:  //N or S
             if (isN()) {dir = N;}
             else if (isS()) {dir = S;}
-            else dir = 0;
+            else {dir = 0; speed = 0;}
             break;
           case W:  //SW or NE
             if (isS() || isW()) {dir = SW;}
             else if (isN() || isE()) {dir = NE;}
-            else dir = 0;
+            else {dir = 0; speed = 0;}
             break;
         }
         break;
@@ -288,18 +330,18 @@ public class Minecart extends CreatureBase {
           case N:  //NW or SE
             if (isS() || isE()) {dir = SE;}
             else if (isN() || isW()) {dir = NW;}
-            else dir = 0;
+            else {dir = 0; speed = 0;}
             break;
           case S:  //NE or SW
             if (isN() || isE()) {dir = NE;}
             else if (isS() || isW()) {dir = SW;}
-            else dir = 0;
+            else {dir = 0; speed = 0;}
             break;
           default:
           case W:  //E or W
             if (isE()) {dir = E;}
             else if (isW()) {dir = W;}
-            else dir = 0;
+            else {dir = 0; speed = 0;}
             break;
         }
         break;
@@ -309,17 +351,17 @@ public class Minecart extends CreatureBase {
           case N:  //N or S
             if (isN()) {dir = N;}
             else if (isS()) {dir = S;}
-            else dir = 0;
+            else {dir = 0; speed = 0;}
             break;
           case E:  //NE or SW
             if (isN() || isE()) {dir = NE;}
             else if (isS() || isW()) {dir = SW;}
-            else dir = 0;
+            else {dir = 0; speed = 0;}
             break;
           case W:  //NW or SE
             if (isN() || isW()) {dir = NW;}
             else if (isS() || isE()) {dir = SE;}
-            else dir = 0;
+            else {dir = 0; speed = 0;}
             break;
         }
         break;
@@ -328,18 +370,18 @@ public class Minecart extends CreatureBase {
           case N:  //SW or NE
             if (isS() || isW()) {dir = SW;}
             else if (isN() || isE()) {dir = NE;}
-            else dir = 0;
+            else {dir = 0; speed = 0;}
             break;
           default:
           case E:  //E or W
             if (isE()) {dir = E;}
             else if (isW()) {dir = W;}
-            else dir = 0;
+            else {dir = 0; speed = 0;}
             break;
           case S:  //NW or SE
             if (isN() || isW()) {dir = NW;}
             else if (isS() || isE()) {dir = SE;}
-            else dir = 0;
+            else {dir = 0; speed = 0;}
             break;
         }
         break;
@@ -352,7 +394,7 @@ public class Minecart extends CreatureBase {
       ExtraRedstone er = (ExtraRedstone)chunk.getExtra(gx, gy, gz, Extras.REDSTONE);
       if (er == null) {
         Static.log("no redstone data");
-        return false;
+        return -2;
       }
       if (er.powered) {
         powered = true;
@@ -391,7 +433,7 @@ public class Minecart extends CreatureBase {
         speed = 0;
       }
     }
-    if (dir == 0 || speed == 0f) return true;
+    if (dir == 0 || speed == 0f) return 0;
     float delta = speed / 20f;
     float step;
     float maxDist;
@@ -402,7 +444,6 @@ public class Minecart extends CreatureBase {
       //N,E,S,W
       maxDist = 1f;
     }
-//    if (Static.isClient()) Static.log("dir=" + dir + ",speed=" + speed);
     float dist_maxDist = 0f;
     boolean hasNorth = false;
     boolean up = false, dn = false;
@@ -420,6 +461,11 @@ public class Minecart extends CreatureBase {
       }
     }
 
+    //starting pos
+    float sx = (float)Math.floor(pos.x);
+    float sy = (float)Math.floor(pos.y);
+    float sz = (float)Math.floor(pos.z);
+
     while (delta > 0) {
       if (delta > Static._1_16) {
         step = Static._1_16;
@@ -428,11 +474,11 @@ public class Minecart extends CreatureBase {
       }
       delta -= step;
       dist += step;
-      pos.x = (float)Math.floor(pos.x);
-      pos.y = (float)Math.floor(pos.y);
-      pos.z = (float)Math.floor(pos.z);
+      pos.x = sx;
+      pos.y = sy;
+      pos.z = sz;
       if (dir > W) {
-        dist_maxDist = dist  *  maxDist;
+        dist_maxDist = dist * maxDist;
       } else {
         if (up) pos.y += dist;
         else if (dn) pos.y += 1f - dist;
@@ -534,14 +580,13 @@ public class Minecart extends CreatureBase {
           }
         }
         dist -= maxDist;
-//        if (Static.isClient()) Static.log("new pos=" + x + "," + y + "," + z);
         return moveOnRails();
       }
       if (inBlock(0, up | dn ? 1f : 0, 0, false, -1, AVOID_NONE) != 0) {
         dir = Direction.opposite(dir);
       }
     }
-    return true;
+    return 1;
   }
 
   public boolean canUse() {
@@ -558,8 +603,10 @@ public class Minecart extends CreatureBase {
     c.serverTransport.setRiding(occupant, this);
   }
 
+  private static Coords coords = new Coords();
+
   /** Player move. */
-  public synchronized void move(boolean up, boolean dn, boolean lt, boolean rt,
+  public void move(boolean up, boolean dn, boolean lt, boolean rt,
     boolean jump, boolean sneak, boolean run, boolean b1, boolean b2,
     boolean fup, boolean fdn)
   {
@@ -567,25 +614,31 @@ public class Minecart extends CreatureBase {
     //to keep the minecart and player synced this must be synced with render engine
     synchronized(Static.renderLock) {
       Chunk chunk1 = getChunk();
-      if (moveOnRails()) {
-        Coords c = new Coords();
-        if (up) {
-          if (speed < pushSpeed / 2f) {
-            speed = pushSpeed;
-            occupant.getDir(c);
-            dir = c.dir_xz;
+      switch (moveOnRails()) {
+        case 0:
+          //no break
+        case 1:
+          //TODO : allow slowing down cart
+          synchronized(coords) {
+            if (up) {
+              if (speed < pushSpeed / 2f) {
+                speed = pushSpeed;
+                occupant.getDir(coords);
+                dir = coords.dir_xz;
+              }
+            } else if (dn) {
+              if (speed < pushSpeed) {
+                speed = pushSpeed;
+                occupant.getDir(coords);
+                dir = Direction.opposite(coords.dir_xz);
+              }
+            }
           }
-        } else if (dn) {
-          if (speed < pushSpeed) {
-            speed = pushSpeed;
-            occupant.getDir(c);
-            dir = Direction.opposite(c.dir_xz);
-          }
-        }
-      } else {
-        offRail();
-        gravity(-1);
-        move(false, false, false, -1, AVOID_NONE);
+          break;
+        case -1:
+          gravity(0);
+          move(false, false, false, -1, AVOID_NONE);
+          break;
       }
       Chunk chunk2 = getChunk();
       if (chunk2 != chunk1) {

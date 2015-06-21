@@ -3,3 +3,6 @@ glViewport() is used to scale the menus into position
 
 If a world is created in dedicated server, the leaves are dark (no light).
   Does not happen in single player mode.
+
+Minecart : speed, dir, dist are not synced with client.  Need to sync them are get rid of them.
+  soln : don't move on the client side while in a vehicle (let the server move the client)
