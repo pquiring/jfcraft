@@ -1,0 +1,26 @@
+<project name="jfcraft" default="jar" basedir=".">
+  <description>jfcraft</description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src/plugins/marioworld"/>
+  <property name="build" location="classes_marioworld"/>
+  <property name="classpath" location="jfcraft.jar;javaforce.jar"/>
+  <property name="version" value="1.0"/>
+
+  <target name="compile" description="compile the source">
+    <!-- Compile the java code from ${src} into ${build} -->
+    <mkdir dir="${build}"/>
+    <echo message="plugin=${build}"/>
+    <javac srcdir="${src}" destdir="${build}" target="1.6" source="1.6" debug="true" includeantruntime="false">
+      <classpath path="${classpath}"/>
+    </javac>
+  </target>
+
+  <target name="jar" depends="compile" description="build jar file">
+    <!-- Build jar file from class files -->
+    <mkdir dir="plugins"/>
+    <jar destfile="plugins/marioworld.jar" includes="**/*.class" basedir="${build}">
+      <fileset dir="src/plugins/marioworld" includes="*.properties"/>
+      <fileset dir="src/plugins/marioworld" includes="**/*.png"/>
+    </jar>
+  </target>
+</project>
