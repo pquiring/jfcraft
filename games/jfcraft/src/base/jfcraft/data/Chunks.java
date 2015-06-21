@@ -43,7 +43,6 @@ public class Chunks extends ClientServer {
   public synchronized Chunk getChunk2(int dim, int cx, int cz, boolean doPhase2, boolean doPhase3, boolean doLights) {
     Chunk chunk = getChunk(dim,cx,cz);
 //    Static.log("getChunk2:" + cx + "," + cz + ":" + getAdj + ":" + cache.size());
-//    long p1 = System.nanoTime() / 1000000;
     if (!dim_inited[dim]) {
       Static.dims.dims[dim].init();
       dim_inited[dim] = true;
@@ -63,7 +62,6 @@ public class Chunks extends ClientServer {
       }
       addChunk(chunk);
     }
-//    long p2 = System.nanoTime() / 1000000;
     if (doPhase2 && chunk.needPhase2) {
       chunk.getAdjChunks(false, false, false, 8);
       Static.dims.dims[dim].getGeneratorPhase2().generate(chunk);
@@ -73,16 +71,10 @@ public class Chunks extends ClientServer {
       Static.dims.dims[dim].getGeneratorPhase3().generate(chunk);
       chunk.buildShapes();
     }
-//    long p3 = System.nanoTime() / 1000000;
     if (doLights && chunk.needLights) {
       chunk.getAdjChunks(true, true, false, 8);
       Static.dims.dims[dim].getLightingServer().light(chunk);
     }
-//    long p4 = System.nanoTime() / 1000000;
-//    long diff = p4 - p1;
-//    if (Static.debugProfile && diff > 2) {
-//      Static.log("getChunk took:" + (p2-p1) + "," + (p3-p2) + "," + (p4-p3));
-//    }
     return chunk;
   }
 
@@ -277,29 +269,17 @@ public class Chunks extends ClientServer {
     }
   }
   public int getCount() {
-//    long p1 = System.nanoTime() / 1000000;
     int cnt;
     synchronized(lock) {
       cnt = cache.size();
     }
-//    long p2 = System.nanoTime() / 1000000;
-//    long diff = p2 - p1;
-//    if (Static.debugProfile && diff > 2) {
-//      Static.log("getCount:" + diff);
-//    }
     return cnt;
   }
   public Chunk[] getChunks() {
     Chunk chunks[];
-//    long p1 = System.nanoTime() / 1000000;
     synchronized(lock) {
       chunks = cache.values().toArray(new Chunk[cache.size()]);
     }
-//    long p2 = System.nanoTime() / 1000000;
-//    long diff = p2 - p1;
-//    if (Static.debugProfile && diff > 2) {
-//      Static.log("getChunks:" + diff);
-//    }
     return chunks;
   }
 
@@ -339,18 +319,10 @@ public class Chunks extends ClientServer {
     int ix = chunk.cx >> storeBits;
     int iz = chunk.cz >> storeBits;
     byte data[];
-//    long p1 = System.nanoTime() / 1000000;
-//    long p2;
     synchronized(chunk.lock) {
-//      p2 = System.nanoTime() / 1000000;
       data = coder.encodeObject(chunk, true);
       chunk.dirty = false;
     }
-//    long p3 = System.nanoTime() / 1000000;
-//    long diff = p3 - p1;
-//    if (Static.debugProfile && diff > 2) {
-//      Static.log("chunks.saveChunk took:" + (p2-p1) + "," + (p3-p2));
-//    }
     synchronized(fileLock) {
       ChunkKey key = ChunkKey.alloc(chunk.dim, ix, iz);
 //      Static.log("saveChunk:" + chunk.dim + "," + chunk.cx + "," + chunk.cz);
