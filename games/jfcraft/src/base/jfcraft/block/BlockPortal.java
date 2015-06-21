@@ -175,7 +175,7 @@ public abstract class BlockPortal extends BlockBase {
    * @param c = coords of portal block from old dimension
    */
   public void teleport(EntityBase e, Coords c) {
-    Static.log("teleport:" + e + "@" + c);
+    Static.log("teleport:" + e + "@" + c + ":dim=" + e.dim);
     Coords p = c.clone();
     //for now just convert coords as is
     Chunk chunk = Static.server.world.chunks.getChunk2(e.dim, p.cx, p.cz, true, true, true);
@@ -194,8 +194,8 @@ public abstract class BlockPortal extends BlockBase {
       int dir = Chunk.getDir(p.bits);
       //create portal at entity coords
       boolean foundAir = false;
-      for(int y = 64;y < 256;y++) {
-        if (chunk.getID(p.gx, y, p.gz) == 0) {
+      for(int y = 64;y < 128-5;y++) {
+        if ((chunk.getID(p.gx, y, p.gz) == 0) && (chunk.getID(p.gx, y - 1, p.gz) != 0)) {
           p.gy = y;
           foundAir = true;
           break;
@@ -203,7 +203,7 @@ public abstract class BlockPortal extends BlockBase {
       }
       if (!foundAir) {
         for(int y = 64;y > 0;y--) {
-          if (chunk.getID(p.gx, y, p.gz) == 0) {
+          if ((chunk.getID(p.gx, y, p.gz) == 0) && (chunk.getID(p.gx, y - 1, p.gz) != 0)) {
             p.gy = y;
             foundAir = true;
             break;
