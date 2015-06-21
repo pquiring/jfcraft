@@ -15,8 +15,6 @@ package jfcraft.block;
  * Created : Mar 31, 2014
  */
 
-import java.util.ArrayList;
-
 import javaforce.gl.*;
 
 import jfcraft.client.*;
