@@ -1,4 +1,4 @@
-JFCraft/0.15
+JFCraft/0.16
 ============
 
 Yet another implementation of the MineCraft game.
