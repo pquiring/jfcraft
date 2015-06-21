@@ -1,9 +1,12 @@
 ChangeLog
 =========
 
-Jun ?, 2015 : v0.16 released!
+Jun 21, 2015 : v0.16 released!
   - fixed cracking boat/minecart (cracks must be on their own texture unit)
-
+  - added new Mario World dimension
+    - new turtle entity
+    - new block types
+    - create portal using [?] blocks (see RecipeCoinBlock)
 
 Jun 16, 2015 : v0.15 released!
   - water/lava now flow
