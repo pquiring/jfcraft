@@ -660,17 +660,19 @@ public class Game extends RenderScreen {
     gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, perspective.m);  //perspective matrix
     gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, Static.identity.m);  //model matrix
 
+    float elight = Static.client.player.getLight(sunLight);
+    gl.glUniform1f(Static.uniformSunLight, elight);
     if (item.id == 0) {
       renderHand(gl);
     } else {
-      renderItemInHand(gl, item);
+      renderItemInHand(gl, item, elight);
     }
   }
 
   private RenderDest o_items = new RenderDest(Chunk.buffersCount);
   private RenderData data = new RenderData();
 
-  private void renderItemInHand(GL gl, Item item) {
+  private void renderItemInHand(GL gl, Item item, float light) {
     o_items.resetAll();
     Texture texture = null;
     boolean isBlock = false;
@@ -699,7 +701,7 @@ public class Game extends RenderScreen {
         data.x = 0;
         data.y = 0;
         data.z = 0;
-        data.sl[X] = sunLight;
+        data.sl[X] = 1.0f;
         data.crack = -1;
         if (block.isDirXZ) {
           data.dir[X] = S;
