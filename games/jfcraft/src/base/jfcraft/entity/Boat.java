@@ -194,9 +194,20 @@ public class Boat extends VehicleBase {
   public boolean canSelect() {
     return true;
   }
+
+  public void despawn() {
+    if (occupant != null) {
+      occupant.vehicle = null;
+      Static.server.broadcastRiding(this, occupant, false);
+      occupant = null;
+    }
+    super.despawn();
+  }
+
   public Item[] drop() {
     return new Item[] {new Item(Items.BOAT)};
   }
+
   public boolean cracks() {
     return true;
   }
