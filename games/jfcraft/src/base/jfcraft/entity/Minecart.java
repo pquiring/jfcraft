@@ -15,7 +15,6 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 
 public class Minecart extends VehicleBase {
-  //TODO : sync these with client or get rid of them
   public float speed;  //current speed
   public int dir;  //current direction (N,E,S,W,NE,NW,SE,SW,A=none)
   public float dist;  //distance travel on current rail in dir
@@ -48,7 +47,7 @@ public class Minecart extends VehicleBase {
   public void init() {
     super.init();
     yDrag = Static.dragSpeed;
-    xzDrag = 0.0f;  //TEST : 0.1f
+    xzDrag = 0.1f;
     width = 1.0f;
     width2 = width/2f;
     height = 1.0f;
@@ -451,7 +450,7 @@ public class Minecart extends VehicleBase {
     }
     if (speed > maxSpeed) speed = maxSpeed;
     //apply drag
-    if (false) {
+    if (true) {
       speed -= xzDrag;
       if (speed <= 0) {
         speed = 0;
@@ -635,6 +634,16 @@ public class Minecart extends VehicleBase {
   public boolean canSelect() {
     return true;
   }
+
+  public void despawn() {
+    if (occupant != null) {
+      occupant.vehicle = null;
+      Static.server.broadcastRiding(this, occupant, false);
+      occupant = null;
+    }
+    super.despawn();
+  }
+
   public Item[] drop() {
     return new Item[] {new Item(Items.MINECART)};
   }
@@ -648,9 +657,11 @@ public class Minecart extends VehicleBase {
   public boolean write(SerialBuffer buffer, boolean file) {
     super.write(buffer, file);
     buffer.writeByte(ver);
-    buffer.writeFloat(speed);
-    buffer.writeInt(dir);
-    buffer.writeFloat(dist);
+    if (file) {
+      buffer.writeFloat(speed);
+      buffer.writeInt(dir);
+      buffer.writeFloat(dist);
+    }
     return true;
   }
 
@@ -658,9 +669,11 @@ public class Minecart extends VehicleBase {
   public boolean read(SerialBuffer buffer, boolean file) {
     super.read(buffer, file);
     byte ver = buffer.readByte();
-    speed = buffer.readFloat();
-    dir = buffer.readInt();
-    dist = buffer.readFloat();
+    if (file) {
+      speed = buffer.readFloat();
+      dir = buffer.readInt();
+      dist = buffer.readFloat();
+    }
     return true;
   }
 }
