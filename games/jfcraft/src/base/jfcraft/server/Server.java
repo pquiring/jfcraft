@@ -618,7 +618,7 @@ public class Server {
     }
   }
 
-  public void broadcastEntityMove(EntityBase e) {
+  public void broadcastEntityMove(EntityBase e, boolean self) {
     Packet update = new PacketMove(Packets.MOVE,
       e.pos.x, e.pos.y, e.pos.z, e.ang.x, e.ang.y, e.ang.z,
       e.uid, e.mode
@@ -628,7 +628,7 @@ public class Server {
       for(int a=0;a<cnt;a++) {
         Client client = clients.get(a);
         if (client.player == null) continue;
-        if (client.player == e) continue;
+        if (client.player == e && !self) continue;
         if (client.player.dim != e.dim) continue;
         int dx = Static.floor((client.player.pos.x - e.pos.x) / 16.0f);
         int dz = Static.floor((client.player.pos.z - e.pos.z) / 16.0f);
@@ -649,6 +649,23 @@ public class Server {
         if (client.player.dim != entity.dim) continue;
         int dx = Static.floor((client.player.pos.x - entity.pos.x) / 16.0f);
         int dz = Static.floor((client.player.pos.z - entity.pos.z) / 16.0f);
+        if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
+        if (dz > Static.maxLoadRange || dz < -Static.maxLoadRange) continue;
+        client.serverTransport.addUpdate(update);
+      }
+    }
+  }
+
+  public void broadcastRiding(VehicleBase v, CreatureBase o, boolean mount) {
+    Packet update = new PacketRiding(Packets.RIDING, v.uid, o.uid, mount);
+    synchronized(clientsLock) {
+      int cnt = clients.size();
+      for(int a=0;a<cnt;a++) {
+        Client client = clients.get(a);
+        if (client.player == null) continue;
+        if (client.player.dim != v.dim) continue;
+        int dx = Static.floor((client.player.pos.x - v.pos.x) / 16.0f);
+        int dz = Static.floor((client.player.pos.z - v.pos.z) / 16.0f);
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
         if (dz > Static.maxLoadRange || dz < -Static.maxLoadRange) continue;
         client.serverTransport.addUpdate(update);
@@ -1076,7 +1093,7 @@ public class Server {
       client.player.pos.x = x;
       client.player.pos.y = y;
       client.player.pos.z = z;
-      broadcastEntityMove(client.player);
+      broadcastEntityMove(client.player, true);
     }
     else if (p[0].equals("/time")) {
       //time #

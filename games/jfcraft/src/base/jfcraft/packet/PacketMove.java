@@ -34,12 +34,9 @@ public class PacketMove extends Packet {
   //process on client side
   public void process(Client client) {
     int uid = i1;
-    if (client.player.vehicle != null && client.player.vehicle.uid == uid) {
-      return;
-    }
     EntityBase e = client.world.getEntity(uid);
     if (e == null) {
-//            Static.log("C:MOVE:Unknown entity:" + pm.uid);
+//      Static.log("C:MOVE:Unknown entity:" + pm.uid);
       return;
     }
     synchronized(Static.renderLock) {  //TODO : need to eliminate this
@@ -52,19 +49,28 @@ public class PacketMove extends Packet {
         if (chunk1 != null) {  //should never be null (???)
           chunk1.delEntity(e);
         } else {
-//              Static.log("C:Error:MOVE:chunk1 == null");
+//          Static.log("C:Error:MOVE:chunk1 == null");
         }
-        if (chunk2 == null) {
+        if (chunk2 != null) {
           //entity moved into unknown area
-          return;
+          chunk2.addEntity(e);
+        } else {
+//          Static.log("C:Error:MOVE:chunk2 == null");
         }
-        chunk2.addEntity(e);
       }
-      e.ang.x = f4;
-      e.ang.y = f5;
-      e.ang.z = f6;
-      e.mode = i2;
+      if (e instanceof VehicleBase) {
+        EntityBase occupant = ((VehicleBase)e).occupant;
+        if (occupant != null) {
+          occupant.pos.x = f1;
+          occupant.pos.y = f2;
+          occupant.pos.z = f3;
+        }
+      }
     }
+    e.ang.x = f4;
+    e.ang.y = f5;
+    e.ang.z = f6;
+    e.mode = i2;
   }
 
   @Override

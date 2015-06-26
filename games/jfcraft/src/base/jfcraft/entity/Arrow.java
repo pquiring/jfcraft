@@ -160,7 +160,7 @@ public class Arrow extends EntityBase {
     //TODO : adjust xAngle based on gravity to create ballistic arc
     boolean moved = move(false, true, false, -1, AVOID_NONE);
     if (fell || moved) {
-      Static.server.broadcastEntityMove(this);
+      Static.server.broadcastEntityMove(this, false);
     }
   }
 

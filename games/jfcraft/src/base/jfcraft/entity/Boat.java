@@ -12,7 +12,7 @@ import jfcraft.client.*;
 import jfcraft.item.*;
 import jfcraft.opengl.*;
 
-public class Boat extends CreatureBase {
+public class Boat extends VehicleBase {
   //render assets
   public static Texture texture;
   private static String textureName;
@@ -129,12 +129,48 @@ public class Boat extends CreatureBase {
 
   public void tick() {
     super.tick();
-    if (occupant != null) return;
     updateFlags(0,0,0);
+    if (occupant != null) {
+      float speed = 0;
+      if (onWater) {
+        if (run)
+          speed = fastWaterSpeed;
+        else
+          speed = waterSpeed;
+      }
+      else {
+        speed = landSpeed;
+      }
+      if (up || dn) {
+        occupant.calcVectors(speed / 20.0f, move_vectors);
+        float xv = 0, zv = 0;
+        if (up) {
+          xv += move_vectors.forward.v[0];
+          zv += move_vectors.forward.v[2];
+        }
+        if (dn) {
+          xv += -move_vectors.forward.v[0];
+          zv += -move_vectors.forward.v[2];
+        }
+        if (xv != 0) setXVel(xv);
+        if (zv != 0) setZVel(zv);
+        ang.y = occupant.ang.y;
+      }
+    }
     boolean fell = gravity(0.25f);
     boolean moved = move(false, true, false, -1, AVOID_NONE);
     if (fell || moved) {
-      Static.server.broadcastEntityMove(this);
+      Static.server.broadcastEntityMove(this, false);
+    }
+    if (occupant != null) {
+      occupant.pos.x = pos.x;
+      occupant.pos.y = pos.y;
+      occupant.pos.z = pos.z;
+      if (sneak) {
+        occupant.vehicle = null;
+        Static.server.broadcastRiding(this, occupant, false);
+        occupant = null;
+      }
     }
   }
 
@@ -143,70 +179,23 @@ public class Boat extends CreatureBase {
   }
 
   public void use(Client c) {
-    if (occupant != null) return;  //in use
-    occupant = c.player;
-    c.player.vehicle = this;
-    c.player.pos.x = pos.x;
-    c.player.pos.y = pos.y;
-    c.player.pos.z = pos.z;
-    c.serverTransport.setRiding(occupant, this);
+    synchronized(this) {
+      if (occupant != null) return;  //in use
+      resetControls();
+      occupant = c.player;
+      c.player.vehicle = this;
+      c.player.pos.x = pos.x;
+      c.player.pos.y = pos.y;
+      c.player.pos.z = pos.z;
+      Static.server.broadcastRiding(this, occupant, true);
+    }
   }
 
-  /** Player move. */
-  public synchronized void move(boolean up, boolean dn, boolean lt, boolean rt,
-    boolean jump, boolean sneak, boolean run, boolean b1, boolean b2,
-    boolean fup, boolean fdn)
-  {
-    gravity(0.25f);
-    float speed = 0;
-    if (onWater) {
-      if (run)
-        speed = fastWaterSpeed;
-      else
-        speed = waterSpeed;
-    }
-    else {
-      speed = landSpeed;
-    }
-    if (up || dn) {
-      occupant.calcVectors(speed / 20.0f, move_vectors);
-      float xv = 0, zv = 0;
-      if (up) {
-        xv += move_vectors.forward.v[0];
-        zv += move_vectors.forward.v[2];
-      }
-      if (dn) {
-        xv += -move_vectors.forward.v[0];
-        zv += -move_vectors.forward.v[2];
-      }
-      if (xv != 0) setXVel(xv);
-      if (zv != 0) setZVel(zv);
-      ang.y = occupant.ang.y;
-    }
-//    Static.log(Static.CS() + ":b:" + x + "," + y + "," + z + ":" + speed + ":" + v.forward.v[0] + "," + v.forward.v[2] + ":" + xv + "," + zv + ":" + up + dn + ":" + occupant.yAngle);
-    //to keep the boat and player synced this must be synced with render engine
-    synchronized(Static.renderLock) {
-      move(sneak, false, false, -1, AVOID_NONE);
-      occupant.pos.x = pos.x;
-      occupant.pos.y = pos.y;
-      occupant.pos.z = pos.z;
-    }
-//    Static.log(Static.CS() + ":a:" + x + "," + y + "," + z);
-    if (Static.isServer() && sneak) {
-      //eject occupant
-      occupant.vehicle = null;
-      occupant.client.serverTransport.setRiding(occupant, null);
-      occupant = null;
-    }
-  }
   public boolean canSelect() {
     return true;
   }
   public Item[] drop() {
     return new Item[] {new Item(Items.BOAT)};
-  }
-  public boolean isVehicle() {
-    return true;
   }
   public boolean cracks() {
     return true;

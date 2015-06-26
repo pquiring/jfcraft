@@ -145,7 +145,7 @@ public class Domino extends BlockEntity {
     float dx = 0, dz = 0;
     if (fall) {
       ang.x += 10.0f * dir;
-      Static.server.broadcastEntityMove(this);
+      Static.server.broadcastEntityMove(this, false);
       //fake moving forward a bit to make next domino fall
       GLMatrix mat = new GLMatrix();
       mat.addRotate(ang.y, 0, 1, 0);

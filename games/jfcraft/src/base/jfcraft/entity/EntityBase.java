@@ -58,7 +58,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public float scale;  //# parts
   public boolean isStatic;  //one static instance for all instances
   public boolean dirty, needCopyBuffers;
-  public Player occupant;
   public int path[];
 
   public static Random r = new Random();
@@ -1033,10 +1032,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
       return sl;
     else
       return bl;
-  }
-
-  public boolean isVehicle() {
-    return false;
   }
 
   /** Returns items entity drops on death. */

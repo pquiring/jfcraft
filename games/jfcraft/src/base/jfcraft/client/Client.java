@@ -301,7 +301,9 @@ public class Client {
             player.mode = EntityBase.MODE_FLYING;
         }
       }
-      move(up, dn, lt, rt, jump, sneak, run, b1, b2, fup, fdn);
+      if (player.vehicle == null) {
+        player.move(up, dn, lt, rt, jump, sneak, run, b1, b2, fup, fdn);
+      }
     }
     //send tick to server
     clientTransport.tick(player, up, dn, lt, rt, jump, sneak, run, b1, b2, fup, fdn);
@@ -588,17 +590,6 @@ public class Client {
   public void dropItems(Item items[]) {
     for(int a=0;a<items.length;a++) {
       dropItem(items[a]);
-    }
-  }
-
-  public void move(boolean up, boolean dn, boolean lt, boolean rt,
-    boolean jump, boolean sneak, boolean run, boolean b1, boolean b2,
-    boolean fup, boolean fdn)
-  {
-    if (player.vehicle != null) {
-      player.vehicle.move(up, dn, lt, rt, jump, sneak, run, b1, b2, fup, fdn);
-    } else {
-      player.move(up, dn, lt, rt, jump, sneak, run, b1, b2, fup, fdn);
     }
   }
 

@@ -170,9 +170,4 @@ public abstract class ServerTransport extends Transport {
     Packet packet = new PacketTeleport2(Packets.TELEPORT2, e.pos.x,e.pos.y,e.pos.z, e.dim);
     send(coder.encodeObject(packet, false));
   }
-
-  public void setRiding(Player player, EntityBase vehicle) {
-    Packet packet = new PacketRiding(Packets.RIDING, vehicle != null ? vehicle.uid : -1);
-    addUpdate(packet);
-  }
 }

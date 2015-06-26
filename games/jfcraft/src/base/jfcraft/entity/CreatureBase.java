@@ -24,6 +24,8 @@ public abstract class CreatureBase extends EntityBase {
   public float saturation;  //20 = full
   public float exhaustion;  //when >= 4.0 : -1 from saturation or food
 
+  public VehicleBase vehicle;
+
   public void hit() {
     runCount = 7;
   }

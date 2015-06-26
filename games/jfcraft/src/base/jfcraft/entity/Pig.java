@@ -206,7 +206,7 @@ public class Pig extends CreatureBase {
         }
       }
     }
-    if (fell || mode != MODE_IDLE || wasMoving) Static.server.broadcastEntityMove(this);
+    if (fell || mode != MODE_IDLE || wasMoving) Static.server.broadcastEntityMove(this, false);
   }
 
   private static Random r = new Random();
