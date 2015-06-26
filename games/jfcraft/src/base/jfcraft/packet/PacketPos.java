@@ -54,34 +54,44 @@ public class PacketPos extends Packet {
     client.player.ang.x = f4;
     client.player.ang.y = f5;
     client.player.ang.z = f6;
-    client.move(up, dn, lt, rt, jump, sneak, run, b1, b2, fup, fdn);
     Chunk chunk1 = client.player.getChunk();
-    float dx = Math.abs(client.player.pos.x - f1);
-    float dy = Math.abs(client.player.pos.y - f2);
-    float dz = Math.abs(client.player.pos.z - f3);
-    if (dx > 0.1f || dy > 0.1f || dz > 0.1f) {
-      Static.log("Error:client moved too far? " + dx + "," + dy + "," + dz + ":" + client.player.vehicle);
-      Static.log("C=" + f1 + "," + f2 + "," + f3);
-      Static.log("S=" + client.player.pos.x + "," + client.player.pos.y + "," + client.player.pos.z);
-      if (false) {
-        PacketMoveBack p2 = new PacketMoveBack(Packets.MOVEBACK, client.player.pos.x, client.player.pos.y, client.player.pos.z);
-        client.serverTransport.addUpdate(p2);
-        client.cheat++;
-        if (false && client.cheat > 20) {
-          client.serverTransport.close();
-          server.removeClient(client);
-          return;
+    if (client.player.vehicle == null) {
+      client.player.move(up, dn, lt, rt, jump, sneak, run, b1, b2, fup, fdn);
+      float dx = Math.abs(client.player.pos.x - f1);
+      float dy = Math.abs(client.player.pos.y - f2);
+      float dz = Math.abs(client.player.pos.z - f3);
+      if (dx > 0.1f || dy > 0.1f || dz > 0.1f) {
+        Static.log("Error:client moved too far? " + dx + "," + dy + "," + dz + ":" + client.player.vehicle);
+        Static.log("C=" + f1 + "," + f2 + "," + f3);
+        Static.log("S=" + client.player.pos.x + "," + client.player.pos.y + "," + client.player.pos.z);
+        if (false) {
+          PacketMoveBack p2 = new PacketMoveBack(Packets.MOVEBACK, client.player.pos.x, client.player.pos.y, client.player.pos.z);
+          client.serverTransport.addUpdate(p2);
+          client.cheat++;
+          if (false && client.cheat > 20) {
+            client.serverTransport.close();
+            server.removeClient(client);
+            return;
+          }
+        } else {
+          client.player.pos.x = f1;
+          client.player.pos.y = f2;
+          client.player.pos.z = f3;
         }
       } else {
+        client.cheat = 0;
         client.player.pos.x = f1;
         client.player.pos.y = f2;
         client.player.pos.z = f3;
       }
     } else {
-      client.cheat = 0;
-      client.player.pos.x = f1;
-      client.player.pos.y = f2;
-      client.player.pos.z = f3;
+      VehicleBase veh = client.player.vehicle;
+      if (veh != null) {
+        veh.up = up;
+        veh.dn = dn;
+        veh.run = run;
+        veh.sneak = sneak;
+      }
     }
     if (client.player.underWater) {
       if (client.underwaterCounter < 2 * 20) {
@@ -109,7 +119,9 @@ public class PacketPos extends Packet {
       chunk1.delEntity(client.player);
       chunk2.addEntity(client.player);
     }
-    server.broadcastEntityMove(client.player);
+    if (client.player.vehicle == null) {
+      server.broadcastEntityMove(client.player, false);
+    }
     if (moving) {
       switch (client.player.mode) {
         case EntityBase.MODE_WALK:

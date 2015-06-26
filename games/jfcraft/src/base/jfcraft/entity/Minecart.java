@@ -14,7 +14,7 @@ import jfcraft.item.*;
 import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 
-public class Minecart extends CreatureBase {
+public class Minecart extends VehicleBase {
   //TODO : sync these with client or get rid of them
   public float speed;  //current speed
   public int dir;  //current direction (N,E,S,W,NE,NW,SE,SW,A=none)
@@ -207,17 +207,31 @@ public class Minecart extends CreatureBase {
 
   public void tick() {
     super.tick();
-    if (occupant != null) return;
-    updateFlags(0,0,0);
     boolean fell = false;
     boolean moved = false;
-    Chunk chunk1 = getChunk();
     boolean wasOnRail = onRail;
+    updateFlags(0,0,0);
+    Chunk chunk1 = getChunk();
     switch (moveOnRails()) {
-      case 0:
-        break;
       case 1:
         moved = true;
+        //no break
+      case 0:
+        if (occupant != null) {
+          if (up) {
+            if (speed < pushSpeed / 2f) {
+              speed = pushSpeed;
+              occupant.getDir(coords);
+              dir = coords.dir_xz;
+            }
+          } else if (dn) {
+            if (speed < pushSpeed) {
+              speed = pushSpeed;
+              occupant.getDir(coords);
+              dir = Direction.opposite(coords.dir_xz);
+            }
+          }
+        }
         break;
       case -1:
         fell = gravity(0);
@@ -230,7 +244,17 @@ public class Minecart extends CreatureBase {
       chunk2.addEntity(this);
     }
     if (fell || moved || (wasOnRail != onRail)) {
-      Static.server.broadcastEntityMove(this);
+      Static.server.broadcastEntityMove(this, false);
+    }
+    if (occupant != null) {
+      occupant.pos.x = pos.x;
+      occupant.pos.y = pos.y;
+      occupant.pos.z = pos.z;
+      if (sneak) {
+        occupant.vehicle = null;
+        Static.server.broadcastRiding(this, occupant, false);
+        occupant = null;
+      }
     }
   }
 
@@ -594,76 +618,25 @@ public class Minecart extends CreatureBase {
   }
 
   public void use(Client c) {
-    if (occupant != null) return;  //in use
-    occupant = c.player;
-    c.player.vehicle = this;
-    c.player.pos.x = pos.x;
-    c.player.pos.y = pos.y;
-    c.player.pos.z = pos.z;
-    c.serverTransport.setRiding(occupant, this);
+    synchronized(this) {
+      if (occupant != null) return;  //in use
+      resetControls();
+      occupant = c.player;
+      c.player.vehicle = this;
+      c.player.pos.x = pos.x;
+      c.player.pos.y = pos.y;
+      c.player.pos.z = pos.z;
+      Static.server.broadcastRiding(this, occupant, true);
+    }
   }
 
   private static Coords coords = new Coords();
 
-  /** Player move. */
-  public void move(boolean up, boolean dn, boolean lt, boolean rt,
-    boolean jump, boolean sneak, boolean run, boolean b1, boolean b2,
-    boolean fup, boolean fdn)
-  {
-    updateFlags(0,0,0);
-    //to keep the minecart and player synced this must be synced with render engine
-    synchronized(Static.renderLock) {
-      Chunk chunk1 = getChunk();
-      switch (moveOnRails()) {
-        case 0:
-          //no break
-        case 1:
-          //TODO : allow slowing down cart
-          synchronized(coords) {
-            if (up) {
-              if (speed < pushSpeed / 2f) {
-                speed = pushSpeed;
-                occupant.getDir(coords);
-                dir = coords.dir_xz;
-              }
-            } else if (dn) {
-              if (speed < pushSpeed) {
-                speed = pushSpeed;
-                occupant.getDir(coords);
-                dir = Direction.opposite(coords.dir_xz);
-              }
-            }
-          }
-          break;
-        case -1:
-          gravity(0);
-          move(false, false, false, -1, AVOID_NONE);
-          break;
-      }
-      Chunk chunk2 = getChunk();
-      if (chunk2 != chunk1) {
-        chunk1.delEntity(this);
-        chunk2.addEntity(this);
-      }
-      occupant.pos.x = pos.x;
-      occupant.pos.y = pos.y;
-      occupant.pos.z = pos.z;
-    }
-    if (Static.isServer() && sneak) {
-      //eject occupant
-      occupant.vehicle = null;
-      occupant.client.serverTransport.setRiding(occupant, null);
-      occupant = null;
-    }
-  }
   public boolean canSelect() {
     return true;
   }
   public Item[] drop() {
     return new Item[] {new Item(Items.MINECART)};
-  }
-  public boolean isVehicle() {
-    return true;
   }
   public boolean cracks() {
     return true;

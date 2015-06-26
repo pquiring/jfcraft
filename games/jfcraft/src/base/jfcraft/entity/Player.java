@@ -23,7 +23,6 @@ public class Player extends CreatureBase {
   public ExtraChest enderChest = new ExtraChest(0,0,0,3*9);
 
   public Client client;
-  public EntityBase vehicle;
 
   public int gainedLife, tookHungerDmg;
 

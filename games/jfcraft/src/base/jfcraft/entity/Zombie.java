@@ -220,7 +220,7 @@ public class Zombie extends CreatureBase {
         vel.z = 0;
       }
     }
-    if (fell || target != null || mode != MODE_IDLE || wasMoving) Static.server.broadcastEntityMove(this);
+    if (fell || target != null || mode != MODE_IDLE || wasMoving) Static.server.broadcastEntityMove(this, false);
     super.tick();
   }
 
