@@ -47,7 +47,7 @@ public class Minecart extends VehicleBase {
   public void init() {
     super.init();
     yDrag = Static.dragSpeed;
-    xzDrag = 0.1f;
+    xzDrag = 0.01f;
     width = 1.0f;
     width2 = width/2f;
     height = 1.0f;
