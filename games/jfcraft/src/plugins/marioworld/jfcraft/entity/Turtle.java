@@ -84,9 +84,9 @@ public class Turtle extends CreatureBase {
 
   public void initStatic(GL gl) {
     textures = new Texture[3];
-    textures[0] = Textures.getTexture(gl, "entity/turtle/green");
-    textures[1] = Textures.getTexture(gl, "entity/turtle/blue");
-    textures[2] = Textures.getTexture(gl, "entity/turtle/red");
+    textures[0] = Textures.getTexture(gl, "entity/turtle/green", 0);
+    textures[1] = Textures.getTexture(gl, "entity/turtle/blue", 0);
+    textures[2] = Textures.getTexture(gl, "entity/turtle/red", 0);
   }
 
   private static String parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG", "TAIL"};

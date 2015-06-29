@@ -148,6 +148,7 @@ public class Texture {
   }
 
   public void bind(GL gl) {
+    gl.glActiveTexture(GL.GL_TEXTURE0 + unit);
     gl.glBindTexture(GL.GL_TEXTURE_2D, glid);
   }
 

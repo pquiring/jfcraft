@@ -61,7 +61,7 @@ public class SinglePlayerMenu extends RenderScreen {
     reset();
 
     if (t_menu == null) {
-      t_menu = Textures.getTexture(gl, "jfcraft/singlemenu");
+      t_menu = Textures.getTexture(gl, "jfcraft/singlemenu", 0);
     }
 
     if (o_menu == null) {

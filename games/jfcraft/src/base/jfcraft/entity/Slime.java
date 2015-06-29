@@ -75,7 +75,7 @@ public class Slime extends CreatureBase {
   }
 
   public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName);
+    texture = Textures.getTexture(gl, textureName, 0);
   }
 
   private static String parts[] = {"INNER", "L_EYE", "R_EYE", "MOUTH", "OUTTER"};  //outter MUST be last (transparent)

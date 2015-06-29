@@ -58,14 +58,6 @@ public class PacketMove extends Packet {
 //          Static.log("C:Error:MOVE:chunk2 == null");
         }
       }
-      if (e instanceof VehicleBase) {
-        EntityBase occupant = ((VehicleBase)e).occupant;
-        if (occupant != null) {
-          occupant.pos.x = f1;
-          occupant.pos.y = f2;
-          occupant.pos.z = f3;
-        }
-      }
     }
     e.ang.x = f4;
     e.ang.y = f5;

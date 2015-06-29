@@ -1,10 +1,10 @@
 package jfcraft.client;
 
-/** Furnace Menu
+/** Horse Menu
  *
  * @author pquiring
  *
- * Created : May 8, 2014
+ * Created : Jun 27, 2015
  */
 
 import jfcraft.item.Item;
@@ -19,14 +19,14 @@ import jfcraft.data.*;
 import jfcraft.block.*;
 import jfcraft.item.*;
 
-public class FurnaceMenu extends RenderScreen {
+public class HorseMenu extends RenderScreen {
   private Texture t_menu;
-  private static RenderBuffers o_menu, o_flame, o_arrow;
+  private static RenderBuffers o_menu, o_15, o_armor;
   private int mx, my;
   private final int gui_width = 350, gui_height = 330;  //size of menu
 
-  public FurnaceMenu() {
-    id = Client.FURNACE;
+  public HorseMenu() {
+    id = Client.HORSE;
   }
 
   public void setup() {
@@ -38,35 +38,22 @@ public class FurnaceMenu extends RenderScreen {
     setMenuSize(gui_width, gui_height);
 
     if (t_menu == null) {
-      t_menu = Textures.getTexture(gl, "gui/container/furnace", 0);
+      t_menu = Textures.getTexture(gl, "gui/container/horse", 0);
     }
 
     if (o_menu == null) {
       o_menu = createMenu(gl);
     }
 
-    ExtraFurnace furnace = (ExtraFurnace)Static.client.container;
-    int heat = 0, heatMax = 0, timer = 0;
-    int flame_height, arrow_width;
-    if (furnace != null) {
-      heat = furnace.heat;
-      heatMax = furnace.heatMax;
-      timer = furnace.timer;
+    if (o_15 == null) {
+      o_15 = createMenu(gl, 160,36, 0,332, 180,108);
     }
 
-    flame_height = heatMax == 0 ? 0 : (heat * 100 / heatMax) * 28 / 100;
-    if (o_flame == null) {
-      o_flame = createMenu(gl, 111,70 + 28 - flame_height, 352,0 + 28 - flame_height, 28,flame_height);
-    } else {
-      recreateMenu(gl, o_flame, 111,70 + 28 - flame_height, 352,0 + 28 - flame_height, 28,flame_height);
+    if (o_armor == null) {
+      o_armor = createMenu(gl, 14,70, 0,440, 36,36);
     }
 
-    arrow_width = timer == 0 ? 0 : ((200-timer) * 100 / 200) * 48 / 100;
-    if (o_arrow == null) {
-      o_arrow = createMenu(gl, 160,67, 352,28, arrow_width,32);
-    } else {
-      recreateMenu(gl, o_arrow, 160,67, 352,28, arrow_width,32);
-    }
+    ExtraHorse container = (ExtraHorse)Static.client.container;
 
     gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, identity.m);  //view matrix
     gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, identity.m);  //model matrix
@@ -80,16 +67,16 @@ public class FurnaceMenu extends RenderScreen {
     t_menu.bind(gl);
     o_menu.bindBuffers(gl);
     o_menu.render(gl);
-
-    //render flames and arrow
-    t_menu.bind(gl);
-    if (flame_height > 0) {
-      o_flame.bindBuffers(gl);
-      o_flame.render(gl);
-    }
-    if (arrow_width > 0) {
-      o_arrow.bindBuffers(gl);
-      o_arrow.render(gl);
+    if (container != null) {
+      if (container.items.length > 2) {
+        o_15.bindBuffers(gl);
+        o_15.render(gl);
+      }
+      if (container.items[1].id != Blocks.OBSIDIAN) {
+        //mule & donkey have OBSIDIAN where the armor would be placed
+        o_armor.bindBuffers(gl);
+        o_armor.render(gl);
+      }
     }
 
     reset();
@@ -118,21 +105,37 @@ public class FurnaceMenu extends RenderScreen {
       x += 36;
     }
 
-    //render furnace slots
-    if (furnace != null) {
-      if (furnace.items[ExtraFurnace.INPUT].id != 0) {
-        renderItem(gl,furnace.items[ExtraFurnace.INPUT],111,67);
+    //render 2 slots
+    if (container != null) {
+      if (container.items[ExtraHorse.SADDLE].id != 0) {
+        renderItem(gl,container.items[ExtraHorse.SADDLE],16,36 + 36);
       }
-      if (furnace.items[ExtraFurnace.FUEL].id != 0) {
-        renderItem(gl,furnace.items[ExtraFurnace.FUEL],111,139);
+      char id = container.items[ExtraHorse.ARMOR].id;
+      if (id != 0 && id != Blocks.OBSIDIAN) {
+        renderItem(gl,container.items[ExtraHorse.ARMOR],16,36*2 + 36);
       }
-      if (furnace.items[ExtraFurnace.OUTPUT].id != 0) {
-        renderItem(gl,furnace.items[ExtraFurnace.OUTPUT],225,109);
+    }
+
+    //render chest items
+    Item item;
+    if (container != null && container.items.length > 2) {
+      x = 160;
+      y = 36 + 36;
+      for(int a=0;a<15;a++) {
+        if (a > 0 && a % 5 == 0) {
+          x = 16;
+          y += 36;
+        }
+        item = container.items[a+2];
+        if (item != null && item.id != 0) {
+          renderItem(gl,item,x,y);
+        }
+        x += 36;
       }
     }
 
     //render item in hand
-    Item item = Static.client.hand;
+    item = Static.client.hand;
     if (item != null) {
       renderItem(gl,item,mx,my);
     }
@@ -187,21 +190,35 @@ public class FurnaceMenu extends RenderScreen {
       }
       bx += 36;
     }
-    //check furnace
-    bx = 111;
-    by = 32;
-    if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
-      Static.client.clickContainer((byte)ExtraFurnace.INPUT, button == 1);
+    //check horse chest
+    ExtraHorse container = (ExtraHorse)Static.client.container;
+    if (container != null && container.items.length > 2) {
+      bx = 160;
+      by = 36 + 36;
+      byte idx = 2;
+      for(int a=0;a<15;a++) {
+        if (a > 0 && a % 5 == 0) {
+          bx = 16;
+          by += 36;
+        }
+        if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
+          Static.client.clickContainer(idx, button == 1);
+        }
+        bx += 36;
+        idx++;
+      }
     }
-    bx = 111;
-    by = 105;
+
+    //check horse slots
+    bx = 16;
+    by = 36;
     if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
-      Static.client.clickContainer((byte)ExtraFurnace.FUEL, button == 1);
+      Static.client.clickContainer((byte)ExtraHorse.SADDLE, button == 1);
     }
-    bx = 225;
-    by = 63;
+    bx = 16;
+    by = 36+36;
     if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
-      Static.client.clickContainer((byte)ExtraFurnace.OUTPUT, button == 1);
+      Static.client.clickContainer((byte)ExtraHorse.ARMOR, button == 1);
     }
   }
 

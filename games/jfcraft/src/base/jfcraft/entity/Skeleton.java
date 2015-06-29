@@ -74,7 +74,7 @@ public class Skeleton extends CreatureBase {
   }
 
   public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName);
+    texture = Textures.getTexture(gl, textureName, 0);
     dest = new RenderDest(parts.length);
   }
 

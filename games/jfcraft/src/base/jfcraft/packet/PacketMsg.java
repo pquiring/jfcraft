@@ -42,14 +42,7 @@ public class PacketMsg extends Packet {
     if (msg.charAt(0) == '/') {
       server.doCommand(client, msg);
     } else {
-      synchronized(server.clientsLock) {
-        int cnt = server.clients.size();
-        for(int a=0;a<cnt;a++) {
-          Client client2 = server.clients.get(a);
-//                if (client2 == client) continue;
-          client2.serverTransport.sendMsg(client.player.name + ">" + msg);
-        }
-      }
+      server.broadcastMsg(client.player.name + ">" + msg);
     }
   }
 

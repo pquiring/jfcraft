@@ -29,6 +29,7 @@ public class Login extends RenderScreen {
     Static.client = client;
     client.clientTransport.start();
     client.clientTransport.login();
+    client.uid = -1;
     reqWorld = false;
     reqPlayer = false;
   }
@@ -75,17 +76,17 @@ public class Login extends RenderScreen {
     renderText(gl);
 
     if (Static.client.auth) {
-      if (Static.client.world == null && Static.client.player == null && !reqWorld) {
+      if (Static.client.world == null && Static.client.uid == -1 && !reqWorld) {
         Static.client.clientTransport.getWorld();
         reqWorld = true;
         return;
       }
-      if (Static.client.world != null && Static.client.spawnAreaDonePercent == 100 && Static.client.player == null && !reqPlayer) {
+      if (Static.client.world != null && Static.client.spawnAreaDonePercent == 100 && Static.client.uid == -1 && !reqPlayer) {
         Static.client.clientTransport.getPlayer();
         reqPlayer = true;
         return;
       }
-      if (Static.client.world != null && Static.client.player != null) {
+      if (Static.client.world != null && Static.client.uid != -1) {
         Static.initClientThread(Static.client.world, "Client render (EDT)", true, false);  //actually EDT
         Static.client.startTimers();
         LoadingChunks loading = (LoadingChunks)Static.screens.screens[Client.LOADINGCHUNKS];

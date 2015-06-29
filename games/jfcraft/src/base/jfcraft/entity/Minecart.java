@@ -63,7 +63,7 @@ public class Minecart extends VehicleBase {
   }
 
   public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName);
+    texture = Textures.getTexture(gl, textureName, 0);
   }
 
   public void initInstance(GL gl) {
@@ -210,8 +210,7 @@ public class Minecart extends VehicleBase {
     boolean moved = false;
     boolean wasOnRail = onRail;
     updateFlags(0,0,0);
-    Chunk chunk1 = getChunk();
-    switch (moveOnRails()) {
+    switch (moveOnRails(getChunk())) {
       case 1:
         moved = true;
         //no break
@@ -237,18 +236,19 @@ public class Minecart extends VehicleBase {
         moved = move(false, false, false, -1, AVOID_NONE);
         break;
     }
-    Chunk chunk2 = getChunk();
-    if (chunk2 != chunk1) {
-      chunk1.delEntity(this);
-      chunk2.addEntity(this);
-    }
     if (fell || moved || (wasOnRail != onRail)) {
       Static.server.broadcastEntityMove(this, false);
     }
     if (occupant != null) {
+      Chunk chunk1 = occupant.getChunk();
       occupant.pos.x = pos.x;
-      occupant.pos.y = pos.y;
+      occupant.pos.y = pos.y - occupant.legLength;
       occupant.pos.z = pos.z;
+      Chunk chunk2 = occupant.getChunk();
+      if (chunk2 != chunk1) {
+        chunk1.delEntity(occupant);
+        chunk2.addEntity(occupant);
+      }
       if (sneak) {
         occupant.vehicle = null;
         Static.server.broadcastRiding(this, occupant, false);
@@ -271,12 +271,7 @@ public class Minecart extends VehicleBase {
    *        -1 = off rail
    *        -2 = error
    */
-  private int moveOnRails() {
-    Chunk chunk = this.getChunk();
-    if (chunk == null) {
-      return -2;
-    }
-
+  private int moveOnRails(Chunk chunk1) {
     int gx = Static.floor(pos.x % 16.0f);
     if (pos.x < 0 && gx != 0) gx = 16 + gx;
     int gy = Static.floor(pos.y);
@@ -291,12 +286,17 @@ public class Minecart extends VehicleBase {
     int gz = Static.floor(pos.z % 16.0f);
     if (pos.z < 0 && gz != 0) gz = 16 + gz;
 
-    char rid = chunk.getID(gx, gy, gz);
+    char rid = chunk1.getID(gx, gy, gz);
     if (!BlockRail.isRail(rid)) {
       if (onRail) {
         offRail();
       }
       onRail = false;
+      Chunk chunk2 = getChunk();
+      if (chunk1 != chunk2) {
+        chunk1.delEntity(this);
+        chunk2.addEntity(this);
+      }
       return -1;
     }
     if (!onRail) {
@@ -309,7 +309,7 @@ public class Minecart extends VehicleBase {
     vel.y = 0;
     vel.z = 0;
 
-    int bits = chunk.getBits(gx, gy, gz);
+    int bits = chunk1.getBits(gx, gy, gz);
     int e1 = bits & 0x0f;
     int e2 = (bits & 0xf0) >> 4;
     if (e1 == 0 && e2 != 0) {
@@ -414,7 +414,7 @@ public class Minecart extends VehicleBase {
       //do nothing
     }
     else if (rid == Blocks.RAIL_POWERED) {
-      ExtraRedstone er = (ExtraRedstone)chunk.getExtra(gx, gy, gz, Extras.REDSTONE);
+      ExtraRedstone er = (ExtraRedstone)chunk1.getExtra(gx, gy, gz, Extras.REDSTONE);
       if (er == null) {
         Static.log("no redstone data");
         return -2;
@@ -456,7 +456,14 @@ public class Minecart extends VehicleBase {
         speed = 0;
       }
     }
-    if (dir == 0 || speed == 0f) return 0;
+    if (dir == 0 || speed == 0f) {
+      Chunk chunk2 = getChunk();
+      if (chunk1 != chunk2) {
+        chunk1.delEntity(this);
+        chunk2.addEntity(this);
+      }
+      return 0;
+    }
     float delta = speed / 20f;
     float step;
     float maxDist;
@@ -585,7 +592,7 @@ public class Minecart extends VehicleBase {
         }
         if (up || dn) {
           //check if rail levels off
-          rid = chunk.getID(gx, gy, gz);
+          rid = chunk1.getID(gx, gy, gz);
           if (BlockRail.isRail(rid)) {
             if (up) {
               pos.y -= Static._1_16;
@@ -596,18 +603,23 @@ public class Minecart extends VehicleBase {
         } else {
           //check if next rail slopes down
           if (gy > 0) {
-            rid = chunk.getID(gx, gy-1, gz);
+            rid = chunk1.getID(gx, gy-1, gz);
             if (BlockRail.isRail(rid)) {
               pos.y -= Static._1_16;
             }
           }
         }
         dist -= maxDist;
-        return moveOnRails();
+        return moveOnRails(chunk1);
       }
       if (inBlock(0, up | dn ? 1f : 0, 0, false, -1, AVOID_NONE) != 0) {
         dir = Direction.opposite(dir);
       }
+    }
+    Chunk chunk2 = getChunk();
+    if (chunk1 != chunk2) {
+      chunk1.delEntity(this);
+      chunk2.addEntity(this);
     }
     return 1;
   }
@@ -616,15 +628,21 @@ public class Minecart extends VehicleBase {
     return true;
   }
 
-  public void use(Client c) {
+  public void useEntity(Client c, boolean sneak) {
     synchronized(this) {
       if (occupant != null) return;  //in use
       resetControls();
       occupant = c.player;
+      Chunk chunk1 = occupant.getChunk();
       c.player.vehicle = this;
       c.player.pos.x = pos.x;
       c.player.pos.y = pos.y;
       c.player.pos.z = pos.z;
+      Chunk chunk2 = occupant.getChunk();
+      if (chunk2 != chunk1) {
+        chunk1.delEntity(occupant);
+        chunk2.addEntity(occupant);
+      }
       Static.server.broadcastRiding(this, occupant, true);
     }
   }

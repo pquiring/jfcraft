@@ -35,7 +35,7 @@ public class SignMenu extends RenderScreen {
     for(int a=0;a<4;a++) {
       addTextField(gl, "", 52, 40 + a * fontSize * 2, 408, false, 15, true, 2);
     }
-    t_board = Textures.getTexture(gl, "blocks/planks_oak");
+    t_board = Textures.getTexture(gl, "blocks/planks_oak", 0);
     b_board = createMenu(gl, 76, 40, 0, 0, 360, fontSize * 2 * 4);
   }
 

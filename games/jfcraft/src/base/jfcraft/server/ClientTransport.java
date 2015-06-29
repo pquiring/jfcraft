@@ -71,7 +71,8 @@ public abstract class ClientTransport extends Transport {
   }
   public void tick(Player player,boolean up, boolean dn, boolean lt, boolean rt,
     boolean jump, boolean sneak, boolean run, boolean b1, boolean b2,
-    boolean fup, boolean fdn) {
+    boolean fup, boolean fdn)
+  {
     Packet packetArray[];
     int size;
     synchronized(packets) {
@@ -236,6 +237,12 @@ public abstract class ClientTransport extends Transport {
   }
   public void setSign(String txt[]) {
     Packet packet = new PacketSetSign(Packets.SETSIGN, txt);
+    synchronized(packets) {
+      packets.add(packet);
+    }
+  }
+  public void useVehicleInventory() {
+    Packet packet = new PacketUseVehicleInventory(Packets.USEVEHICLEINVENTORY);
     synchronized(packets) {
       packets.add(packet);
     }

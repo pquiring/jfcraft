@@ -42,7 +42,7 @@ public class MessageMenu extends RenderScreen {
     reset();
 
     if (t_menu == null) {
-      t_menu = Textures.getTexture(gl, "jfcraft/background");
+      t_menu = Textures.getTexture(gl, "jfcraft/background", 0);
     }
 
     if (o_menu == null) {

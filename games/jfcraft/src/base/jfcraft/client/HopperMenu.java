@@ -36,7 +36,7 @@ public class HopperMenu extends RenderScreen {
     setMenuSize(gui_width, gui_height);
 
     if (t_menu == null) {
-      t_menu = Textures.getTexture(gl, "gui/container/hopper");
+      t_menu = Textures.getTexture(gl, "gui/container/hopper", 0);
     }
 
     if (o_menu == null) {

@@ -5,7 +5,8 @@ package jfcraft.packet;
  * @author pquiring
  */
 
-import jfcraft.client.Client;
+import jfcraft.client.*;
+import jfcraft.entity.*;
 import jfcraft.data.*;
 
 public class PacketChunk extends Packet {
@@ -25,6 +26,15 @@ public class PacketChunk extends Packet {
   //process on client side
   public void process(Client client) {
 //    Static.log("got Chunk:"+chunk.cx + "," + chunk.cz);
+//    if (client.player == null) {
+      EntityBase e[] = chunk.getEntities();
+      for(int a=0;a<e.length;a++) {
+        if (e[a].uid == client.uid) {
+          client.player = (Player)e[a];
+          break;
+        }
+      }
+//    }
     client.world.chunks.addChunk(chunk);
     client.removeChunkPending(chunk.cx, chunk.cz);
   }

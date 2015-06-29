@@ -540,20 +540,20 @@ public class Server {
     }
   }
 
-  public void broadcastSheepSheared(Sheep sheep) {
-    int cx = Static.floor(sheep.pos.x / 16.0f);
-    int cz = Static.floor(sheep.pos.z / 16.0f);
-    int gx = Static.floor(sheep.pos.x % 16.0f);
-    if (sheep.pos.x < 0 && gx != 0) gx = 16 + gx;
-    int gz = Static.floor(sheep.pos.z % 16.0f);
-    if (sheep.pos.z < 0 && gz != 0) gz = 16 + gz;
-    Packet update = new PacketSheepSheared(Packets.SHEEPSHEARED, sheep.uid);
+  public void broadcastEntityFlags(EntityBase entity) {
+    int cx = Static.floor(entity.pos.x / 16.0f);
+    int cz = Static.floor(entity.pos.z / 16.0f);
+    int gx = Static.floor(entity.pos.x % 16.0f);
+    if (entity.pos.x < 0 && gx != 0) gx = 16 + gx;
+    int gz = Static.floor(entity.pos.z % 16.0f);
+    if (entity.pos.z < 0 && gz != 0) gz = 16 + gz;
+    Packet update = new PacketSetFlags(Packets.SETFLAGS, entity.uid, entity.flags);
     synchronized(clientsLock) {
       int cnt = clients.size();
       for(int a=0;a<cnt;a++) {
         Client client = clients.get(a);
         if (client.player == null) continue;
-        if (client.player.dim != sheep.dim) continue;
+        if (client.player.dim != entity.dim) continue;
         int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
         int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
@@ -1051,6 +1051,16 @@ public class Server {
       }
     }
     return null;
+  }
+
+  public void broadcastMsg(String msg) {
+    synchronized(clientsLock) {
+      int cnt = clients.size();
+      for(int a=0;a<cnt;a++) {
+        Client client2 = clients.get(a);
+        client2.serverTransport.sendMsg(msg);
+      }
+    }
   }
 
   public void doCommand(Client client, String cmd) {

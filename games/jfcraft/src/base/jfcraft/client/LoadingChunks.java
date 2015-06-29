@@ -76,7 +76,7 @@ public class LoadingChunks extends RenderScreen {
 
     renderText(gl);
 
-    if (client.loadedSpawnArea) {
+    if (client.loadedSpawnArea && client.player != null) {
       client.clientTransport.online();
       client.player.offline = false;
       Static.video.setScreen(Static.screens.screens[Client.GAME]);

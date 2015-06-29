@@ -52,7 +52,7 @@ public class ChestMenu extends RenderScreen {
     if (chest == null) return;
 
     if (t_menu == null) {
-      t_menu = Textures.getTexture(gl, "gui/container/generic_54");
+      t_menu = Textures.getTexture(gl, "gui/container/generic_54", 0);
     }
 
     if (o_menu == null) {

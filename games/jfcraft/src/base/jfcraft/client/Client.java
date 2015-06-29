@@ -29,6 +29,11 @@ public class Client {
   public String name, pass;
   public boolean auth = false;
   public boolean isLocal = false;
+
+  //player info (until Chunk containing Player is loaded)
+  public int uid, dim;
+  public float x, z;
+
   public Player player;
   public XYZ ang = new XYZ();  //mouse angle (copied to player in tick)
   public ServerTransport serverTransport;
@@ -86,6 +91,7 @@ public class Client {
   public static byte DROPPER = 21;
   public static byte DISPENSER = 22;
   public static byte SIGN = 23;
+  public static byte HORSE = 24;
 
   public byte menu = GAME;  //current menu
 
@@ -238,6 +244,7 @@ public class Client {
   }
 
   public void tick() {
+    if (player == null) return;
     if (chatTime > 0) {
       chatTime--;
     }
@@ -330,8 +337,18 @@ public class Client {
       }
       return;
     }
-    int cx = Static.floor(player.pos.x / 16.0f);
-    int cz = Static.floor(player.pos.z / 16.0f);
+    int dim,cx,cz;
+    if (player != null) {
+      cx = Static.floor(player.pos.x / 16.0f);
+      cz = Static.floor(player.pos.z / 16.0f);
+      dim = player.dim;
+    } else {
+      //player not loaded yet
+      cx = Static.floor(x / 16.0f);
+      cz = Static.floor(z / 16.0f);
+      dim = this.dim;
+    }
+
     Coords c = Coords.alloc();
     int loadRange = Settings.current.loadRange;
     int cnt = 0;
@@ -342,7 +359,7 @@ public class Client {
       for(int x=-loadRange;x<=loadRange;x++) {
         c.x = cx + x;
         cnt++;
-        if (!world.chunks.hasChunk(player.dim, c.x, c.z)) {
+        if (!world.chunks.hasChunk(dim, c.x, c.z)) {
           if (!isChunkPending(c)) {
             synchronized(pendingChunks) {
               pendingChunks.add(c);
@@ -375,7 +392,7 @@ public class Client {
       Chunk chunk = chunkList[a];
       int dx = chunk.cx - cx;
       int dz = chunk.cz - cz;
-      if (chunk.dim != player.dim
+      if (chunk.dim != dim
         || dx > maxDist || dx < -maxDist
         || dz > maxDist || dz < -maxDist
       ) {

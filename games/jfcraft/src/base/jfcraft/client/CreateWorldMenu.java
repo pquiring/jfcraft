@@ -48,7 +48,7 @@ public class CreateWorldMenu extends RenderScreen {
     reset();
 
     if (t_menu == null) {
-      t_menu = Textures.getTexture(gl, "jfcraft/createmenu");
+      t_menu = Textures.getTexture(gl, "jfcraft/createmenu", 0);
     }
 
     if (o_menu == null) {

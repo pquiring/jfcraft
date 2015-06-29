@@ -89,8 +89,11 @@ public class PacketPos extends Packet {
       if (veh != null) {
         veh.up = up;
         veh.dn = dn;
+        veh.lt = lt;
+        veh.rt = rt;
         veh.run = run;
         veh.sneak = sneak;
+        veh.jump = jump;
       }
     }
     if (client.player.underWater) {
@@ -213,7 +216,7 @@ public class PacketPos extends Packet {
           }
         } else if (client.s1.entity != null && client.s1.entity.canUse()) {
           client.action[1] = Client.ACTION_USE_ENTITY;
-          client.s1.entity.use(client);
+          client.s1.entity.useEntity(client, sneak);
         } else if (client.action[1] == Client.ACTION_PLACE || client.action[1] == Client.ACTION_IDLE || client.action[1] == Client.ACTION_USE_TOOL) {
           Item item = client.player.items[client.activeSlot];
           ItemBase itembase = Static.items.items[item.id];

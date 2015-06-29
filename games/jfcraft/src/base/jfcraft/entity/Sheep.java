@@ -19,8 +19,6 @@ import jfcraft.item.*;
 import jfcraft.opengl.*;
 
 public class Sheep extends CreatureBase {
-  public boolean hasFur;
-
   private float walkAngle;  //angle of legs/arms as walking
   private float walkAngleDelta;
 
@@ -30,6 +28,20 @@ public class Sheep extends CreatureBase {
   private static Texture texture, furTexture;
 
   public static int initHealth = 10;
+
+  public static final int FLAG_FUR = 1;
+
+  public boolean hasFur() {
+    return (flags & FLAG_FUR) != 0;
+  }
+
+  public void setFur(boolean fur) {
+    if (fur) {
+      flags |= FLAG_FUR;
+    } else {
+      flags &= -1 - FLAG_FUR;
+    }
+  }
 
   public Sheep() {
     super();
@@ -71,7 +83,7 @@ public class Sheep extends CreatureBase {
   }
 
   public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName);
+    texture = Textures.getTexture(gl, textureName, 0);
     dest = new RenderDest(parts.length);
   }
 
@@ -107,7 +119,7 @@ public class Sheep extends CreatureBase {
 
   public void copyBuffers(GL gl) {
     dest.copyBuffers(gl);
-    furTexture = Textures.getTexture(gl, furName);
+    furTexture = Textures.getTexture(gl, furName, 0);
   }
 
   public void bindTexture(GL gl) {
@@ -172,7 +184,7 @@ public class Sheep extends CreatureBase {
       dest.getBuffers(a).bindBuffers(gl);
       dest.getBuffers(a).render(gl);
     }
-    if (hasFur) {
+    if (hasFur()) {
       furTexture.bind(gl);
       for(int a=6;a<12;a++) {
         RenderBuffers buf = dest.getBuffers(a);
@@ -237,7 +249,7 @@ public class Sheep extends CreatureBase {
         e.init();
         e.dim = chunk.dim;
         e.health = initHealth;
-        e.hasFur = true;
+        e.flags = FLAG_FUR;
         e.pos.x = px;
         e.pos.y = py;
         e.pos.z = pz;
@@ -263,9 +275,9 @@ public class Sheep extends CreatureBase {
       char toolid = client.player.items[client.activeSlot].id;
       ItemBase tool = Static.items.items[toolid];
       if (tool.isTool && tool.tool == Items.TOOL_SHEARS) {
-        if (hasFur) {
-          hasFur = false;
-          Static.server.broadcastSheepSheared(this);
+        if (hasFur()) {
+          setFur(false);
+          Static.server.broadcastEntityFlags(this);
           Random r = new Random();
           int cnt = r.nextInt(2) + 1;
           for(int a=0;a<cnt;a++) {
@@ -301,23 +313,6 @@ public class Sheep extends CreatureBase {
     }
   }
 
-  private static final byte ver = 0;
-
-  @Override
-  public boolean write(SerialBuffer buffer, boolean file) {
-    super.write(buffer, file);
-    buffer.writeByte(ver);
-    buffer.writeBoolean(hasFur);
-    return true;
-  }
-
-  @Override
-  public boolean read(SerialBuffer buffer, boolean file) {
-    super.read(buffer, file);
-    byte ver = buffer.readByte();
-    hasFur = buffer.readBoolean();
-    return true;
-  }
   public int[] getGenerateDims() {
     return new int[] {Dims.EARTH};
   }

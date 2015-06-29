@@ -153,9 +153,11 @@ public class Static {
   public static int uniformAlphaFactor;
   public static int uniformEnableTextures;
   public static int uniformEnableFog;
+  public static int uniformEnableHorsePattern;
   public static int uniformFogColor;
   public static int uniformTexture;
   public static int uniformCrack;
+  public static int uniformHorsePattern;
 
   //colors : R G B
   public static final float white[] = new float[] {1,1,1};
