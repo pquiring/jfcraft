@@ -33,6 +33,8 @@ public class ExtraContainer extends ExtraBase {
     this.items = container.items;
   }
 
+  public void changed() {}
+
   public void get(Server server, Client client, byte idx, byte count) {
     byte cc = client.container.items[idx].count;
     if (count > cc) {
@@ -51,7 +53,10 @@ public class ExtraContainer extends ExtraBase {
     }
     server.broadcastSetContainerItem(idx, client.container);
     client.serverTransport.setHand(client.hand);
-    client.chunk.dirty = true;
+    if (client.chunk != null) {
+      client.chunk.dirty = true;
+    }
+    changed();
   }
 
   public void put(Server server, Client client, byte idx, byte count) {
@@ -96,7 +101,10 @@ public class ExtraContainer extends ExtraBase {
       }
     }
     client.serverTransport.setHand(client.hand);
-    client.chunk.dirty = true;
+    if (client.chunk != null) {
+      client.chunk.dirty = true;
+    }
+    changed();
   }
 
   public void exchange(Server server, Client client, byte idx) {
@@ -113,7 +121,10 @@ public class ExtraContainer extends ExtraBase {
     client.container.items[idx] = tmp;
     server.broadcastSetContainerItem(idx, client.container);
     client.serverTransport.setHand(client.hand);
-    client.chunk.dirty = true;
+    if (client.chunk != null) {
+      client.chunk.dirty = true;
+    }
+    changed();
   }
 
   @Override

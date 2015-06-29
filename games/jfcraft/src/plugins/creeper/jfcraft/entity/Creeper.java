@@ -78,7 +78,7 @@ public class Creeper extends CreatureBase {
   }
 
   public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName);
+    texture = Textures.getTexture(gl, textureName, 0);
   }
 
   private static String parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG"};

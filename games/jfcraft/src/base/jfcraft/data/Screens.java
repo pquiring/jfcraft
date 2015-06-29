@@ -40,6 +40,7 @@ public class Screens {
     registerScreen(new WaitMenu());
     registerScreen(new DropperMenu());
     registerScreen(new SignMenu());
+    registerScreen(new HorseMenu());
   }
 
   public void init(GL gl) {

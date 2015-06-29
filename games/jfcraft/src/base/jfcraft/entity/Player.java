@@ -76,6 +76,7 @@ public class Player extends CreatureBase {
     xzDrag = yDrag * 4.0f;
     attackDmg = 1.0f;  //base damage (fists)
     attackRange = 5.0f;
+    legLength = 0.625f;
   }
 
   public void initStatic() {
@@ -83,7 +84,7 @@ public class Player extends CreatureBase {
   }
 
   public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName);
+    texture = Textures.getTexture(gl, textureName, 0);
     dest = new RenderDest(parts.length);
   }
 
@@ -206,6 +207,15 @@ public class Player extends CreatureBase {
     gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
   }
 
+  public void render(GL gl) {
+    for(int a=0;a<dest.count();a++) {
+      RenderBuffers buf = dest.getBuffers(a);
+      setMatrixModel(gl, a, buf);
+      buf.bindBuffers(gl);
+      buf.render(gl);
+    }
+  }
+
   public void ctick() {
     float delta = 0;
     switch (mode) {
@@ -226,15 +236,6 @@ public class Player extends CreatureBase {
     walkAngle += delta;
     if ((walkAngle < -45.0) || (walkAngle > 45.0)) {
       walkAngleDelta *= -1;
-    }
-  }
-
-  public void render(GL gl) {
-    for(int a=0;a<dest.count();a++) {
-      RenderBuffers buf = dest.getBuffers(a);
-      setMatrixModel(gl, a, buf);
-      buf.bindBuffers(gl);
-      buf.render(gl);
     }
   }
 

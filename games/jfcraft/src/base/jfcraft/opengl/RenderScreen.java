@@ -112,13 +112,13 @@ public abstract class RenderScreen {
 
   public static void initStatic(GL gl) {
     if (t_widgets == null) {
-      t_widgets = Textures.getTexture(gl, "gui/widgets");
+      t_widgets = Textures.getTexture(gl, "gui/widgets", 0);
     }
     if (t_icons == null) {
-      t_icons = Textures.getTexture(gl, "gui/icons");
+      t_icons = Textures.getTexture(gl, "gui/icons", 0);
     }
     if (t_text == null) {
-      t_text = Textures.getTexture(gl, "font/ascii");
+      t_text = Textures.getTexture(gl, "font/ascii", 0);
     }
     if (o_text == null) {
       o_text = new RenderBuffers();

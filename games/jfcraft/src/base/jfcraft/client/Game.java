@@ -544,7 +544,16 @@ public class Game extends RenderScreen {
     ChatMenu chat;
     switch (vk) {
       case 'E':
-        InventoryMenu menu = (InventoryMenu)Static.screens.screens[Client.INVENTORY];
+        RenderScreen menu;
+        if (Static.client.player.vehicle != null) {
+          int idx = Static.client.player.vehicle.getMenu();
+          if (idx == -1) return;
+          if (idx != Client.INVENTORY) {
+            Static.client.clientTransport.useVehicleInventory();
+            return;
+          }
+        }
+        menu = Static.screens.screens[Client.INVENTORY];
         menu.setup();
         Static.video.setScreen(menu);
         lastx = -1;

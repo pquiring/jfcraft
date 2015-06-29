@@ -41,7 +41,7 @@ public class WaitMenu extends RenderScreen {
     }
 
     if (t_menu == null) {
-      t_menu = Textures.getTexture(gl, "jfcraft/background");
+      t_menu = Textures.getTexture(gl, "jfcraft/background", 0);
     }
 
     if (o_menu == null) {

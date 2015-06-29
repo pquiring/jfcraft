@@ -44,7 +44,7 @@ public class MultiPlayerMenu extends RenderScreen {
     reset();
 
     if (t_menu == null) {
-      t_menu = Textures.getTexture(gl, "jfcraft/multimenu");
+      t_menu = Textures.getTexture(gl, "jfcraft/multimenu", 0);
     }
 
     if (o_menu == null) {

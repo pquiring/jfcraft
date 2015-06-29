@@ -79,7 +79,7 @@ public class EnvironmentEarth implements EnvironmentBase {
     sun.load(gl, makeAlpha("environment/sun"));
     moon = new Texture();
     moon.load(gl, makeAlpha("environment/moon_phases"));
-    rain = Textures.getTexture(gl, "environment/rain");
+    rain = Textures.getTexture(gl, "environment/rain", 0);
 //    snow = Textures.getTexture(gl, "environment/snow");
     stars = new Texture();
     stars.load(gl, makeStars());

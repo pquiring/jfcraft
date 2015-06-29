@@ -30,11 +30,14 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   // centered on x and z, but bottom on y of their cube
   public int dim;  //dimension
   public int id;  //Entity type : PLAYER, ZOMBIE, etc.
-  public int uid;  //unique id
+  public int uid;  //unique id (in game only) (not saved to disk)
   public int age;
   public int teleportTimer;
+  public int cid;  //id within chunk (saved to disk)
+  public int flags;  //generic flags (usage depends on derived entities)
 
   public float width, width2, height, height2, depth, depth2;
+  public float legLength;  //for when in vehicle
   public float eyeHeight, jumpVelocity, reach;
   public float walkSpeed, runSpeed, sneakSpeed, swimSpeed;
   public float yDrag, xzDrag;
@@ -1017,7 +1020,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return false;
   }
   /** Use entity. */
-  public void use(Client c) {}
+  public void useEntity(Client c, boolean sneak) {}
   /** Use tool on entity. */
   public boolean useTool(Client client, Coords c) {
     Static.log("Entity.useTool");
@@ -1041,6 +1044,18 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   public void getIDs() {}
 
+  public boolean isFlagSet(int flag) {
+    return (flags & flag) != 0;
+  }
+
+  public void setFlag(int flag) {
+    flags |= flag;
+  }
+
+  public void clrFlag(int flag) {
+    flags &= -1 - flag;
+  }
+
   //RenderSource
 
   public RenderDest getDest() {return null;}
@@ -1054,6 +1069,9 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   //private void setMatrixModel(GL gl, int bodyPart) {}
 
   public void render(GL gl) {}
+
+  /** Setup vehicle/occupant relationships after read() from file/network. */
+  public void setupLinks(Chunk chunk, boolean file) {}
 
   private static final byte ver = 0;
 
@@ -1071,9 +1089,12 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     buffer.writeFloat(vel.y);
     buffer.writeFloat(vel.z);
     buffer.writeInt(dim);
-    buffer.writeInt(age);
-    buffer.writeInt(teleportTimer);
-    if (!file) {
+    buffer.writeInt(flags);
+    if (file) {
+      buffer.writeInt(age);
+      buffer.writeInt(teleportTimer);
+      buffer.writeInt(cid);
+    } else {
       buffer.writeInt(uid);
     }
     return true;
@@ -1093,9 +1114,12 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     vel.y = buffer.readFloat();
     vel.z = buffer.readFloat();
     dim = buffer.readInt();
-    age = buffer.readInt();
-    teleportTimer = buffer.readInt();
-    if (!file) {
+    flags = buffer.readInt();
+    if (file) {
+      age = buffer.readInt();
+      teleportTimer = buffer.readInt();
+      cid = buffer.readInt();
+    } else {
       uid = buffer.readInt();
     }
     return true;

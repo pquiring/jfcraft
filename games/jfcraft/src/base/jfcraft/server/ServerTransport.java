@@ -50,7 +50,8 @@ public abstract class ServerTransport extends Transport {
     send(coder.encodeObject(packet, false));
   }
   public void sendPlayer(Client client) {
-    Packet packet = new PacketPlayer(Packets.PLAYER_REPLY, client.player);
+    Packet packet = new PacketPlayer(Packets.PLAYER_REPLY, client.player.uid, client.player.dim,
+    client.player.pos.x, client.player.pos.z);
     send(coder.encodeObject(packet, false));
   }
   public void sendWorld(World world) {
@@ -107,7 +108,12 @@ public abstract class ServerTransport extends Transport {
   }
 
   public void setContainer(int cx, int cz, ExtraContainer item) {
-    Packet packet = new PacketSetContainer(Packets.SETCONTAINER, cx, cz, item);
+    Packet packet = new PacketSetContainer(Packets.SETCONTAINER, item, cx, cz);
+    addUpdate(packet);
+  }
+
+  public void setContainer(ExtraContainer item) {
+    Packet packet = new PacketSetContainer(Packets.SETCONTAINER, item);
     addUpdate(packet);
   }
 

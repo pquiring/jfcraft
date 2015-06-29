@@ -61,7 +61,7 @@ public class Domino extends BlockEntity {
   }
 
   public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName);
+    texture = Textures.getTexture(gl, textureName, 0);
   }
 
   public void initInstance(GL gl) {

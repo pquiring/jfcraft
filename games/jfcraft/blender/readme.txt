@@ -19,3 +19,5 @@ When creating a new model:
 Notes:
  - You may notice some models have the wrong texture used (portal, fire, etc.) that's because the texture is animated
    so I needed to use something that's square.  The texture names are not used in game anyways.
+ - Set the Grid Subvisions to 16 or 32 and then snapping vertexes in edit mode will work nicely.
+   The subvisions are only visible in ortho view mode (toggle with Numpad 5) and then use one of the ortho views.

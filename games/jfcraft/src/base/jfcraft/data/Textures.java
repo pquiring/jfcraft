@@ -18,10 +18,11 @@ import jfcraft.opengl.Texture;
 public class Textures {
   private static HashMap<String, Texture> cache = new HashMap<String, Texture>();
 
-  public static Texture getTexture(GL gl, String name) {
+  public static Texture getTexture(GL gl, String name, int unit) {
     Texture texture = cache.get(name);
     if (texture != null) return texture;
     texture = new Texture();
+    texture.unit = unit;
     texture.load(gl, Assets.getImage(name).image);
     cache.put(name, texture);
     return texture;

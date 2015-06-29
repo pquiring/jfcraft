@@ -25,8 +25,8 @@ public class PacketTick extends Packet {
 
   //process on client side
   public void process(Client client) {
-//Static.log("tick");
     int cnt = packets.length;
+//Static.log("client:tick:" + cnt);
     for(int a=0;a<cnt;a++) {
       packets[a].process(client);
     }

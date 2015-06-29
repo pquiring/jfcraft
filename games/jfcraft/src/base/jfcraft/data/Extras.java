@@ -19,6 +19,7 @@ public class Extras implements SerialCreator {
   public static byte CRACK;  //not saved to disk
   public static byte REDSTONE;
   public static byte SIGN;
+  public static byte HORSE;
 
   public void registerExtra(ExtraBase eb) {
     regExtras[extraCount++] = eb;
@@ -41,6 +42,7 @@ public class Extras implements SerialCreator {
     registerExtra(new ExtraChest());
     registerExtra(new ExtraDropper());
     registerExtra(new ExtraSign());
+    registerExtra(new ExtraHorse());
   }
 
   @Override

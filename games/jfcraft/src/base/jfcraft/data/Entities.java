@@ -33,6 +33,7 @@ public class Entities implements SerialCreator {
   public static int PIG;
   public static int COW;
   public static int SHEEP;
+  public static int HORSE;
 
   //misc
   public static int MOVINGBLOCK;
@@ -82,11 +83,13 @@ public class Entities implements SerialCreator {
     registerEntity(new WorldItem());
     registerEntity(new Pig());
     registerEntity(new Cow());
+    registerEntity(new Horse());
     registerEntity(new Sheep());
     registerEntity(new EndPortal());
     registerEntity(new Arrow());
     registerEntity(new Boat());
     registerEntity(new Minecart());
+    registerEntity(new Horse());
   }
 
   public void initStatic() {

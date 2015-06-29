@@ -49,7 +49,7 @@ public class MainMenu extends RenderScreen {
     setMenuSize(512, 512);
 
     if (t_menu == null) {
-      t_menu = Textures.getTexture(gl, "jfcraft/mainmenu");
+      t_menu = Textures.getTexture(gl, "jfcraft/mainmenu", 0);
     }
 
     if (o_menu == null) {

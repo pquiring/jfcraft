@@ -92,7 +92,7 @@ public class Packets implements SerialCreator {
     registerPacket(new PacketSetExtra(), "SETEXTRA");
     registerPacket(new PacketDelExtra(), "DELEXTRA");
     registerPacket(new PacketSound(), "SOUND");
-    registerPacket(new PacketSheepSheared(), "SHEEPSHEARED");
+    registerPacket(new PacketSetFlags(), "SETFLAGS");
     registerPacket(new PacketKnockBack(), "KNOCKBACK");
     registerPacket(new PacketGenSpawnArea(), "GENSPAWNAREA");
     registerPacket(new PacketClearBlock2(), "CLEARBLOCK2");
@@ -104,12 +104,12 @@ public class Packets implements SerialCreator {
     registerPacket(new PacketMoveBack(), "MOVEBACK");
     registerPacket(new PacketEnderChest(), "ENDERCHEST");
     registerPacket(new PacketSetSign(), "SETSIGN");
+    registerPacket(new PacketUseVehicleInventory(), "USEVEHICLEINVENTORY");
   }
 
   public static byte RIDING;
   public static byte SETMODE; //survival, creative, etc.
   public static byte RESPAWN;
-  public static byte SHEEPSHEARED;
   public static byte DROP;
   public static byte TOGGLEGAMEMODE;
   public static byte ENDERCHEST;
@@ -123,7 +123,6 @@ public class Packets implements SerialCreator {
   public static byte SPAWN;
   public static byte MENULEAVE;
   public static byte MOVEBACK;
-
   public static byte GENSPAWNAREA;
   public static byte ARMOREXCHANGE;
   public static byte SETARMOR;
@@ -136,9 +135,11 @@ public class Packets implements SerialCreator {
   public static byte SETCONTAINERITEM;
   public static byte SETINV;
   public static byte CRAFTONE;
+
   //server -> client
   public static byte LOGIN_REPLY;
   public static byte CHUNK_REPLY;
+  public static byte SETFLAGS;
   //client -> server
   public static byte LOGIN_REQUEST;
   public static byte INVGET;
@@ -160,6 +161,7 @@ public class Packets implements SerialCreator {
   public static byte CRAFTEXCHANGE;
   public static byte ARMORGET;
   public static byte SETSIGN;
+  public static byte USEVEHICLEINVENTORY;
   //client <-> server
   public static byte TICK;
   public static byte SETACTIVESLOT;

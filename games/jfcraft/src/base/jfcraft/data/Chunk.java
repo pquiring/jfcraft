@@ -1011,12 +1011,24 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     }
     dirty = true;
   }
+  /** Retrieves entity using globaly unique uid. */
   public EntityBase getEntity(int uid) {
     synchronized(lock) {
       int cnt = entities.size();
       for(int a=0;a<cnt;a++) {
         EntityBase e = entities.get(a);
         if (e.uid == uid) return e;
+      }
+    }
+    return null;
+  }
+  /** Retrieves entity using temp cid. */
+  public EntityBase getEntity2(int cid) {
+    synchronized(lock) {
+      int cnt = entities.size();
+      for(int a=0;a<cnt;a++) {
+        EntityBase e = entities.get(a);
+        if (e.cid == cid) return e;
       }
     }
     return null;
@@ -1277,6 +1289,10 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       //entities
       int entity_size = entities.size();
       buffer.writeInt(entity_size);
+      int cid = 1;
+      for(int a=0;a<entity_size;a++) {
+        entities.get(a).cid = cid++;
+      }
       for(int a=0;a<entity_size;a++) {
         entities.get(a).write(buffer, file);
       }
@@ -1374,6 +1390,11 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
         eb.read(buffer, file);
         entities.add(eb);
       }
+    }
+    entity_size = entities.size();
+    for(int a=0;a<entity_size;a++) {
+      EntityBase eb = entities.get(a);
+      eb.setupLinks(this, file);
     }
     int tick_size = 0;
     if (file) {

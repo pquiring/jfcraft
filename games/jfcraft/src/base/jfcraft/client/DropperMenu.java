@@ -36,7 +36,7 @@ public class DropperMenu extends RenderScreen {
     setMenuSize(gui_width, gui_height);
 
     if (t_menu == null) {
-      t_menu = Textures.getTexture(gl, "gui/container/dispenser");
+      t_menu = Textures.getTexture(gl, "gui/container/dispenser", 0);
     }
 
     if (o_menu == null) {

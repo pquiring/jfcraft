@@ -723,8 +723,8 @@ public class World implements SerialClass, SerialCreator {
 
   private static final int magic = 0x5743464a;
   //this version MUST be incremented if any other ver is incremented
-  private static final int min_ver = 1;  //min version supported
-  private static final int ver = 1;
+  private static final int min_ver = 2;  //min version supported
+  private static final int ver = 2;
 
   @Override
   public boolean write(SerialBuffer buffer, boolean file) {

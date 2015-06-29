@@ -25,6 +25,7 @@ public abstract class CreatureBase extends EntityBase {
   public float exhaustion;  //when >= 4.0 : -1 from saturation or food
 
   public VehicleBase vehicle;
+  public int vcid, vuid;  //vehicle id (vcid=in chunk on disk ,vuid=in game)
 
   public void hit() {
     runCount = 7;
@@ -324,7 +325,7 @@ public abstract class CreatureBase extends EntityBase {
    *
    */
   public void moveEntity() {
-    if (!onGround && !inWater && mode != MODE_JUMPING) return;
+  //  if (!onGround && !inWater && mode != MODE_JUMPING) return;  //horse can jump and move
     float speed;
     switch (mode) {
       case MODE_JUMPING:
@@ -357,6 +358,19 @@ public abstract class CreatureBase extends EntityBase {
     buffer.writeFloat(hunger);
     buffer.writeFloat(saturation);
     buffer.writeFloat(exhaustion);
+    if (file) {
+      if (vehicle != null) {
+        buffer.writeInt(vehicle.cid);
+      } else {
+        buffer.writeInt(0);
+      }
+    } else {
+      if (vehicle != null) {
+        buffer.writeInt(vehicle.uid);
+      } else {
+        buffer.writeInt(0);
+      }
+    }
     return true;
   }
 
@@ -370,7 +384,23 @@ public abstract class CreatureBase extends EntityBase {
     hunger = buffer.readFloat();
     saturation = buffer.readFloat();
     exhaustion = buffer.readFloat();
+    if (file) {
+      vcid = buffer.readInt();
+    } else {
+      vuid = buffer.readInt();
+    }
     return true;
   }
 
+  public void setupLinks(Chunk chunk, boolean file) {
+    if (file) {
+      if (vcid != 0) {
+        vehicle = (VehicleBase)chunk.getEntity2(vcid);
+      }
+    } else {
+      if (vuid != 0) {
+        vehicle = (VehicleBase)chunk.getEntity(vuid);
+      }
+    }
+  }
 }

@@ -56,7 +56,7 @@ public class Boat extends VehicleBase {
   }
 
   public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName);
+    texture = Textures.getTexture(gl, textureName, 0);
     model = loadModel("boat");
   }
 
@@ -163,9 +163,15 @@ public class Boat extends VehicleBase {
       Static.server.broadcastEntityMove(this, false);
     }
     if (occupant != null) {
+      Chunk chunk1 = occupant.getChunk();
       occupant.pos.x = pos.x;
-      occupant.pos.y = pos.y;
+      occupant.pos.y = pos.y - occupant.legLength;
       occupant.pos.z = pos.z;
+      Chunk chunk2 = occupant.getChunk();
+      if (chunk2 != chunk1) {
+        chunk1.delEntity(occupant);
+        chunk2.addEntity(occupant);
+      }
       if (sneak) {
         occupant.vehicle = null;
         Static.server.broadcastRiding(this, occupant, false);
@@ -178,15 +184,21 @@ public class Boat extends VehicleBase {
     return true;
   }
 
-  public void use(Client c) {
+  public void useEntity(Client c, boolean sneak) {
     synchronized(this) {
       if (occupant != null) return;  //in use
       resetControls();
       occupant = c.player;
+      Chunk chunk1 = occupant.getChunk();
       c.player.vehicle = this;
       c.player.pos.x = pos.x;
       c.player.pos.y = pos.y;
       c.player.pos.z = pos.z;
+      Chunk chunk2 = occupant.getChunk();
+      if (chunk2 != chunk1) {
+        chunk1.delEntity(occupant);
+        chunk2.addEntity(occupant);
+      }
       Static.server.broadcastRiding(this, occupant, true);
     }
   }
