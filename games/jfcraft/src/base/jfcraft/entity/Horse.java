@@ -318,8 +318,28 @@ public class Horse extends VehicleBase {
         mat.addTranslate2(-org[L_LEG].x, -org[L_LEG].y, -org[L_LEG].z);
         break;
       case TAIL_1:
+        mat.addTranslate2(org[TAIL_1].x, org[TAIL_1].y, org[TAIL_1].z);
+        mat.addRotate2(+30, 1, 0, 0);
+        mat.addTranslate2(-org[TAIL_1].x, -org[TAIL_1].y, -org[TAIL_1].z);
+        break;
       case TAIL_2:
+        mat.addTranslate2(org[TAIL_1].x, org[TAIL_1].y, org[TAIL_1].z);
+        mat.addRotate2(+30, 1, 0, 0);
+        mat.addTranslate2(-org[TAIL_1].x, -org[TAIL_1].y, -org[TAIL_1].z);
+        mat.addTranslate2(org[TAIL_2].x, org[TAIL_2].y, org[TAIL_2].z);
+        mat.addRotate2(+30, 1, 0, 0);
+        mat.addTranslate2(-org[TAIL_2].x, -org[TAIL_2].y, -org[TAIL_2].z);
+        break;
       case TAIL_3:
+        mat.addTranslate2(org[TAIL_1].x, org[TAIL_1].y, org[TAIL_1].z);
+        mat.addRotate2(+30, 1, 0, 0);
+        mat.addTranslate2(-org[TAIL_1].x, -org[TAIL_1].y, -org[TAIL_1].z);
+        mat.addTranslate2(org[TAIL_2].x, org[TAIL_2].y, org[TAIL_2].z);
+        mat.addRotate2(+30, 1, 0, 0);
+        mat.addTranslate2(-org[TAIL_2].x, -org[TAIL_2].y, -org[TAIL_2].z);
+        mat.addTranslate2(org[TAIL_3].x, org[TAIL_3].y, org[TAIL_3].z);
+        mat.addRotate2(+30, 1, 0, 0);
+        mat.addTranslate2(-org[TAIL_3].x, -org[TAIL_3].y, -org[TAIL_3].z);
         break;
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
@@ -541,7 +561,6 @@ public class Horse extends VehicleBase {
           Static.server.broadcastEntityFlags(this);
         }
         //TODO : apple, carrot, etc.
-        return;
       }
       if (sneak) {
         //access inventory directly

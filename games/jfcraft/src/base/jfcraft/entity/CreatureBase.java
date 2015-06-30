@@ -104,9 +104,11 @@ public abstract class CreatureBase extends EntityBase {
   /** Find block or entity in this entities line of sight (ray tracing)
    *
    * @param tid = block id to find (-1 any solid block)
-   * @return Coords of block (x,y,z,side) (null if nothing found)
+   * @param type = Entity or Selection
+   * @param veh = Entity to NOT select
+   * @param c = coords to fill in
    */
-  public Coords findBlock(int tid, BlockHitTest.Type type, Coords c) {
+  public void findBlock(int tid, BlockHitTest.Type type, VehicleBase veh, Coords c) {
     float dx,dy,dz;
     synchronized(find_vectors) {
       calcVectors(Static._1_16, find_vectors);
@@ -114,15 +116,15 @@ public abstract class CreatureBase extends EntityBase {
       dy = find_vectors.facing.v[1];
       dz = find_vectors.facing.v[2];
     }
-    return findBlock(tid,
+    findBlock(tid,
       pos.x,pos.y + eyeHeight,pos.z,
       dx * Static._1_16,
       dy * Static._1_16,
       dz * Static._1_16,
-      type, c);
+      type, veh, c);
   }
 
-  private Coords findBlock(int tid, float ix, float iy, float iz, float dx, float dy, float dz, BlockHitTest.Type type, Coords c) {
+  private void findBlock(int tid, float ix, float iy, float iz, float dx, float dy, float dz, BlockHitTest.Type type, VehicleBase veh, Coords c) {
     //current position in space
     float px = ix;
     float py = iy;
@@ -138,6 +140,8 @@ public abstract class CreatureBase extends EntityBase {
 
     float sx = 0, sy = 0, sz = 0;  //last AIR position in space
     boolean haveSide = false;
+    int vid = -1;
+    if (veh != null) vid = veh.uid;
 
     World world = Static.world();
 
@@ -149,11 +153,13 @@ public abstract class CreatureBase extends EntityBase {
       for(int e=0;e<elist.length;e++) {
         EntityBase entity = elist[e];
         if (entity.uid == this.uid) continue;
+        if (entity.uid == vid) continue;  //do not select vehicle
         if (!entity.canSelect()) continue;
         if (entity.isBlock) continue;
         if (entity.hitPoint(px, py, pz)) {
           c.block = null;
-          return entity.getCoords(c);
+          entity.getCoords(c);
+          return;
         }
       }
       world.getBlock(dim,px,py,pz,c);
@@ -185,7 +191,7 @@ public abstract class CreatureBase extends EntityBase {
       c.block = null;
       c.entity = null;
       c.chunk = null;
-      return null;
+      return;
     }
 
     if (haveSide) {
@@ -221,7 +227,6 @@ public abstract class CreatureBase extends EntityBase {
     }
 
     c.dir = side;
-    return c;
   }
 
   public void getTarget() {

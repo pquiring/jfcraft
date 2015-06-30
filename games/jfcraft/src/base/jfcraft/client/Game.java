@@ -56,6 +56,10 @@ public class Game extends RenderScreen {
       Player player = (Player)Static.entities.entities[Entities.PLAYER];
       hand = player.getRightHand();
     }
+    if (o_box == null) {
+      o_box = new RenderBuffers();
+      o_box.type = GL.GL_LINES;
+    }
   }
 
   public void setCursor() {
@@ -97,6 +101,16 @@ public class Game extends RenderScreen {
   private boolean dim_env_inited[] = new boolean[Dims.MAX_ID];
 
   private Coords c = new Coords();
+
+  private float v3[] = new float[3];
+  private float[] setv3(float x,float y,float z) {
+    v3[0] = x;
+    v3[1] = y;
+    v3[2] = z;
+    return v3;
+  }
+  private float v2[] = new float[2];
+  private int boxPoly[] = new int[] {0,1, 2,3, 0,2, 1,3, 4,5, 6,7, 4,6, 5,7, 0,4, 1,5, 2,6, 3,7};
 
   public void process(GL gl) {
     if (advanceAnimation) {
@@ -214,34 +228,67 @@ public class Game extends RenderScreen {
     pro.next();
 
     //render box around block
-    Static.client.player.findBlock(-1, BlockHitTest.Type.SELECTION, Static.client.selection);
+    Static.client.player.findBlock(-1, BlockHitTest.Type.SELECTION, Static.client.player.vehicle, Static.client.selection);
     if (Static.client.selection.block != null) {
-      if (o_box == null) {
-        o_box = new RenderBuffers();
-        o_box.type = GL.GL_LINES;
-      }
       o_box.reset();
       ArrayList<Box> boxes = Static.client.selection.block.getBoxes(Static.client.selection, BlockHitTest.Type.SELECTION);
       int boxcnt = boxes.size();
       for(int a=0;a<boxcnt;a++) {
         Box box = boxes.get(a);
-        o_box.addVertex(new float[] {box.x1,box.y1,box.z1});
-        o_box.addVertex(new float[] {box.x2,box.y1,box.z1});
-        o_box.addVertex(new float[] {box.x1,box.y1,box.z2});
-        o_box.addVertex(new float[] {box.x2,box.y1,box.z2});
-        o_box.addVertex(new float[] {box.x1,box.y2,box.z1});
-        o_box.addVertex(new float[] {box.x2,box.y2,box.z1});
-        o_box.addVertex(new float[] {box.x1,box.y2,box.z2});
-        o_box.addVertex(new float[] {box.x2,box.y2,box.z2});
+        o_box.addVertex(setv3(box.x1,box.y1,box.z1));
+        o_box.addVertex(setv3(box.x2,box.y1,box.z1));
+        o_box.addVertex(setv3(box.x1,box.y1,box.z2));
+        o_box.addVertex(setv3(box.x2,box.y1,box.z2));
+        o_box.addVertex(setv3(box.x1,box.y2,box.z1));
+        o_box.addVertex(setv3(box.x2,box.y2,box.z1));
+        o_box.addVertex(setv3(box.x1,box.y2,box.z2));
+        o_box.addVertex(setv3(box.x2,box.y2,box.z2));
         for(int b=0;b<8;b++) {
-          o_box.addTextureCoords(new float[] {0,0});
+          o_box.addTextureCoords(v2,v2);
           o_box.addDefault(Static.black);
         }
         //add 12 lines
-        o_box.addPoly(new int[] {0,1, 2,3, 0,2, 1,3, 4,5, 6,7, 4,6, 5,7, 0,4, 1,5, 2,6, 3,7});
+        o_box.addPoly(boxPoly);
       }
       o_box.copyBuffers(gl);
       o_box.mat.setTranslate(Static.client.selection.x, Static.client.selection.y, Static.client.selection.z);
+      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, o_box.mat.m);  //model matrix
+      o_box.bindBuffers(gl);
+      gl.glUniform1i(Static.uniformEnableTextures, 0);
+      o_box.render(gl);
+      gl.glUniform1i(Static.uniformEnableTextures, 1);
+    }
+    if (Static.client.selection.entity != null) {
+      o_box.reset();
+      EntityBase e = Static.client.selection.entity;
+      float width2 = e.width2;
+      float height = e.height;
+      float depth2 = e.depth2;
+      float x = e.pos.x;
+      float y = e.pos.y;
+      float z = e.pos.z;
+      float x1 = x - width2;
+      float y1 = y;
+      float z1 = z - depth2;
+      float x2 = x + width2;
+      float y2 = y + height;
+      float z2 = z + depth2;
+      o_box .addVertex(setv3(x1,y1,z1));
+      o_box .addVertex(setv3(x2,y1,z1));
+      o_box .addVertex(setv3(x1,y1,z2));
+      o_box .addVertex(setv3(x2,y1,z2));
+      o_box .addVertex(setv3(x1,y2,z1));
+      o_box .addVertex(setv3(x2,y2,z1));
+      o_box .addVertex(setv3(x1,y2,z2));
+      o_box .addVertex(setv3(x2,y2,z2));
+      for(int b=0;b<8;b++) {
+        o_box.addTextureCoords(v2, v2);
+        o_box.addDefault(Static.black);
+      }
+      //add 12 lines
+      o_box.addPoly(boxPoly);
+      o_box.copyBuffers(gl);
+      o_box.mat.setTranslate(0,0,0);
       gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, o_box.mat.m);  //model matrix
       o_box.bindBuffers(gl);
       gl.glUniform1i(Static.uniformEnableTextures, 0);
@@ -428,7 +475,7 @@ public class Game extends RenderScreen {
         dy += fontSize;
         addText(dx,dy,"Time:" + world.time);
         dy += fontSize;
-        Static.client.player.findBlock(-1, BlockHitTest.Type.SELECTION, c);
+        Static.client.player.findBlock(-1, BlockHitTest.Type.SELECTION, Static.client.player.vehicle, c);
         if (c.block != null && c.chunk != null) {
           addText(dx,dy,"Hit:" + c);
           dy += fontSize;
