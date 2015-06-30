@@ -63,6 +63,8 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public boolean dirty, needCopyBuffers;
   public int path[];
 
+  public float angX;  //default position
+
   public static Random r = new Random();
   public static GLMatrix mat = new GLMatrix(); //for rendering only (client side render only)
 
@@ -730,6 +732,8 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
       vel.z += zdrag;
       if (vel.z > 0) vel.z = 0;
     }
+
+    if (moved) dirty = true;
 
     return moved;
   }

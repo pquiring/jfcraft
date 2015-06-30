@@ -315,7 +315,7 @@ public abstract class CreatureBase extends EntityBase {
         mode = MODE_IDLE;
       }
     }
-    ang.x = 0;
+    ang.x = angX;
   }
 
   private static GLMatrix mMat = new GLMatrix();

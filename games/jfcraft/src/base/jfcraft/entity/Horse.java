@@ -1,6 +1,6 @@
 package jfcraft.entity;
 
-/** Horse entity
+/** Horse entity.
  *
  * @author pquiring
  *
@@ -92,6 +92,7 @@ public class Horse extends VehicleBase {
 
   //render assets
   public static Texture textures[];
+  public static GLVertex org[];
 
   public static int initHealth = 10;
 
@@ -118,6 +119,7 @@ public class Horse extends VehicleBase {
     depth2 = depth/2;
     walkAngleDelta = 5.0f;
     sittingPos = 1.5f;
+    angX = 45f;
     if (Static.isServer()) {
       eyeHeight = 0.5f;
       jumpVelocity = 0.58f;  //results in jump of 1.42
@@ -167,6 +169,7 @@ public class Horse extends VehicleBase {
     , "L_EAR_SHORT", "R_EAR_SHORT", "L_EAR_LONG", "R_EAR_LONG"
     , "TAIL_1", "TAIL_2", "TAIL_3"
     , "MANE", "NECK", "JAW_LOWER", "JAW_UPPER"
+    , "CHEST"
   };
 
   //0-5 = HEAD, BODY, ARMs, LEGs
@@ -189,6 +192,7 @@ public class Horse extends VehicleBase {
   private static final int NECK = 22;
   private static final int JAW_LOWER = 23;
   private static final int JAW_UPPER = 24;
+  private static final int CHEST = 25;
 
   private static int commonParts[] = {
     HEAD,BODY,NECK,JAW_LOWER,JAW_UPPER
@@ -212,6 +216,7 @@ public class Horse extends VehicleBase {
 
   public void buildBuffers(RenderDest dest, RenderData data) {
     GLModel mod = loadModel("horse");
+    org = new GLVertex[parts.length];
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
@@ -232,6 +237,7 @@ public class Horse extends VehicleBase {
       }
       buf.org = obj.org;
       buf.type = obj.type;
+      org[a] = obj.org;
     }
   }
 
@@ -251,42 +257,65 @@ public class Horse extends VehicleBase {
   private void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
-    ang.x = 10f;
     switch (bodyPart) {
-      case HEAD:
+      case JAW_LOWER:
+        //must rotate parent part first
+        mat.addTranslate2(org[NECK].x, org[NECK].y, org[NECK].z);
+        mat.addRotate2(-ang.x, 1, 0, 0);
+        mat.addTranslate2(-org[NECK].x, -org[NECK].y, -org[NECK].z);
+        mat.addTranslate2(org[JAW_LOWER].x, org[JAW_LOWER].y, org[JAW_LOWER].z);
+        mat.addRotate2(-10f, 1, 0, 0);
+        mat.addTranslate2(-org[JAW_LOWER].x, -org[JAW_LOWER].y, -org[JAW_LOWER].z);
+        break;
+      case JAW_UPPER:
+        //must rotate parent part first
+        mat.addTranslate2(org[NECK].x, org[NECK].y, org[NECK].z);
+        mat.addRotate2(-ang.x, 1, 0, 0);
+        mat.addTranslate2(-org[NECK].x, -org[NECK].y, -org[NECK].z);
+        mat.addTranslate2(org[JAW_UPPER].x, org[JAW_UPPER].y, org[JAW_UPPER].z);
+        mat.addRotate2(+10f, 1, 0, 0);
+        mat.addTranslate2(-org[JAW_UPPER].x, -org[JAW_UPPER].y, -org[JAW_UPPER].z);
+        break;
       case L_EAR_SHORT:
       case R_EAR_SHORT:
       case L_EAR_LONG:
       case R_EAR_LONG:
-      case JAW_LOWER:
-      case JAW_UPPER:
+      case HEAD:
       case NECK:
       case MANE:
-        mat.addTranslate2(0, buf.org.y, 0);
+        mat.addTranslate2(org[NECK].x, org[NECK].y, org[NECK].z);
         mat.addRotate2(-ang.x, 1, 0, 0);
-        mat.addTranslate2(0, -buf.org.y, 0);
+        mat.addTranslate2(-org[NECK].x, -org[NECK].y, -org[NECK].z);
         break;
       case BODY:
         break;
       case L_ARM:
       case L_ARM_LOWER:
       case L_ARM_HOOVE:
+        mat.addTranslate2(org[L_ARM].x, org[L_ARM].y, org[L_ARM].z);
+        mat.addRotate2(-walkAngle, 1, 0, 0);
+        mat.addTranslate2(-org[L_ARM].x, -org[L_ARM].y, -org[L_ARM].z);
+        break;
       case R_LEG:
       case R_LEG_LOWER:
       case R_LEG_HOOVE:
-        mat.addTranslate2(buf.org.x, buf.org.y, buf.org.z);
-        mat.addRotate2(walkAngle, 1, 0, 0);
-        mat.addTranslate2(-buf.org.x, -buf.org.y, -buf.org.z);
+        mat.addTranslate2(org[R_LEG].x, org[R_LEG].y, org[R_LEG].z);
+        mat.addRotate2(-walkAngle, 1, 0, 0);
+        mat.addTranslate2(-org[R_LEG].x, -org[R_LEG].y, -org[R_LEG].z);
         break;
       case R_ARM:
       case R_ARM_LOWER:
       case R_ARM_HOOVE:
+        mat.addTranslate2(org[R_ARM].x, org[R_ARM].y, org[R_ARM].z);
+        mat.addRotate2(walkAngle, 1, 0, 0);
+        mat.addTranslate2(-org[R_ARM].x, -org[R_ARM].y, -org[R_ARM].z);
+        break;
       case L_LEG:
       case L_LEG_LOWER:
       case L_LEG_HOOVE:
-        mat.addTranslate2(buf.org.x, buf.org.y, buf.org.z);
-        mat.addRotate2(-walkAngle, 1, 0, 0);
-        mat.addTranslate2(-buf.org.x, -buf.org.y, -buf.org.z);
+        mat.addTranslate2(org[L_LEG].x, org[L_LEG].y, org[L_LEG].z);
+        mat.addRotate2(walkAngle, 1, 0, 0);
+        mat.addTranslate2(-org[L_LEG].x, -org[L_LEG].y, -org[L_LEG].z);
         break;
       case TAIL_1:
       case TAIL_2:
@@ -295,6 +324,33 @@ public class Horse extends VehicleBase {
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
     gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
+  }
+
+  public void render(GL gl) {
+    for(int a=0;a<commonParts.length;a++) {
+      int part = commonParts[a];
+      RenderBuffers buf = dest.getBuffers(part);
+      setMatrixModel(gl, part, buf);
+      buf.bindBuffers(gl);
+      buf.render(gl);
+    }
+    int ep[] = extraParts[type];
+    int cnt = ep.length;
+    for(int a=0;a<cnt;a++) {
+      int part = ep[a];
+      RenderBuffers buf = dest.getBuffers(part);
+      setMatrixModel(gl, part, buf);
+      buf.bindBuffers(gl);
+      buf.render(gl);
+    }
+    gl.glUniform1i(Static.uniformEnableHorsePattern, 0);
+    if (haveChest()) {
+      int part = CHEST;
+      RenderBuffers buf = dest.getBuffers(part);
+      setMatrixModel(gl, part, buf);
+      buf.bindBuffers(gl);
+      buf.render(gl);
+    }
   }
 
   public void ctick() {
@@ -320,26 +376,6 @@ public class Horse extends VehicleBase {
     }
   }
 
-  public void render(GL gl) {
-    for(int a=0;a<commonParts.length;a++) {
-      int part = commonParts[a];
-      RenderBuffers buf = dest.getBuffers(part);
-      setMatrixModel(gl, part, buf);
-      buf.bindBuffers(gl);
-      buf.render(gl);
-    }
-    int ep[] = extraParts[type];
-    int cnt = ep.length;
-    for(int a=0;a<cnt;a++) {
-      int part = ep[a];
-      RenderBuffers buf = dest.getBuffers(part);
-      setMatrixModel(gl, part, buf);
-      buf.bindBuffers(gl);
-      buf.render(gl);
-    }
-    gl.glUniform1i(Static.uniformEnableHorsePattern, 0);
-  }
-
   public int getMenu() {
     if (!isTamed()) return Client.INVENTORY;
     return Client.HORSE;
@@ -361,10 +397,10 @@ public class Horse extends VehicleBase {
     //random walking
     if (Static.debugRotate) {
       //test rotate in a spot
-      ang.y += 1.0f;
-      if (ang.y > 180f) { ang.y = -180f; }
+//      ang.y += 1.0f;
+//      if (ang.y > 180f) { ang.y = -180f; }
       ang.x += 1.0f;
-      if (ang.x > 45.0f) { ang.x = -45.0f; }
+      if (ang.x > 360.0f) { ang.x = 0.0f; }
       mode = MODE_WALK;
     } else {
       if (occupant != null && isTamed() && haveSaddle()) {
@@ -381,7 +417,9 @@ public class Horse extends VehicleBase {
           jump();
         }
         ang.y = occupant.ang.y;
+        if (dn) ang.y += 180f;
         moveEntity();
+        if (dn) ang.y -= 180f;
       } else {
         randomWalking();
         if (mode != MODE_IDLE) {
@@ -448,6 +486,7 @@ public class Horse extends VehicleBase {
         if (e.type == TYPE_SKELETON || e.type == TYPE_ZOMBIE) {
           e.type = TYPE_BLACK;
         }
+        e.type = TYPE_DONKEY; //test
         if (e.type > 3) {
           //pattern = 0,11,12,13,14
           e.pattern = r.nextInt(5);
@@ -466,6 +505,7 @@ public class Horse extends VehicleBase {
         e.pos.x = px;
         e.pos.y = py;
         e.pos.z = pz;
+        e.ang.x = 45f;
         e.ang.y = r.nextInt(360);
         return e;
       }
@@ -548,10 +588,22 @@ Static.log("use horse inventory:" + client.container);
   }
 
   public Item[] drop() {
-    Random r = new Random();
-    Item items[] = new Item[2];
-    items[0] = new Item(Items.STEAK_RAW, 0, r.nextInt(2)+1);
-    items[1] = new Item(Items.LEATHER, 0, r.nextInt(2)+1);
+    int cnt = 0;
+    for(int a=0;a<inventory.items.length;a++) {
+      if (a == ExtraHorse.ARMOR && inventory.items[a].id == Blocks.OBSIDIAN) {
+        continue;
+      }
+      if (inventory.items[a].id != 0) cnt++;
+    }
+    Item items[] = new Item[cnt];
+    int idx = 0;
+    for(int a=0;a<inventory.items.length;a++) {
+      if (a == ExtraHorse.ARMOR && inventory.items[a].id == Blocks.OBSIDIAN) {
+        continue;
+      }
+      if (inventory.items[a].id == 0) continue;
+      items[idx++].copy(inventory.items[a]);
+    }
     return items;
   }
 
