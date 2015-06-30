@@ -166,7 +166,7 @@ public class PacketPos extends Packet {
       client.soundStep = 0;
     }
     if (b1) {
-      client.player.findBlock(-1, BlockHitTest.Type.SELECTION, client.s1);
+      client.player.findBlock(-1, BlockHitTest.Type.SELECTION, client.player.vehicle, client.s1);
       if (client.s1 != null) {
         if (client.s1.block != null) {
           //break block
@@ -206,7 +206,7 @@ public class PacketPos extends Packet {
       }
     }
     else if (b2) {
-      client.player.findBlock(-1, BlockHitTest.Type.SELECTION, client.s1);
+      client.player.findBlock(-1, BlockHitTest.Type.SELECTION, client.player.vehicle, client.s1);
       if (client.s1.block != null || client.s1.entity != null) {
         if (client.s1.block != null && client.s1.block.canUse && !sneak && client.action[1] != Client.ACTION_PLACE) {
           //useBlock();
@@ -253,7 +253,7 @@ public class PacketPos extends Packet {
                 itembase2 = Static.items.items[item.id];
               }
               if (itembase2.canPlaceInWater) {
-                client.player.findBlock(Blocks.WATER, BlockHitTest.Type.SELECTION, client.s2);
+                client.player.findBlock(Blocks.WATER, BlockHitTest.Type.SELECTION, client.player.vehicle, client.s2);
                 if (client.s2.block != null) {
                   client.s1.copy(client.s2);
                 }

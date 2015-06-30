@@ -123,7 +123,7 @@ public class HorseMenu extends RenderScreen {
       y = 36 + 36;
       for(int a=0;a<15;a++) {
         if (a > 0 && a % 5 == 0) {
-          x = 16;
+          x = 160;
           y += 36;
         }
         item = container.items[a+2];
@@ -194,11 +194,11 @@ public class HorseMenu extends RenderScreen {
     ExtraHorse container = (ExtraHorse)Static.client.container;
     if (container != null && container.items.length > 2) {
       bx = 160;
-      by = 36 + 36;
+      by = 36;
       byte idx = 2;
       for(int a=0;a<15;a++) {
         if (a > 0 && a % 5 == 0) {
-          bx = 16;
+          bx = 160;
           by += 36;
         }
         if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
