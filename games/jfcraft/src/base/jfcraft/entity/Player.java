@@ -172,33 +172,33 @@ public class Player extends CreatureBase {
         break;
       case L_ARM:
         mat.addTranslate(0, buf.org.y, 0);
-        mat.addRotate2(walkAngle, 1, 0, 0);
+        mat.addRotate(walkAngle, 1, 0, 0);
         mat.addTranslate2(0, -buf.org.y, 0);
         break;
       case R_ARM:
         mat.addTranslate(0, buf.org.y, 0);
-        mat.addRotate2(-walkAngle, 1, 0, 0);
+        mat.addRotate(-walkAngle, 1, 0, 0);
         mat.addTranslate2(0, -buf.org.y, 0);
         break;
       case L_LEG:
         if (vehicle == null) {
           mat.addTranslate(0, buf.org.y, 0);
-          mat.addRotate2(-walkAngle, 1, 0, 0);
+          mat.addRotate(-walkAngle, 1, 0, 0);
           mat.addTranslate2(0, -buf.org.y, 0);
         } else {
           mat.addTranslate(0, buf.org.y, 0);
-          mat.addRotate2(-90, 1, 0, 0);
+          mat.addRotate(-90, 1, 0, 0);
           mat.addTranslate2(0, -buf.org.y, 0);
         }
         break;
       case R_LEG:
         if (vehicle == null) {
           mat.addTranslate(0, buf.org.y, 0);
-          mat.addRotate2(walkAngle, 1, 0, 0);
+          mat.addRotate(walkAngle, 1, 0, 0);
           mat.addTranslate2(0, -buf.org.y, 0);
         } else {
           mat.addTranslate(0, buf.org.y, 0);
-          mat.addRotate2(-90, 1, 0, 0);
+          mat.addRotate(-90, 1, 0, 0);
           mat.addTranslate2(0, -buf.org.y, 0);
         }
         break;
