@@ -187,7 +187,7 @@ public class Player extends CreatureBase {
           mat.addTranslate2(0, -buf.org.y, 0);
         } else {
           mat.addTranslate(0, buf.org.y, 0);
-          mat.addRotate(-90, 1, 0, 0);
+          mat.addRotate(90, 1, 0, 0);
           mat.addTranslate2(0, -buf.org.y, 0);
         }
         break;
@@ -198,7 +198,7 @@ public class Player extends CreatureBase {
           mat.addTranslate2(0, -buf.org.y, 0);
         } else {
           mat.addTranslate(0, buf.org.y, 0);
-          mat.addRotate(-90, 1, 0, 0);
+          mat.addRotate(90, 1, 0, 0);
           mat.addTranslate2(0, -buf.org.y, 0);
         }
         break;
