@@ -331,13 +331,9 @@ public abstract class CreatureBase extends EntityBase {
    */
   public void moveEntity() {
   //  if (!onGround && !inWater && mode != MODE_JUMPING) return;  //horse can jump and move
-    float speed;
-    switch (mode) {
-      case MODE_JUMPING:
-      case MODE_WALK: speed = walkSpeed / 20.0f; break;
-      case MODE_RUN: speed = runSpeed / 20.0f; break;
-      default: return;
-    }
+    float speed = getSpeed(mode);
+    if (speed == 0f) return;
+    speed /= 20f;
     mMat.setIdentity();
     mMat.addRotate(ang.y, 0, 1, 0);
     mVec.set(0, 0, -speed);

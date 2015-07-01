@@ -15,6 +15,9 @@ public abstract class VehicleBase extends CreatureBase {
   public boolean up, dn, run, sneak;  //occupant controls
   public boolean lt, rt, jump;
 
+  public float walkSpeedOccupant;
+  public float runSpeedOccupant;
+
   public void resetControls() {
     up = false;
     dn = false;
@@ -24,6 +27,16 @@ public abstract class VehicleBase extends CreatureBase {
 
   public int getMenu() {
     return Client.INVENTORY;
+  }
+
+  public float getSpeed(int mode) {
+    if (occupant == null) return super.getSpeed(mode);
+    switch (mode) {
+      case MODE_JUMPING:
+      case MODE_RUN: return runSpeedOccupant;
+      case MODE_WALK: return walkSpeedOccupant;
+    }
+    return 0f;
   }
 
   private static final byte ver = 0;
