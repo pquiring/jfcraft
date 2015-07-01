@@ -557,6 +557,9 @@ public class Horse extends VehicleBase {
             inventory.items[ExtraHorse.SADDLE] = saddle;
             inventory.items[ExtraHorse.ARMOR] = armor;
             setHaveChest(true);
+            item.count--;
+            if (item.count == 0) item.clear();
+            client.serverTransport.setInvItem(client.activeSlot, item);
           }
           Static.server.broadcastEntityFlags(this);
         }
