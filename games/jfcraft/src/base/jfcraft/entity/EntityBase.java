@@ -1077,6 +1077,15 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   /** Setup vehicle/occupant relationships after read() from file/network. */
   public void setupLinks(Chunk chunk, boolean file) {}
 
+  public float getSpeed(int mode) {
+    switch (mode) {
+      case MODE_JUMPING:
+      case MODE_RUN: return runSpeed;
+      case MODE_WALK: return walkSpeed;
+    }
+    return 0f;
+  }
+
   private static final byte ver = 0;
 
   @Override
