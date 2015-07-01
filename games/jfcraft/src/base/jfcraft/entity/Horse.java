@@ -169,7 +169,7 @@ public class Horse extends VehicleBase {
     , "L_EAR_SHORT", "R_EAR_SHORT", "L_EAR_LONG", "R_EAR_LONG"
     , "TAIL_1", "TAIL_2", "TAIL_3"
     , "MANE", "NECK", "JAW_LOWER", "JAW_UPPER"
-    , "CHEST"
+    , "CHEST", "SADDLE_SEAT", "SADDLE_HEAD"
   };
 
   //0-5 = HEAD, BODY, ARMs, LEGs
@@ -193,6 +193,8 @@ public class Horse extends VehicleBase {
   private static final int JAW_LOWER = 23;
   private static final int JAW_UPPER = 24;
   private static final int CHEST = 25;
+  private static final int SADDLE_SEAT = 26;
+  private static final int SADDLE_HEAD = 27;
 
   private static int commonParts[] = {
     HEAD,BODY,NECK,JAW_LOWER,JAW_UPPER
@@ -283,11 +285,13 @@ public class Horse extends VehicleBase {
       case HEAD:
       case NECK:
       case MANE:
+      case SADDLE_HEAD:
         mat.addTranslate2(org[NECK].x, org[NECK].y, org[NECK].z);
         mat.addRotate2(-ang.x, 1, 0, 0);
         mat.addTranslate2(-org[NECK].x, -org[NECK].y, -org[NECK].z);
         break;
       case BODY:
+      case SADDLE_SEAT:
         break;
       case L_ARM:
       case L_ARM_LOWER:
@@ -367,6 +371,18 @@ public class Horse extends VehicleBase {
     if (haveChest()) {
       int part = CHEST;
       RenderBuffers buf = dest.getBuffers(part);
+      setMatrixModel(gl, part, buf);
+      buf.bindBuffers(gl);
+      buf.render(gl);
+    }
+    if (haveSaddle()) {
+      int part = SADDLE_SEAT;
+      RenderBuffers buf = dest.getBuffers(part);
+      setMatrixModel(gl, part, buf);
+      buf.bindBuffers(gl);
+      buf.render(gl);
+      part = SADDLE_HEAD;
+      buf = dest.getBuffers(part);
       setMatrixModel(gl, part, buf);
       buf.bindBuffers(gl);
       buf.render(gl);
