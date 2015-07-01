@@ -1033,8 +1033,8 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   public float getLight(float sunLight) {
     World world = Static.world();
-    float bl = ((float)world.getBlockLight(dim, pos.x, pos.y, pos.z)) / 15.0f;
-    float sl = ((float)world.getSunLight(dim, pos.x, pos.y, pos.z)) / 15.0f * sunLight;
+    float bl = ((float)world.getBlockLight(dim, pos.x, pos.y + height2, pos.z)) / 15.0f;
+    float sl = ((float)world.getSunLight(dim, pos.x, pos.y + height2, pos.z)) / 15.0f * sunLight;
     if (sl > bl)
       return sl;
     else

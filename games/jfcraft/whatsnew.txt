@@ -1,9 +1,10 @@
 ChangeLog
 =========
 
-Jun ?, 2015 : v0.17 released!
+Jul 1, 2015 : v0.17 released!
   - fixed sync problem when players are in vehicles (minecart, boat)
-    - the server controls everything now, the client is no longer free running
+    - the server controls everything now while in vehicle
+  - horse is mostly complete now (except for the lead)
 
 Jun 21, 2015 : v0.16 released!
   - fixed cracking boat/minecart (cracks must be on their own texture unit)

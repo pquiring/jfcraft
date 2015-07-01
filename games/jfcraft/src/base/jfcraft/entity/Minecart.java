@@ -242,8 +242,9 @@ public class Minecart extends VehicleBase {
     if (occupant != null) {
       Chunk chunk1 = occupant.getChunk();
       occupant.pos.x = pos.x;
-      occupant.pos.y = pos.y - occupant.legLength;
+      occupant.pos.y = pos.y - occupant.legLength + 0.3f;
       occupant.pos.z = pos.z;
+      Static.server.broadcastEntityMove(occupant, true);
       Chunk chunk2 = occupant.getChunk();
       if (chunk2 != chunk1) {
         chunk1.delEntity(occupant);

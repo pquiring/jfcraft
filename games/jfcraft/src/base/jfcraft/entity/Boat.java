@@ -167,6 +167,7 @@ public class Boat extends VehicleBase {
       occupant.pos.x = pos.x;
       occupant.pos.y = pos.y - occupant.legLength;
       occupant.pos.z = pos.z;
+      Static.server.broadcastEntityMove(occupant, true);
       Chunk chunk2 = occupant.getChunk();
       if (chunk2 != chunk1) {
         chunk1.delEntity(occupant);

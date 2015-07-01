@@ -59,9 +59,11 @@ public class PacketMove extends Packet {
         }
       }
     }
-    e.ang.x = f4;
-    e.ang.y = f5;
-    e.ang.z = f6;
+    if (uid != client.uid) {
+      e.ang.x = f4;
+      e.ang.y = f5;
+      e.ang.z = f6;
+    }
     e.mode = i2;
   }
 

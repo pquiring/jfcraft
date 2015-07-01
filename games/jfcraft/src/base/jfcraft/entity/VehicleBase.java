@@ -15,17 +15,11 @@ public abstract class VehicleBase extends CreatureBase {
   public boolean up, dn, run, sneak;  //occupant controls
   public boolean lt, rt, jump;
 
-  public float sittingPos;
-
   public void resetControls() {
     up = false;
     dn = false;
     run = false;
     sneak = false;
-  }
-
-  public float getSittingPosY() {
-    return sittingPos;
   }
 
   public int getMenu() {
