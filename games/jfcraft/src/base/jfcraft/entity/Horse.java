@@ -128,8 +128,8 @@ public class Horse extends VehicleBase {
       eyeHeight = 0.5f;
       jumpVelocity = 0.58f;  //results in jump of 1.42
       //speeds are blocks per second
-      walkSpeed = 2.3f;
-      runSpeed = 3.9f;
+      walkSpeed = 11.0f;
+      runSpeed = 14.0f;
       sneakSpeed = 1.3f;
       swimSpeed = (walkSpeed / 2.0f);
     }
