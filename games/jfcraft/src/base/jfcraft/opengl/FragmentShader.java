@@ -27,10 +27,12 @@ public class FragmentShader {
 "uniform bool uUseFog;\n" +
 "uniform vec3 uFogColor;\n" +
 "uniform bool uUseHorsePattern;\n" +
+"uniform bool uUseHorseArmor;\n" +
     //there is usually at least 16 texture units available
 "uniform sampler2D uTexture;\n" +  //unit 0
 "uniform sampler2D uCrack;\n" +  //unit 1
 "uniform sampler2D uHorsePattern;\n" +  //unit 2
+"uniform sampler2D uHorseArmor;\n" +  //unit 3
 "\n" +
 "void main() {\n" +
 "  float sunPercent = vSunLightPercent * uSunLightNow;\n" +
@@ -50,6 +52,13 @@ public class FragmentShader {
 "    }\n" +
 "    if (uUseHorsePattern) {\n" +
 "      textureColor2 = texture2D(uHorsePattern, vTextureCoord);\n" +
+"      if (textureColor2.a != 0.0) {\n" +
+"        float negAlpha = 1.0 - textureColor2.a;" +
+"        textureColor.rgb = textureColor.rgb * negAlpha + textureColor2.rgb * textureColor2.a ;\n" +
+"      }\n" +
+"    }\n" +
+"    if (uUseHorseArmor) {\n" +
+"      textureColor2 = texture2D(uHorseArmor, vTextureCoord);\n" +
 "      if (textureColor2.a != 0.0) {\n" +
 "        float negAlpha = 1.0 - textureColor2.a;" +
 "        textureColor.rgb = textureColor.rgb * negAlpha + textureColor2.rgb * textureColor2.a ;\n" +

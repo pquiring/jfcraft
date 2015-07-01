@@ -106,6 +106,9 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
     Static.log("max texture size=" + max[0]);
     Static.max_texture_size = max[0];
 
+    gl.glGetIntegerv(GL.GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, max);
+    Static.log("max texture units=" + max[0]);
+
     resize(gl, comp.getWidth(), comp.getHeight());
 
     //setup opengl
@@ -143,20 +146,24 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
     Static.uniformEnableTextures = gl.glGetUniformLocation(program, "uUseTextures");
     Static.uniformEnableFog = gl.glGetUniformLocation(program, "uUseFog");
     Static.uniformEnableHorsePattern = gl.glGetUniformLocation(program, "uUseHorsePattern");
+    Static.uniformEnableHorseArmor = gl.glGetUniformLocation(program, "uUseHorseArmor");
     Static.uniformFogColor = gl.glGetUniformLocation(program, "uFogColor");
     Static.uniformTexture = gl.glGetUniformLocation(program, "uTexture");
     Static.uniformCrack = gl.glGetUniformLocation(program, "uCrack");
     Static.uniformHorsePattern = gl.glGetUniformLocation(program, "uHorsePattern");
+    Static.uniformHorseArmor = gl.glGetUniformLocation(program, "uHorseArmor");
 
     gl.glUniform1f(Static.uniformSunLight, 1.0f);
     gl.glUniform1f(Static.uniformAlphaFactor, 1.0f);
     gl.glUniform1i(Static.uniformEnableTextures, 1);
     gl.glUniform1i(Static.uniformEnableFog, 0);
     gl.glUniform1i(Static.uniformEnableHorsePattern, 0);
+    gl.glUniform1i(Static.uniformEnableHorseArmor, 0);
     gl.glUniform3fv(Static.uniformFogColor, 1, new float[] {0.0f, 0.0f, 0.0f});
     gl.glUniform1i(Static.uniformTexture, 0);
     gl.glUniform1i(Static.uniformCrack, 1);
     gl.glUniform1i(Static.uniformHorsePattern, 2);
+    gl.glUniform1i(Static.uniformHorseArmor, 3);
 
     ready = true;
 

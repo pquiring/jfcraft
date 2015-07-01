@@ -71,6 +71,10 @@ public class Horse extends VehicleBase {
     }
   }
 
+  public boolean haveArmor(int flag) {
+    return (flags & flag) != 0;
+  }
+
   public static final int TYPE_DONKEY = 0;
   public static final int TYPE_MULE = 1;
   public static final int TYPE_SKELETON = 2;
@@ -148,17 +152,24 @@ public class Horse extends VehicleBase {
     "entity/horse/horse_darkbrown",
     "entity/horse/horse_gray",
     "entity/horse/horse_white",
-    //markings are put in seperate texture unit #2 (overlay)
+    //markings (texture unit #2) (overlay)
     "entity/horse/horse_markings_blackdots",
     "entity/horse/horse_markings_white",
     "entity/horse/horse_markings_whitedots",
     "entity/horse/horse_markings_whitefield",
+    //armor (texture unit #3) (overlay)
+    "entity/horse/armor/horse_armor_iron",
+    "entity/horse/armor/horse_armor_gold",
+    "entity/horse/armor/horse_armor_diamond",
   };
 
   public void initStatic(GL gl) {
-    textures = new Texture[15];
+    textures = new Texture[textureNames.length];
+    int unit = 0;
     for(int a=0;a<textureNames.length;a++) {
-      textures[a] = Textures.getTexture(gl, textureNames[a], a > 10 ? 2 : 0);
+      if (a == 11) unit = 2;  //markings
+      if (a == 15) unit = 3;  //armor
+      textures[a] = Textures.getTexture(gl, textureNames[a], unit);
     }
   }
 
@@ -248,6 +259,18 @@ public class Horse extends VehicleBase {
     if (pattern != PATTERN_NONE) {
       textures[pattern].bind(gl);
       gl.glUniform1i(Static.uniformEnableHorsePattern, 1);
+    }
+    if (haveArmor(FLAG_ARMOR_IRON)) {
+      textures[15].bind(gl);
+      gl.glUniform1i(Static.uniformEnableHorseArmor, 1);
+    }
+    else if (haveArmor(FLAG_ARMOR_GOLD)) {
+      textures[16].bind(gl);
+      gl.glUniform1i(Static.uniformEnableHorseArmor, 1);
+    }
+    else if (haveArmor(FLAG_ARMOR_DIAMOND)) {
+      textures[17].bind(gl);
+      gl.glUniform1i(Static.uniformEnableHorseArmor, 1);
     }
   }
 
@@ -368,6 +391,7 @@ public class Horse extends VehicleBase {
       buf.render(gl);
     }
     gl.glUniform1i(Static.uniformEnableHorsePattern, 0);
+    gl.glUniform1i(Static.uniformEnableHorseArmor, 0);
     if (haveChest()) {
       int part = CHEST;
       RenderBuffers buf = dest.getBuffers(part);
@@ -433,8 +457,8 @@ public class Horse extends VehicleBase {
     //random walking
     if (Static.debugRotate) {
       //test rotate in a spot
-//      ang.y += 1.0f;
-//      if (ang.y > 180f) { ang.y = -180f; }
+      ang.y += 1.0f;
+      if (ang.y > 180f) { ang.y = -180f; }
       ang.x += 1.0f;
       if (ang.x > 360.0f) { ang.x = 0.0f; }
       mode = MODE_WALK;
@@ -471,6 +495,7 @@ public class Horse extends VehicleBase {
           if (tameCounter == 20 * 15) {
             Static.server.broadcastMsg("Horse Tamed");  //TODO : use heart particles
             setTamed(true);
+            Static.server.broadcastEntityFlags(this);
           } else {
             if (r.nextInt(64) == 0) {
               //dismount occupant
@@ -522,7 +547,6 @@ public class Horse extends VehicleBase {
         if (e.type == TYPE_SKELETON || e.type == TYPE_ZOMBIE) {
           e.type = TYPE_BLACK;
         }
-        e.type = TYPE_DONKEY; //test
         if (e.type > 3) {
           //pattern = 0,11,12,13,14
           e.pattern = r.nextInt(5);
@@ -531,7 +555,7 @@ public class Horse extends VehicleBase {
           }
         }
         e.inventory = new ExtraHorse(false);
-        e.inventory.horse = this;
+        e.inventory.horse = e;
         if (e.type < 2) {
           //donkey and mule can not use armor, place OBSIDIAN there
           e.inventory.items[ExtraHorse.ARMOR].id = Blocks.OBSIDIAN;
@@ -587,7 +611,6 @@ public class Horse extends VehicleBase {
         synchronized(client.lock) {
           client.container = inventory;
           client.menu = Client.HORSE;
-Static.log("use horse inventory:" + client.container);
           client.serverTransport.setContainer(client.container);
           client.serverTransport.enterMenu(client.menu);
         }
@@ -633,14 +656,23 @@ Static.log("use horse inventory:" + client.container);
       }
       if (inventory.items[a].id != 0) cnt++;
     }
+    if (haveChest()) cnt++;
     Item items[] = new Item[cnt];
     int idx = 0;
+    if (haveChest()) {
+      items[idx] = new Item();
+      items[idx].id = Blocks.CHEST;
+      items[idx].count = 1;
+      idx++;
+    }
     for(int a=0;a<inventory.items.length;a++) {
       if (a == ExtraHorse.ARMOR && inventory.items[a].id == Blocks.OBSIDIAN) {
         continue;
       }
       if (inventory.items[a].id == 0) continue;
-      items[idx++].copy(inventory.items[a]);
+      items[idx] = new Item();
+      items[idx].copy(inventory.items[a]);
+      idx++;
     }
     return items;
   }
@@ -661,6 +693,8 @@ Static.log("use horse inventory:" + client.container);
     int newFlags = 0;
     if (isTamed()) newFlags |= FLAG_TAMED;
     if (haveChest()) newFlags |= FLAG_CHEST;
+    Static.log("inv=" + inventory);
+    Static.log("inv.items=" + inventory.items);
     if (inventory.items[ExtraHorse.SADDLE].id == Items.SADDLE) {
       newFlags |= FLAG_SADDLE;
     }
@@ -676,6 +710,7 @@ Static.log("use horse inventory:" + client.container);
     }
     if (newFlags != flags) {
       flags = newFlags;
+      dirty = true;
       Static.server.broadcastEntityFlags(this);
     }
   }
