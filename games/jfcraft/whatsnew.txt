@@ -4,7 +4,12 @@ ChangeLog
 Jul 1, 2015 : v0.17 released!
   - fixed sync problem when players are in vehicles (minecart, boat)
     - the server controls everything now while in vehicle
-  - horse is mostly complete now (except for the lead)
+  - horse is mostly complete now
+    - a message "Horse Tamed" appears when a horse is tamed (todo : heart particles)
+    - mule/donkey can use chest
+    - horses can use armor
+    - saddle can be crafted (4 leather, 2 iron bars)
+    - TODO : lead
 
 Jun 21, 2015 : v0.16 released!
   - fixed cracking boat/minecart (cracks must be on their own texture unit)
