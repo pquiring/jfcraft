@@ -10,7 +10,7 @@ fix world generating algorithms
 mobs (spider, ghast, blaze, endermite(silverfish), magma cube, witch, guardian)
 create complex AI logic for each mob (currently they are all passive but attack if attacked and all animals run if attacked)
 chars (villagers)
-more animals (chicken, horse, rabbit, wolf, bat, squid, ocelet)
+more animals (chicken, rabbit, wolf, bat, squid, ocelet)
 misc (iron golem, snow golem)
 bosses (wither, dragon)
 brewing (potions)
@@ -32,6 +32,6 @@ map
 item frame
 flower pot
 banners
-ride horses
+horse leads
 spawn eggs
 implement more commands : like /import /export

@@ -122,7 +122,6 @@ public class Horse extends VehicleBase {
     depth = 1.5f;
     depth2 = depth/2;
     walkAngleDelta = 5.0f;
-    sittingPos = 1.5f;
     angX = 45f;
     if (Static.isServer()) {
       eyeHeight = 0.5f;
@@ -509,17 +508,17 @@ public class Horse extends VehicleBase {
     }
     if (fell || mode != MODE_IDLE || wasMoving) {
       Static.server.broadcastEntityMove(this, false);
-      if (occupant != null) {
-        Chunk chunk1 = occupant.getChunk();
-        occupant.pos.x = pos.x;
-        occupant.pos.y = pos.y - occupant.legLength + 1.5f;
-        occupant.pos.z = pos.z;
-        Static.server.broadcastEntityMove(occupant, true);
-        Chunk chunk2 = occupant.getChunk();
-        if (chunk2 != chunk1) {
-          chunk1.delEntity(occupant);
-          chunk2.addEntity(occupant);
-        }
+    }
+    if (occupant != null) {
+      Chunk chunk1 = occupant.getChunk();
+      occupant.pos.x = pos.x;
+      occupant.pos.y = pos.y - occupant.legLength + 1.5f;
+      occupant.pos.z = pos.z;
+      Static.server.broadcastEntityMove(occupant, true);
+      Chunk chunk2 = occupant.getChunk();
+      if (chunk2 != chunk1) {
+        chunk1.delEntity(occupant);
+        chunk2.addEntity(occupant);
       }
     }
     if (occupant != null && sneak) {
