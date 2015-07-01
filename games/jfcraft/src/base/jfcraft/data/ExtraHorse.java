@@ -21,7 +21,7 @@ public class ExtraHorse extends ExtraContainer {
   public Horse horse;
 
   public ExtraHorse() {
-    this.id = Extras.FURNACE;
+    this.id = Extras.HORSE;
     items = new Item[2];
     for(int a=0;a<2;a++) {
       items[a] = new Item();
@@ -43,8 +43,8 @@ public class ExtraHorse extends ExtraContainer {
   }
 
   private boolean isHorseArmor(Item item) {
-    if (item.id == Items.HORSE_ARMOR_DIAMOND) return true;
-    if (item.id == Items.HORSE_ARMOR_DIAMOND) return true;
+    if (item.id == Items.HORSE_ARMOR_IRON) return true;
+    if (item.id == Items.HORSE_ARMOR_GOLD) return true;
     if (item.id == Items.HORSE_ARMOR_DIAMOND) return true;
     return false;
   }
