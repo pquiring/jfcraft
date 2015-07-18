@@ -280,7 +280,7 @@ public class Horse extends VehicleBase {
   }
 
   //transforms are applied in reverse
-  private void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     switch (bodyPart) {
@@ -713,6 +713,19 @@ public class Horse extends VehicleBase {
       flags = newFlags;
       dirty = true;
       Static.server.broadcastEntityFlags(this);
+    }
+  }
+
+  public void convertIDs(char blockIDs[], char itemIDs[]) {
+    int cnt = inventory.items.length;
+    for(int a=0;a<cnt;a++) {
+      char id = inventory.items[a].id;
+      if (Static.isBlock(id)) {
+        id = blockIDs[id];
+      } else {
+        id = (char)(itemIDs[id - Items.FIRST_ID] + Items.FIRST_ID);
+      }
+      inventory.items[a].id = id;
     }
   }
 

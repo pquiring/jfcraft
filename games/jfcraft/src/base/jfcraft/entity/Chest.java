@@ -95,7 +95,7 @@ public class Chest extends BlockEntity {
     dest.copyBuffers(gl);
   }
 
-  private void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     switch (bodyPart) {

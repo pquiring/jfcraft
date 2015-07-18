@@ -28,7 +28,8 @@ public class RenderBuffers implements Cloneable {
 
   public boolean visible;
   public GLMatrix mat;  //current rotation, translation, scale (not used by chunks)
-  public GLVertex org;  //origin (default = 0.0f,0.0f,0.0f)
+  public GLVertex org;  //origin (default = 0.0f,0.0f,0.0f) (pivot point) (loaded from file)
+  public GLVertex center;  //calc center point (to scale) (must call callCenter())
   public boolean alloced = false;
   public int vpb, uvb1, uvb2, vib, lcb, slb, blb;  //GL Buffers
   public int idxCnt;
@@ -609,5 +610,33 @@ public class RenderBuffers implements Cloneable {
   /** Adjust UV coords for cracking */
   public static void adjustCrack(float uv[], int crack) {
     adjustTexture(uv, Static.blocks.subcracks[crack]);
+  }
+
+  /** Calcs the center of the cube. */
+  public void calcCenter() {
+    center = new GLVertex();
+    float v[] = vpl.getBuffer();
+    int cnt = vpl.size() / 3;
+    float x1 = v[0];
+    float y1 = v[1];
+    float z1 = v[2];
+    float x2 = x1;
+    float y2 = y1;
+    float z2 = z1;
+    int p = 3;
+    for(int a=1;a<cnt;a++) {
+      float x = v[p++];
+      float y = v[p++];
+      float z = v[p++];
+      if (x < x1) x1 = x;
+      if (x > x2) x2 = x;
+      if (y < y1) y1 = y;
+      if (y > y2) y2 = y;
+      if (z < z1) z1 = z;
+      if (z > z2) z2 = z;
+    }
+    center.x = x1 + (x2 - x1)/2f;
+    center.y = y1 + (y2 - y1)/2f;
+    center.z = z1 + (z2 - z1)/2f;
   }
 }

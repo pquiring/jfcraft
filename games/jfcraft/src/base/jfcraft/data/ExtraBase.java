@@ -18,6 +18,8 @@ public abstract class ExtraBase implements SerialClass {
   /** Override in derived extras. */
   public void update(ExtraBase update) {}
 
+  public void convertIDs(char blockIDs[], char itemIDs[]) {}
+
   private static final byte ver = 0;
 
   @Override

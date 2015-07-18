@@ -302,7 +302,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   private static Coords c = new Coords();
   public void tick(Chunk chunk, Tick tick) {
 //    Static.log("tick:blockbase:" + tick);
-    if (hasShape) setShape(chunk, tick.x, tick.y, tick.z, true);
+    if (hasShape) setShape(chunk, tick.x, tick.y, tick.z, true, c);
     if (isSupported) {
       tick.toWorldCoords(chunk, c);
       Static.world().getBlock(chunk.dim, c.x, c.y, c.z, c);
@@ -318,7 +318,8 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   /** Entity tick */
   public void etick(EntityBase e, Coords c) {}
   /** Check shape of block (fence, glass pane, bars, etc.) */
-  public void setShape(Chunk chunk, int gx,int gy,int gz, boolean live) {}
+  public void setShape(Chunk chunk, int gx, int gy, int gz, boolean live, Coords c) {}
+  private static Coords tmp = new Coords();
   /** Place block @ coords. */
   public boolean place(Client client, Coords c) {
     int dir = 0;
@@ -342,7 +343,9 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     }
     c.chunk.setBlock(c.gx,c.gy,c.gz,id,bits);
     if (hasShape) {
-      setShape(c.chunk, c.gx, c.gy, c.gz, false);
+      synchronized(tmp) {
+        setShape(c.chunk, c.gx, c.gy, c.gz, false, tmp);
+      }
       bits = c.chunk.getBits(c.gx, c.gy, c.gz);
     }
     Static.server.broadcastSetBlock(c.chunk.dim,c.x,c.y,c.z,id,bits);

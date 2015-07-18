@@ -35,6 +35,19 @@ public class ExtraContainer extends ExtraBase {
 
   public void changed() {}
 
+  public void convertIDs(char blockIDs[], char itemIDs[]) {
+    for(int a=0;a<items.length;a++) {
+      Item item = items[a];
+      char id = item.id;
+      if (Static.isBlock(id)) {
+        id = blockIDs[id];
+      } else {
+        id = (char)(itemIDs[id - Items.FIRST_ID] + Items.FIRST_ID);
+      }
+      item.id = id;
+    }
+  }
+
   public void get(Server server, Client client, byte idx, byte count) {
     byte cc = client.container.items[idx].count;
     if (count > cc) {

@@ -113,7 +113,7 @@ public class Slime extends CreatureBase {
     texture.bind(gl);
   }
 
-  private void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     mat.addTranslate(pos.x, pos.y, pos.z);

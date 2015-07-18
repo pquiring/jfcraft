@@ -123,7 +123,7 @@ public class Piston extends BlockEntity {
     dest.copyBuffers(gl);
   }
 
-  private void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.x, 1, 0, 0);
     mat.addRotate3(-ang.z, 0, 0, 1);

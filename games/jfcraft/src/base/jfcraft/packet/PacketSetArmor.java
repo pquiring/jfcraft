@@ -28,19 +28,18 @@ public class PacketSetArmor extends Packet {
   //process on client side
   public void process(Client client) {
     int idx = b1;
-    client.player.armors[idx] = item;
+    if (item != null) {
+      client.player.armors[idx] = item;
+    } else {
+      client.player.armors[idx].clear();
+    }
   }
 
   @Override
   public boolean write(SerialBuffer buffer, boolean file) {
     super.write(buffer, file);
     buffer.writeByte(b1);
-    if (item == null) {
-      buffer.writeBoolean(false);
-    } else {
-      buffer.writeBoolean(true);
-      item.write(buffer, file);
-    }
+    item.write(buffer, file);
     return true;
   }
 
@@ -48,11 +47,8 @@ public class PacketSetArmor extends Packet {
   public boolean read(SerialBuffer buffer, boolean file) {
     super.read(buffer, file);
     b1 = buffer.readByte();
-    boolean hasItem = buffer.readBoolean();
-    if (hasItem) {
-      item = new Item();
-      item.read(buffer, file);
-    }
+    item = new Item();
+    item.read(buffer, file);
     return true;
   }
 }

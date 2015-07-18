@@ -141,6 +141,7 @@ public class SinglePlayerMenu extends RenderScreen {
     public long ms;
     public String date;
     public String extra;
+    public boolean incompatible;
   }
 
   public ArrayList<WorldInfo> worlds = new ArrayList<WorldInfo>();
@@ -177,6 +178,7 @@ public class SinglePlayerMenu extends RenderScreen {
       }
       if (world == null) continue;
       WorldInfo wi = new WorldInfo();
+      wi.incompatible = world.incompatible;
       wi.name = world.name;
       wi.folder = file.getAbsolutePath();
       int idx = wi.folder.lastIndexOf(File.separatorChar);
@@ -184,6 +186,9 @@ public class SinglePlayerMenu extends RenderScreen {
       wi.ms = world_dat.lastModified();
       wi.date = long2Date(wi.ms);
       wi.extra = "";
+      if (wi.incompatible) {
+        wi.extra = "Incompatible version";
+      }
       worlds.add(wi);
     }
     worlds.sort(new Comparator<WorldInfo>() {
@@ -198,6 +203,7 @@ public class SinglePlayerMenu extends RenderScreen {
   public void playWorld() {
     if (selectedWorld == -1) return;
     WorldInfo wi = worlds.get(selectedWorld);
+    if (wi.incompatible) return;
     LocalServerTransport serverTransport = new LocalServerTransport();
     LocalClientTransport clientTransport = new LocalClientTransport();
     Server server = new Server();

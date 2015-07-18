@@ -10,7 +10,8 @@ import jfcraft.data.*;
 import jfcraft.server.Server;
 
 public class PacketChunkRequest extends Packet {
-  public int i1, i2;
+  public int cx, cz;
+  public boolean load;
 
   public PacketChunkRequest() {}
 
@@ -18,30 +19,38 @@ public class PacketChunkRequest extends Packet {
     super(cmd);
   }
 
-  public PacketChunkRequest(byte cmd, int b1, int b2) {
+  public PacketChunkRequest(byte cmd, int cx, int cz, boolean load) {
     super(cmd);
-    this.i1 = b1;
-    this.i2 = b2;
+    this.cx = cx;
+    this.cz = cz;
+    this.load = load;
   }
 
   //process on server side
   public void process(Server server, Client client) {
-    server.chunkWorker.add(client.player.dim, i1, i2, client.serverTransport);
+    if (load) {
+      server.chunkWorker.add(client.player.dim, cx, cz, client.serverTransport);
+      client.loadChunk(cx, cz);
+    } else {
+      client.unloadChunk(cx, cz);
+    }
   }
 
   @Override
   public boolean write(SerialBuffer buffer, boolean file) {
     super.write(buffer, file);
-    buffer.writeInt(i1);
-    buffer.writeInt(i2);
+    buffer.writeInt(cx);
+    buffer.writeInt(cz);
+    buffer.writeBoolean(load);
     return true;
   }
 
   @Override
   public boolean read(SerialBuffer buffer, boolean file) {
     super.read(buffer, file);
-    i1 = buffer.readInt();
-    i2 = buffer.readInt();
+    cx = buffer.readInt();
+    cz = buffer.readInt();
+    load = buffer.readBoolean();
     return true;
   }
 }

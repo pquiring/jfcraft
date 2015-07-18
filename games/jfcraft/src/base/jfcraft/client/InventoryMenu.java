@@ -35,6 +35,7 @@ public class InventoryMenu extends RenderScreen {
     Static.client.clientTransport.enterInvMenu();
     player = (Player)Static.entities.entities[Entities.PLAYER];
     player.ang.y = 180.0f;  //face the "real" player
+    player.armors = Static.client.player.armors;
   }
 
   public void render(GL gl, int width, int height) {
@@ -113,6 +114,16 @@ public class InventoryMenu extends RenderScreen {
         renderItem(gl,item,x,y);
       }
       x += 36;
+    }
+    //render armor slots
+    x = 16;
+    y = 16 + 36;
+    for(int a=0;a<4;a++) {
+      Item item = Static.client.player.armors[a];
+      if (item.id != 0) {
+        renderItem(gl,item,x,y);
+      }
+      y += 36;
     }
 
     //render crafting slots(4)

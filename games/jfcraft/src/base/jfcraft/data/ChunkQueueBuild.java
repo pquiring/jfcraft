@@ -26,7 +26,7 @@ public class ChunkQueueBuild {
         Chunk chunk = chunks[pos];
         if (chunk.canRender()) {
           chunk.buildBuffers();
-          next.add(chunk);
+          if (next != null) next.add(chunk);
         }
         pos++;
         if (pos == BUFSIZ) pos = 0;
@@ -34,7 +34,7 @@ public class ChunkQueueBuild {
         cnt++;
       }
 //if (cnt > 0) Static.log("     b:" + cnt);
-      next.signal();
+      if (next != null) next.signal();
     } catch (Exception e) {
       Static.log(e);
     }

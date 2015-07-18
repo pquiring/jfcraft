@@ -22,7 +22,7 @@ public class Zombie extends CreatureBase {
   private float walkAngleDelta;
 
   //render assets
-  private static RenderDest dest;
+  public static RenderDest dest;
   private static Texture texture;
   private static String textureName;
 
@@ -113,7 +113,7 @@ public class Zombie extends CreatureBase {
     texture.bind(gl);
   }
 
-  private void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     switch (bodyPart) {

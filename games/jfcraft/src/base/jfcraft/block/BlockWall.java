@@ -55,10 +55,9 @@ public class BlockWall extends BlockBase {
     }
   }
 
-  public void setShape(Chunk chunk, int gx,int gy,int gz,boolean live) {
+  public void setShape(Chunk chunk, int gx, int gy, int gz, boolean live, Coords c) {
     int bits = chunk.getBits(gx,gy,gz);
     int dir = Chunk.getDir(bits);
-    Coords c = Coords.alloc();
     int x = gx + chunk.cx * 16;
     int y = gy;
     int z = gz + chunk.cz * 16;
@@ -80,7 +79,6 @@ public class BlockWall extends BlockBase {
     if (c.block.isSolid || c.block.id == id) {
       shape |= WB;
     }
-    c.free();
     if (shape != dir) {
       bits = Chunk.makeBits(shape, Chunk.getVar(bits));
       chunk.setBits(gx,gy,gz, bits);

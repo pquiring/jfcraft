@@ -30,10 +30,6 @@ public class Client {
   public boolean auth = false;
   public boolean isLocal = false;
 
-  //player info (until Chunk containing Player is loaded)
-  public int uid, dim;
-  public float x, z;
-
   public Player player;
   public XYZ ang = new XYZ();  //mouse angle (copied to player in tick)
   public ServerTransport serverTransport;
@@ -203,13 +199,47 @@ public class Client {
     }
   }
 
-  private ArrayList<Coords> pendingChunks = new ArrayList<Coords>();
+  public ArrayList<CXCZ> loadedChunks = new ArrayList<CXCZ>();  //server side
 
-  private boolean isChunkPending(Coords c) {
+  public void loadChunk(int cx,int cz) {
+    synchronized(loadedChunks) {
+      loadedChunks.add(new CXCZ(cx,cz));
+    }
+  }
+
+  public void unloadChunk(int cx,int cz) {
+    synchronized(loadedChunks) {
+      int cnt = loadedChunks.size();
+      for(int a=0;a<cnt;a++) {
+        CXCZ cc = loadedChunks.get(a);
+        if (cc.cx == cx && cc.cz == cz) {
+          loadedChunks.remove(a);
+          return;
+        }
+      }
+    }
+  }
+
+  public boolean hasChunk(int cx, int cz) {
+    synchronized(loadedChunks) {
+      int cnt = loadedChunks.size();
+      for(int a=0;a<cnt;a++) {
+        CXCZ cc = loadedChunks.get(a);
+        if (cc.cx == cx && cc.cz == cz) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  private ArrayList<CXCZ> pendingChunks = new ArrayList<CXCZ>();  //client side
+
+  private boolean isChunkPending(int cx, int cz) {
     synchronized(pendingChunks) {
       for(int a=0;a<pendingChunks.size();a++) {
-        Coords pc = pendingChunks.get(a);
-        if (pc.x == c.x && pc.y == c.y && pc.z == c.z) return true;
+        CXCZ pc = pendingChunks.get(a);
+        if (pc.cx == cx && pc.cz == cz) return true;
       }
     }
     return false;
@@ -218,10 +248,9 @@ public class Client {
   public void removeChunkPending(int cx, int cz) {
     synchronized(pendingChunks) {
       for(int a=0;a<pendingChunks.size();a++) {
-        Coords pc = pendingChunks.get(a);
-        if (pc.x == cx && pc.z == cz) {
+        CXCZ pc = pendingChunks.get(a);
+        if (pc.cx == cx && pc.cz == cz) {
           pendingChunks.remove(a);
-          pc.free();
           return;
         }
       }
@@ -338,44 +367,36 @@ public class Client {
       return;
     }
     int dim,cx,cz;
-    if (player != null) {
-      cx = Static.floor(player.pos.x / 16.0f);
-      cz = Static.floor(player.pos.z / 16.0f);
-      dim = player.dim;
-    } else {
-      //player not loaded yet
-      cx = Static.floor(x / 16.0f);
-      cz = Static.floor(z / 16.0f);
-      dim = this.dim;
+    if (player == null) {
+      return;
     }
+    cx = Static.floor(player.pos.x / 16.0f);
+    cz = Static.floor(player.pos.z / 16.0f);
+    dim = player.dim;
 
-    Coords c = Coords.alloc();
     int loadRange = Settings.current.loadRange;
     int cnt = 0;
     int request = 0;
     int pendingChunk = 0;
+    int _cx, _cz;
     for(int z=-loadRange;z<=loadRange;z++) {
-      c.z = cz + z;
+      _cz = cz + z;
       for(int x=-loadRange;x<=loadRange;x++) {
-        c.x = cx + x;
+        _cx = cx + x;
         cnt++;
-        if (!world.chunks.hasChunk(dim, c.x, c.z)) {
-          if (!isChunkPending(c)) {
+        if (!world.chunks.hasChunk(dim, _cx, _cz)) {
+          if (!isChunkPending(_cx, _cz)) {
             synchronized(pendingChunks) {
-              pendingChunks.add(c);
-              clientTransport.getChunk(c);
+              pendingChunks.add(new CXCZ(_cx, _cz));
+              clientTransport.loadChunk(_cx, _cz);
             }
             request++;
-            c = Coords.alloc();
-            c.x = cx + x;
-            c.z = cz + z;
           } else {
             pendingChunk++;
           }
         }
       }
     }
-    c.free();
     if (request > 0) {
 //      Static.log("client requested " + request + " chunks");
     }
@@ -397,6 +418,7 @@ public class Client {
         || dz > maxDist || dz < -maxDist
       ) {
         world.chunks.removeChunk(chunk);
+        clientTransport.unloadChunk(chunk.cx, chunk.cz);  //let server know it's out of range
       }
     }
   }
@@ -445,7 +467,7 @@ public class Client {
     if (hand != null) {
       ItemBase itembase = Static.items.items[hand.id];
       if (!itembase.isArmor) return;
-      if (player.armors[idx].id != -1) {
+      if (player.armors[idx].id != 0) {
         clientTransport.armorExchange(idx);
       } else {
         clientTransport.armorPut(idx);

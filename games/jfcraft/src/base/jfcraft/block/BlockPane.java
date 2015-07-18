@@ -75,10 +75,9 @@ public class BlockPane extends BlockBase {
     }
   }
 
-  public void setShape(Chunk chunk, int gx,int gy,int gz,boolean live) {
+  public void setShape(Chunk chunk, int gx, int gy, int gz, boolean live, Coords c) {
     int bits = chunk.getBits(gx,gy,gz);
     int dir = Chunk.getDir(bits);
-    Coords c = Coords.alloc();
     int x = gx + chunk.cx * 16;
     int y = gy;
     int z = gz + chunk.cz * 16;
@@ -100,7 +99,6 @@ public class BlockPane extends BlockBase {
     if (c.block.isSolid || c.block.id == id || c.block.id == Blocks.GLASS_PANE || c.block.id == Blocks.GLASS_PANE_COLOR) {
       shape |= WB;
     }
-    c.free();
     if (shape == 0) shape = 0xf;
     if (shape != dir) {
       bits = Chunk.makeBits(shape, Chunk.getVar(bits));

@@ -8,6 +8,7 @@ package jfcraft.item;
  */
 
 import javaforce.*;
+import javaforce.gl.*;
 
 import jfcraft.item.Item;
 import jfcraft.opengl.*;
@@ -36,6 +37,12 @@ public class ItemBase {
   public SubTexture textures[];
   public float attackDmg = 1;
   public boolean useRelease;  //activate on release (bow)
+
+  //armor info
+  public Texture armorTextures[];
+  public String armorTextureNames[];
+  public float armorScales[];
+  public int armorParts[][];
 
   public int buffersIdx;  //DEST_NORMAL or DEST_ALPHA
 
@@ -425,5 +432,38 @@ public class ItemBase {
       return Direction.S;
     else
       return Direction.A;
+  }
+
+  public ItemBase setArmorTextures(String names[], float scales[], int parts[][]) {
+    armorTextureNames = names;
+    armorScales = scales;
+    armorParts = parts;
+    return this;
+  }
+
+  public int getArmorLayers() {
+    return armorParts.length;
+  }
+
+  public int getArmorParts(int layer) {
+    return armorParts[layer].length;
+  }
+
+  public void bindArmorTexture(GL gl, int layer) {
+    if (armorTextures == null) {
+      armorTextures = new Texture[armorTextureNames.length];
+      for(int a=0;a<armorTextureNames.length;a++) {
+        armorTextures[a] = Textures.getTexture(gl, armorTextureNames[a], 0);
+      }
+    }
+    armorTextures[layer].bind(gl);
+  }
+
+  public float getArmorScale(int layer) {
+    return armorScales[layer];
+  }
+
+  public int getArmorPart(int layer, int partidx) {
+    return armorParts[layer][partidx];
   }
 }

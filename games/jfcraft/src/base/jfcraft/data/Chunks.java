@@ -104,23 +104,21 @@ public class Chunks extends ClientServer {
     ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cz);
 //    Static.log("addChunk:" + cid);
     synchronized(lock) {
-      if (cache.get(key) != null) {
-//        Static.log(Static.CS() + ":Adding chunk that already exists:" + cid);
-        key.free();
-        return;
+      Chunk old = cache.get(key);
+      if (old != null) {
+        removeChunk(old);
       }
     }
     if (isClient) chunk.createObjects();
     //add entities to cache and generate uid's if server
-    int cnt = chunk.entities.size();
-    for(int a=0;a<cnt;) {
-      EntityBase e = chunk.entities.get(a);
+    EntityBase es[] = chunk.getEntities();
+    for(int a=0;a<es.length;a++) {
+      EntityBase e = es[a];
       e.init();
       if (isServer) {
         if (e.id == Entities.PLAYER) {
           //player saved to disk somehow???
           chunk.entities.remove(a);
-          cnt--;
           continue;
         }
         e.uid = world.generateUID();
@@ -136,12 +134,9 @@ public class Chunks extends ClientServer {
             + ",x=" + e.pos.x + ",z=" + e.pos.z +",chunk.cx=" +chunk.cx + ",cz=" + chunk.cz);
           chunk.delEntity(e);
           chunk2.addEntity(e);
-          cnt--;
-          a--;
         }
       }
       world.addEntity(e);
-      a++;
     }
     //update links
     Chunk N = getChunk(chunk.dim, chunk.cx, chunk.cz - 1);

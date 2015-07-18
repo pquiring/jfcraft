@@ -103,7 +103,7 @@ public class Lever extends BlockEntity {
     dest.copyBuffers(gl);
   }
 
-  private void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
 //    mat.addRotate(-xAngle, 0, 1, 0);
 //    mat.addRotate3(-zAngle, 0, 1, 0);
