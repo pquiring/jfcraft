@@ -14,10 +14,8 @@ import jfcraft.item.*;
 import jfcraft.data.*;
 import jfcraft.opengl.*;
 
-public class Player extends CreatureBase {
-  //inventory (last 9 are active items)
-  public Item items[] = new Item[9*4];
-  public Item armors[] = new Item[4];
+public class Player extends HumaniodBase {
+  //inventory (first 9 are active items)
   public String name;
 
   public ExtraChest enderChest = new ExtraChest(0,0,0,3*9);
@@ -31,19 +29,13 @@ public class Player extends CreatureBase {
 
   //would like to move Render Assets to Entity, but it's static!!!
   //render assets
-  public static RenderDest dest;
+  private static RenderDest dest;
   //texture size
-  private static String textureName;
   private static Texture texture;
 
   public Player() {
+    super(4*9, 4);
     id = Entities.PLAYER;
-    for(int a=0;a<items.length;a++) {
-      items[a] = new Item();
-    }
-    for(int a=0;a<armors.length;a++) {
-      armors[a] = new Item();
-    }
   }
 
   public RenderDest getDest() {
@@ -79,12 +71,9 @@ public class Player extends CreatureBase {
     legLength = 0.625f;
   }
 
-  public void initStatic() {
-    textureName = "entity/steve";
-  }
-
   public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName, 0);
+    super.initStatic(gl);  //HumanoidBase
+    texture = Textures.getTexture(gl, "entity/steve", 0);
     dest = new RenderDest(parts.length);
   }
 
@@ -124,6 +113,7 @@ public class Player extends CreatureBase {
   private static String parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG"};
 
   public void buildBuffers(RenderDest dest, RenderData data) {
+    super.buildBuffers(super.getDest(), data);  //HumanoidBase
     GLModel mod = loadModel("steve");
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
@@ -159,7 +149,7 @@ public class Player extends CreatureBase {
     texture.bind(gl);
   }
 
-  private void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     switch (bodyPart) {
@@ -204,6 +194,11 @@ public class Player extends CreatureBase {
         break;
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
+    if (scale != 1.0f) {
+      mat.addTranslate2(buf.center.x, buf.center.y, buf.center.z);
+      mat.addScale(scale, scale, scale);
+      mat.addTranslate2(-buf.center.x, -buf.center.y, -buf.center.z);
+    }
     gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
   }
 
@@ -214,6 +209,8 @@ public class Player extends CreatureBase {
       buf.bindBuffers(gl);
       buf.render(gl);
     }
+    renderArmor(gl);
+    renderItemInHand(gl);
   }
 
   public void ctick() {
@@ -240,6 +237,7 @@ public class Player extends CreatureBase {
   }
 
   public void copyBuffers(GL gl) {
+    super.copyBuffers(gl);  //HumaniodBase
     dest.copyBuffers(gl);
   }
 
@@ -249,14 +247,10 @@ public class Player extends CreatureBase {
   public boolean write(SerialBuffer buffer, boolean file) {
     super.write(buffer, file);
     buffer.writeByte(ver);
-    for(int a=0;a<9*4;a++) {
-      items[a].write(buffer, file);
-    }
-    for(int a=0;a<4;a++) {
-      armors[a].write(buffer, file);
-    }
-    for(int a=0;a<9*3;a++) {
-      enderChest.items[a].write(buffer, file);
+    if (file) {
+      for(int a=0;a<9*3;a++) {
+        enderChest.items[a].write(buffer, file);
+      }
     }
     byte nameBytes[] = name.getBytes();
     byte nameLength = (byte)nameBytes.length;
@@ -269,14 +263,10 @@ public class Player extends CreatureBase {
   public boolean read(SerialBuffer buffer, boolean file) {
     super.read(buffer, file);
     byte ver = buffer.readByte();
-    for(int a=0;a<9*4;a++) {
-      items[a].read(buffer, file);
-    }
-    for(int a=0;a<4;a++) {
-      armors[a].read(buffer, file);
-    }
-    for(int a=0;a<9*3;a++) {
-      enderChest.items[a].read(buffer, file);
+    if (file) {
+      for(int a=0;a<9*3;a++) {
+        enderChest.items[a].read(buffer, file);
+      }
     }
     byte nameLength = buffer.readByte();
     byte nameBytes[] = new byte[nameLength];

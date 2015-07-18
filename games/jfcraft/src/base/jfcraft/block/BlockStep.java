@@ -140,7 +140,7 @@ public class BlockStep extends BlockBase {
     }
   }
 
-  public void setShape(Chunk chunk, int gx,int gy,int gz,boolean live) {
+  public void setShape(Chunk chunk, int gx, int gy, int gz, boolean live, Coords c) {
     int bits = chunk.getBits(gx,gy,gz);
     int dir = Chunk.getDir(bits);
     int shape = dir;
@@ -148,7 +148,6 @@ public class BlockStep extends BlockBase {
     int y = gy;
     int z = gz + chunk.cz * 16;
     World world = Static.server.world;
-    Coords c = Coords.alloc();
     do {  //just need a good break out
       if (dir == N || dir == NE || dir == NW || dir == NE2 || dir == NW2) {
         world.getBlock(chunk.dim, x, y, z+1, c);
@@ -239,7 +238,6 @@ public class BlockStep extends BlockBase {
         }
       }
     } while (false);
-    c.free();
     if (shape != dir) {
       Static.log("setShape:old=" + dir + ",new=" + shape);
       bits = Chunk.makeBits(shape, Chunk.getVar(bits));

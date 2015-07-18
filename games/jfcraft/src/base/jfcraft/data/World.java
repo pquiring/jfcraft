@@ -29,7 +29,7 @@ public class World implements SerialClass, SerialCreator {
   public int day;
   public boolean genSpawnAreaDone;
 
-  //possible id mapping
+  //id mapping
   public ArrayList<String> blockMap = new ArrayList<String>();  //0-32767
   public ArrayList<String> itemMap = new ArrayList<String>();  //32768-65535
   public ArrayList<String> entityMap = new ArrayList<String>();
@@ -59,7 +59,7 @@ public class World implements SerialClass, SerialCreator {
     }
   }
 
-  public static boolean loadedIncompatibleVersion;
+  public boolean incompatible;
   public static boolean listingOnly;
 
   public static World load(String fileName, boolean listingOnly) {
@@ -69,14 +69,11 @@ public class World implements SerialClass, SerialCreator {
         FileInputStream fis = new FileInputStream(fileName);
         byte data[] = JF.readAll(fis);
         fis.close();
-        loadedIncompatibleVersion = false;
         World world = (World)coder.decodeObject(data, new World(), true);
-        if (loadedIncompatibleVersion) {
-          if (listingOnly) return null;
+        if (world != null && world.incompatible && !listingOnly) {
           JF.showError("Error : Can not load world", "World is saved in incompatible version");
           return null;
         }
-        if (world == null) return null;
         return world;
       }
     } catch (Exception e) {
@@ -152,15 +149,14 @@ public class World implements SerialClass, SerialCreator {
   }
 
   public int getPowerLevel(int dim,float x, float y, float z, Coords from) {
-    Coords c = Coords.alloc();
-    getBlock(dim,x,y,z,c);
-    if (c.block == null) {
-      c.free();
-      return 0;
+    synchronized(tmp) {
+      getBlock(dim,x,y,z,tmp);
+      if (tmp.block == null) {
+        return 0;
+      }
+      int lvl = tmp.block.getPowerLevel(tmp, from);
+      return lvl;
     }
-    int lvl = c.block.getPowerLevel(c, from);
-    c.free();
-    return lvl;
   }
 
   public void powerChanged(int dim,float x, float y, float z) {
@@ -177,13 +173,15 @@ public class World implements SerialClass, SerialCreator {
     checkPowered(dim,x-1,y,z-1);
   }
 
+  private static Coords tmp = new Coords();
+
   public void checkPowered(int dim,float x, float y, float z) {
-    Coords c = Coords.alloc();
-    getBlock(dim, x, y, z, c);
-    if (c.block != null) {
-      c.block.checkPowered(c);
+    synchronized(tmp) {
+      getBlock(dim, x, y, z, tmp);
+      if (tmp.block != null) {
+        tmp.block.checkPowered(tmp);
+      }
     }
-    c.free();
   }
 
   public boolean hasBlock(int dim, float x, float y, float z, char id) {
@@ -723,8 +721,8 @@ public class World implements SerialClass, SerialCreator {
 
   private static final int magic = 0x5743464a;
   //this version MUST be incremented if any other ver is incremented
-  private static final int min_ver = 2;  //min version supported
-  private static final int ver = 2;
+  private static final int min_ver = 3;  //min version supported
+  private static final int ver = 3;  //latest version supported
 
   @Override
   public boolean write(SerialBuffer buffer, boolean file) {
@@ -792,7 +790,7 @@ public class World implements SerialClass, SerialCreator {
     buffer.writeInt(size);
     buffer.writeBytes(plugins.getBytes());
 
-    buffer.writeInt(0x12345678);
+    buffer.writeInt(magic);
     return true;
   }
 
@@ -804,20 +802,21 @@ public class World implements SerialClass, SerialCreator {
       return false;
     }
     int _ver = buffer.readInt();
-    if (_ver > ver) {
-      Static.log("World ver newer than supported, can not load");
-      loadedIncompatibleVersion = true;
-      return false;
-    }
-    if (_ver < min_ver) {
-      Static.log("World ver older than supported, can not load");
-      loadedIncompatibleVersion = true;
-      return false;
-    }
     int nameLength = buffer.readInt();
     byte nameBytes[] = new byte[nameLength];
     buffer.readBytes(nameBytes);
     name = new String(nameBytes);
+
+    if (_ver > ver) {
+      Static.log("World ver newer than supported, can not load");
+      incompatible = true;
+      return true;
+    }
+    if (_ver < min_ver) {
+      Static.log("World ver older than supported, can not load");
+      incompatible = true;
+      return true;
+    }
 
     int typeLength = buffer.readInt();
     byte typeBytes[] = new byte[typeLength];
@@ -919,7 +918,7 @@ public class World implements SerialClass, SerialCreator {
     }
 
     int test = buffer.readInt();
-    if (test != 0x12345678) {
+    if (test != magic) {
       Static.log("Corrupt world!");
       return false;
     }

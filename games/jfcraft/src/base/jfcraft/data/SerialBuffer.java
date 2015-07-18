@@ -25,6 +25,11 @@ public class SerialBuffer {
     length = 0;
   }
 
+  public void rewind() {
+    length = pos;
+    pos = 0;
+  }
+
   public byte[] toArray() {
     return Arrays.copyOf(data, pos);
   }

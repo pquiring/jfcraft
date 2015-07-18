@@ -7,6 +7,8 @@ package jfcraft.data;
  * Created : Jun 14, 2014
  */
 
+import java.util.*;
+
 public class ChunkQueueLight {
   private static final int BUFSIZ = 1024 * 4;
   private Chunk[] chunks = new Chunk[BUFSIZ];
@@ -67,6 +69,17 @@ public class ChunkQueueLight {
     } catch (Exception e) {
       Static.log(e);
     }
+  }
+
+  public Chunk[] getQueue() {
+    ArrayList<Chunk> list = new ArrayList<Chunk>();
+    int pos = head1;
+    while (pos != head2) {
+      list.add(chunks[pos]);
+      pos++;
+      if (pos == BUFSIZ) pos = 0;
+    }
+    return list.toArray(new Chunk[0]);
   }
 
   public void add(Chunk chunk,int x1,int y1,int z1,int x2, int y2, int z2) {

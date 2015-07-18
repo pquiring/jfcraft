@@ -341,6 +341,19 @@ public class Server {
     }
   }
 
+  public void broadcastChunk(Chunk chunk) {
+    synchronized(clientsLock) {
+      int cnt = clients.size();
+      for(int a=0;a<cnt;a++) {
+        Client client = clients.get(a);
+        if (client.player == null) continue;
+        if (client.player.dim != chunk.dim) continue;
+        if (!client.hasChunk(chunk.cx, chunk.cz)) continue;
+        client.serverTransport.sendChunk(chunk);
+      }
+    }
+  }
+
   public void broadcastSetBlock(int dim,float x, float y, float z,char id,int bits) {
     int cx = Static.floor(x / 16.0f);
     int cz = Static.floor(z / 16.0f);
@@ -356,6 +369,7 @@ public class Server {
         Client client = clients.get(a);
         if (client.player == null) continue;
         if (client.player.dim != dim) continue;
+//        if (!client.hasChunk(cx, cz)) continue;
         int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
         int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
@@ -387,6 +401,7 @@ public class Server {
         Client client = clients.get(a);
         if (client.player == null) continue;
         if (client.player.dim != dim) continue;
+//        if (!client.hasChunk(cx, cz)) continue;
         int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
         int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
@@ -418,6 +433,7 @@ public class Server {
         Client client = clients.get(a);
         if (client.player == null) continue;
         if (client.player.dim != dim) continue;
+//        if (!client.hasChunk(cx, cz)) continue;
         int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
         int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
@@ -445,6 +461,7 @@ public class Server {
         Client client = clients.get(a);
         if (client.player == null) continue;
         if (client.player.dim != dim) continue;
+//        if (!client.hasChunk(cx, cz)) continue;
         int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
         int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
@@ -474,6 +491,7 @@ public class Server {
         Client client = clients.get(a);
         if (client.player == null) continue;
         if (client.player.dim != dim) continue;
+//        if (!client.hasChunk(cx, cz)) continue;
         int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
         int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
@@ -512,6 +530,7 @@ public class Server {
         Client client = clients.get(a);
         if (client.player == null) continue;
         if (client.player.dim != dim) continue;
+//        if (!client.hasChunk(cx, cz)) continue;
         int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
         int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
@@ -531,6 +550,7 @@ public class Server {
         Client client = clients.get(a);
         if (client.player == null) continue;
         if (client.player.dim != dim) continue;
+//        if (!client.hasChunk(cx, cz)) continue;
         int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
         int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
@@ -554,6 +574,7 @@ public class Server {
         Client client = clients.get(a);
         if (client.player == null) continue;
         if (client.player.dim != entity.dim) continue;
+//        if (!client.hasChunk(cx, cz)) continue;
         int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
         int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
@@ -573,6 +594,7 @@ public class Server {
         Client client = clients.get(a);
         if (client.player == null) continue;
         if (client.player.dim != dim) continue;
+//        if (!client.hasChunk(cx, cz)) continue;
         int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
         int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
@@ -583,6 +605,8 @@ public class Server {
   }
 
   public void broadcastEntitySpawn(EntityBase entity) {
+    int cx = Static.floor(entity.pos.x / 16.0f);
+    int cz = Static.floor(entity.pos.z / 16.0f);
     Packet update = new PacketSpawn(Packets.SPAWN, entity);
     synchronized(clientsLock) {
       int cnt = clients.size();
@@ -591,8 +615,9 @@ public class Server {
         if (client.player == null) continue;
         if (client.player == entity) continue;
         if (client.player.dim != entity.dim) continue;
-        int dx = Static.floor((client.player.pos.x - entity.pos.x) / 16.0f);
-        int dz = Static.floor((client.player.pos.z - entity.pos.z) / 16.0f);
+//        if (!client.hasChunk(cx, cz)) continue;
+        int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
+        int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
         if (dz > Static.maxLoadRange || dz < -Static.maxLoadRange) continue;
         client.serverTransport.addUpdate(update);
@@ -601,6 +626,8 @@ public class Server {
   }
 
   public void broadcastEntityDespawn(EntityBase entity) {
+    int cx = Static.floor(entity.pos.x / 16.0f);
+    int cz = Static.floor(entity.pos.z / 16.0f);
     Packet update = new PacketDespawn(Packets.DESPAWN, entity.uid);
     synchronized(clientsLock) {
       int cnt = clients.size();
@@ -609,8 +636,9 @@ public class Server {
         if (client.player == null) continue;
         if (client.player == entity) continue;
         if (client.player.dim != entity.dim) continue;
-        int dx = Static.floor((client.player.pos.x - entity.pos.x) / 16.0f);
-        int dz = Static.floor((client.player.pos.z - entity.pos.z) / 16.0f);
+//        if (!client.hasChunk(cx, cz)) continue;
+        int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
+        int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
         if (dz > Static.maxLoadRange || dz < -Static.maxLoadRange) continue;
         client.serverTransport.addUpdate(update);
@@ -619,6 +647,8 @@ public class Server {
   }
 
   public void broadcastEntityMove(EntityBase e, boolean self) {
+    int cx = Static.floor(e.pos.x / 16.0f);
+    int cz = Static.floor(e.pos.z / 16.0f);
     Packet update = new PacketMove(Packets.MOVE,
       e.pos.x, e.pos.y, e.pos.z, e.ang.x, e.ang.y, e.ang.z,
       e.uid, e.mode
@@ -630,8 +660,9 @@ public class Server {
         if (client.player == null) continue;
         if (client.player == e && !self) continue;
         if (client.player.dim != e.dim) continue;
-        int dx = Static.floor((client.player.pos.x - e.pos.x) / 16.0f);
-        int dz = Static.floor((client.player.pos.z - e.pos.z) / 16.0f);
+//        if (!client.hasChunk(cx, cz)) continue;
+        int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
+        int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
         if (dz > Static.maxLoadRange || dz < -Static.maxLoadRange) continue;
         client.serverTransport.addUpdate(update);
@@ -640,6 +671,8 @@ public class Server {
   }
 
   public void broadcastEntityHealth(CreatureBase entity) {
+    int cx = Static.floor(entity.pos.x / 16.0f);
+    int cz = Static.floor(entity.pos.z / 16.0f);
     Packet update = new PacketHealth(Packets.HEALTH, entity.uid, entity.health);
     synchronized(clientsLock) {
       int cnt = clients.size();
@@ -647,8 +680,9 @@ public class Server {
         Client client = clients.get(a);
         if (client.player == null) continue;
         if (client.player.dim != entity.dim) continue;
-        int dx = Static.floor((client.player.pos.x - entity.pos.x) / 16.0f);
-        int dz = Static.floor((client.player.pos.z - entity.pos.z) / 16.0f);
+//        if (!client.hasChunk(cx, cz)) continue;
+        int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
+        int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
         if (dz > Static.maxLoadRange || dz < -Static.maxLoadRange) continue;
         client.serverTransport.addUpdate(update);
@@ -657,6 +691,8 @@ public class Server {
   }
 
   public void broadcastRiding(VehicleBase v, CreatureBase o, boolean mount) {
+    int cx = Static.floor(v.pos.x / 16.0f);
+    int cz = Static.floor(v.pos.z / 16.0f);
     Packet update = new PacketRiding(Packets.RIDING, v.uid, o.uid, mount);
     synchronized(clientsLock) {
       int cnt = clients.size();
@@ -664,8 +700,9 @@ public class Server {
         Client client = clients.get(a);
         if (client.player == null) continue;
         if (client.player.dim != v.dim) continue;
-        int dx = Static.floor((client.player.pos.x - v.pos.x) / 16.0f);
-        int dz = Static.floor((client.player.pos.z - v.pos.z) / 16.0f);
+//        if (!client.hasChunk(cx, cz)) continue;
+        int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
+        int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
         if (dz > Static.maxLoadRange || dz < -Static.maxLoadRange) continue;
         client.serverTransport.addUpdate(update);
@@ -698,6 +735,8 @@ public class Server {
   }
 
   public void broadcastB2E(int dim, int x,int y,int z, int uid) {
+    int cx = Static.floor(x / 16.0f);
+    int cz = Static.floor(z / 16.0f);
     Packet update = new PacketB2E(Packets.B2E, x, y, z, uid);
     synchronized(clientsLock) {
       int cnt = clients.size();
@@ -705,8 +744,9 @@ public class Server {
         Client client = clients.get(a);
         if (client.player == null) continue;
         if (client.player.dim != dim) continue;
-        int dx = Static.floor((client.player.pos.x - x) / 16.0f);
-        int dz = Static.floor((client.player.pos.z - z) / 16.0f);
+//        if (!client.hasChunk(cx, cz)) continue;
+        int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
+        int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
         if (dz > Static.maxLoadRange || dz < -Static.maxLoadRange) continue;
         client.serverTransport.addUpdate(update);
@@ -715,6 +755,8 @@ public class Server {
   }
 
   public void broadcastE2B(int dim, float x, float y, float z,int uid) {
+    int cx = Static.floor(x / 16.0f);
+    int cz = Static.floor(z / 16.0f);
     Packet update = new PacketE2B(Packets.E2B, uid);
     synchronized(clientsLock) {
       int cnt = clients.size();
@@ -722,8 +764,9 @@ public class Server {
         Client client = clients.get(a);
         if (client.player == null) continue;
         if (client.player.dim != dim) continue;
-        int dx = Static.floor((client.player.pos.x - x) / 16.0f);
-        int dz = Static.floor((client.player.pos.z - z) / 16.0f);
+//        if (!client.hasChunk(cx, cz)) continue;
+        int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
+        int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
         if (dz > Static.maxLoadRange || dz < -Static.maxLoadRange) continue;
         client.serverTransport.addUpdate(update);
@@ -732,6 +775,8 @@ public class Server {
   }
 
   public void broadcastMoveBlock(int dim, int uid, float x, float y, float z) {
+    int cx = Static.floor(x / 16.0f);
+    int cz = Static.floor(z / 16.0f);
     Packet update = new PacketMoveBlock(Packets.MOVEBLOCK, x,y,z, uid);
     synchronized(clientsLock) {
       int cnt = clients.size();
@@ -739,8 +784,9 @@ public class Server {
         Client client = clients.get(a);
         if (client.player == null) continue;
         if (client.player.dim != dim) continue;
-        int dx = Static.floor((client.player.pos.x - x) / 16.0f);
-        int dz = Static.floor((client.player.pos.z - z) / 16.0f);
+//        if (!client.hasChunk(cx, cz)) continue;
+        int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
+        int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
         if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
         if (dz > Static.maxLoadRange || dz < -Static.maxLoadRange) continue;
         client.serverTransport.addUpdate(update);
@@ -1197,6 +1243,219 @@ public class Server {
       Static.server.world.addEntity(e);
       Static.server.broadcastEntitySpawn(e);
       Static.log("spawn " + e.getName() + " @=" + e.pos.x + "," + e.pos.y + "," + e.pos.z + ":uid=" + e.uid);
+    }
+    else if (p[0].equals("/export")) {
+      // /export x1 y1 z1 x2 y2 z2 filename
+      if (p.length != 8) {
+        client.serverTransport.sendMsg("/export x1 y1 z1 x2 y2 z2 filename");
+        return;
+      }
+      int x1 = Integer.valueOf(p[1]);
+      int y1 = Integer.valueOf(p[2]);
+      int z1 = Integer.valueOf(p[3]);
+      int x2 = Integer.valueOf(p[4]);
+      int y2 = Integer.valueOf(p[5]);
+      int z2 = Integer.valueOf(p[6]);
+      String filename = p[7];
+      int t;
+      if (y1 < 0) y1 = 0;
+      if (y2 < 0) y2 = 0;
+      if (y1 > 255) y1 = 255;
+      if (y2 > 255) y2 = 255;
+      if (x2 < x1) {t = x1; x1 = x2; x2 = t;}
+      if (y2 < y1) {t = y1; y1 = y2; y2 = t;}
+      if (z2 < z1) {t = z1; z1 = z2; z2 = t;}
+      int w = x2 - x1 + 1;
+      int h = y2 - y1 + 1;
+      int d = z2 - z1 + 1;
+      if (w > 256 || d > 256) {
+        client.serverTransport.sendMsg("Export failed : area too large (max 256x256x256)");
+        return;
+      }
+      BluePrint blueprint = new BluePrint();
+      blueprint.readInit(w, h, d, world);
+      //chunk coords
+      int cx = x1 >> 4;
+      int cz = z1 >> 4;
+      //chunks width count
+      int cw = (x2 >> 4) - (x1 >> 4) + 1;
+      //chunks depth count
+      int cd = (z2 >> 4) - (z1 >> 4) + 1;
+      //dimension
+      int dim = client.player.dim;
+      //source
+      int sx = 0;
+      int sz = 0;
+      //dest
+      int dx = 0;
+      int dz = 0;
+      //this chunk
+      int tw = 16;
+      int th = h;
+      int td = 16;
+      for(int z=0;z<cd;z++) {
+        dx = 0;
+        for(int x=0;x<cw;x++) {
+          Chunk chunk = world.chunks.getChunk(dim, cx + x, cz + z);
+          if (chunk == null) {
+            client.serverTransport.sendMsg("Export failed : area not loaded");
+            return;
+          }
+          sx = 0;
+          sz = 0;
+          tw = 16;
+          th = h;
+          td = 16;
+          //calc edge cases
+          if (x == 0) {
+            sx = x1 % 16;
+            tw -= sx;
+          }
+          if (x == cw-1) {
+            tw -= w % 16;
+          }
+          if (z == 0) {
+            sz = z1 % 16;
+            td -= sz;
+          }
+          if (z == cd-1) {
+            td -= d % 16;
+          }
+          blueprint.readChunk(chunk,  sx, y1, sz,  dx, 0, dz,  tw, th, td);
+          dx += tw;
+        }
+        dz += td;
+      }
+      new File(Static.getBasePath() + "/blueprints").mkdir();
+      blueprint.save(Static.getBasePath() + "/blueprints/" + filename + ".blueprint");
+      client.serverTransport.sendMsg("Export complete:" + filename);
+    }
+    else if (p[0].equals("/import")) {
+      // /import x1 y1 z1 filename [orientations]
+      //   orientations = [mirror] [rotate]
+      //   mirror = mx mz
+      //   rotate = r90 r180 r270
+      if (p.length < 4) {
+        client.serverTransport.sendMsg("/import x1 y1 z1 filename [mx | mz] [r90 | r180 | r270]");
+        return;
+      }
+      int x1 = Integer.valueOf(p[1]);
+      int y1 = Integer.valueOf(p[2]);
+      int z1 = Integer.valueOf(p[3]);
+      String filename = p[4];
+      BluePrint blueprint = BluePrint.read(Static.getBasePath() + "/blueprints/" + filename + ".blueprint");
+      if (blueprint == null) {
+        client.serverTransport.sendMsg("BluePrint not found");
+        return;
+      }
+      Static.log("blueprint:" + blueprint.X + "," + blueprint.Y + "," + blueprint.Z);
+      for(int a=5;a<p.length;a++) {
+        String or = p[a];
+        if (or.equals("mx")) {
+          blueprint.mirrorX();
+        }
+        else if (or.equals("mz")) {
+          blueprint.mirrorZ();
+        }
+        else if (or.equals("r90")) {
+          blueprint.rotateY(90);
+        }
+        else if (or.equals("r180")) {
+          blueprint.rotateY(180);
+        }
+        else if (or.equals("r270")) {
+          blueprint.rotateY(270);
+        }
+      }
+      int x2 = x1 + blueprint.X - 1;
+      int y2 = y1 + blueprint.Y - 1;
+      int z2 = z1 + blueprint.Z - 1;
+      int w = x2 - x1 + 1;
+      int h = y2 - y1 + 1;
+      int d = z2 - z1 + 1;
+      //chunk coords
+      int cx = x1 >> 4;
+      int cz = z1 >> 4;
+      //chunks width count
+      int cw = (x2 >> 4) - (x1 >> 4) + 1;
+      //chunks depth count
+      int cd = (z2 >> 4) - (z1 >> 4) + 1;
+      //dimension
+      int dim = client.player.dim;
+      //source
+      int sx = 0;
+      int sz = 0;
+      //dest
+      int dx = 0;
+      int dz = 0;
+      //this chunk
+      int tw = 16;
+      int th = h;
+      int td = 16;
+      Static.log("import:" + cd + "," + cw);
+      ChunkQueueLight queue = new ChunkQueueLight(null, false);
+      for(int z=0;z<cd;z++) {
+        sx = 0;
+        for(int x=0;x<cw;x++) {
+          Chunk chunk = world.chunks.getChunk(dim, cx + x, cz + z);
+          if (chunk == null) {
+            client.serverTransport.sendMsg("Import failed : area not loaded");
+            return;
+          }
+          dx = 0;
+          dz = 0;
+          tw = 16;
+          th = h;
+          td = 16;
+          //calc edge cases
+          if (x == 0) {
+            dx = x1 % 16;
+            tw -= dx;
+            Static.log("x==0");
+          }
+          if (x == cw-1) {
+            tw -= 16 - (x2 % 16);
+            Static.log("x==cw-1");
+          }
+          if (z == 0) {
+            dz = z1 % 16;
+            td -= dz;
+            Static.log("z==0");
+          }
+          if (z == cd-1) {
+            td -= 16 - (z2 % 16);
+            Static.log("z==cd-1");
+          }
+          blueprint.writeChunk(chunk,  sx, 0, sz,  dx, y1, dz,  tw, th, td);
+          chunk.resetLights();
+          queue.add(chunk, 0, 0, 0, 15, 255, 15);
+          if (x == 0) {
+            chunk.W.resetLights();
+            queue.add(chunk.W, 0, 0, 0, 15, 255, 15);
+          }
+          if (x == cw - 1) {
+            chunk.E.resetLights();
+            queue.add(chunk.E, 0, 0, 0, 15, 255, 15);
+          }
+          if (z == 0) {
+            chunk.N.resetLights();
+            queue.add(chunk.N, 0, 0, 0, 15, 255, 15);
+          }
+          if (z == cd-1) {
+            chunk.S.resetLights();
+            queue.add(chunk.S, 0, 0, 0, 15, 255, 15);
+          }
+          sx += tw;
+        }
+        sz += td;
+      }
+      Chunk chunks[] = queue.getQueue();
+      queue.signal();
+      queue.process();  //long process
+      for(int a=0;a<chunks.length;a++) {
+        broadcastChunk(chunks[a]);
+      }
+      client.serverTransport.sendMsg("Import complete:" + filename);
     } else {
       client.serverTransport.sendMsg("Unknown command");
     }

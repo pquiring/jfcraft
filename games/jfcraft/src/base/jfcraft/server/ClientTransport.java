@@ -65,8 +65,12 @@ public abstract class ClientTransport extends Transport {
     Packet packet = new PacketOnline(Packets.ONLINE);
     send(coder.encodeObject(packet, false));
   }
-  public void getChunk(Coords c) {
-    Packet packet = new PacketChunkRequest(Packets.CHUNK_REQUEST, c.x, c.z);
+  public void loadChunk(int cx, int cz) {
+    Packet packet = new PacketChunkRequest(Packets.CHUNK_REQUEST, cx, cz, true);
+    send(coder.encodeObject(packet, false));
+  }
+  public void unloadChunk(int cx, int cz) {
+    Packet packet = new PacketChunkRequest(Packets.CHUNK_REQUEST, cx, cz, false);
     send(coder.encodeObject(packet, false));
   }
   public void tick(Player player,boolean up, boolean dn, boolean lt, boolean rt,

@@ -112,7 +112,7 @@ public class Domino extends BlockEntity {
     dest.copyBuffers(gl);
   }
 
-  private void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     mat.addTranslate2(buf.org.x, buf.org.y, buf.org.z);

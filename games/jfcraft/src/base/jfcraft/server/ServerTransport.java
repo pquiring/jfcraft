@@ -50,8 +50,7 @@ public abstract class ServerTransport extends Transport {
     send(coder.encodeObject(packet, false));
   }
   public void sendPlayer(Client client) {
-    Packet packet = new PacketPlayer(Packets.PLAYER_REPLY, client.player.uid, client.player.dim,
-    client.player.pos.x, client.player.pos.z);
+    Packet packet = new PacketPlayer(Packets.PLAYER_REPLY, client.player);
     send(coder.encodeObject(packet, false));
   }
   public void sendWorld(World world) {

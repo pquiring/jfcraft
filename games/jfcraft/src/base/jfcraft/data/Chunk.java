@@ -1052,6 +1052,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     }
     return null;
   }
+  private static Coords tmp = new Coords();
   /** Builds shapes (canRender() must return true)
     Server side only.
     Use after gen phase 2.
@@ -1068,7 +1069,9 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
           id = blocks[y][p];
           block = Static.blocks.blocks[id];
           if (!block.hasShape) continue;
-          block.setShape(this, x,y,z, false);
+          synchronized(tmp) {
+            block.setShape(this, x,y,z, false, tmp);
+          }
           p++;
         }
       }
@@ -1294,7 +1297,8 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
         entities.get(a).cid = cid++;
       }
       for(int a=0;a<entity_size;a++) {
-        entities.get(a).write(buffer, file);
+        EntityBase entity = entities.get(a);
+        entity.write(buffer, file);
       }
       int tick_size = 0;
       if (file) {

@@ -58,7 +58,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public CreatureBase target;
   public boolean onGround, onWater;
   public int mode;  //IDLE, WALK, RUN, SNEAK, BOWCHARGE, etc.
-  public float scale;  //# parts
+  public float scale;  //scale entity
   public boolean isStatic;  //one static instance for all instances
   public boolean dirty, needCopyBuffers;
   public int path[];
@@ -1070,7 +1070,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   public void bindTexture(GL gl) {}
 
-  //private void setMatrixModel(GL gl, int bodyPart) {}
+  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {};
 
   public void render(GL gl) {}
 
@@ -1085,6 +1085,8 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     }
     return 0f;
   }
+
+  public void convertIDs(char blockIDs[], char itemIDs[]) {}
 
   private static final byte ver = 0;
 

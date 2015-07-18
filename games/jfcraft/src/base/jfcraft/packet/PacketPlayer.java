@@ -10,8 +10,8 @@ import jfcraft.data.*;
 import jfcraft.entity.*;
 
 public class PacketPlayer extends Packet {
-  public int uid, dim;
-  public float x, z;
+  public Player player;
+  public int uid;
 
   public PacketPlayer() {}
 
@@ -19,39 +19,30 @@ public class PacketPlayer extends Packet {
     super(cmd);
   }
 
-  public PacketPlayer(byte cmd, int uid, int dim, float x, float z) {
+  public PacketPlayer(byte cmd, Player player) {
     super(cmd);
-    this.uid = uid;
-    this.dim = dim;
-    this.x = x;
-    this.z = z;
+    this.player = player;
   }
 
   //process on client side
   public void process(Client client) {
-    client.uid = uid;
-    client.dim = dim;
-    client.x = x;
-    client.z = z;
+    client.player = player;
   }
 
   @Override
   public boolean write(SerialBuffer buffer, boolean file) {
     super.write(buffer, file);
-    buffer.writeInt(uid);
-    buffer.writeInt(dim);
-    buffer.writeFloat(x);
-    buffer.writeFloat(z);
+    player.write(buffer, true);  //must write everything
+    buffer.writeInt(player.uid);  //player.write(file) writes cid, not uid
     return true;
   }
 
   @Override
   public boolean read(SerialBuffer buffer, boolean file) {
     super.read(buffer, file);
-    uid = buffer.readInt();
-    dim = buffer.readInt();
-    x = buffer.readFloat();
-    z = buffer.readFloat();
+    player = new Player();
+    player.read(buffer, true);  //must read everything
+    player.uid = buffer.readInt();
     return true;
   }
 }

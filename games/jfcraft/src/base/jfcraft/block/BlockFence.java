@@ -57,10 +57,9 @@ public class BlockFence extends BlockBase {
     }
   }
 
-  public void setShape(Chunk chunk, int gx,int gy,int gz,boolean live) {
+  public void setShape(Chunk chunk, int gx, int gy, int gz, boolean live, Coords c) {
     int bits = chunk.getBits(gx,gy,gz);
     int dir = Chunk.getDir(bits);
-    Coords c = Coords.alloc();
     int x = gx + chunk.cx * 16;
     int y = gy;
     int z = gz + chunk.cz * 16;
@@ -89,7 +88,6 @@ public class BlockFence extends BlockBase {
         Static.server.broadcastSetBlock(chunk.dim, x, y, z, id, bits);
       }
     }
-    c.free();
   }
   public ArrayList<Box> getBoxes(Coords c, Type type) {
     ArrayList<Box> list = new ArrayList<Box>();
