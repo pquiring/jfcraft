@@ -1175,6 +1175,108 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     lights = newLights;
   }
 
+  /** Removes planes that are empty. */
+  public void reduce() {
+    synchronized(lock) {
+      for(int y=0;y<256;y++) {
+        if (blocks[y] != null) {
+          for(int p=0;p<256;p++) {
+            if (blocks[y][p] != 0) break;
+            if (p == 255) {
+              blocks[y] = null;
+            }
+          }
+        }
+        if (blocks2[y] != null) {
+          for(int p=0;p<256;p++) {
+            if (blocks2[y][p] != 0) break;
+            if (p == 255) {
+              blocks2[y] = null;
+            }
+          }
+        }
+        if (bits[y] != null) {
+          for(int p=0;p<256;p++) {
+            if (bits[y][p] != 0) break;
+            if (p == 255) {
+              bits[y] = null;
+            }
+          }
+        }
+        if (bits2[y] != null) {
+          for(int p=0;p<256;p++) {
+            if (bits2[y][p] != 0) break;
+            if (p == 255) {
+              bits2[y] = null;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  public void fill(int x1, int y1, int z1,  int dx, int dy, int dz, char id) {
+    int x2 = x1 + dx - 1;
+    int y2 = y1 + dy - 1;
+    int z2 = z1 + dz - 1;
+    synchronized(lock) {
+      for(int y=y1;y<=y2;y++) {
+        if (blocks[y] == null) {
+          blocks[y] = new char[256];
+        }
+        if (bits[y] == null) {
+          bits[y] = new byte[256];
+        }
+        for(int z=z1;z<=z2;z++) {
+          int p = z * 16;
+          for(int x=x1;x<=x2;x++) {
+            blocks[y][p] = id;
+            bits[y][p] = 0;
+            if (blocks2[y] != null) {
+              blocks2[y][p] = 0;
+            }
+            if (bits2[y] != null) {
+              bits2[y][p] = 0;
+            }
+            p++;
+          }
+        }
+      }
+    }
+    reduce();
+  }
+
+  public void fill2(int x1, int y1, int z1,  int dx, int dy, int dz, char id) {
+    int x2 = x1 + dx - 1;
+    int y2 = y1 + dy - 1;
+    int z2 = z1 + dz - 1;
+    synchronized(lock) {
+      for(int y=y1;y<=y2;y++) {
+        if (blocks2[y] == null) {
+          blocks2[y] = new char[256];
+        }
+        if (bits2[y] == null) {
+          bits2[y] = new byte[256];
+        }
+        for(int z=z1;z<=z2;z++) {
+          int p = z * 16;
+          for(int x=x1;x<=x2;x++) {
+            blocks2[y][p] = id;
+            bits2[y][p] = 0;
+            if (blocks[y] != null) {
+              blocks[y][p] = 0;
+            }
+            if (bits[y] != null) {
+              bits[y][p] = 0;
+            }
+            p++;
+          }
+        }
+      }
+    }
+    reduce();
+  }
+
   public String toString() {
     return "Chunk:" + cx + "," + cz;
   }
