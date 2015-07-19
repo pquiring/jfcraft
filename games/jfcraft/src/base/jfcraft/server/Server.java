@@ -1192,6 +1192,11 @@ public class Server {
         client.serverTransport.sendMsg("Error:Item not found:" + p[7]);
         return;
       }
+      if (Static.isItem(item.id)) {
+        client.serverTransport.sendMsg("Error:Can not fill with item");
+        return;
+      }
+      BlockBase block = Static.blocks.blocks[item.id];
       if (x2 < x1) {
         int t = x1;
         x1 = x2;
@@ -1207,23 +1212,85 @@ public class Server {
         z1 = z2;
         z2 = t;
       }
-      int dx = Math.abs(x2-x1);
-      int dy = Math.abs(y2-y1);
-      int dz = Math.abs(z2-z1);
-      if (dx > 256 || dy > 256 || dz > 256) {
-        client.serverTransport.sendMsg("Area too big");
-      }
-      int cnt = 0;
-      for(int x=x1;x<=x2;x++) {
-        for(int y=y1;y<=y2;y++) {
-          for(int z=z1;z<=z2;z++) {
-            world.destroyBlock(client.player.dim, x, y, z, false);
-            world.setBlock(client.player.dim, x, y, z, item.id, 0);
-            cnt++;
+      int w = x2 - x1 + 1;
+      int h = y2 - y1 + 1;
+      int d = z2 - z1 + 1;
+      //chunk coords
+      int cx = x1 >> 4;
+      int cz = z1 >> 4;
+      //chunks width count
+      int cw = (x2 >> 4) - (x1 >> 4) + 1;
+      //chunks depth count
+      int cd = (z2 >> 4) - (z1 >> 4) + 1;
+      //dimension
+      int dim = client.player.dim;
+      //dest
+      int dx = 0;
+      int dz = 0;
+      //this chunk
+      int tw = 16;
+      int th = h;
+      int td = 16;
+      Static.log("import:" + cd + "," + cw);
+      ChunkQueueLight queue = new ChunkQueueLight(null, false);
+      for(int z=0;z<cd;z++) {
+        for(int x=0;x<cw;x++) {
+          Chunk chunk = world.chunks.getChunk(dim, cx + x, cz + z);
+          if (chunk == null) {
+            client.serverTransport.sendMsg("Import failed : area not loaded");
+            return;
+          }
+          dx = 0;
+          dz = 0;
+          tw = 16;
+          th = h;
+          td = 16;
+          //calc edge cases
+          if (x == 0) {
+            dx = x1 % 16;
+            tw -= dx;
+          }
+          if (x == cw-1) {
+            tw -= 16 - (x2 % 16);
+          }
+          if (z == 0) {
+            dz = z1 % 16;
+            td -= dz;
+          }
+          if (z == cd-1) {
+            td -= 16 - (z2 % 16);
+          }
+          if (block.isBlocks2)
+            chunk.fill2(dx, y1, dz,  tw, th, td, item.id);
+          else
+            chunk.fill(dx, y1, dz,  tw, th, td, item.id);
+          chunk.resetLights();
+          queue.add(chunk, 0, 0, 0, 15, 255, 15);
+          if (x == 0) {
+            chunk.W.resetLights();
+            queue.add(chunk.W, 0, 0, 0, 15, 255, 15);
+          }
+          if (x == cw - 1) {
+            chunk.E.resetLights();
+            queue.add(chunk.E, 0, 0, 0, 15, 255, 15);
+          }
+          if (z == 0) {
+            chunk.N.resetLights();
+            queue.add(chunk.N, 0, 0, 0, 15, 255, 15);
+          }
+          if (z == cd-1) {
+            chunk.S.resetLights();
+            queue.add(chunk.S, 0, 0, 0, 15, 255, 15);
           }
         }
       }
-      client.serverTransport.sendMsg("Filled " + cnt + " blocks");
+      Chunk chunks[] = queue.getQueue();
+      queue.signal();
+      queue.process();  //long process
+      for(int a=0;a<chunks.length;a++) {
+        broadcastChunk(chunks[a]);
+      }
+      client.serverTransport.sendMsg("Fill complete");
     }
     else if (p[0].equals("/spawn")) {
       if (p.length < 2) {
@@ -1312,14 +1379,14 @@ public class Server {
             tw -= sx;
           }
           if (x == cw-1) {
-            tw -= w % 16;
+            tw -= 16 - (x2 % 16);
           }
           if (z == 0) {
             sz = z1 % 16;
             td -= sz;
           }
           if (z == cd-1) {
-            td -= d % 16;
+            td -= 16 - (z2 % 16);
           }
           blueprint.readChunk(chunk,  sx, y1, sz,  dx, 0, dz,  tw, th, td);
           dx += tw;
@@ -1411,20 +1478,16 @@ public class Server {
           if (x == 0) {
             dx = x1 % 16;
             tw -= dx;
-            Static.log("x==0");
           }
           if (x == cw-1) {
             tw -= 16 - (x2 % 16);
-            Static.log("x==cw-1");
           }
           if (z == 0) {
             dz = z1 % 16;
             td -= dz;
-            Static.log("z==0");
           }
           if (z == cd-1) {
             td -= 16 - (z2 % 16);
-            Static.log("z==cd-1");
           }
           blueprint.writeChunk(chunk,  sx, 0, sz,  dx, y1, dz,  tw, th, td);
           chunk.resetLights();

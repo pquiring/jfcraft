@@ -243,6 +243,7 @@ public class BluePrint implements SerialClass, SerialCreator {
         int ecnt = chunk.entities.size();
         for(int a=0;a<ecnt;a++) {
           EntityBase e = chunk.entities.get(a);
+          if (e.id == Entities.PLAYER) continue;
           float x = e.pos.x;
           float y = e.pos.y;
           float z = e.pos.z;
