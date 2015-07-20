@@ -1519,6 +1519,18 @@ public class Server {
         broadcastChunk(chunks[a]);
       }
       client.serverTransport.sendMsg("Import complete:" + filename);
+    }
+    else if (p[0].equals("/relight")) {
+      //fix lighting in chunk that player is currently in
+      int cx = Static.floor(client.player.pos.x / 16.0f);
+      int cz = Static.floor(client.player.pos.z / 16.0f);
+      Chunk chunk = world.chunks.getChunk(client.player.dim, cx, cz);
+      ChunkQueueLight queue = new ChunkQueueLight(null, false);
+      queue.add(chunk, 0, 0, 0, 15, 255, 15);
+      queue.signal();
+      queue.process();
+      broadcastChunk(chunk);
+      client.serverTransport.sendMsg("Chunk " + cx + "," + cz + " relight");
     } else {
       client.serverTransport.sendMsg("Unknown command");
     }
