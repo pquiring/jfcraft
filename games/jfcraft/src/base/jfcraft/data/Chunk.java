@@ -326,7 +326,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       if (needLights) return;
       needRelight = true;
       dirty = true;
-      //TODO : calc precise coords
+      if (isBorder()) return;
       int xyz[] = getLightCoordsSet(x,y,z, newBlock, Static.blocks.blocks[oldid]);
       if (isClient) {
         Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
@@ -418,7 +418,6 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     if (z < 0) {N.setBlockIfEmpty(x, y, z+16, id, _bits); return;}
     int p = z * 16 + x;
     BlockBase newBlock = Static.blocks.blocks[id];
-    char b[];
     char oldid;
     synchronized(lock) {
       if (newBlock.isBlocks2) {
@@ -460,6 +459,42 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     }
   }
 
+  /** Sets a block ID (does not update lighting). */
+  public void setID(int x,int y,int z, char id) {
+    if (x > 15) {E.setID(x-16, y, z, id); return;}
+    if (x < 0) {W.setID(x+16, y, z, id); return;}
+    if (y > 255) return;
+    if (y < 0) return;
+    if (z > 15) {S.setID(x, y, z-16, id); return;}
+    if (z < 0) {N.setID(x, y, z+16, id); return;}
+    synchronized(lock) {
+      if (blocks[y] == null) {
+        blocks[y] = new char[16*16];
+        bits[y] = new byte[16*16];
+      }
+      blocks[y][z * 16 + x] = id;
+    }
+  }
+
+  /** Sets a block ID and bits (does not update lighting). */
+  public void setIDBits(int x,int y,int z, char id, int _bits) {
+    if (x > 15) {E.setIDBits(x-16, y, z, id, _bits); return;}
+    if (x < 0) {W.setIDBits(x+16, y, z, id, _bits); return;}
+    if (y > 255) return;
+    if (y < 0) return;
+    if (z > 15) {S.setIDBits(x, y, z-16, id, _bits); return;}
+    if (z < 0) {N.setIDBits(x, y, z+16, id, _bits); return;}
+    synchronized(lock) {
+      if (blocks[y] == null) {
+        blocks[y] = new char[16*16];
+        bits[y] = new byte[16*16];
+      }
+      int p = z * 16 + x;
+      blocks[y][p] = id;
+      bits[y][p] = (byte)_bits;
+    }
+  }
+
   public char getID(int x,int y, int z) {
     if (x > 15) return E.getID(x-16, y, z);
     if (x < 0) return W.getID(x+16, y, z);
@@ -495,6 +530,42 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
         bits[y] = new byte[16*16];
       }
       bits[y][z * 16 + x] = (byte)_bits;
+    }
+  }
+
+  /** Sets a block ID (does not update lighting). */
+  public void setID2(int x,int y,int z, char id) {
+    if (x > 15) {E.setID2(x-16, y, z, id); return;}
+    if (x < 0) {W.setID2(x+16, y, z, id); return;}
+    if (y > 255) return;
+    if (y < 0) return;
+    if (z > 15) {S.setID2(x, y, z-16, id); return;}
+    if (z < 0) {N.setID2(x, y, z+16, id); return;}
+    synchronized(lock) {
+      if (blocks2[y] == null) {
+        blocks2[y] = new char[16*16];
+        bits2[y] = new byte[16*16];
+      }
+      blocks2[y][z * 16 + x] = id;
+    }
+  }
+
+  /** Sets a block ID and bits (does not update lighting). */
+  public void setID2Bits(int x,int y,int z, char id, int _bits) {
+    if (x > 15) {E.setID2Bits(x-16, y, z, id, _bits); return;}
+    if (x < 0) {W.setID2Bits(x+16, y, z, id, _bits); return;}
+    if (y > 255) return;
+    if (y < 0) return;
+    if (z > 15) {S.setID2Bits(x, y, z-16, id, _bits); return;}
+    if (z < 0) {N.setID2Bits(x, y, z+16, id, _bits); return;}
+    synchronized(lock) {
+      if (blocks2[y] == null) {
+        blocks2[y] = new char[16*16];
+        bits2[y] = new byte[16*16];
+      }
+      int p = z * 16 + x;
+      blocks2[y][p] = id;
+      bits2[y][p] = (byte)_bits;
     }
   }
 
@@ -796,6 +867,10 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
 
   public boolean canLights() {
     return adjCount == 8;
+  }
+
+  public boolean isBorder() {
+    return adjCount != 8;
   }
 
   //server-side only : load all adjacent chunks within a range

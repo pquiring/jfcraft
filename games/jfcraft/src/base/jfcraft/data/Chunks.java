@@ -144,7 +144,10 @@ public class Chunks extends ClientServer {
       N.S = chunk;
       N.adjCount++;
       if (isClient && N.adjCount == 8) {
-        Static.client.chunkBuilder.add(N);
+        if (N.needRelight)
+          Static.client.chunkLighter.add(N, 0,0,0, 15,255,15);
+        else
+          Static.client.chunkBuilder.add(N);
       }
       chunk.N = N;
       chunk.adjCount++;
@@ -154,7 +157,10 @@ public class Chunks extends ClientServer {
       S.N = chunk;
       S.adjCount++;
       if (isClient && S.adjCount == 8) {
-        Static.client.chunkBuilder.add(S);
+        if (S.needRelight)
+          Static.client.chunkLighter.add(S, 0,0,0, 15,255,15);
+        else
+          Static.client.chunkBuilder.add(S);
       }
       chunk.S = S;
       chunk.adjCount++;
@@ -164,7 +170,10 @@ public class Chunks extends ClientServer {
       E.W = chunk;
       E.adjCount++;
       if (isClient && E.adjCount == 8) {
-        Static.client.chunkBuilder.add(E);
+        if (E.needRelight)
+          Static.client.chunkLighter.add(E, 0,0,0, 15,255,15);
+        else
+          Static.client.chunkBuilder.add(E);
       }
       chunk.E = E;
       chunk.adjCount++;
@@ -174,7 +183,10 @@ public class Chunks extends ClientServer {
       W.E = chunk;
       W.adjCount++;
       if (isClient && W.adjCount == 8) {
-        Static.client.chunkBuilder.add(W);
+        if (W.needRelight)
+          Static.client.chunkLighter.add(W, 0,0,0, 15,255,15);
+        else
+          Static.client.chunkBuilder.add(W);
       }
       chunk.W = W;
       chunk.adjCount++;
@@ -184,7 +196,10 @@ public class Chunks extends ClientServer {
     if (NE != null) {
       NE.adjCount++;
       if (isClient && NE.adjCount == 8) {
-        Static.client.chunkBuilder.add(NE);
+        if (NE.needRelight)
+          Static.client.chunkLighter.add(NE, 0,0,0, 15,255,15);
+        else
+          Static.client.chunkBuilder.add(NE);
       }
       chunk.adjCount++;
     }
@@ -192,7 +207,10 @@ public class Chunks extends ClientServer {
     if (NW != null) {
       NW.adjCount++;
       if (isClient && NW.adjCount == 8) {
-        Static.client.chunkBuilder.add(NW);
+        if (NW.needRelight)
+          Static.client.chunkLighter.add(NW, 0,0,0, 15,255,15);
+        else
+          Static.client.chunkBuilder.add(NW);
       }
       chunk.adjCount++;
     }
@@ -200,7 +218,10 @@ public class Chunks extends ClientServer {
     if (SE != null) {
       SE.adjCount++;
       if (isClient && SE.adjCount == 8) {
-        Static.client.chunkBuilder.add(SE);
+        if (SE.needRelight)
+          Static.client.chunkLighter.add(SE, 0,0,0, 15,255,15);
+        else
+          Static.client.chunkBuilder.add(SE);
       }
       chunk.adjCount++;
     }
@@ -208,7 +229,10 @@ public class Chunks extends ClientServer {
     if (SW != null) {
       SW.adjCount++;
       if (isClient && SW.adjCount == 8) {
-        Static.client.chunkBuilder.add(SW);
+        if (SW.needRelight)
+          Static.client.chunkLighter.add(SW, 0,0,0, 15,255,15);
+        else
+          Static.client.chunkBuilder.add(SW);
       }
       chunk.adjCount++;
     }
@@ -216,7 +240,10 @@ public class Chunks extends ClientServer {
       cache.put(key.clone(), chunk);
     }
     if (isClient && chunk.adjCount == 8) {
-      Static.client.chunkBuilder.add(chunk);
+      if (chunk.needRelight)
+        Static.client.chunkLighter.add(chunk, 0,0,0, 15,255,15);
+      else
+        Static.client.chunkBuilder.add(chunk);
     }
     key.free();
   }
