@@ -323,16 +323,15 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
         b[p] = id;
         bits[y][p] = (byte)_bits;
       }
+      if (needLights) return;
       needRelight = true;
       dirty = true;
       //TODO : calc precise coords
-      if (!needLights) {
-        int xyz[] = getLightCoordsSet(x,y,z, newBlock, Static.blocks.blocks[oldid]);
-        if (isClient) {
-          Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
-        } else {
-          Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
-        }
+      int xyz[] = getLightCoordsSet(x,y,z, newBlock, Static.blocks.blocks[oldid]);
+      if (isClient) {
+        Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
+      } else {
+        Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
       }
     }
   }
@@ -360,15 +359,14 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
         blocks[y] = null;
         bits[y] = null;
       }
+      if (needLights) return;
       needRelight = true;
       dirty = true;
-      if (!needLights) {
-        int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
-        if (isClient) {
-          Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
-        } else {
-          Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
-        }
+      int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
+      if (isClient) {
+        Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
+      } else {
+        Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
       }
     }
   }
@@ -450,15 +448,14 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
         blocks[y][p] = id;
         bits[y][p] = (byte)_bits;
       }
+      if (needLights) return;
       needRelight = true;
       dirty = true;
-      if (!needLights) {
-        int xyz[] = getLightCoordsSet(x,y,z, newBlock, Static.blocks.blocks[oldid]);
-        if (isClient) {
-          Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
-        } else {
-          Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
-        }
+      int xyz[] = getLightCoordsSet(x,y,z, newBlock, Static.blocks.blocks[oldid]);
+      if (isClient) {
+        Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
+      } else {
+        Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
       }
     }
   }

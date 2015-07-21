@@ -12,17 +12,26 @@ public class ChunkQueueBuild {
   private Chunk[] chunks = new Chunk[BUFSIZ];
   private int tail, head1, head2;
   private ChunkQueueCopy next;
-  private static final int max = 9;
+  private int max = 9;
+  private Object lock = new Object();
 
   public ChunkQueueBuild(ChunkQueueCopy next) {
     this.next = next;
   }
 
+  /** Max chunks to process per call to process()
+   * -1 for infinite.
+   * default = 3
+   */
+  public void setMax(int max) {
+    this.max = max;
+  }
+
   public void process() {
     try {
-      int cnt = 0;
+      int cnt = max;
       int pos = tail;
-      while (pos != head1 && cnt < max) {
+      while (pos != head1 && cnt != 0) {
         Chunk chunk = chunks[pos];
         if (chunk.canRender()) {
           chunk.buildBuffers();
@@ -31,7 +40,7 @@ public class ChunkQueueBuild {
         pos++;
         if (pos == BUFSIZ) pos = 0;
         tail = pos;
-        cnt++;
+        cnt--;
       }
 //if (cnt > 0) Static.log("     b:" + cnt);
       if (next != null) next.signal();
@@ -42,26 +51,30 @@ public class ChunkQueueBuild {
 
   public void add(Chunk chunk) {
     //scan head1->head2
-    int pos = head1;
-    while (pos != head2) {
-      if (chunks[pos] == chunk) {
-        return;
+    synchronized(lock) {
+      int pos = head1;
+      while (pos != head2) {
+        if (chunks[pos] == chunk) {
+          return;
+        }
+        pos++;
+        if (pos == BUFSIZ) pos = 0;
       }
+      //add to queue
+      chunks[pos] = chunk;
       pos++;
       if (pos == BUFSIZ) pos = 0;
+      if (pos == tail) {
+        Static.log("ERROR:Client Chunk processing queue overflow!!!");
+        return;
+      }
+      head2 = pos;
     }
-    //add to queue
-    chunks[pos] = chunk;
-    pos++;
-    if (pos == BUFSIZ) pos = 0;
-    if (pos == tail) {
-      Static.log("ERROR:Client Chunk processing queue overflow!!!");
-      return;
-    }
-    head2 = pos;
   }
 
   public void signal() {
-    head1 = head2;
+    synchronized(lock) {
+      head1 = head2;
+    }
   }
 }

@@ -11,6 +11,7 @@ public class ChunkQueueSave {
   private static final int BUFSIZ = 1024 * 4;
   private Chunk[] chunks = new Chunk[BUFSIZ];
   private int tail, head1, head2;
+  private Object lock = new Object();
 
   public ChunkQueueSave() {}
 
@@ -37,26 +38,30 @@ public class ChunkQueueSave {
 
   public void add(Chunk chunk) {
     //scan head1->head2
-    int pos = head1;
-    while (pos != head2) {
-      if (chunks[pos] == chunk) {
-        return;
+    synchronized(lock) {
+      int pos = head1;
+      while (pos != head2) {
+        if (chunks[pos] == chunk) {
+          return;
+        }
+        pos++;
+        if (pos == BUFSIZ) pos = 0;
       }
+      //add to queue
+      chunks[pos] = chunk;
       pos++;
       if (pos == BUFSIZ) pos = 0;
+      if (pos == tail) {
+        Static.log("ERROR:Chunk processing queue overflow!!!");
+        return;
+      }
+      head2 = pos;
     }
-    //add to queue
-    chunks[pos] = chunk;
-    pos++;
-    if (pos == BUFSIZ) pos = 0;
-    if (pos == tail) {
-      Static.log("ERROR:Chunk processing queue overflow!!!");
-      return;
-    }
-    head2 = pos;
   }
 
   public void signal() {
-    head1 = head2;
+    synchronized(lock) {
+      head1 = head2;
+    }
   }
 }
