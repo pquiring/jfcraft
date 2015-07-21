@@ -1252,7 +1252,7 @@ public class Server {
         for(int x=0;x<cw;x++) {
           Chunk chunk = world.chunks.getChunk(dim, cx1 + x, cz1 + z);
           if (chunk == null) {
-            client.serverTransport.sendMsg("Import failed : area not loaded");
+            client.serverTransport.sendMsg("Fill failed : area not loaded");
             return;
           }
           dx = 0;
