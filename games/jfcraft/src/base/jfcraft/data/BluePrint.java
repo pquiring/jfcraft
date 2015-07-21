@@ -1,4 +1,4 @@
-  package jfcraft.data;
+package jfcraft.data;
 
 /**
  * Exported Region (BluePrints).
@@ -331,12 +331,12 @@ public class BluePrint implements SerialClass, SerialCreator {
           for(int x=0;x<w;x++) {
             char id = getID(x+sx,y+sy,z+sz);
             if (id != 0) {
-              chunk.setBlock(x+dx,y+dy,z+dz, id, getBits(x+sx,y+sy,z+sz));
+              chunk.setIDBits(x+dx,y+dy,z+dz, id, getBits(x+sx,y+sy,z+sz));
               cnt++;
             }
             char id2 = getID2(x+sx,y+sy,z+sz);
             if (id2 != 0) {
-              chunk.setBlock(x+dx,y+dy,z+dz, id2, getBits2(x+sx,y+sy,z+sz));
+              chunk.setIDBits(x+dx,y+dy,z+dz, id2, getBits2(x+sx,y+sy,z+sz));
               cnt++;
             }
           }
@@ -392,6 +392,7 @@ public class BluePrint implements SerialClass, SerialCreator {
           }
         }
       }
+      chunk.dirty = true;
     }
     Static.log("write to chunk:" + cnt);
   }
