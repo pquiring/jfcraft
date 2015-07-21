@@ -1181,6 +1181,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
             if (blocks[y][p] != 0) break;
             if (p == 255) {
               blocks[y] = null;
+              bits[y] = null;
             }
           }
         }
@@ -1189,21 +1190,6 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
             if (blocks2[y][p] != 0) break;
             if (p == 255) {
               blocks2[y] = null;
-            }
-          }
-        }
-        if (bits[y] != null) {
-          for(int p=0;p<256;p++) {
-            if (bits[y][p] != 0) break;
-            if (p == 255) {
-              bits[y] = null;
-            }
-          }
-        }
-        if (bits2[y] != null) {
-          for(int p=0;p<256;p++) {
-            if (bits2[y][p] != 0) break;
-            if (p == 255) {
               bits2[y] = null;
             }
           }
