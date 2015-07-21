@@ -248,8 +248,8 @@ public class BluePrint implements SerialClass, SerialCreator {
           float y = e.pos.y;
           float z = e.pos.z;
           if (x >= sx1 && x <= sx2) {
-            if (y >= sy1 && x <= sy2) {
-              if (z >= sz1 && x <= sz2) {
+            if (y >= sy1 && y <= sy2) {
+              if (z >= sz1 && z <= sz2) {
                 buffer.reset();
                 e.write(buffer, true);
                 buffer.rewind();
@@ -276,8 +276,8 @@ public class BluePrint implements SerialClass, SerialCreator {
           short y = e.y;
           short z = e.z;
           if (x >= sx1 && x <= sx2) {
-            if (y >= sy1 && x <= sy2) {
-              if (z >= sz1 && x <= sz2) {
+            if (y >= sy1 && y <= sy2) {
+              if (z >= sz1 && z <= sz2) {
                 buffer.reset();
                 e.write(buffer, true);
                 buffer.rewind();
@@ -358,8 +358,8 @@ public class BluePrint implements SerialClass, SerialCreator {
         float y = e.pos.y;
         float z = e.pos.z;
         if (x >= sx1 && x <= sx2) {
-          if (y >= sy1 && x <= sy2) {
-            if (z >= sz1 && x <= sz2) {
+          if (y >= sy1 && y <= sy2) {
+            if (z >= sz1 && z <= sz2) {
               e.pos.x -= sx;
               e.pos.y -= sy;
               e.pos.z -= sz;
@@ -379,8 +379,8 @@ public class BluePrint implements SerialClass, SerialCreator {
         short y = e.y;
         short z = e.z;
         if (x >= sx1 && x <= sx2) {
-          if (y >= sy1 && x <= sy2) {
-            if (z >= sz1 && x <= sz2) {
+          if (y >= sy1 && y <= sy2) {
+            if (z >= sz1 && z <= sz2) {
               e.x -= sx;
               e.y -= sy;
               e.z -= sz;
