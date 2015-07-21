@@ -1216,12 +1216,14 @@ public class Server {
       int h = y2 - y1 + 1;
       int d = z2 - z1 + 1;
       //chunk coords
-      int cx = x1 >> 4;
-      int cz = z1 >> 4;
+      int cx1 = (int)Math.floor(x1 / 16f);
+      int cz1 = (int)Math.floor(z1 / 16f);
+      int cx2 = (int)Math.floor(x2 / 16f);
+      int cz2 = (int)Math.floor(z2 / 16f);
       //chunks width count
-      int cw = (x2 >> 4) - (x1 >> 4) + 1;
+      int cw = cx2 - cx1 + 1;
       //chunks depth count
-      int cd = (z2 >> 4) - (z1 >> 4) + 1;
+      int cd = cz2 - cz1 + 1;
       //dimension
       int dim = client.player.dim;
       //dest
@@ -1231,11 +1233,24 @@ public class Server {
       int tw = 16;
       int th = h;
       int td = 16;
-      Static.log("import:" + cd + "," + cw);
+
+      int gx1 = x1 % 16;
+      if (x1 < 0 && gx1 != 0) gx1 = 16 + gx1;
+      int gy1 = y1;
+      int gz1 = z1 % 16;
+      if (z1 < 0 && gz1 != 0) gz1 = 16 + gz1;
+
+      int gx2 = x2 % 16;
+      if (x2 < 0 && gx2 != 0) gx2 = 16 + gx2;
+      int gy2 = y2;
+      int gz2 = z2 % 16;
+      if (z2 < 0 && gz2 != 0) gz2 = 16 + gz2;
+
+      Static.log("fill:" + cd + "," + cw);
       ChunkQueueLight queue = new ChunkQueueLight(null, false);
       for(int z=0;z<cd;z++) {
         for(int x=0;x<cw;x++) {
-          Chunk chunk = world.chunks.getChunk(dim, cx + x, cz + z);
+          Chunk chunk = world.chunks.getChunk(dim, cx1 + x, cz1 + z);
           if (chunk == null) {
             client.serverTransport.sendMsg("Import failed : area not loaded");
             return;
@@ -1247,18 +1262,18 @@ public class Server {
           td = 16;
           //calc edge cases
           if (x == 0) {
-            dx = x1 % 16;
-            tw -= dx;
+            dx = gx1;
+            tw -= gx1;
           }
           if (x == cw-1) {
-            tw -= 16 - (x2 % 16);
+            tw = gx2 + 1;
           }
           if (z == 0) {
-            dz = z1 % 16;
-            td -= dz;
+            dz = gz1;
+            td -= gz1;
           }
           if (z == cd-1) {
-            td -= 16 - (z2 % 16);
+            td = gz2 + 1;
           }
           if (block.isBlocks2)
             chunk.fill2(dx, y1, dz,  tw, th, td, item.id);
@@ -1286,6 +1301,7 @@ public class Server {
       }
       Chunk chunks[] = queue.getQueue();
       queue.signal();
+      queue.setMax(-1);
       queue.process();  //long process
       for(int a=0;a<chunks.length;a++) {
         broadcastChunk(chunks[a]);
@@ -1342,12 +1358,14 @@ public class Server {
       BluePrint blueprint = new BluePrint();
       blueprint.readInit(w, h, d, world);
       //chunk coords
-      int cx = x1 >> 4;
-      int cz = z1 >> 4;
+      int cx1 = (int)Math.floor(x1 / 16f);
+      int cz1 = (int)Math.floor(z1 / 16f);
+      int cx2 = (int)Math.floor(x2 / 16f);
+      int cz2 = (int)Math.floor(z2 / 16f);
       //chunks width count
-      int cw = (x2 >> 4) - (x1 >> 4) + 1;
+      int cw = cx2 - cx1 + 1;
       //chunks depth count
-      int cd = (z2 >> 4) - (z1 >> 4) + 1;
+      int cd = cz2 - cz1 + 1;
       //dimension
       int dim = client.player.dim;
       //source
@@ -1360,10 +1378,23 @@ public class Server {
       int tw = 16;
       int th = h;
       int td = 16;
+
+      int gx1 = x1 % 16;
+      if (x1 < 0 && gx1 != 0) gx1 = 16 + gx1;
+//      int gy1 = y1;
+      int gz1 = z1 % 16;
+      if (z1 < 0 && gz1 != 0) gz1 = 16 + gz1;
+
+      int gx2 = x2 % 16;
+      if (x2 < 0 && gx2 != 0) gx2 = 16 + gx2;
+//      int gy2 = y2;
+      int gz2 = z2 % 16;
+      if (z2 < 0 && gz2 != 0) gz2 = 16 + gz2;
+
       for(int z=0;z<cd;z++) {
         dx = 0;
         for(int x=0;x<cw;x++) {
-          Chunk chunk = world.chunks.getChunk(dim, cx + x, cz + z);
+          Chunk chunk = world.chunks.getChunk(dim, cx1 + x, cz1 + z);
           if (chunk == null) {
             client.serverTransport.sendMsg("Export failed : area not loaded");
             return;
@@ -1375,18 +1406,18 @@ public class Server {
           td = 16;
           //calc edge cases
           if (x == 0) {
-            sx = x1 % 16;
-            tw -= sx;
+            sx = gx1;
+            tw -= gx1;
           }
           if (x == cw-1) {
-            tw -= 16 - (x2 % 16);
+            tw = gx2 + 1;
           }
           if (z == 0) {
-            sz = z1 % 16;
-            td -= sz;
+            sz = gz1;
+            td -= gz1;
           }
           if (z == cd-1) {
-            td -= 16 - (z2 % 16);
+            td = gz2 + 1;
           }
           blueprint.readChunk(chunk,  sx, y1, sz,  dx, 0, dz,  tw, th, td);
           dx += tw;
@@ -1402,7 +1433,7 @@ public class Server {
       //   orientations = [mirror] [rotate]
       //   mirror = mx mz
       //   rotate = r90 r180 r270
-      if (p.length < 4) {
+      if (p.length < 5) {
         client.serverTransport.sendMsg("/import x1 y1 z1 filename [mx | mz] [r90 | r180 | r270]");
         return;
       }
@@ -1441,12 +1472,14 @@ public class Server {
       int h = y2 - y1 + 1;
       int d = z2 - z1 + 1;
       //chunk coords
-      int cx = x1 >> 4;
-      int cz = z1 >> 4;
+      int cx1 = (int)Math.floor(x1 / 16f);
+      int cz1 = (int)Math.floor(z1 / 16f);
+      int cx2 = (int)Math.floor(x2 / 16f);
+      int cz2 = (int)Math.floor(z2 / 16f);
       //chunks width count
-      int cw = (x2 >> 4) - (x1 >> 4) + 1;
+      int cw = cx2 - cx1 + 1;
       //chunks depth count
-      int cd = (z2 >> 4) - (z1 >> 4) + 1;
+      int cd = cz2 - cz1 + 1;
       //dimension
       int dim = client.player.dim;
       //source
@@ -1459,12 +1492,27 @@ public class Server {
       int tw = 16;
       int th = h;
       int td = 16;
-      Static.log("import:" + cd + "," + cw);
+
+      int gx1 = x1 % 16;
+      if (x1 < 0 && gx1 != 0) gx1 = 16 + gx1;
+      int gy1 = y1;
+      int gz1 = z1 % 16;
+      if (z1 < 0 && gz1 != 0) gz1 = 16 + gz1;
+
+      int gx2 = x2 % 16;
+      if (x2 < 0 && gx2 != 0) gx2 = 16 + gx2;
+      int gy2 = y2;
+      int gz2 = z2 % 16;
+      if (z2 < 0 && gz2 != 0) gz2 = 16 + gz2;
+
+      Static.log("import:" + x1 + "," + y1 + "," + z1 + ":" + x2 + "," + y2 + "," + z2);
+      Static.log("import:" + gx1 + "," + gy1 + "," + gz1 + ":" + gx2 + "," + gy2 + "," + gz2);
+      Static.log("import:" + cw + "," + cd);
       ChunkQueueLight queue = new ChunkQueueLight(null, false);
       for(int z=0;z<cd;z++) {
         sx = 0;
         for(int x=0;x<cw;x++) {
-          Chunk chunk = world.chunks.getChunk(dim, cx + x, cz + z);
+          Chunk chunk = world.chunks.getChunk(dim, cx1 + x, cz1 + z);
           if (chunk == null) {
             client.serverTransport.sendMsg("Import failed : area not loaded");
             return;
@@ -1476,18 +1524,18 @@ public class Server {
           td = 16;
           //calc edge cases
           if (x == 0) {
-            dx = x1 % 16;
-            tw -= dx;
+            dx = gx1;
+            tw -= gx1;
           }
           if (x == cw-1) {
-            tw -= 16 - (x2 % 16);
+            tw = gx2 + 1;
           }
           if (z == 0) {
-            dz = z1 % 16;
-            td -= dz;
+            dz = gz1;
+            td -= gz1;
           }
           if (z == cd-1) {
-            td -= 16 - (z2 % 16);
+            td = gz2 + 1;
           }
           blueprint.writeChunk(chunk,  sx, 0, sz,  dx, y1, dz,  tw, th, td);
           chunk.resetLights();
@@ -1496,7 +1544,7 @@ public class Server {
             chunk.W.resetLights();
             queue.add(chunk.W, 0, 0, 0, 15, 255, 15);
           }
-          if (x == cw - 1) {
+          if (x == cw-1) {
             chunk.E.resetLights();
             queue.add(chunk.E, 0, 0, 0, 15, 255, 15);
           }
@@ -1514,6 +1562,7 @@ public class Server {
       }
       Chunk chunks[] = queue.getQueue();
       queue.signal();
+      queue.setMax(-1);
       queue.process();  //long process
       for(int a=0;a<chunks.length;a++) {
         broadcastChunk(chunks[a]);
@@ -1528,6 +1577,7 @@ public class Server {
       ChunkQueueLight queue = new ChunkQueueLight(null, false);
       queue.add(chunk, 0, 0, 0, 15, 255, 15);
       queue.signal();
+      queue.setMax(-1);
       queue.process();
       broadcastChunk(chunk);
       client.serverTransport.sendMsg("Chunk " + cx + "," + cz + " relight");

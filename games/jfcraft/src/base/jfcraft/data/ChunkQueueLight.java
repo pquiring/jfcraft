@@ -21,19 +21,28 @@ public class ChunkQueueLight {
   private int tail, head1, head2;
   private ChunkQueueBuild next;
   private boolean isClient;
-  private static final int max = 3;
+  private int max = 3;
   private Profiler pro = new Profiler("lp:");
+  private Object lock = new Object();
 
   public ChunkQueueLight(ChunkQueueBuild next, boolean isClient) {
     this.next = next;
     this.isClient = isClient;
   }
 
+  /** Max chunks to process per call to process()
+   * -1 for infinite.
+   * default = 3
+   */
+  public void setMax(int max) {
+    this.max = max;
+  }
+
   public void process() {
     try {
-      int cnt = 0;
+      int cnt = max;
       int pos = tail;
-      while (pos != head1 && cnt < max) {
+      while (pos != head1 && cnt != 0) {
         Chunk chunk = chunks[pos];
         int x1 = x1s[pos];
         int y1 = y1s[pos];
@@ -62,7 +71,7 @@ public class ChunkQueueLight {
         pos++;
         if (pos == BUFSIZ) pos = 0;
         tail = pos;
-        cnt++;
+        cnt--;
       }
 //if (cnt > 0) Static.log("l:" + cnt);
       if (next != null) next.signal();
@@ -84,41 +93,44 @@ public class ChunkQueueLight {
 
   public void add(Chunk chunk,int x1,int y1,int z1,int x2, int y2, int z2) {
     //scan head1->head2
-    int pos;
-    pos = head1;
-    while (pos != head2) {
-      if (chunks[pos] == chunk) {
-        //combine ranges
-        if (x1 < x1s[pos]) x1s[pos] = x1;
-        if (y1 < y1s[pos]) y1s[pos] = y1;
-        if (z1 < z1s[pos]) z1s[pos] = z1;
-        if (x2 > x2s[pos]) x2s[pos] = x2;
-        if (y2 > y2s[pos]) y2s[pos] = y2;
-        if (z2 > z2s[pos]) z2s[pos] = z2;
-        return;
+    synchronized(lock) {
+      int pos = head1;
+      while (pos != head2) {
+        if (chunks[pos] == chunk) {
+          //combine ranges
+          if (x1 < x1s[pos]) x1s[pos] = x1;
+          if (y1 < y1s[pos]) y1s[pos] = y1;
+          if (z1 < z1s[pos]) z1s[pos] = z1;
+          if (x2 > x2s[pos]) x2s[pos] = x2;
+          if (y2 > y2s[pos]) y2s[pos] = y2;
+          if (z2 > z2s[pos]) z2s[pos] = z2;
+          return;
+        }
+        pos++;
+        if (pos == BUFSIZ) pos = 0;
       }
+      //add to queue
+      chunks[pos] = chunk;
+      x1s[pos] = x1;
+      y1s[pos] = y1;
+      z1s[pos] = z1;
+      if (y2 > 255) y2 = 255;
+      x2s[pos] = x2;
+      y2s[pos] = y2;
+      z2s[pos] = z2;
       pos++;
       if (pos == BUFSIZ) pos = 0;
+      if (pos == tail) {
+        Static.log("ERROR:Client Chunk processing queue overflow!!!");
+        return;
+      }
+      head2 = pos;
     }
-    //add to queue
-    chunks[pos] = chunk;
-    x1s[pos] = x1;
-    y1s[pos] = y1;
-    z1s[pos] = z1;
-    if (y2 > 255) y2 = 255;
-    x2s[pos] = x2;
-    y2s[pos] = y2;
-    z2s[pos] = z2;
-    pos++;
-    if (pos == BUFSIZ) pos = 0;
-    if (pos == tail) {
-      Static.log("ERROR:Client Chunk processing queue overflow!!!");
-      return;
-    }
-    head2 = pos;
   }
 
   public void signal() {
-    head1 = head2;
+    synchronized(lock) {
+      head1 = head2;
+    }
   }
 }

@@ -13,21 +13,30 @@ public class ChunkQueueCopy {
   private static final int BUFSIZ = 1024 * 4;
   private Chunk[] chunks = new Chunk[BUFSIZ];
   private int tail, head1, head2;
-  private static final int max = 9;
+  private int max = 9;
+  private Object lock = new Object();
 
   public ChunkQueueCopy() {}
 
+  /** Max chunks to process per call to process()
+   * -1 for infinite.
+   * default = 3
+   */
+  public void setMax(int max) {
+    this.max = max;
+  }
+
   public void process(GL gl) {
     try {
-      int cnt = 0;
+      int cnt = max;
       int pos = tail;
-      while (pos != head1 && cnt < max) {
+      while (pos != head1 && cnt != 0) {
         Chunk chunk = chunks[pos];
         chunk.copyBuffers(gl);
         pos++;
         if (pos == BUFSIZ) pos = 0;
         tail = pos;
-        cnt++;
+        cnt--;
       }
 //if (cnt > 0) Static.log("              c:" + cnt);
     } catch (Exception e) {
@@ -37,26 +46,30 @@ public class ChunkQueueCopy {
 
   public void add(Chunk chunk) {
     //scan head1->head2
-    int pos = head1;
-    while (pos != head2) {
-      if (chunks[pos] == chunk) {
-        return;
+    synchronized(lock) {
+      int pos = head1;
+      while (pos != head2) {
+        if (chunks[pos] == chunk) {
+          return;
+        }
+        pos++;
+        if (pos == BUFSIZ) pos = 0;
       }
+      //add to queue
+      chunks[pos] = chunk;
       pos++;
       if (pos == BUFSIZ) pos = 0;
+      if (pos == tail) {
+        Static.log("ERROR:Client Chunk processing queue overflow!!!");
+        return;
+      }
+      head2 = pos;
     }
-    //add to queue
-    chunks[pos] = chunk;
-    pos++;
-    if (pos == BUFSIZ) pos = 0;
-    if (pos == tail) {
-      Static.log("ERROR:Client Chunk processing queue overflow!!!");
-      return;
-    }
-    head2 = pos;
   }
 
   public void signal() {
-    head1 = head2;
+    synchronized(lock) {
+      head1 = head2;
+    }
   }
 }
