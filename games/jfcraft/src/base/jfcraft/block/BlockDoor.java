@@ -33,6 +33,7 @@ public class BlockDoor extends BlockBase {
     canUse = true;
     model_upper = Assets.getModel("door_upper").model;
     model_lower = Assets.getModel("door_lower").model;
+    varMask = 0x7;  //remove VAR_UPPER
   }
 
   public static final int VAR_UPPER = 0x8;  //placed in var

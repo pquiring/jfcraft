@@ -147,7 +147,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   }
 
   public String getName(int var) {
-    if (isVar) return names[var]; else return names[0];
+    if (isVar) return names[var & varMask]; else return names[0];
   }
   public BlockBase setGreenTop() {
     isGreen = true;

@@ -1246,7 +1246,9 @@ public class Server {
       int gz2 = z2 % 16;
       if (z2 < 0 && gz2 != 0) gz2 = 16 + gz2;
 
-      Static.log("fill:" + cd + "," + cw);
+//      Static.log("fill:" + x1 + "," + y1 + "," + z1 + ":" + x2 + "," + y2 + "," + z2);
+//      Static.log("fill:" + gx1 + "," + gy1 + "," + gz1 + ":" + gx2 + "," + gy2 + "," + gz2);
+//      Static.log("fill:" + cw + "," + cd);
       ChunkQueueLight queue = new ChunkQueueLight(null, false);
       for(int z=0;z<cd;z++) {
         for(int x=0;x<cw;x++) {
@@ -1266,14 +1268,14 @@ public class Server {
             tw -= gx1;
           }
           if (x == cw-1) {
-            tw = gx2 + 1;
+            tw -= 15 - gx2;
           }
           if (z == 0) {
             dz = gz1;
             td -= gz1;
           }
           if (z == cd-1) {
-            td = gz2 + 1;
+            td -= 15 - gz2;
           }
           if (block.isBlocks2)
             chunk.fill2(dx, y1, dz,  tw, th, td, item.id);
@@ -1410,14 +1412,14 @@ public class Server {
             tw -= gx1;
           }
           if (x == cw-1) {
-            tw = gx2 + 1;
+            tw -= 15 - gx2;
           }
           if (z == 0) {
             sz = gz1;
             td -= gz1;
           }
           if (z == cd-1) {
-            td = gz2 + 1;
+            td -= 15 - gz2;
           }
           blueprint.readChunk(chunk,  sx, y1, sz,  dx, 0, dz,  tw, th, td);
           dx += tw;
@@ -1528,14 +1530,14 @@ public class Server {
             tw -= gx1;
           }
           if (x == cw-1) {
-            tw = gx2 + 1;
+            tw -= 15 - gx2;
           }
           if (z == 0) {
             dz = gz1;
             td -= gz1;
           }
           if (z == cd-1) {
-            td = gz2 + 1;
+            td -= 15 - gz2;
           }
           blueprint.writeChunk(chunk,  sx, 0, sz,  dx, y1, dz,  tw, th, td);
           chunk.resetLights();
