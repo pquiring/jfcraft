@@ -1286,7 +1286,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
           bits[y] = new byte[256];
         }
         for(int z=z1;z<=z2;z++) {
-          int p = z * 16;
+          int p = z * 16 + x1;
           for(int x=x1;x<=x2;x++) {
             blocks[y][p] = id;
             bits[y][p] = 0;
@@ -1317,7 +1317,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
           bits2[y] = new byte[256];
         }
         for(int z=z1;z<=z2;z++) {
-          int p = z * 16;
+          int p = z * 16 + x1;
           for(int x=x1;x<=x2;x++) {
             blocks2[y][p] = id;
             bits2[y][p] = 0;
