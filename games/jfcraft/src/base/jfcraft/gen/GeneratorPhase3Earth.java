@@ -29,6 +29,8 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
     animals = Static.entities.listGenerate(Dims.EARTH);
   }
 
+  public void reset() {}
+
   public void generate(Chunk chunk) {
     this.chunk = chunk;
 
@@ -208,13 +210,14 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
 //        float temp = chunk.temp[p];
 //        float rain = chunk.rain[p];
         int bt = chunk.biome[p];
-        BlockBase block;
+        BlockBase block, blockA;
         switch (bt) {
           default:
           case Chunk.TAIGA:
           case Chunk.FOREST:
             block = getBlock(x,elev,z);
-            if (block.canPlantOn) {
+            blockA = getBlock(x,elev+1,z);
+            if (block.canPlantOn && blockA.id == 0) {
               if (block.id != Blocks.GRASS && block.id != Blocks.DIRT) {
                 System.out.println("canPlantOn != soil:" + (int)block.id);
               }

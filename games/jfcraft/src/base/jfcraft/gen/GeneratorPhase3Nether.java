@@ -27,6 +27,8 @@ public class GeneratorPhase3Nether implements GeneratorPhase3Base {
     trees = new byte[] {Blocks.VAR_OAK, Blocks.VAR_SPRUCE, Blocks.VAR_JUNGLE};
   }
 
+  public void reset() {}
+
   public void generate(Chunk chunk) {
     this.chunk = chunk;
 

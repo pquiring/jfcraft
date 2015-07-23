@@ -30,6 +30,8 @@ public class GeneratorPhase3Mario implements GeneratorPhase3Base {
     animals = Static.entities.listGenerate(DimMarioWorld.MARIO_WORLD);
   }
 
+  public void reset() {}
+
   public void generate(Chunk chunk) {
     this.chunk = chunk;
 

@@ -36,4 +36,14 @@ public class Dims {
     registerDimension(new DimEnd());
     registerDimension(new DimNether());
   }
+
+  public void resetAll() {
+    int p = 0;
+    while (dims[p] != null) {
+      dims[p].getGeneratorPhase1().reset();
+      dims[p].getGeneratorPhase2().reset();
+      dims[p].getGeneratorPhase3().reset();
+      p++;
+    }
+  }
 }
