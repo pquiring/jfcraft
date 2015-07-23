@@ -76,6 +76,7 @@ public class Server {
   }
 
   private void startWorld() {
+    Static.dims.resetAll();  //reset all generators
     Static.initNoises(world);
     new File(folderName + "/players").mkdirs();
     if (!world.genSpawnAreaDone) {
@@ -1450,6 +1451,10 @@ public class Server {
       BluePrint blueprint = BluePrint.read(Static.getBasePath() + "/blueprints/" + filename + ".blueprint");
       if (blueprint == null) {
         client.serverTransport.sendMsg("BluePrint not found");
+        return;
+      }
+      if (!blueprint.convertIDs(world)) {
+        client.serverTransport.sendMsg("BluePrint import failed, missing ID:" + blueprint.missingID);
         return;
       }
       Static.log("blueprint:" + blueprint.X + "," + blueprint.Y + "," + blueprint.Z);

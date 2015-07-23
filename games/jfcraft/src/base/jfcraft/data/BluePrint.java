@@ -344,48 +344,77 @@ public class BluePrint implements SerialClass, SerialCreator {
       float sy2 = sy + h - 1;
       float sz2 = sz + d - 1;
       //copy entities in range
-      int ecnt = entities.size();
-      for(int a=0;a<ecnt;a++) {
-        EntityBase e = entities.get(a);
-        float x = e.pos.x;
-        float y = e.pos.y;
-        float z = e.pos.z;
-        if (x >= sx1 && x <= sx2) {
-          if (y >= sy1 && y <= sy2) {
-            if (z >= sz1 && z <= sz2) {
-              e.pos.x -= sx;
-              e.pos.y -= sy;
-              e.pos.z -= sz;
-              e.pos.x += dx + cx;
-              e.pos.y += dy;
-              e.pos.z += dz + cz;
-              chunk.addEntity(e);
+      synchronized(buffer) {
+        int ecnt = entities.size();
+        for(int a=0;a<ecnt;a++) {
+          EntityBase e = entities.get(a);
+          float x = e.pos.x;
+          float y = e.pos.y;
+          float z = e.pos.z;
+          if (x >= sx1 && x <= sx2) {
+            if (y >= sy1 && y <= sy2) {
+              if (z >= sz1 && z <= sz2) {
+                buffer.reset();
+                e.write(buffer, true);
+                buffer.rewind();
+                e = (EntityBase)Static.entities.create(buffer);
+                if (e != null) {
+                  e.read(buffer, true);
+                  e.pos.x -= sx;
+                  e.pos.y -= sy;
+                  e.pos.z -= sz;
+                  e.pos.x += dx + cx;
+                  e.pos.y += dy;
+                  e.pos.z += dz + cz;
+                  chunk.addEntity(e);
+                }
+              }
             }
           }
         }
-      }
-      //copy extras in range
-      int xcnt = extras.size();
-      for(int a=0;a<xcnt;a++) {
-        ExtraBase e = extras.get(a);
-        short x = e.x;
-        short y = e.y;
-        short z = e.z;
-        if (x >= sx1 && x <= sx2) {
-          if (y >= sy1 && y <= sy2) {
-            if (z >= sz1 && z <= sz2) {
-              e.x -= sx;
-              e.y -= sy;
-              e.z -= sz;
-              e.x += dx;
-              e.y += dy;
-              e.z += dz;
-              chunk.addExtra(e);
+        //copy extras in range
+        int xcnt = extras.size();
+        for(int a=0;a<xcnt;a++) {
+          ExtraBase e = extras.get(a);
+          short x = e.x;
+          short y = e.y;
+          short z = e.z;
+          if (x >= sx1 && x <= sx2) {
+            if (y >= sy1 && y <= sy2) {
+              if (z >= sz1 && z <= sz2) {
+                buffer.reset();
+                e.write(buffer, true);
+                buffer.rewind();
+                e = (ExtraBase)Static.extras.create(buffer);
+                if (e != null) {
+                  e.read(buffer, true);
+                  e.x -= sx;
+                  e.y -= sy;
+                  e.z -= sz;
+                  e.x += dx;
+                  e.y += dy;
+                  e.z += dz;
+                  chunk.addExtra(e);
+                }
+              }
             }
           }
         }
       }
       chunk.dirty = true;
+    }
+  }
+
+  public static BluePrint read(InputStream is) {
+    synchronized(coder) {
+      try {
+        byte data[] = JF.readAll(is);
+        BluePrint xchunk = (BluePrint)coder.decodeObject(data, creator, true);
+        return xchunk;
+      } catch (Exception e) {
+        e.printStackTrace();
+        return null;
+      }
     }
   }
 

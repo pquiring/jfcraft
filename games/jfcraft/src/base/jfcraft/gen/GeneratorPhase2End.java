@@ -25,6 +25,8 @@ public class GeneratorPhase2End implements GeneratorPhase2Base {
 
   public void getIDs() {}
 
+  public void reset() {}
+
   public void generate(Chunk chunk) {
     this.chunk = chunk;
 

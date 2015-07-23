@@ -25,6 +25,8 @@ public class GeneratorPhase1Nether implements GeneratorPhase1Base {
 
   public void getIDs() {}
 
+  public void reset() {}
+
   private void getSeed() {
     float _r1 = Static.noises[Static.N_RANDOM1].noise_2d(chunk.cx, chunk.cz);  //-1,1
     float _r2 = Static.noises[Static.N_RANDOM2].noise_2d(chunk.cx, chunk.cz);  //-1,1
@@ -60,7 +62,7 @@ public class GeneratorPhase1Nether implements GeneratorPhase1Base {
 
     generateBiomes();
 
-    reset();
+    fill();
 
     generate_default();
 
@@ -113,7 +115,7 @@ public class GeneratorPhase1Nether implements GeneratorPhase1Base {
     }
   }
 
-  private void reset() {
+  private void fill() {
     Arrays.fill(blocks, (char)0);
     Arrays.fill(bits, (byte)0);
     Arrays.fill(blocks2, (char)0);

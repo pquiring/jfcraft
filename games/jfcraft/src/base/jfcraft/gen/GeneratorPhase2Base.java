@@ -10,4 +10,5 @@ import jfcraft.data.Chunk;
 public interface GeneratorPhase2Base {
   public void getIDs();
   public void generate(Chunk chunk);
+  public void reset();
 }

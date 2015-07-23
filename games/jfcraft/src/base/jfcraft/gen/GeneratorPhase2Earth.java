@@ -23,10 +23,20 @@ import static jfcraft.data.Direction.*;
 public class GeneratorPhase2Earth implements GeneratorPhase2Base {
   private Chunk chunk;
   private Random r = new Random();
+  private BluePrint cabin;
 
   public void getIDs() {}
 
+  public void reset() {
+    cabin = null;
+  }
+
   public void generate(Chunk chunk) {
+    if (cabin == null) {
+      //BUG : This needs to get reloaded whenever a new world is loaded
+      cabin = Assets.getBluePrint("cabin").blueprint;
+      cabin.convertIDs(Static.server.world);
+    }
     this.chunk = chunk;
 
     synchronized(chunk.lock) {
@@ -41,8 +51,8 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
       if (r.nextInt(1000) == 0) {
         addRavine();
       }
-      if (r.nextInt(10000) == 0) {
-//        addVillage();  //todo
+      if (r.nextInt(10000) == 0 || (chunk.cx == 0 && chunk.cz == -3)) {
+        addCabin();
       }
     }
   }
@@ -328,5 +338,12 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
 
       len--;
     } while (len > 0);
+  }
+  private void addCabin() {
+    int elev = (int)chunk.elev[8 * 16 + 8];
+    if (elev + cabin.Y <= 255) {
+      cabin.writeChunk(chunk, 0, 0, 0, 0, elev+1, 0, cabin.X, cabin.Y, cabin.Z);
+      //TODO : extend foundation
+    }
   }
 }

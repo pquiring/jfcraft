@@ -17,14 +17,16 @@ public class Assets {
   private static ArrayList<Asset> pngs = new ArrayList<Asset>();
   private static ArrayList<Asset> wavs = new ArrayList<Asset>();
   private static ArrayList<Asset> models = new ArrayList<Asset>();
+  private static ArrayList<Asset> prints = new ArrayList<Asset>();
   private static ArrayList<ZipFile> zips = new ArrayList<ZipFile>();
 
-  private enum Type {PNG, WAV, MODEL};
+  private enum Type {PNG, WAV, MODEL, BLUEPRINT};
 
   public static void reset() {
     pngs.clear();
     wavs.clear();
     models.clear();
+    prints.clear();
     zips.clear();
   }
 
@@ -58,6 +60,7 @@ public class Assets {
       case PNG: assets = pngs; break;
       case WAV: assets = wavs; break;
       case MODEL: assets = models; break;
+      case BLUEPRINT: assets = prints; break;
       default: return null;
     }
 
@@ -104,6 +107,11 @@ public class Assets {
           model.name = name;
           model.model = new GLModel();
           return model;
+        case BLUEPRINT:
+          AssetBluePrint blueprint = new AssetBluePrint();
+          blueprint.name = name;
+          blueprint.blueprint = new BluePrint();
+          return blueprint;
       }
       return null;
     }
@@ -143,6 +151,12 @@ public class Assets {
         model.model = loader.load(is);
         assets.add(model);
         return model;
+      case BLUEPRINT:
+        AssetBluePrint print = new AssetBluePrint();
+        print.name = name;
+        print.blueprint = BluePrint.read(is);
+        assets.add(print);
+        return print;
     }
     //TODO more formats (ie: ogg, mp3, etc.)
     return null;
@@ -166,6 +180,13 @@ public class Assets {
     String filename;
     filename = "assets/minecraft/models/" + name + ".jf3d";
     AssetModel asset = (AssetModel)getAsset(name, Type.MODEL, filename);
+    return asset;
+  }
+
+  public static AssetBluePrint getBluePrint(String name) {
+    String filename;
+    filename = "assets/minecraft/blueprints/" + name + ".blueprint";
+    AssetBluePrint asset = (AssetBluePrint)getAsset(name, Type.BLUEPRINT, filename);
     return asset;
   }
 }

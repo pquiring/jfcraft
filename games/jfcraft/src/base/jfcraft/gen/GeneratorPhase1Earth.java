@@ -25,6 +25,8 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
   private char blocks2[] = new char[16*256*16];
   private byte bits2[] = new byte[16*256*16];
 
+  public void reset() {}
+
   private void getSeed() {
     float _r1 = Static.noises[Static.N_RANDOM1].noise_2d(chunk.cx, chunk.cz);  //-1,1
     float _r2 = Static.noises[Static.N_RANDOM2].noise_2d(chunk.cx, chunk.cz);  //-1,1
@@ -118,7 +120,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
 
     generateBiomes();
 
-    reset();
+    fill();
 
     if (world.type.equals("default")) {
       generate_default();
@@ -388,7 +390,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
     bits[p] = (byte)_bits;
   }
 
-  private void reset() {
+  private void fill() {
     Arrays.fill(blocks, (char)0);
     Arrays.fill(bits, (byte)0);
     Arrays.fill(blocks2, (char)0);
