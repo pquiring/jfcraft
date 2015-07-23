@@ -360,4 +360,19 @@ public class BlockRail extends BlockBase {
     return list;
   }
 */
+
+  public byte rotateBits(byte bits, int rotation) {
+    int e1 = bits & 0xf0;
+    int e2 = bits & 0x0f;
+    if (e1 != 0) {
+      e1 >>= 4;
+      e1 = Direction.rotate((byte)e1, rotation);
+      e1 <<= 4;
+    }
+    if (e2 != 0) {
+      e2 = Direction.rotate((byte)e2, rotation);
+    }
+    return (byte)(e1 | e2);
+  }
+
 }

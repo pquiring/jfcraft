@@ -340,10 +340,25 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
     } while (len > 0);
   }
   private void addCabin() {
-    int elev = (int)chunk.elev[8 * 16 + 8];
-    if (elev + cabin.Y <= 255) {
-      cabin.writeChunk(chunk, 0, 0, 0, 0, elev+1, 0, cabin.X, cabin.Y, cabin.Z);
-      //TODO : extend foundation
+    int elev = (int)chunk.elev[8 * 16 + 8] + 1;
+    if (elev + cabin.Y > 255) return;
+    if (chunk.getID(8, elev+1, 8) != 0) return;
+    int ang = r.nextInt(4);
+    ang = 1;  //test
+    switch (ang) {
+      case 0: break;  //no change
+      case 1: cabin.rotateY(R90); break;
+      case 2: cabin.rotateY(R180); break;
+      case 3: cabin.rotateY(R270); break;
+    }
+    cabin.writeChunk(chunk, 0, 0, 0, 0, elev, 0, cabin.X, cabin.Y, cabin.Z);
+    //TODO : extend foundation
+    //rotate back if needed
+    switch (ang) {
+      case 0: break;  //no change
+      case 1: cabin.rotateY(R270); break;
+      case 2: cabin.rotateY(R180); break;
+      case 3: cabin.rotateY(R90); break;
     }
   }
 }

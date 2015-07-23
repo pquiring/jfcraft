@@ -24,15 +24,6 @@ public class BlockWall extends BlockBase {
     }
   }
 
-  //dir bits
-  private static final int NB = 0x1;
-  private static final int EB = 0x2;
-  private static final int SB = 0x4;
-  private static final int WB = 0x8;
-
-  private static final int N_S = NB | SB;
-  private static final int E_W = EB | WB;
-
   public void buildBuffers(RenderDest dest, RenderData data) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
     int dir = data.dir[X];

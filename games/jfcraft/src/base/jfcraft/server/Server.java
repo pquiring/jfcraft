@@ -21,6 +21,7 @@ import jfcraft.dim.*;
 import jfcraft.data.*;
 import jfcraft.entity.*;
 import jfcraft.packet.*;
+import static jfcraft.data.Direction.*;
 
 public class Server {
   public World world;
@@ -1467,13 +1468,13 @@ public class Server {
           blueprint.mirrorZ();
         }
         else if (or.equals("r90")) {
-          blueprint.rotateY(90);
+          blueprint.rotateY(R90);
         }
         else if (or.equals("r180")) {
-          blueprint.rotateY(180);
+          blueprint.rotateY(R180);
         }
         else if (or.equals("r270")) {
-          blueprint.rotateY(270);
+          blueprint.rotateY(R270);
         }
       }
       int x2 = x1 + blueprint.X - 1;

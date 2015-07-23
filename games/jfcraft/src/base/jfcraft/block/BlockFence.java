@@ -28,12 +28,6 @@ public class BlockFence extends BlockBase {
     model = Assets.getModel("fence").model;
   }
 
-  //dir bits
-  private static final int NB = 0x1;
-  private static final int EB = 0x2;
-  private static final int SB = 0x4;
-  private static final int WB = 0x8;
-
   public void buildBuffers(RenderDest dest, RenderData data) {
     SubTexture st = getTexture(data);
     RenderBuffers buf = dest.getBuffers(buffersIdx);

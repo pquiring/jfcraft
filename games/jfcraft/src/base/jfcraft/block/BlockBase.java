@@ -15,9 +15,9 @@ import javaforce.gl.*;
 import jfcraft.client.*;
 import jfcraft.item.*;
 import jfcraft.data.*;
-import static jfcraft.data.Chunk.DEST_TEXT;
 import jfcraft.entity.*;
 import jfcraft.opengl.*;
+
 import static jfcraft.data.Direction.*;
 
 public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
@@ -737,7 +737,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   }
 
   public void addText(RenderDest dest, String lns[], RenderData data) {
-    RenderBuffers buf = dest.getBuffers(DEST_TEXT);
+    RenderBuffers buf = dest.getBuffers(Chunk.DEST_TEXT);
     int chars = 0;
     for(int a=0;a<lns.length;a++) {
       chars += lns[a].length();
@@ -817,5 +817,23 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
       buf.addSunLight(0);
       buf.addBlockLight(0);
     }
+  }
+
+  public byte rotateBits(byte bits, int rotation) {
+    if (hasShape) {
+      byte dir = (byte)((bits & 0xf0) >> 4);
+      byte var = (byte)(bits & 0x0f);
+      Static.log("pre shape:" + dir);
+      dir = Direction.rotateShape(dir, rotation);
+      Static.log("pst shape:" + dir);
+      return (byte)((dir << 4) | var);
+    }
+    if (isDir || isDirFace || isDirXZ) {
+      byte dir = (byte)((bits & 0xf0) >> 4);
+      byte var = (byte)(bits & 0x0f);
+      dir = Direction.rotate(dir, rotation);
+      return (byte)((dir << 4) | var);
+    }
+    return bits;
   }
 }
