@@ -12,7 +12,10 @@ import java.util.*;
 
 import javaforce.JF;
 
-import jfcraft.entity.EntityBase;
+import jfcraft.data.*;
+import jfcraft.block.*;
+import jfcraft.entity.*;
+import static jfcraft.data.Direction.*;
 
 public class BluePrint implements SerialClass, SerialCreator {
   private char blocks[][];  //type:16
@@ -448,21 +451,379 @@ public class BluePrint implements SerialClass, SerialCreator {
     }
   }
 
-  public void mirrorX() {}
+  public void mirrorX() {
+    //flip blocks
+    char id;
+    BlockBase block;
+    for(int y=0;y<Y;y++) {
+      if (blocks[y] != null) {
+        char blocksSrc[] = blocks[y];
+        char blocksDst[] = new char[X * Z];
+        byte bitsSrc[] = bits[y];
+        byte bitsDst[] = new byte[X * Z];
+        int s = 0;
+        int d = (X-1) * Z;
+        int Z2 = Z*2;
+        for(int x=0;x<X;x++) {
+          for(int z=0;z<Z;z++) {
+            id = blocksSrc[s];
+            if (id != 0) {
+              blocksDst[d] = id;
+              block = Static.blocks.blocks[id];
+              bitsDst[d] = block.rotateBits(bitsSrc[s], R180);
+            }
+            d++;
+            s++;
+          }
+          d -= Z2;
+        }
+        blocks[y] = blocksDst;
+        bits[y] = bitsDst;
+      }
+      if (blocks2[y] != null) {
+        char blocksSrc[] = blocks2[y];
+        char blocksDst[] = new char[X * Z];
+        byte bitsSrc[] = bits2[y];
+        byte bitsDst[] = new byte[X * Z];
+        int s = 0;
+        int d = (X-1) * Z;
+        int Z2 = Z*2;
+        for(int x=0;x<X;x++) {
+          for(int z=0;z<Z;z++) {
+            id = blocksSrc[s];
+            if (id != 0) {
+              blocksDst[d] = id;
+              block = Static.blocks.blocks[id];
+              bitsDst[d] = block.rotateBits(bitsSrc[s], R180);
+            }
+            d++;
+            s++;
+          }
+          d -= Z2;
+        }
+        blocks2[y] = blocksDst;
+        bits2[y] = bitsDst;
+      }
+    }
+    //flip entities
+    int ecnt = entities.size();
+    for(int a=0;a<ecnt;a++) {
+      EntityBase e = entities.get(a);
+      e.pos.x = X - e.pos.x - 1;
+    }
+    //flip extras
+    int xcnt = extras.size();
+    for(int a=0;a<xcnt;a++) {
+      ExtraBase e = extras.get(a);
+      e.x = (short)(X - e.x - 1);
+    }
+  }
 
-  public void mirrorZ() {}
+  public void mirrorZ() {
+    //flip blocks
+    char id;
+    BlockBase block;
+    for(int y=0;y<Y;y++) {
+      if (blocks[y] != null) {
+        char blocksSrc[] = blocks[y];
+        char blocksDst[] = new char[X * Z];
+        byte bitsSrc[] = bits[y];
+        byte bitsDst[] = new byte[X * Z];
+        int s = 0;
+        int d = (Z-1) * X;
+        int X2 = X*2;
+        for(int z=0;z<Z;z++) {
+          for(int x=0;x<X;x++) {
+            id = blocksSrc[s];
+            if (id != 0) {
+              blocksDst[d] = id;
+              block = Static.blocks.blocks[id];
+              bitsDst[d] = block.rotateBits(bitsSrc[s], R180);
+            }
+            d++;
+            s++;
+          }
+          d -= X2;
+        }
+        blocks[y] = blocksDst;
+        bits[y] = bitsDst;
+      }
+      if (blocks2[y] != null) {
+        char blocksSrc[] = blocks2[y];
+        char blocksDst[] = new char[X * Z];
+        byte bitsSrc[] = bits2[y];
+        byte bitsDst[] = new byte[X * Z];
+        int s = 0;
+        int d = (Z-1) * X;
+        int X2 = X*2;
+        for(int z=0;z<Z;z++) {
+          for(int x=0;x<X;x++) {
+            id = blocksSrc[s];
+            if (id != 0) {
+              blocksDst[d] = id;
+              block = Static.blocks.blocks[id];
+              bitsDst[d] = block.rotateBits(bitsSrc[s], R180);
+            }
+            d++;
+            s++;
+          }
+          d -= X2;
+        }
+        blocks2[y] = blocksDst;
+        bits2[y] = bitsDst;
+      }
+    }
+    //flip entities
+    int ecnt = entities.size();
+    for(int a=0;a<ecnt;a++) {
+      EntityBase e = entities.get(a);
+      e.pos.z = Z - e.pos.z - 1;
+    }
+    //flip extras
+    int xcnt = extras.size();
+    for(int a=0;a<xcnt;a++) {
+      ExtraBase e = extras.get(a);
+      e.z = (short)(Z - e.z - 1);
+    }
+  }
 
   /** Rotates blueprints.
-   * @param ang must be multiple of 90 degrees [90, 180, 270].
+   * @param ang must be Direction.R90 R180 R270
    */
-  public void rotateY(float ang) {
-    if (ang == 0f) return;
-    switch ((int)ang) {
-      case 90:
-      case 180:
-      case 270:
-        break;
+  public void rotateY(int rotation) {
+    switch (rotation) {
+      case R90: rotate90(); break;
+      case R180: rotate180(); break;
+      case R270: rotate270(); break;
     }
+  }
+
+  private void rotate90() {
+    int newX = Z;
+    int newZ = X;
+    char id;
+    BlockBase block;
+    for(int y=0;y<Y;y++) {
+      if (blocks[y] != null) {
+        char blocksSrc[] = blocks[y];
+        char blocksDst[] = new char[X * Z];
+        byte bitsSrc[] = bits[y];
+        byte bitsDst[] = new byte[X * Z];
+        int s = 0;
+        int d = 0;
+        for(int z=0;z<Z;z++) {
+          d = (newX-1-z);
+          for(int x=0;x<X;x++) {
+            id = blocksSrc[s];
+            if (id != 0) {
+              blocksDst[d] = id;
+              block = Static.blocks.blocks[id];
+              bitsDst[d] = block.rotateBits(bitsSrc[s], R90);
+            }
+            d += newX;
+            s++;
+          }
+        }
+        blocks[y] = blocksDst;
+        bits[y] = bitsDst;
+      }
+      if (blocks2[y] != null) {
+        char blocksSrc[] = blocks2[y];
+        char blocksDst[] = new char[X * Z];
+        byte bitsSrc[] = bits2[y];
+        byte bitsDst[] = new byte[X * Z];
+        int s = 0;
+        int d = 0;
+        for(int z=0;z<Z;z++) {
+          d = (newX-1-z);
+          for(int x=0;x<X;x++) {
+            id = blocksSrc[s];
+            if (id != 0) {
+              blocksDst[d] = id;
+              block = Static.blocks.blocks[id];
+              bitsDst[d] = block.rotateBits(bitsSrc[s], R90);
+            }
+            d += newX;
+            s++;
+          }
+        }
+        blocks2[y] = blocksDst;
+        bits2[y] = bitsDst;
+      }
+    }
+    //rotate entities
+    {
+      int ecnt = entities.size();
+      float x, z;
+      for(int a=0;a<ecnt;a++) {
+        EntityBase e = entities.get(a);
+        x = e.pos.x;
+        z = e.pos.z;
+        e.pos.x = Z - z - 1;
+        e.pos.z = x;
+      }
+    }
+    //rotate extras
+    {
+      int xcnt = extras.size();
+      short x, z;
+      for(int a=0;a<xcnt;a++) {
+        ExtraBase e = extras.get(a);
+        x = e.x;
+        z = e.z;
+        e.x = (short)(Z - z - 1);
+        e.z = x;
+      }
+    }
+    X = newX;
+    Z = newZ;
+  }
+
+  private void rotate180() {
+    //rotate blocks
+    char id;
+    BlockBase block;
+    for(int y=0;y<Y;y++) {
+      if (blocks[y] != null) {
+        char blocksSrc[] = blocks[y];
+        char blocksDst[] = new char[X * Z];
+        byte bitsSrc[] = bits[y];
+        byte bitsDst[] = new byte[X * Z];
+        int s = 0;
+        int d = (Z * X) - 1;
+        for(int z=0;z<Z;z++) {
+          for(int x=0;x<X;x++) {
+            id = blocksSrc[s];
+            if (id != 0) {
+              blocksDst[d] = id;
+              block = Static.blocks.blocks[id];
+              bitsDst[d] = block.rotateBits(bitsSrc[s], R180);
+            }
+            d--;
+            s++;
+          }
+        }
+        blocks[y] = blocksDst;
+        bits[y] = bitsDst;
+      }
+      if (blocks2[y] != null) {
+        char blocksSrc[] = blocks2[y];
+        char blocksDst[] = new char[X * Z];
+        byte bitsSrc[] = bits2[y];
+        byte bitsDst[] = new byte[X * Z];
+        int s = 0;
+        int d = (Z * X) - 1;
+        for(int z=0;z<Z;z++) {
+          for(int x=0;x<X;x++) {
+            id = blocksSrc[s];
+            if (id != 0) {
+              blocksDst[d] = id;
+              block = Static.blocks.blocks[id];
+              bitsDst[d] = block.rotateBits(bitsSrc[s], R180);
+            }
+            d--;
+            s++;
+          }
+        }
+        blocks2[y] = blocksDst;
+        bits2[y] = bitsDst;
+      }
+    }
+    //rotate entities
+    int ecnt = entities.size();
+    for(int a=0;a<ecnt;a++) {
+      EntityBase e = entities.get(a);
+      e.pos.x = X - e.pos.x - 1;
+      e.pos.z = Z - e.pos.z - 1;
+    }
+    //rotate extras
+    int xcnt = extras.size();
+    for(int a=0;a<xcnt;a++) {
+      ExtraBase e = extras.get(a);
+      e.x = (short)(X - e.x - 1);
+      e.z = (short)(Z - e.z - 1);
+    }
+  }
+
+  private void rotate270() {
+    int newX = Z;
+    int newZ = X;
+    char id;
+    BlockBase block;
+    for(int y=0;y<Y;y++) {
+      if (blocks[y] != null) {
+        char blocksSrc[] = blocks[y];
+        char blocksDst[] = new char[X * Z];
+        byte bitsSrc[] = bits[y];
+        byte bitsDst[] = new byte[X * Z];
+        int s = 0;
+        int d = 0;
+        for(int z=0;z<Z;z++) {
+          d = newX * z;
+          for(int x=0;x<X;x++) {
+            id = blocksSrc[s];
+            if (id != 0) {
+              blocksDst[d] = id;
+              block = Static.blocks.blocks[id];
+              bitsDst[d] = block.rotateBits(bitsSrc[s], R270);
+            }
+            d -= newZ;
+            s++;
+          }
+        }
+        blocks[y] = blocksDst;
+        bits[y] = bitsDst;
+      }
+      if (blocks2[y] != null) {
+        char blocksSrc[] = blocks2[y];
+        char blocksDst[] = new char[X * Z];
+        byte bitsSrc[] = bits2[y];
+        byte bitsDst[] = new byte[X * Z];
+        int s = 0;
+        int d = 0;
+        for(int z=0;z<Z;z++) {
+          d = newX * z;
+          for(int x=0;x<X;x++) {
+            id = blocksSrc[s];
+            if (id != 0) {
+              blocksDst[d] = id;
+              block = Static.blocks.blocks[id];
+              bitsDst[d] = block.rotateBits(bitsSrc[s], R270);
+            }
+            d -= newZ;
+            s++;
+          }
+        }
+        blocks2[y] = blocksDst;
+        bits2[y] = bitsDst;
+      }
+    }
+    //rotate entities
+    {
+      int ecnt = entities.size();
+      float x, z;
+      for(int a=0;a<ecnt;a++) {
+        EntityBase e = entities.get(a);
+        x = e.pos.x;
+        z = e.pos.z;
+        e.pos.x = z;
+        e.pos.z = (X - x - 1);
+      }
+    }
+    //rotate extras
+    {
+      int xcnt = extras.size();
+      short x, z;
+      for(int a=0;a<xcnt;a++) {
+        ExtraBase e = extras.get(a);
+        x = e.x;
+        z = e.z;
+        e.x = z;
+        e.z = (short)(X - x - 1);
+      }
+    }
+    X = newX;
+    Z = newZ;
   }
 
   private static final byte ver = 0;

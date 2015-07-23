@@ -59,14 +59,14 @@ public class ChunkQueueLight {
 //        pro.print();
         if (next != null) {
           next.add(chunk);
-          if (z1 < 0) next.add(chunk.N);
-          if (x2 > 15) next.add(chunk.E);
-          if (z2 > 15) next.add(chunk.S);
-          if (x1 < 0) next.add(chunk.W);
-          if ((z1 < 0) && (x2 > 15)) next.add(chunk.N.E);
-          if ((z1 < 0) && (x1 < 0)) next.add(chunk.N.W);
-          if ((z2 > 15) && (x2 > 15)) next.add(chunk.S.E);
-          if ((z2 > 15) && (x1 < 0)) next.add(chunk.S.W);
+          if (z1 <= 0) next.add(chunk.N);
+          if (x2 >= 15) next.add(chunk.E);
+          if (z2 >= 15) next.add(chunk.S);
+          if (x1 <= 0) next.add(chunk.W);
+          if ((z1 <= 0) && (x2 >= 15)) next.add(chunk.N.E);
+          if ((z1 <= 0) && (x1 <= 0)) next.add(chunk.N.W);
+          if ((z2 >= 15) && (x2 >= 15)) next.add(chunk.S.E);
+          if ((z2 >= 15) && (x1 <= 0)) next.add(chunk.S.W);
         }
         pos++;
         if (pos == BUFSIZ) pos = 0;
