@@ -1273,6 +1273,23 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     }
   }
 
+  private void removeExtra(int x1, int y1, int z1,  int x2, int y2, int z2) {
+    int cnt = extras.size();
+    for(int a=0;a<cnt;) {
+      ExtraBase e = extras.get(a);
+      if (e.x >= x1 && e.x <= x2) {
+        if (e.y >= y1 && e.y <= y2) {
+          if (e.z >= z1 && e.z <= z2) {
+            extras.remove(a);
+            cnt--;
+            continue;
+          }
+        }
+      }
+      a++;
+    }
+  }
+
   public void fill(int x1, int y1, int z1,  int dx, int dy, int dz, char id) {
     int x2 = x1 + dx - 1;
     int y2 = y1 + dy - 1;
@@ -1300,6 +1317,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
           }
         }
       }
+      removeExtra(x1, y1, z1, x2, y2, z2);
     }
     reduce();
   }

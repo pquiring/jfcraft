@@ -206,7 +206,6 @@ public class BluePrint implements SerialClass, SerialCreator {
   }
 
   public void readChunk(Chunk chunk, int sx, int sy, int sz, int dx, int dy, int dz, int w, int h, int d) {
-    int cnt = 0;
     Static.log("readChunk ?:" + w + "," + h + "," + d);
     Static.log("readChunk s:" + sx + "," + sy + "," + sz);
     Static.log("readChunk d:" + dx + "," + dy + "," + dz);
@@ -218,18 +217,15 @@ public class BluePrint implements SerialClass, SerialCreator {
             if (id != 0) {
               setID(x+dx,y+dy,z+dz, id);
               setBits(x+dx,y+dy,z+dz, chunk.getBits(x+sx,y+sy,z+sz));
-              cnt++;
             }
             char id2 = chunk.getID2(x+sx,y+sy,z+sz);
             if (id2 != 0) {
               setID2(x+dx,y+dy,z+dz, id2);
               setBits2(x+dx,y+dy,z+dz, chunk.getBits2(x+sx,y+sy,z+sz));
-              cnt++;
             }
           }
         }
       }
-      Static.log("read blocks:" + cnt);
       float cx = chunk.cx * 16f;
       float cz = chunk.cz * 16f;
       float sx1 = sx + cx;
@@ -287,9 +283,9 @@ public class BluePrint implements SerialClass, SerialCreator {
                   e.x -= sx;
                   e.y -= sy;
                   e.z -= sz;
-                  e.x += sx;
-                  e.y += sy;
-                  e.z += sz;
+                  e.x += dx;
+                  e.y += dy;
+                  e.z += dz;
                   extras.add(e);
                 }
               }
@@ -321,7 +317,6 @@ public class BluePrint implements SerialClass, SerialCreator {
   }
 
   public void writeChunk(Chunk chunk, int sx, int sy, int sz, int dx, int dy, int dz, int w, int h, int d) {
-    int cnt = 0;
     Static.log("writeChunk ?:" + w + "," + h + "," + d);
     Static.log("writeChunk s:" + sx + "," + sy + "," + sz);
     Static.log("writeChunk d:" + dx + "," + dy + "," + dz);
@@ -332,12 +327,10 @@ public class BluePrint implements SerialClass, SerialCreator {
             char id = getID(x+sx,y+sy,z+sz);
             if (id != 0) {
               chunk.setIDBits(x+dx,y+dy,z+dz, id, getBits(x+sx,y+sy,z+sz));
-              cnt++;
             }
             char id2 = getID2(x+sx,y+sy,z+sz);
             if (id2 != 0) {
               chunk.setIDBits(x+dx,y+dy,z+dz, id2, getBits2(x+sx,y+sy,z+sz));
-              cnt++;
             }
           }
         }
@@ -366,7 +359,7 @@ public class BluePrint implements SerialClass, SerialCreator {
               e.pos.x += dx + cx;
               e.pos.y += dy;
               e.pos.z += dz + cz;
-              chunk.entities.add(e);
+              chunk.addEntity(e);
             }
           }
         }
@@ -387,14 +380,13 @@ public class BluePrint implements SerialClass, SerialCreator {
               e.x += dx;
               e.y += dy;
               e.z += dz;
-              chunk.extras.add(e);
+              chunk.addExtra(e);
             }
           }
         }
       }
       chunk.dirty = true;
     }
-    Static.log("write to chunk:" + cnt);
   }
 
   public static BluePrint read(String filename) {

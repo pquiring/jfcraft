@@ -310,6 +310,10 @@ public class BlockDoor extends BlockBase {
   public void tick(Chunk chunk, Tick tick) {
     tick.toWorldCoords(chunk, c);
     ExtraRedstone er = (ExtraRedstone)c.chunk.getExtra(c.gx, c.gy, c.gz, Extras.REDSTONE);
+    if (er == null) {
+      Static.log("BlockDoor:Unable to find ExtraRedstone@" + c.gx +","+ c.gy +","+ c.gz +","+ Extras.REDSTONE);
+      return;
+    }
     if (er.cnt > 0) {
       er.cnt--;
     }

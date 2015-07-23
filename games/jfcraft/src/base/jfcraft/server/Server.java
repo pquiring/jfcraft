@@ -1197,6 +1197,10 @@ public class Server {
         return;
       }
       BlockBase block = Static.blocks.blocks[item.id];
+      if (block.isRedstone) {
+        client.serverTransport.sendMsg("Error:Can not fill with complex blocks");
+        return;
+      }
       if (x2 < x1) {
         int t = x1;
         x1 = x2;
