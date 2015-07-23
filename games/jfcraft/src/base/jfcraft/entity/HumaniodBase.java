@@ -100,6 +100,29 @@ public abstract class HumaniodBase extends CreatureBase {
     //TODO
   }
 
+  public void convertIDs(char blockIDs[], char itemIDs[]) {
+    int cnt = items.length;
+    for(int a=0;a<cnt;a++) {
+      char id = items[a].id;
+      if (Static.isBlock(id)) {
+        id = blockIDs[id];
+      } else {
+        id = (char)(itemIDs[id - Items.FIRST_ID] + Items.FIRST_ID);
+      }
+      items[a].id = id;
+    }
+    cnt = armors.length;
+    for(int a=0;a<cnt;a++) {
+      char id = armors[a].id;
+      if (Static.isBlock(id)) {
+        id = blockIDs[id];
+      } else {
+        id = (char)(itemIDs[id - Items.FIRST_ID] + Items.FIRST_ID);
+      }
+      armors[a].id = id;
+    }
+  }
+
   private static final byte ver = 0;
 
   @Override
