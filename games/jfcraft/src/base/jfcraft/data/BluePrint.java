@@ -522,7 +522,7 @@ public class BluePrint implements SerialClass, SerialCreator {
     int ecnt = entities.size();
     for(int a=0;a<ecnt;a++) {
       EntityBase e = entities.get(a);
-      e.pos.x = X - e.pos.x - 1;
+      e.pos.x = X - e.pos.x;
     }
     //flip extras
     int xcnt = extras.size();
@@ -590,7 +590,7 @@ public class BluePrint implements SerialClass, SerialCreator {
     int ecnt = entities.size();
     for(int a=0;a<ecnt;a++) {
       EntityBase e = entities.get(a);
-      e.pos.z = Z - e.pos.z - 1;
+      e.pos.z = Z - e.pos.z;
     }
     //flip extras
     int xcnt = extras.size();
@@ -672,7 +672,7 @@ public class BluePrint implements SerialClass, SerialCreator {
         EntityBase e = entities.get(a);
         x = e.pos.x;
         z = e.pos.z;
-        e.pos.x = Z - z - 1;
+        e.pos.x = Z - z;
         e.pos.z = x;
         e.ang.y += 90;
       }
@@ -822,7 +822,7 @@ public class BluePrint implements SerialClass, SerialCreator {
         x = e.pos.x;
         z = e.pos.z;
         e.pos.x = z;
-        e.pos.z = (X - x - 1);
+        e.pos.z = (X - x);
         e.ang.y -= 90;
       }
     }
