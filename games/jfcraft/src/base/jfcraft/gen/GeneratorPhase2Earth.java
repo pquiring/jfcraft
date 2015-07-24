@@ -344,7 +344,6 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
     if (elev + cabin.Y > 255) return;
     if (chunk.getID(8, elev+1, 8) != 0) return;
     int ang = r.nextInt(4);
-    ang = 1;  //test
     switch (ang) {
       case 0: break;  //no change
       case 1: cabin.rotateY(R90); break;

@@ -759,7 +759,7 @@ public class BluePrint implements SerialClass, SerialCreator {
         int s = 0;
         int d = 0;
         for(int z=0;z<Z;z++) {
-          d = newX * z;
+          d = ((newZ-1) * newX) + z;
           for(int x=0;x<X;x++) {
             id = blocksSrc[s];
             if (id != 0) {
@@ -782,7 +782,7 @@ public class BluePrint implements SerialClass, SerialCreator {
         int s = 0;
         int d = 0;
         for(int z=0;z<Z;z++) {
-          d = newX * z;
+          d = ((newZ-1) * newX) + z;
           for(int x=0;x<X;x++) {
             id = blocksSrc[s];
             if (id != 0) {
