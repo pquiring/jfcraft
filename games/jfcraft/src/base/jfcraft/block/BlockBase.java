@@ -823,9 +823,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     if (hasShape) {
       byte dir = (byte)((bits & 0xf0) >> 4);
       byte var = (byte)(bits & 0x0f);
-      Static.log("pre shape:" + dir);
       dir = Direction.rotateShape(dir, rotation);
-      Static.log("pst shape:" + dir);
       return (byte)((dir << 4) | var);
     }
     if (isDir || isDirFace || isDirXZ) {

@@ -254,6 +254,7 @@ public class BluePrint implements SerialClass, SerialCreator {
                 buffer.rewind();
                 e = (EntityBase)Static.entities.create(buffer);
                 if (e != null) {
+                  e.init();
                   e.read(buffer, true);
                   e.pos.x -= sx + cx;
                   e.pos.y -= sy;
@@ -362,6 +363,7 @@ public class BluePrint implements SerialClass, SerialCreator {
                 buffer.rewind();
                 e = (EntityBase)Static.entities.create(buffer);
                 if (e != null) {
+                  e.init();
                   e.read(buffer, true);
                   e.pos.x -= sx;
                   e.pos.y -= sy;
@@ -369,6 +371,17 @@ public class BluePrint implements SerialClass, SerialCreator {
                   e.pos.x += dx + cx;
                   e.pos.y += dy;
                   e.pos.z += dz + cz;
+                  if (e instanceof BlockEntity) {
+                    BlockEntity be = (BlockEntity)e;
+                    int gx = Static.floor(e.pos.x % 16.0f);
+                    if (e.pos.x < 0 && gx != 0) gx = 16 + gx;
+                    int gy = Static.floor(e.pos.y);
+                    int gz = Static.floor(e.pos.z % 16.0f);
+                    if (e.pos.z < 0 && gz != 0) gz = 16 + gz;
+                    be.gx = gx;
+                    be.gy = gy;
+                    be.gz = gz;
+                  }
                   chunk.addEntity(e);
                 }
               }
@@ -661,6 +674,7 @@ public class BluePrint implements SerialClass, SerialCreator {
         z = e.pos.z;
         e.pos.x = Z - z - 1;
         e.pos.z = x;
+        e.ang.y += 90;
       }
     }
     //rotate extras
@@ -733,8 +747,9 @@ public class BluePrint implements SerialClass, SerialCreator {
     int ecnt = entities.size();
     for(int a=0;a<ecnt;a++) {
       EntityBase e = entities.get(a);
-      e.pos.x = X - e.pos.x - 1;
-      e.pos.z = Z - e.pos.z - 1;
+      e.pos.x = X - e.pos.x;
+      e.pos.z = Z - e.pos.z;
+      e.ang.y += 180;
     }
     //rotate extras
     int xcnt = extras.size();
@@ -808,6 +823,7 @@ public class BluePrint implements SerialClass, SerialCreator {
         z = e.pos.z;
         e.pos.x = z;
         e.pos.z = (X - x - 1);
+        e.ang.y -= 90;
       }
     }
     //rotate extras
@@ -1033,6 +1049,7 @@ public class BluePrint implements SerialClass, SerialCreator {
     for(int a=0;a<entity_size;a++) {
       EntityBase eb = (EntityBase)Static.entities.create(buffer);
       if (eb != null) {
+        eb.init();
         eb.read(buffer, file);
         entities.add(eb);
       }
