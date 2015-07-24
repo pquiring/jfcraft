@@ -17,7 +17,7 @@ import jfcraft.data.*;
 import jfcraft.item.Item;
 import jfcraft.opengl.*;
 
-public class Zombie extends CreatureBase {
+public class Zombie extends HumaniodBase {
   private float walkAngle;  //angle of legs/arms as walking
   private float walkAngleDelta;
 
@@ -30,7 +30,7 @@ public class Zombie extends CreatureBase {
   private static int initArmor = 2;
 
   public Zombie() {
-    super();
+    super(1, 4);
     id = Entities.ZOMBIE;
   }
 

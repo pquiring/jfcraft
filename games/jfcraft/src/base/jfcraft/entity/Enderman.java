@@ -17,7 +17,7 @@ import jfcraft.data.*;
 import jfcraft.item.Item;
 import jfcraft.opengl.*;
 
-public class Enderman extends CreatureBase {
+public class Enderman extends HumaniodBase {
   private float walkAngle;  //angle of legs/arms as walking
   private float walkAngleDelta;
 
@@ -30,7 +30,7 @@ public class Enderman extends CreatureBase {
   private static int initArmor = 2;
 
   public Enderman() {
-    super();
+    super(1, 0);
     id = Entities.ENDERMAN;
   }
 
