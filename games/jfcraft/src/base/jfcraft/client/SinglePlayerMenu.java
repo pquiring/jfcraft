@@ -204,10 +204,15 @@ public class SinglePlayerMenu extends RenderScreen {
     if (selectedWorld == -1) return;
     WorldInfo wi = worlds.get(selectedWorld);
     if (wi.incompatible) return;
+    Server server = new Server();
+    if (!server.startWorld(wi.folder)) {
+      MessageMenu message = (MessageMenu)Static.screens.screens[Client.MESSAGE];
+      message.setup("Error", server.errmsg, Static.screens.screens[Client.MAIN]);
+      Static.video.setScreen(message);
+      return;
+    }
     LocalServerTransport serverTransport = new LocalServerTransport();
     LocalClientTransport clientTransport = new LocalClientTransport();
-    Server server = new Server();
-    server.startWorld(wi.folder);
     Client clientClient = new Client(clientTransport);
     clientClient.isLocal = true;
     clientClient.name = Settings.current.player;

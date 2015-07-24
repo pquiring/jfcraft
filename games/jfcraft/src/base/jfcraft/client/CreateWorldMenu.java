@@ -94,10 +94,15 @@ public class CreateWorldMenu extends RenderScreen {
   private void createWorld() {
     String name = world_name.getText();
     if (name.length() == 0) return;
+    Server server = new Server();
+    if (!server.createWorld(name)) {
+      MessageMenu message = (MessageMenu)Static.screens.screens[Client.MESSAGE];
+      message.setup("Error", server.errmsg, Static.screens.screens[Client.MAIN]);
+      Static.video.setScreen(message);
+      return;
+    }
     LocalServerTransport serverTransport = new LocalServerTransport();
     LocalClientTransport clientTransport = new LocalClientTransport();
-    Server server = new Server();
-    server.createWorld(name);
     Client clientClient = new Client(clientTransport);
     clientClient.isLocal = true;
     clientClient.name = Settings.current.player;
