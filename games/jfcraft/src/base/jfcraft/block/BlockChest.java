@@ -79,6 +79,8 @@ public class BlockChest extends BlockBase {
       c.chunk.delEntity(e);
       Static.world().delEntity(e.uid);
       Static.server.broadcastEntityDespawn(e);
+    } else {
+      Static.log("Error:BlockChest.destroy():Entity not found");
     }
     super.destroy(client, c, doDrop);
     c.chunk.delExtra(c, Extras.CHEST);
