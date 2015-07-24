@@ -40,6 +40,8 @@ public class Server {
 
   public static String folderName;
 
+  public String errmsg;
+
   public Server() {
     Static.server = this;
   }
@@ -57,17 +59,33 @@ public class Server {
     world.assignIDs();
     folderName = world.createFolderName(worldName);
     new File(folderName).mkdirs();
+    if (new File(folderName + "/world.dat").exists()) {
+      //world already exists???
+      errmsg = "World already exists?";
+      return false;
+    }
     world.save(folderName + "/world.dat");
+    if (!world.lock(folderName + "/lock.tmp")) {
+      errmsg = "World is in use";
+      return false;
+    }
     startWorld();
     return true;
   }
 
-  public boolean startWorld(String folderName) {
+  public boolean startWorld(String _folderName) {
+    folderName = _folderName;
     int idx = folderName.lastIndexOf("/");
     Static.log("Starting world:" + folderName.substring(idx+1));
-    this.folderName = folderName;
     world = World.load(folderName + "/world.dat", false);
-    if (world == null) return false;
+    if (world == null) {
+      errmsg = "Failed to load world?";
+      return false;
+    }
+    if (!world.lock(folderName + "/lock.tmp")) {
+      errmsg = "World is in use";
+      return false;
+    }
     Static.world.set(world);
     world.init();
     world.chunks = new Chunks(false);
@@ -209,6 +227,7 @@ public class Server {
     doSave();
     Static.log("Server shutdown ... 6");
     world.chunks.closeStores();  //close all files
+    world.unlock();
     Static.log("Server shutdown ... 7");
     Static.server = null;
     Static.log("Server shutdown complete");

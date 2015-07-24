@@ -8,6 +8,7 @@ package jfcraft.data;
  */
 
 import java.io.*;
+import java.nio.channels.*;
 import java.util.*;
 import java.lang.reflect.*;
 
@@ -660,6 +661,36 @@ public class World implements SerialClass, SerialCreator {
       e.printStackTrace();
     }
     return nid;
+  }
+
+  private RandomAccessFile lockraf; // The file we'll lock
+  private FileChannel lockChannel; // The channel to the file
+  private FileLock lockLock; // The lock object we hold
+  private File lockFile;
+
+  public boolean lock(String fileName) {
+    try {
+      lockFile = new File(fileName);
+      lockraf = new RandomAccessFile(lockFile, "rw");
+      lockChannel = lockraf.getChannel();
+      lockLock = lockChannel.tryLock();
+      if (lockLock == null) return false;
+    } catch (Exception e) {
+      Static.log(e);
+      return false;
+    }
+    return true;
+  }
+
+  public void unlock() {
+    if (lockLock == null) return;
+    try {
+      lockLock.release();
+      lockraf.close();
+      lockFile.delete();
+    } catch (Exception e) {
+      Static.log(e);
+    }
   }
 
   /** Assigns IDs to blocks,items,etc.
