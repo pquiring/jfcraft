@@ -5,7 +5,7 @@ weather : rain, snow, clouds
 more farming (melon seeds, pumpkin seeds)
 fishing
 enchanting (requires XP)
-generate cave rooms, springs, lakes, rivers, buildings, items, stuff, etc.
+generate cave rooms, springs, lakes, rivers, items, stuff, etc.
 fix world generating algorithms
 mobs (spider, ghast, blaze, endermite(silverfish), magma cube, witch, guardian)
 create complex AI logic for each mob (currently they are all passive but attack if attacked and all animals run if attacked)
@@ -34,4 +34,4 @@ flower pot
 banners
 horse leads
 spawn eggs
-implement more commands : like /import /export
+implement more commands

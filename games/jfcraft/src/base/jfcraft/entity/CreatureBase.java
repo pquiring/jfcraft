@@ -340,7 +340,12 @@ public abstract class CreatureBase extends EntityBase {
     mMat.mult(mVec);
     vel.x = mVec.v[0];
     vel.z = mVec.v[2];
-    move(false, false, false, mode == MODE_RUN ? -1 : 2, target == null ? (mode == MODE_RUN ? AVOID_NONE : AVOID_LAVA_WATER) : AVOID_LAVA);
+    if (!move(false, false, false,
+      mode == MODE_RUN ? -1 : 2,
+      target == null ? (mode == MODE_RUN ? AVOID_NONE : AVOID_LAVA_WATER) : AVOID_LAVA
+    )) {
+      mode = MODE_IDLE;
+    }
   }
 
   public boolean cracks() {
