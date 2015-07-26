@@ -26,6 +26,8 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public XYZ ang = new XYZ();  //angle
   public XYZ vel = new XYZ();  //velocity
 
+//  public boolean debug = false;
+
   //the position represent the entities center position at the bottom (feet)
   // centered on x and z, but bottom on y of their cube
   public int dim;  //dimension
@@ -312,34 +314,35 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
    * @return 0-16=canStepUp(*_1_16)
    */
   public int inBlock(float dx, float dy, float dz, boolean sneak, int maxFall, int avoid) {
-    if (avoid != AVOID_NONE && !inWater && !inLava) {
-      checkLiquids(dx,dy-0.5f,dz);
-      if ((avoid & AVOID_WATER) == AVOID_WATER && inWater) {
-        return -5;
-      }
-      if ((avoid & AVOID_LAVA) == AVOID_LAVA && inLava) {
-        return -5;
-      }
-    }
-
     boolean hit = hitTest(dx,dy,dz);
 
-    if (sneak && onGround && !hit && !onGround(dx,dy,dz, (char)0)) {
+    boolean nowOnGround = onGround(dx,dy,dz, (char)0);
+
+    if (sneak && onGround && !hit && !nowOnGround) {
       return -3;
     }
 
-    if (!hit) {
-      if (maxFall != -1) {
-        for(float a=0;a<=maxFall;a+=Static._1_16) {
-          if (onGround(dx,dy - a,dz, (char)0)) return 0;
-        }
-        return -4;
+    if (!hit && onGround && !nowOnGround && maxFall != -1) {
+      for(float a=0;a<=maxFall;a+=Static._1_16) {
+        if (onGround(dx,dy - a,dz, (char)0)) return 0;
       }
-      return 0;
+      return -4;
+    }
+
+    if (!nowOnGround && avoid != AVOID_NONE && !inWater && !inLava) {
+      checkLiquids(dx,dy - 0.5f,dz);
+      if ((avoid & AVOID_WATER) == AVOID_WATER && inWater) {
+        inWater = false;
+        return -5;
+      }
+      if ((avoid & AVOID_LAVA) == AVOID_LAVA && inLava) {
+        inLava = false;
+        return -5;
+      }
     }
 
     if (!onGround) {
-      return -1;
+      if (hit) return -1; else return 0;
     }
 
     int ret = canStepUp(dx,dy,dz);
@@ -524,7 +527,10 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     if (vel.x < 1 && vel.z < 1 && mode != MODE_FLYING && !usePath) {
       ret = inBlock(vel.x,0,vel.z, sneak, maxFall, avoid);
     }
-    if (mode == MODE_FLYING) ret = 0;  //TODO : creative mode
+    if (mode == MODE_FLYING) {
+      //TODO : creative mode
+      ret = 0;
+    }
     switch (ret) {
       default:
         pos.y += ret * Static._1_16;

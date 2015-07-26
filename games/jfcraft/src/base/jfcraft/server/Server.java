@@ -1350,6 +1350,7 @@ public class Server {
       EntityBase e = base.spawn(chunk);
       if (e == null) return;  //could not spawn ???
       e.uid = Static.server.world.generateUID();
+//      e.debug = true;
       Static.server.world.addEntity(e);
       Static.server.broadcastEntitySpawn(e);
       Static.log("spawn " + e.getName() + " @=" + e.pos.x + "," + e.pos.y + "," + e.pos.z + ":uid=" + e.uid);
