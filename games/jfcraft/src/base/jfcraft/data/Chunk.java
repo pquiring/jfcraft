@@ -1290,6 +1290,25 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     }
   }
 
+  private void removeEntities(int x1, int y1, int z1,  int x2, int y2, int z2) {
+    int cnt = entities.size();
+    for(int a=0;a<cnt;) {
+      EntityBase e = entities.get(a);
+      if (e.id != Entities.PLAYER) {
+        if (e.pos.x >= x1 && e.pos.x <= x2) {
+          if (e.pos.y >= y1 && e.pos.y <= y2) {
+            if (e.pos.z >= z1 && e.pos.z <= z2) {
+              entities.remove(a);
+              cnt--;
+              continue;
+            }
+          }
+        }
+      }
+      a++;
+    }
+  }
+
   public void fill(int x1, int y1, int z1,  int dx, int dy, int dz, char id) {
     int x2 = x1 + dx - 1;
     int y2 = y1 + dy - 1;
@@ -1318,6 +1337,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
         }
       }
       removeExtra(x1, y1, z1, x2, y2, z2);
+      removeEntities(x1, y1, z1, x2, y2, z2);
     }
     reduce();
   }
@@ -1349,6 +1369,8 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
           }
         }
       }
+      removeExtra(x1, y1, z1, x2, y2, z2);
+      removeEntities(x1, y1, z1, x2, y2, z2);
     }
     reduce();
   }
