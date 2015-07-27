@@ -652,4 +652,9 @@ public class Client {
       sip = null;
     }
   }
+
+  public int getUID() {
+    if (player == null) return -1;
+    return player.uid;
+  }
 }

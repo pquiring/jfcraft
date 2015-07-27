@@ -27,6 +27,7 @@ public class PacketPlayer extends Packet {
   //process on client side
   public void process(Client client) {
     client.player = player;
+    client.world.addEntity(player);
   }
 
   @Override
@@ -41,6 +42,7 @@ public class PacketPlayer extends Packet {
   public boolean read(SerialBuffer buffer, boolean file) {
     super.read(buffer, file);
     player = new Player();
+    Static.log("player.init():player=" + player + ",world=" + Static.client.world);
     player.init(Static.client.world);
     player.read(buffer, true);  //must read everything
     player.uid = buffer.readInt();

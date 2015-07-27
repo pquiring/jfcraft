@@ -2,6 +2,9 @@ package jfcraft.entity;
 
 /** Player state
  *
+ * NOTE : The player is removed from the Chunk on the client side and only exists
+ *        in the world entities list.
+ *
  * @author pquiring
  *
  * Created : Mar 24, 2014

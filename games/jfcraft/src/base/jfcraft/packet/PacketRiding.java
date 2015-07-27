@@ -34,7 +34,7 @@ public class PacketRiding extends Packet {
       return;
     }
     CreatureBase o;
-    if (i2 == client.player.uid) {
+    if (i2 == client.getUID()) {
       o = client.player;
     } else {
       o = (CreatureBase)client.world.getEntity(i2);
