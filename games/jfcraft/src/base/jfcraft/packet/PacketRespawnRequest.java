@@ -30,7 +30,16 @@ public class PacketRespawnRequest extends Packet {
     client.player.hunger = 20;
     client.player.saturation = 20;
     client.player.exhaustion = 0;
-    client.serverTransport.respawn(client.player.pos.x, client.player.pos.y, client.player.pos.z);
+    Chunk chunk = client.player.getChunk();
+    if (chunk == null) {
+      int cx = Static.floor(client.player.pos.x / 16f);
+      int cz = Static.floor(client.player.pos.z / 16f);
+      chunk = server.world.chunks.getChunk2(client.player.dim, cx, cz, true, true, true);
+    }
+    chunk.addEntity(client.player);
+    server.world.addEntity(client.player);
+    server.broadcastEntitySpawn(client.player);
+    client.serverTransport.respawn(client.player.pos.x, client.player.pos.y, client.player.pos.z, Settings.current.dropItemsOnDeath);
   }
 
   @Override

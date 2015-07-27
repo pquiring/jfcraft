@@ -31,8 +31,9 @@ public class PacketSpawn extends Packet {
     int cx = Static.floor(e.pos.x / 16.0f);
     int cz = Static.floor(e.pos.z / 16.0f);
     Chunk chunk = client.world.chunks.getChunk(e.dim, cx, cz);
-    if (chunk == null) return;
-    chunk.addEntity(e);
+    if (chunk != null) {
+      chunk.addEntity(e);
+    }
     client.world.addEntity(e);
   }
 

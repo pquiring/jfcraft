@@ -22,6 +22,7 @@ public class Settings {
   public boolean doSteps = true;  //enable steps land (smooth) (experimental)
   public boolean doViewBobbing = true;  //view bobbing
   public boolean pvp = true;
+  public boolean dropItemsOnDeath = true;
   //VoIP stuff
   public boolean server_voip = true;
   public boolean client_voip = true;

@@ -253,7 +253,7 @@ public class Server {
   }
 
   public void removeClient(Client client) {
-    Static.log("removeClient:" + client);
+    Static.log("removeClient:" + client.player != null ? client.player.name : "???");
     if (Static.iface != null) {
       Static.iface.clientDropped(client.name);
     }

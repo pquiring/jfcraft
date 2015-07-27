@@ -10,6 +10,7 @@ import jfcraft.data.*;
 
 public class PacketRespawn extends Packet {
   public float f1, f2, f3;
+  public boolean clearInv;
 
   public PacketRespawn() {}
 
@@ -17,11 +18,12 @@ public class PacketRespawn extends Packet {
     super(cmd);
   }
 
-  public PacketRespawn(byte cmd, float f1, float f2, float f3) {
+  public PacketRespawn(byte cmd, float f1, float f2, float f3, boolean clearInv) {
     super(cmd);
     this.f1 = f1;
     this.f2 = f2;
     this.f3 = f3;
+    this.clearInv = clearInv;
   }
 
   //process on client side
@@ -36,6 +38,14 @@ public class PacketRespawn extends Packet {
       client.player.hunger = 20;
       client.player.saturation = 20;
       client.player.exhaustion = 0;
+      if (clearInv) {
+        for(int a=0;a<4*9;a++) {
+          client.player.items[a].clear();
+        }
+        for(int a=0;a<4;a++) {
+          client.player.armors[a].clear();
+        }
+      }
       LoadingChunks menu = (LoadingChunks)Static.screens.screens[Client.LOADINGCHUNKS];
       menu.setup(client);
       Static.video.setScreen(menu);
@@ -48,6 +58,7 @@ public class PacketRespawn extends Packet {
     buffer.writeFloat(f1);
     buffer.writeFloat(f2);
     buffer.writeFloat(f3);
+    buffer.writeBoolean(clearInv);
     return true;
   }
 
@@ -57,6 +68,7 @@ public class PacketRespawn extends Packet {
     f1 = buffer.readFloat();
     f2 = buffer.readFloat();
     f3 = buffer.readFloat();
+    clearInv = buffer.readBoolean();
     return true;
   }
 }

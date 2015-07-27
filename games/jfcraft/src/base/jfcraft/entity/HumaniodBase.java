@@ -123,6 +123,24 @@ public abstract class HumaniodBase extends CreatureBase {
     }
   }
 
+  public Item[] drop() {
+    boolean player = id == Entities.PLAYER;
+    if (player && !Settings.current.dropItemsOnDeath) return new Item[0];
+    Item allItems[] = new Item[items.length + armors.length];
+    int p = 0;
+    for(int a=0;a<items.length;a++) {
+      allItems[p] = new Item();
+      allItems[p++].copy(items[a]);
+      if (player) items[a].clear();
+    }
+    for(int a=0;a<armors.length;a++) {
+      allItems[p] = new Item();
+      allItems[p++].copy(armors[a]);
+      if (player) armors[a].clear();
+    }
+    return allItems;
+  }
+
   private static final byte ver = 0;
 
   @Override

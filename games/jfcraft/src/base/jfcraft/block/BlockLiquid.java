@@ -32,6 +32,7 @@ public class BlockLiquid extends BlockAlpha {
     isBlocks2 = true;
     isSolid = false;
     isLiquid = true;
+    absorbLight = 1;
     resetBoxes(Type.BOTH);  //no boxes
   }
   private float var2depth(int var) {

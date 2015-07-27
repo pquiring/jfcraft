@@ -27,6 +27,7 @@ public class PanelSettings extends javax.swing.JPanel {
       pluginsModel.addRow(new Object[] {true, plugins[a][2]});
     }
     pvp.setSelected(Settings.current.pvp);
+    dropItemsOnDeath.setSelected(Settings.current.dropItemsOnDeath);
     voip.setSelected(Settings.current.server_voip);
   }
 
@@ -46,6 +47,7 @@ public class PanelSettings extends javax.swing.JPanel {
     jPanel1 = new javax.swing.JPanel();
     voip = new javax.swing.JCheckBox();
     pvp = new javax.swing.JCheckBox();
+    dropItemsOnDeath = new javax.swing.JCheckBox();
     jScrollPane1 = new javax.swing.JScrollPane();
     pluginsTable = new javax.swing.JTable();
     jLabel3 = new javax.swing.JLabel();
@@ -76,6 +78,9 @@ public class PanelSettings extends javax.swing.JPanel {
     pvp.setSelected(true);
     pvp.setText("PvP");
 
+    dropItemsOnDeath.setSelected(true);
+    dropItemsOnDeath.setText("Drop Items on Death");
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -84,7 +89,8 @@ public class PanelSettings extends javax.swing.JPanel {
         .addContainerGap()
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(pvp)
-          .addComponent(voip))
+          .addComponent(voip)
+          .addComponent(dropItemsOnDeath))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
     jPanel1Layout.setVerticalGroup(
@@ -94,7 +100,9 @@ public class PanelSettings extends javax.swing.JPanel {
         .addComponent(pvp)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addComponent(voip)
-        .addContainerGap())
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(dropItemsOnDeath)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
     pluginsTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -173,7 +181,7 @@ public class PanelSettings extends javax.swing.JPanel {
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jLabel2)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jButton1)
@@ -193,6 +201,7 @@ public class PanelSettings extends javax.swing.JPanel {
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JCheckBox dropItemsOnDeath;
   private javax.swing.JButton jButton1;
   private javax.swing.JButton jButton2;
   private javax.swing.JLabel jLabel1;
@@ -243,6 +252,7 @@ public class PanelSettings extends javax.swing.JPanel {
     }
     Settings.current.server_voip = voip.isSelected();
     Settings.current.pvp = pvp.isSelected();
+    Settings.current.dropItemsOnDeath = dropItemsOnDeath.isSelected();
     Settings.save();
     if (false) {
       //run in this instance of Java

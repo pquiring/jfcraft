@@ -83,8 +83,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public boolean dropVar = true;
   public int dropCount = 1;
   public int emitLight = 0;  //0-14 (15 = sunLight)
-  public int absorbLight = 1;
-  public int absorbSunLight = 0;
+  public int absorbLight = 0;
   public boolean renderAsItem;
   public boolean renderAsEntity;
   public int entityID;
@@ -267,15 +266,9 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   }
   /** Absorb block light in all directions and sun light that is not from above. */
   public final int absorbLight(int lvl) {
+    if (isOpaque) return 0;
     if (lvl <= absorbLight) return 0;
-    if (isOpaque) return 0;
     return (lvl - absorbLight);
-  }
-  /** Absorb sun light from above only. */
-  public final int absorbSunLight(int lvl) {
-    if (lvl <= absorbSunLight) return 0;
-    if (isOpaque) return 0;
-    return (lvl - absorbSunLight);
   }
   public boolean canSupportBlock(Coords c) {
     return isSolid;

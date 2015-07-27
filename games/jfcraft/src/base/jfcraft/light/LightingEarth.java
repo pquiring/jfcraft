@@ -147,23 +147,14 @@ public class LightingEarth implements LightingBase {
     chunk.needLights = false;
 
     chunk.dirty = true;
-    chunk.needBuildBuffers = true;
     chunk.N.dirty = true;
-    chunk.N.needBuildBuffers = true;
     chunk.E.dirty = true;
-    chunk.E.needBuildBuffers = true;
     chunk.S.dirty = true;
-    chunk.S.needBuildBuffers = true;
     chunk.W.dirty = true;
-    chunk.W.needBuildBuffers = true;
     chunk.N.E.dirty = true;
-    chunk.N.E.needBuildBuffers = true;
     chunk.N.W.dirty = true;
-    chunk.N.W.needBuildBuffers = true;
     chunk.S.E.dirty = true;
-    chunk.S.E.needBuildBuffers = true;
     chunk.S.W.dirty = true;
-    chunk.S.W.needBuildBuffers = true;
   }
 
   private byte[][] copyLights(byte in[][]) {
@@ -315,23 +306,14 @@ public class LightingEarth implements LightingBase {
     chunk.needRelight = false;
 
     chunk.dirty = true;
-    chunk.needBuildBuffers = true;
     chunk.N.dirty = true;
-    chunk.N.needBuildBuffers = true;
     chunk.E.dirty = true;
-    chunk.E.needBuildBuffers = true;
     chunk.S.dirty = true;
-    chunk.S.needBuildBuffers = true;
     chunk.W.dirty = true;
-    chunk.W.needBuildBuffers = true;
     chunk.N.E.dirty = true;
-    chunk.N.E.needBuildBuffers = true;
     chunk.N.W.dirty = true;
-    chunk.N.W.needBuildBuffers = true;
     chunk.S.E.dirty = true;
-    chunk.S.E.needBuildBuffers = true;
     chunk.S.W.dirty = true;
-    chunk.S.W.needBuildBuffers = true;
   }
 
   private void processQueue() {
@@ -346,8 +328,8 @@ public class LightingEarth implements LightingBase {
       switch (t) {
         case SUN_FULL:
           if (y > 0 && chunk.getSunLight(x,y-1,z) < 15) {
-            lvl = getBlock(x, y-1, z).absorbSunLight(15);
-            lvl = getBlock2(x, y-1, z).absorbSunLight(lvl);
+            lvl = getBlock(x, y-1, z).absorbLight(15);
+            lvl = getBlock2(x, y-1, z).absorbLight(lvl);
             if (lvl > 0) {
               if (setSunLight(x,y-1,z, lvl)) {
                 add(lvl == 15 ? SUN_FULL : SUN_CAST, x,y-1,z);
@@ -392,11 +374,13 @@ public class LightingEarth implements LightingBase {
           break;
         case SUN_CAST:
           lvl = chunk.getSunLight(x,y,z);
+          if (lvl <= 1) break;
           if (x < 31) {
             olvl = chunk.getSunLight(x+1,y,z);
             if (olvl < lvl) {
               nlvl = getBlock(x+1, y, z).absorbLight(lvl);
               nlvl = getBlock2(x+1, y, z).absorbLight(nlvl);
+              if (nlvl == lvl) nlvl--;
               if (nlvl > olvl) {
                 if (setSunLight(x+1,y,z, nlvl)) {
                   add(SUN_CAST, x+1,y,z);
@@ -409,6 +393,7 @@ public class LightingEarth implements LightingBase {
             if (olvl < lvl) {
               nlvl = getBlock(x-1, y, z).absorbLight(lvl);
               nlvl = getBlock2(x-1, y, z).absorbLight(nlvl);
+              if (nlvl == lvl) nlvl--;
               if (nlvl > olvl) {
                 if (setSunLight(x-1,y,z, nlvl)) {
                   add(SUN_CAST, x-1,y,z);
@@ -421,6 +406,7 @@ public class LightingEarth implements LightingBase {
             if (olvl < lvl) {
               nlvl = getBlock(x, y+1, z).absorbLight(lvl);
               nlvl = getBlock2(x, y+1, z).absorbLight(nlvl);
+              if (nlvl == lvl) nlvl--;
               if (nlvl > olvl) {
                 if (setSunLight(x,y+1,z, nlvl)) {
                   add(SUN_CAST, x,y+1,z);
@@ -433,6 +419,7 @@ public class LightingEarth implements LightingBase {
             if (olvl < lvl) {
               nlvl = getBlock(x, y-1, z).absorbLight(lvl);
               nlvl = getBlock2(x, y-1, z).absorbLight(nlvl);
+              if (nlvl == lvl) nlvl--;
               if (nlvl > olvl) {
                 if (setSunLight(x,y-1,z, nlvl)) {
                   add(SUN_CAST, x,y-1,z);
@@ -445,6 +432,7 @@ public class LightingEarth implements LightingBase {
             if (olvl < lvl) {
               nlvl = getBlock(x, y, z+1).absorbLight(lvl);
               nlvl = getBlock2(x, y, z+1).absorbLight(nlvl);
+              if (nlvl == lvl) nlvl--;
               if (nlvl > olvl) {
                 if (setSunLight(x,y,z+1, nlvl)) {
                   add(SUN_CAST, x,y,z+1);
@@ -457,6 +445,7 @@ public class LightingEarth implements LightingBase {
             if (olvl < lvl) {
               nlvl = getBlock(x, y, z-1).absorbLight(lvl);
               nlvl = getBlock2(x, y, z-1).absorbLight(nlvl);
+              if (nlvl == lvl) nlvl--;
               if (nlvl > olvl) {
                 if (setSunLight(x,y,z-1, nlvl)) {
                   add(SUN_CAST, x,y,z-1);
@@ -473,6 +462,7 @@ public class LightingEarth implements LightingBase {
             if (olvl < lvl) {
               nlvl = getBlock(x+1, y, z).absorbLight(lvl);
               nlvl = getBlock2(x+1, y, z).absorbLight(nlvl);
+              if (nlvl == lvl) nlvl--;
               if (nlvl > olvl) {
                 setBlkLight(x+1,y,z, nlvl);
                 if (nlvl > 1) add(BLK, x+1,y,z);
@@ -484,6 +474,7 @@ public class LightingEarth implements LightingBase {
             if (olvl < lvl) {
               nlvl = getBlock(x-1, y, z).absorbLight(lvl);
               nlvl = getBlock2(x-1, y, z).absorbLight(nlvl);
+              if (nlvl == lvl) nlvl--;
               if (nlvl > olvl) {
                 setBlkLight(x-1,y,z, nlvl);
                 if (nlvl > 1) add(BLK, x-1,y,z);
@@ -495,6 +486,7 @@ public class LightingEarth implements LightingBase {
             if (olvl < lvl) {
               nlvl = getBlock(x, y+1, z).absorbLight(lvl);
               nlvl = getBlock2(x, y+1, z).absorbLight(nlvl);
+              if (nlvl == lvl) nlvl--;
               if (nlvl > olvl) {
                 setBlkLight(x,y+1,z, nlvl);
                 if (nlvl > 1) add(BLK, x,y+1,z);
@@ -506,6 +498,7 @@ public class LightingEarth implements LightingBase {
             if (olvl < lvl) {
               nlvl = getBlock(x, y-1, z).absorbLight(lvl);
               nlvl = getBlock2(x, y-1, z).absorbLight(nlvl);
+              if (nlvl == lvl) nlvl--;
               if (nlvl > olvl) {
                 setBlkLight(x,y-1,z, nlvl);
                 if (nlvl > 1) add(BLK, x,y-1,z);
@@ -517,6 +510,7 @@ public class LightingEarth implements LightingBase {
             if (olvl < lvl) {
               nlvl = getBlock(x, y, z+1).absorbLight(lvl);
               nlvl = getBlock2(x, y, z+1).absorbLight(nlvl);
+              if (nlvl == lvl) nlvl--;
               if (nlvl > olvl) {
                 setBlkLight(x,y,z+1, nlvl);
                 if (nlvl > 1) add(BLK, x,y,z+1);
@@ -528,6 +522,7 @@ public class LightingEarth implements LightingBase {
             if (olvl < lvl) {
               nlvl = getBlock(x, y, z-1).absorbLight(lvl);
               nlvl = getBlock2(x, y, z-1).absorbLight(nlvl);
+              if (nlvl == lvl) nlvl--;
               if (nlvl > olvl) {
                 setBlkLight(x,y,z-1, nlvl);
                 if (nlvl > 1) add(BLK, x,y,z-1);

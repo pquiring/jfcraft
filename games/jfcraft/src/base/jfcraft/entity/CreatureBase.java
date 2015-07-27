@@ -48,16 +48,13 @@ public abstract class CreatureBase extends EntityBase {
         health = 0;
         //entity is dead
         Static.log("Entity killed:" + this);
-        if (id != Entities.PLAYER) {
-          despawn();
-
-          Item items[] = drop();
-          Chunk chunk = getChunk();
-          for(int a=0;a<items.length;a++) {
-            Item item = items[a];
-            if (item.id == Blocks.AIR) continue;
-            WorldItem.create(item, dim, pos.x, pos.y, pos.z, chunk, -1);
-          }
+        despawn();
+        Item items[] = drop();
+        Chunk chunk = getChunk();
+        for(int a=0;a<items.length;a++) {
+          Item item = items[a];
+          if (item.id == Blocks.AIR) continue;
+          WorldItem.create(item, dim, pos.x, pos.y, pos.z, chunk, -1);
         }
       } else {
         health -= amt;
