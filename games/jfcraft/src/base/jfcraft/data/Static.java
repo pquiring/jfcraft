@@ -51,47 +51,29 @@ public class Static {
 
   public static boolean doSteps = false;
 
-  public static ThreadLocal<Integer> logid = new ThreadLocal<Integer>();
   public static ServerInterface iface;
+
+  private static final int getLogID() {
+    return Thread.currentThread().hashCode();
+  }
 
   public static void log(String msg) {
     if (iface != null) {
       iface.log(msg);
     }
-    Integer i = logid.get();
-    int id;
-    if (i != null)
-      id = i.intValue();
-    else
-      id = 0;
-    JFLog.log(id, msg);
+    JFLog.log(getLogID(), msg);
   }
 
   public static void log(Throwable t) {
-    Integer i = logid.get();
-    int id;
-    if (i != null)
-      id = i.intValue();
-    else
-      id = 0;
-    JFLog.log(id, t);
+    JFLog.log(getLogID(), t);
   }
 
   public static void logTrace(String msg) {
-    Integer i = logid.get();
-    int id;
-    if (i != null)
-      id = i.intValue();
-    else
-      id = 0;
-    JFLog.logTrace(id, msg);
+    JFLog.logTrace(getLogID(), msg);
   }
 
-  private static int nextLogID = 1;
-  private synchronized static void initLog(String name, boolean stdout) {
-    int id = nextLogID++;
-    JFLog.init(id, name.replaceAll(" ", "_") + ".log", stdout);
-    logid.set(id);
+  private static void initLog(String name, boolean stdout) {
+    JFLog.init(getLogID(), name.replaceAll(" ", "_") + ".log", stdout);
   }
 
   public static void initClientThread(String name, boolean stdout, boolean timer) {

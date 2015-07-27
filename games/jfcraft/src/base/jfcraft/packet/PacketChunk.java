@@ -29,7 +29,6 @@ public class PacketChunk extends Packet {
     for(int a=0;a<e.length;a++) {
       if (e[a].uid == client.player.uid) {
         chunk.delEntity(e[a]);
-        chunk.addEntity(client.player);  //replace with full version
       }
     }
     client.world.chunks.addChunk(chunk);

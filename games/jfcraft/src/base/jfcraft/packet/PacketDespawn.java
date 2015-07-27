@@ -25,6 +25,7 @@ public class PacketDespawn extends Packet {
 
   //process on client side
   public void process(Client client) {
+    //NOTE : player does not get despawn for itself (see Server.broadcastEntityDespawn)
     int uid = i1;
     EntityBase e = client.world.getEntity(uid);
     if (e == null) {
