@@ -842,14 +842,12 @@ public class BluePrint implements SerialClass, SerialCreator {
     Z = newZ;
   }
 
-  private static final byte ver = 0;
-
   private static final int magic = 0x12345678;
 
   @Override
   public boolean write(SerialBuffer buffer, boolean file) {
     {
-      buffer.writeByte(ver);
+      buffer.writeInt(World.ver);
 
       buffer.writeInt(X);
       buffer.writeInt(Y);
@@ -964,7 +962,9 @@ public class BluePrint implements SerialClass, SerialCreator {
 
   @Override
   public boolean read(SerialBuffer buffer, boolean file) {
-    byte ver = buffer.readByte();
+    int ver = buffer.readInt();
+
+    if (ver < World.min_ver) return false;
 
     X = buffer.readInt();
     Y = buffer.readInt();
