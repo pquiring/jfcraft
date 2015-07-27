@@ -54,8 +54,10 @@ public class PauseMenu extends RenderScreen {
 
   public void setup() {
     setCursor();
-    if (Static.client.openToLan) {
+    if (Static.client.openToLan || !Static.client.clientTransport.isLocal()) {
       openToLan.setClr(Static.grey);
+    } else {
+      openToLan.setClr(Static.white);
     }
   }
 

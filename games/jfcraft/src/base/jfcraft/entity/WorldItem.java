@@ -121,13 +121,15 @@ public class WorldItem extends EntityBase {
     if (moved) Static.server.broadcastEntityMove(this, false);
     if (age > 3 * 20) {
       //check if player is overlapping me
-      EntityBase e[] = Static.server.world.getEntities();
-      for(int a=0;a<e.length;a++) {
-        if (e[a].id != Entities.PLAYER) continue;
-        if (e[a].hitBox(pos.x, pos.y, pos.z, width2, height2, depth2)) {
+      EntityBase es[] = Static.server.world.getEntities();
+      for(int a=0;a<es.length;a++) {
+        EntityBase e = es[a];
+        if (e.id != Entities.PLAYER) continue;
+        Player player = (Player)e;
+        if (player.health == 0) continue;
+        if (player.hitBox(pos.x, pos.y, pos.z, width2, height2, depth2)) {
           //player gets this item
-          Client c = Static.server.getClient((Player)e[a]);
-          c.addItem(item, true);
+          player.client.addItem(item, true);
           Chunk chunk = getChunk();
           chunk.delEntity(this);
           Static.server.world.delEntity(uid);

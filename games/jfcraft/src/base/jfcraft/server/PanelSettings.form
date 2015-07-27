@@ -58,7 +58,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="105" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="162" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -116,6 +116,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="pvp" min="-2" max="-2" attributes="0"/>
                       <Component id="voip" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="dropItemsOnDeath" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -128,7 +129,9 @@
                   <Component id="pvp" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="voip" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="dropItemsOnDeath" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -144,6 +147,12 @@
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" value="PvP"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="dropItemsOnDeath">
+          <Properties>
+            <Property name="selected" type="boolean" value="true"/>
+            <Property name="text" type="java.lang.String" value="Drop Items on Death"/>
           </Properties>
         </Component>
       </SubComponents>

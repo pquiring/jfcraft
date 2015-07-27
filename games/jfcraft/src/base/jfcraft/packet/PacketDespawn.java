@@ -27,7 +27,10 @@ public class PacketDespawn extends Packet {
   public void process(Client client) {
     int uid = i1;
     EntityBase e = client.world.getEntity(uid);
-    if (e == null) return;
+    if (e == null) {
+      Static.log("Despawn not found:" + uid);
+      return;
+    }
     Chunk chunk = e.getChunk();
     if (chunk != null) {
       chunk.delEntity(e);

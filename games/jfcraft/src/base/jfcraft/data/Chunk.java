@@ -35,7 +35,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
   public boolean needLights;  //generator phases
   //flags
   public boolean dirty;  //need to write to disk
-  public boolean needBuildBuffers, needCopyBuffers, needRelight;
+  public boolean needRelight;
   public boolean ready;
   public boolean inRange, isAllEmpty;
 
@@ -126,7 +126,6 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
     mat = new GLMatrix();
     mat.setIdentity();
     mat.setTranslate(cx * 16.0f, 0, cz * 16.0f);
-    needBuildBuffers = true;
   }
 
   public void copyBuffers(GL gl) {
@@ -135,7 +134,6 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       if (!dest.exists(a)) continue;
       dest.getBuffers(a).copyBuffers(gl);
     }
-    needCopyBuffers = false;
     ready = true;
   }
 
@@ -364,6 +362,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       dirty = true;
       int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
       if (isClient) {
+        Static.log("light coords:" + xyz[0]+","+ xyz[1]+","+ xyz[2]+","+ xyz[3]+","+ xyz[4]+","+ xyz[5]);
         Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
       } else {
         Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
@@ -681,7 +680,6 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
   public void buildBuffers() {
 //    if (cx == -1 && cz == 0) Static.log("buildBuffers:" + cx + "," + cz);
     synchronized(lock) {
-      needBuildBuffers = false;
       char id, xid;
       int _bits;
       byte _ll;
@@ -857,7 +855,6 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
         }
       }
       isAllEmpty = dest.allEmpty();
-      needCopyBuffers = true;
     }
   }
 
@@ -1173,7 +1170,6 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       } else {
         cracks.add(crack);
       }
-      needBuildBuffers = true;
       if (isClient) {
         Static.client.chunkBuilder.add(this);
       }
@@ -1187,7 +1183,6 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
         ExtraCrack c = cracks.get(a);
         if (c.x == x && c.y == y && c.z == z) {
           cracks.remove(a);
-          needBuildBuffers = true;
           if (isClient) {
             Static.client.chunkBuilder.add(this);
           }

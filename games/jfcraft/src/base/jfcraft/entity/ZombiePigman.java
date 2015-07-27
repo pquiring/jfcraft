@@ -269,6 +269,6 @@ public class ZombiePigman extends HumaniodBase {
     }
   }
   public int[] getSpawnDims() {
-    return new int[] {Dims.EARTH};
+    return new int[] {Dims.NETHER};
   }
 }
