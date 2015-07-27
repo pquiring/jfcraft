@@ -962,7 +962,7 @@ public class World implements SerialClass, SerialCreator {
       return false;
     }
 
-    Static.log("Loaded world:" + name + "," + type + "," + seed);
+    Static.log("Loaded world:" + this.name + "," + type + "," + seed);
     return true;
   }
 

@@ -156,7 +156,7 @@ public class VoIPServer implements SIPServerInterface, VoIPEventHandler {
     cd.audioRelay.init(cd, this);
     cd.pbxsrc.host = cd.src.host;
     cd.pbxsrc.sdp = new SDP();
-    cd.pbxsrc.sdp.ip = ss.getlocalhost(cd.src.host);
+    cd.pbxsrc.sdp.ip = cd.localhost;
     SDP.Stream astream = cd.pbxsrc.sdp.addStream(SDP.Type.audio);
     astream.codecs = cd.src.sdp.getFirstAudioStream().codecs;
     astream.port = cd.audioRelay.getPort_src();
