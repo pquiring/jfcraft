@@ -117,11 +117,11 @@ public class Client {
   }
 
   public void initThread(String name, boolean stdout) {
-    Static.initClientThread(world, name, stdout, false);
+    Static.initClientThread(name, stdout, false);
   }
 
   public void initTimer(String name, boolean stdout) {
-    Static.initClientThread(world, name, stdout, true);
+    Static.initClientThread(name, stdout, true);
   }
 
   public Client(ServerTransport transport) {
@@ -290,7 +290,7 @@ public class Client {
     //do keyboard input
     boolean up = false, dn = false, lt = false, rt = false, jump = false, sneak = false, run = false, fup = false, fdn = false;
     boolean b1 = false, b2 = false;
-    if (player.hasChunk()) {
+    if (world != null && player != null && player.hasChunk()) {
       if (Static.inGame) {
         up = Static.keys[KeyEvent.VK_W];
         dn = Static.keys[KeyEvent.VK_S];
@@ -610,9 +610,9 @@ public class Client {
     WorldItem e;
     e = new WorldItem();
     e.setItem(item);
-    e.init();
+    e.init(world);
     e.dim = player.dim;
-    e.uid = Static.world().generateUID();
+    e.uid = Static.server.world.generateUID();
     e.pos.x = player.pos.x;
     e.pos.y = player.pos.y + player.eyeHeight;
     e.pos.z = player.pos.z;

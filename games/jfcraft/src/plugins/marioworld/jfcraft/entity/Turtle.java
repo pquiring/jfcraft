@@ -50,8 +50,8 @@ public class Turtle extends CreatureBase {
     return "Turtle";
   }
 
-  public void init() {
-    super.init();
+  public void init(World world) {
+    super.init(world);
     isStatic = true;
     width = 0.6f;
     width2 = width/2;
@@ -61,7 +61,7 @@ public class Turtle extends CreatureBase {
     depth2 = width2;
     walkAngleDelta = 5.0f;
     walkDutyCycle = 2;  //walk 50% of the time
-    if (Static.isServer()) {
+    if (world.isServer) {
       ar = initArmor;
       eyeHeight = 1.3f;
       jumpVelocity = 0.58f;  //results in jump of 1.42
@@ -226,7 +226,6 @@ public class Turtle extends CreatureBase {
   }
 
   public EntityBase spawn(Chunk chunk) {
-    World world = Static.world();
     float px = r.nextInt(16) + chunk.cx * 16.0f + 0.5f;
     int y = r.nextInt(256);
     float pz = r.nextInt(16) + chunk.cz * 16.0f + 0.5f;
@@ -238,7 +237,7 @@ public class Turtle extends CreatureBase {
       {
         py -= 1.0f;
         Turtle e = new Turtle();
-        e.init();
+        e.init(world);
         e.dim = chunk.dim;
         e.health = initHealth;
         e.color = (byte)r.nextInt(3);

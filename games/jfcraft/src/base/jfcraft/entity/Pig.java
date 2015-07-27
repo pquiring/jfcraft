@@ -40,8 +40,8 @@ public class Pig extends CreatureBase {
     return "PIG";
   }
 
-  public void init() {
-    super.init();
+  public void init(World world) {
+    super.init(world);
     width = 0.6f;
     width2 = width/2;
     height = 0.8f;
@@ -49,7 +49,7 @@ public class Pig extends CreatureBase {
     depth = 1.3f;
     depth2 = depth/2;
     walkAngleDelta = 5.0f;
-    if (Static.isServer()) {
+    if (world.isServer) {
       eyeHeight = 0.5f;
       jumpVelocity = 0.58f;  //results in jump of 1.42
       //speeds are blocks per second
@@ -211,7 +211,7 @@ public class Pig extends CreatureBase {
 
   private static Random r = new Random();
   public EntityBase spawn(Chunk chunk) {
-    World world = Static.world();
+    World world = Static.server.world;
     float px = r.nextInt(16) + chunk.cx * 16.0f + 0.5f;
     float pz = r.nextInt(16) + chunk.cz * 16.0f + 0.5f;
     for(float gy = 255;gy>0;gy--) {
@@ -222,7 +222,7 @@ public class Pig extends CreatureBase {
       {
         py -= 1.0f;
         Pig e = new Pig();
-        e.init();
+        e.init(world);
         e.dim = chunk.dim;
         e.health = initHealth;
         e.pos.x = px;

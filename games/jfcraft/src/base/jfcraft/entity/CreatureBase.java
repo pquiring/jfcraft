@@ -140,8 +140,6 @@ public abstract class CreatureBase extends EntityBase {
     int vid = -1;
     if (veh != null) vid = veh.uid;
 
-    World world = Static.world();
-
     EntityBase elist[] = world.getEntities();
 
     int cnt = (int)(reach / Static._1_16);

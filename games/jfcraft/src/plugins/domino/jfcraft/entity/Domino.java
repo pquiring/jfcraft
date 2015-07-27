@@ -43,8 +43,8 @@ public class Domino extends BlockEntity {
     return dest;
   }
 
-  public void init() {
-    super.init();
+  public void init(World world) {
+    super.init(world);
     dest = new RenderDest(parts.length);
     width = 0.5f;
     width2 = width/2;

@@ -40,8 +40,8 @@ public class Cow extends CreatureBase {
     return "cow";
   }
 
-  public void init() {
-    super.init();
+  public void init(World world) {
+    super.init(world);
     isStatic = true;
     width = 0.6f;
     width2 = width/2;
@@ -50,7 +50,7 @@ public class Cow extends CreatureBase {
     depth = 1.5f;
     depth2 = depth/2;
     walkAngleDelta = 5.0f;
-    if (Static.isServer()) {
+    if (world.isServer) {
       eyeHeight = 0.5f;
       jumpVelocity = 0.58f;  //results in jump of 1.42
       //speeds are blocks per second
@@ -208,7 +208,7 @@ public class Cow extends CreatureBase {
 
   private static Random r = new Random();
   public EntityBase spawn(Chunk chunk) {
-    World world = Static.world();
+    World world = Static.server.world;
     float px = r.nextInt(16) + chunk.cx * 16.0f + 0.5f;
     float pz = r.nextInt(16) + chunk.cz * 16.0f + 0.5f;
     for(float gy = 255;gy>0;gy--) {
@@ -219,7 +219,7 @@ public class Cow extends CreatureBase {
       {
         py -= 1.0f;
         Cow e = new Cow();
-        e.init();
+        e.init(world);
         e.dim = chunk.dim;
         e.health = initHealth;
         e.pos.x = px;

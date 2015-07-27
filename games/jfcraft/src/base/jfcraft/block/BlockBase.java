@@ -39,9 +39,8 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
 
   public static ArrayList<Box> boxListEmpty = new ArrayList<Box>();
 
-  public void getIDs() {
-    super.getIDs();
-    World world = Static.world();
+  public void getIDs(World world) {
+    super.getIDs(world);
     if (dropBlock == null) dropBlock = name;
     dropID = world.getBlockID(dropBlock);
     if (dropID == 0 && !dropBlock.toLowerCase().equals("air")) {
@@ -284,7 +283,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
         supportingBlock.y--;
       }
       //get supporting block
-      Static.world().getBlock(thisBlock.chunk.dim, supportingBlock.x, supportingBlock.y, supportingBlock.z, supportingBlock);
+      Static.server.world.getBlock(thisBlock.chunk.dim, supportingBlock.x, supportingBlock.y, supportingBlock.z, supportingBlock);
       if ((thisBlock.block.isPlant && !supportingBlock.block.canPlantOn) || (!supportingBlock.block.canSupportBlock(thisBlock))) {
         //supporting block gone
         return false;
@@ -298,7 +297,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     if (hasShape) setShape(chunk, tick.x, tick.y, tick.z, true, c);
     if (isSupported) {
       tick.toWorldCoords(chunk, c);
-      Static.world().getBlock(chunk.dim, c.x, c.y, c.z, c);
+      Static.server.world.getBlock(chunk.dim, c.x, c.y, c.z, c);
       if (!checkSupported(c)) {
         c.block = this;
         destroy(null, c, true);

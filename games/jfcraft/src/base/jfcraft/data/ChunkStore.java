@@ -265,7 +265,7 @@ public class ChunkStore {
 
   private static SerialCoder coder = new SerialCoder();  //used to read chunks only
 
-  private static Chunk serialChunk = new Chunk();  //just for Chunk.create()
+  private static Chunk serialChunk = new Chunk(null);  //just for Chunk.create()
 
   public Chunk loadChunk(int cx, int cz) {
     try {

@@ -87,7 +87,7 @@ public class Login extends RenderScreen {
         return;
       }
       if (Static.client.world != null && Static.client.player != null) {
-        Static.initClientThread(Static.client.world, "Client render (EDT)", true, false);  //actually EDT
+        Static.initClientThread("Client render (EDT)", true, false);  //actually EDT
         Static.client.startTimers();
         LoadingChunks loading = (LoadingChunks)Static.screens.screens[Client.LOADINGCHUNKS];
         loading.setup(Static.client);

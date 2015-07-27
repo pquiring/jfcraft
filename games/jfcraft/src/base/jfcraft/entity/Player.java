@@ -46,8 +46,8 @@ public class Player extends HumaniodBase {
     return "player";
   }
 
-  public void init() {
-    super.init();
+  public void init(World world) {
+    super.init(world);
     isStatic = true;
     width = 0.6f;
     width2 = width/2;

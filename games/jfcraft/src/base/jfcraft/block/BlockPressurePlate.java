@@ -42,13 +42,12 @@ public class BlockPressurePlate extends BlockCarpet {
       er.t2 = 0;
       c.chunk.addTick(c.gx, c.gy, c.gz, isBlocks2);
       Static.server.broadcastExtra(c.chunk.dim, c.x, c.y, c.z, er, true);
-      Static.world().powerChanged(c.chunk.dim, c.x,c.y,c.z);
+      Static.server.world.powerChanged(c.chunk.dim, c.x,c.y,c.z);
     }
   }
 
   private Coords c = new Coords();
   public void tick(Chunk chunk, Tick tick) {
-    World world = Static.world();
     tick.toWorldCoords(chunk, c);
     ExtraRedstone er = (ExtraRedstone)c.chunk.getExtra(c.gx, c.gy, c.gz, Extras.REDSTONE);
     if (er == null) {
@@ -65,7 +64,7 @@ public class BlockPressurePlate extends BlockCarpet {
     //lost power
     er.active = false;
     Static.server.broadcastExtra(c.chunk.dim, c.x, c.y, c.z, er, true);
-    world.powerChanged(c.chunk.dim, c.x,c.y,c.z);
+    Static.server.world.powerChanged(c.chunk.dim, c.x,c.y,c.z);
     super.tick(chunk, tick); //this will delete tick (no longer needed)
   }
 }

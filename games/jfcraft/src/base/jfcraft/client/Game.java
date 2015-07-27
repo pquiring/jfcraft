@@ -49,7 +49,7 @@ public class Game extends RenderScreen {
 
   public void setup() {
     Static.game = this;
-    world = Static.world();
+    world = Static.client.world;
     setCursor();
     Static.inGame = true;
     if (hand == null) {

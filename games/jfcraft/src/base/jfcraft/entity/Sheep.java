@@ -56,8 +56,8 @@ public class Sheep extends CreatureBase {
     return "Sheep";
   }
 
-  public void init() {
-    super.init();
+  public void init(World world) {
+    super.init(world);
     isStatic = true;
     width = 0.6f;
     width2 = width/2;
@@ -66,7 +66,7 @@ public class Sheep extends CreatureBase {
     depth = 1.8f;
     depth2 = depth/2;
     walkAngleDelta = 5.0f;
-    if (Static.isServer()) {
+    if (world.isServer) {
       eyeHeight = 0.5f;
       jumpVelocity = 0.58f;  //results in jump of 1.42
       //speeds are blocks per second
@@ -235,7 +235,7 @@ public class Sheep extends CreatureBase {
 
   private static Random r = new Random();
   public EntityBase spawn(Chunk chunk) {
-    World world = Static.world();
+    World world = Static.server.world;
     float px = r.nextInt(16) + chunk.cx * 16.0f;
     float pz = r.nextInt(16) + chunk.cz * 16.0f;
     for(float gy = 255;gy>0;gy--) {
@@ -246,7 +246,7 @@ public class Sheep extends CreatureBase {
       {
         py -= 1;
         Sheep e = new Sheep();
-        e.init();
+        e.init(world);
         e.dim = chunk.dim;
         e.health = initHealth;
         e.flags = FLAG_FUR;
@@ -285,9 +285,9 @@ public class Sheep extends CreatureBase {
             if (item.id == Blocks.AIR) continue;
             WorldItem e = new WorldItem();
             e.setItem(item);
-            e.init();
+            e.init(world);
             e.dim = dim;
-            e.uid = Static.world().generateUID();
+            e.uid = Static.server.world.generateUID();
             e.pos.x = pos.x + 0.5f;
             e.pos.y = pos.y + e.height2;
             e.pos.z = pos.z + 0.5f;

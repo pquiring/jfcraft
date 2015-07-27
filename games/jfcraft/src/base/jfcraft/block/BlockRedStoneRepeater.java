@@ -29,8 +29,8 @@ public class BlockRedStoneRepeater extends BlockBase {
     torch = Assets.getModel("torch").model;
   }
 
-  public void getIDs() {
-    super.getIDs();
+  public void getIDs(World world) {
+    super.getIDs(world);
     dropID = Items.REDSTONE_REPEATER_ITEM;
   }
 
@@ -173,7 +173,7 @@ public class BlockRedStoneRepeater extends BlockBase {
     Coords n = c.clone();
     n.otherSide();
     n.adjacentBlock();
-    World world = Static.world();
+    World world = Static.server.world;
     powerLevel = world.getPowerLevel(dim,n.x,n.y,n.z,c);
     boolean locked = isLocked(c);
     if (er.active && !locked) {

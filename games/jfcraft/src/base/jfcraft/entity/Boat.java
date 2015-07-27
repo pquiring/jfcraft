@@ -35,8 +35,8 @@ public class Boat extends VehicleBase {
     return dest;
   }
 
-  public void init() {
-    super.init();
+  public void init(World world) {
+    super.init(world);
     yDrag = Static.dragSpeed;
     xzDrag = yDrag * 4.0f;
     waterSpeed = 6.2f;

@@ -23,8 +23,8 @@ public class BlockEnderChest extends BlockBase {
     isComplex = true;
     isSolid = false;
   }
-  public void getIDs() {
-    super.getIDs();
+  public void getIDs(World world) {
+    super.getIDs(world);
     entityID = Entities.ENDER_CHEST;
   }
   public void buildBuffers(RenderDest dest, RenderData data) {
@@ -40,8 +40,9 @@ public class BlockEnderChest extends BlockBase {
     chest.needCopyBuffers = true;
   }
   public boolean place(Client client, Coords c) {
+    World world = Static.server.world;
     EnderChest echest = new EnderChest();
-    echest.init();
+    echest.init(world);
     echest.pos.x = ((float)c.x) + 0.5f;
     echest.pos.y = ((float)c.y) + 0.5f;
     echest.pos.z = ((float)c.z) + 0.5f;
@@ -49,9 +50,9 @@ public class BlockEnderChest extends BlockBase {
     echest.gy = c.gy;
     echest.gz = c.gz;
     echest.ang.y = c.getYAngle();
-    echest.uid = Static.world().generateUID();
+    echest.uid = world.generateUID();
     c.chunk.addEntity(echest);
-    Static.world().addEntity(echest);
+    world.addEntity(echest);
     Static.server.broadcastEntitySpawn(echest);
     return super.place(client, c);
   }
@@ -70,7 +71,7 @@ public class BlockEnderChest extends BlockBase {
     EntityBase e = c.chunk.findBlockEntity(Entities.ENDER_CHEST, c);
     if (e != null) {
       c.chunk.delEntity(e);
-      Static.world().delEntity(e.uid);
+      Static.server.world.delEntity(e.uid);
       Static.server.broadcastEntityDespawn(e);
     }
   }

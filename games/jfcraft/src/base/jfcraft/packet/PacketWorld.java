@@ -25,9 +25,8 @@ public class PacketWorld extends Packet {
   //process on client side
   public void process(Client client) {
     client.world = world;
-    Static.world.set(world);
     client.world.init();
-    client.world.chunks = new Chunks(true);
+    client.world.chunks = new Chunks(world);
     if (!client.clientTransport.isLocal()) {
       client.world.assignIDs();
     }
@@ -46,7 +45,7 @@ public class PacketWorld extends Packet {
   @Override
   public boolean read(SerialBuffer buffer, boolean file) {
     super.read(buffer, file);
-    world = new World();
+    world = new World(false);
     world.read(buffer, file);
     return true;
   }

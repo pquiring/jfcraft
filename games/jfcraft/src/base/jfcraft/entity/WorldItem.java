@@ -38,8 +38,8 @@ public class WorldItem extends EntityBase {
     return "WorldItem";
   }
 
-  public void init() {
-    super.init();
+  public void init(World world) {
+    super.init(world);
     width = 0.5f;
     width2 = width/2;
     height = width;
@@ -161,9 +161,9 @@ public class WorldItem extends EntityBase {
   public static void create(Item item, int dim, float x, float y, float z, Chunk chunk, int dir) {
     WorldItem e = new WorldItem();
     e.setItem(item);
-    e.init();
+    e.init(Static.server.world);
     e.dim = dim;
-    e.uid = Static.world().generateUID();
+    e.uid = Static.server.world.generateUID();
     e.pos.x = x;
     e.pos.y = y;
     e.pos.z = z;

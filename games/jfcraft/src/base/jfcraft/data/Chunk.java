@@ -18,7 +18,7 @@ import jfcraft.data.*;
 import jfcraft.entity.*;
 import jfcraft.opengl.*;
 
-public class Chunk extends ClientServer implements SerialClass, SerialCreator {
+public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreator {
   public int dim,cx,cz;
   //Blocks order : Y Z X
   //char is 16bits unsigned which allows full usage
@@ -103,14 +103,16 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
   public static final int DEST_TEXT = 2;  //ASCII text
   public static final int buffersCount = 3; //DEST_NORMAL + DEST_ALPHA + DEST_TEXT
 
+  public World world;
+
   /** Old Chunk read from file/network. */
-  public Chunk() {
-    super(Static.isClient());
+  public Chunk(World world) {
+    this.world = world;
   }
 
   /** New Chunk created on server side only */
   public Chunk(int dim, int cx, int cz) {
-    super(false);
+    this.world = Static.server.world;
     this.dim = dim;
     this.cx = cx;
     this.cz = cz;
@@ -326,7 +328,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       dirty = true;
       if (isBorder()) return;
       int xyz[] = getLightCoordsSet(x,y,z, newBlock, Static.blocks.blocks[oldid]);
-      if (isClient) {
+      if (world.isClient) {
         Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
       } else {
         Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
@@ -361,7 +363,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       needRelight = true;
       dirty = true;
       int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
-      if (isClient) {
+      if (world.isClient) {
         Static.log("light coords:" + xyz[0]+","+ xyz[1]+","+ xyz[2]+","+ xyz[3]+","+ xyz[4]+","+ xyz[5]);
         Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
       } else {
@@ -399,7 +401,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       dirty = true;
       if (!needLights) {
         int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
-        if (isClient) {
+        if (world.isClient) {
           Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
         } else {
           Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
@@ -450,7 +452,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       needRelight = true;
       dirty = true;
       int xyz[] = getLightCoordsSet(x,y,z, newBlock, Static.blocks.blocks[oldid]);
-      if (isClient) {
+      if (world.isClient) {
         Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
       } else {
         Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
@@ -1170,7 +1172,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
       } else {
         cracks.add(crack);
       }
-      if (isClient) {
+      if (world.isClient) {
         Static.client.chunkBuilder.add(this);
       }
       dirty = true;
@@ -1183,7 +1185,7 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
         ExtraCrack c = cracks.get(a);
         if (c.x == x && c.y == y && c.z == z) {
           cracks.remove(a);
-          if (isClient) {
+          if (world.isClient) {
             Static.client.chunkBuilder.add(this);
           }
           dirty = true;
@@ -1631,6 +1633,6 @@ public class Chunk extends ClientServer implements SerialClass, SerialCreator {
 
   @Override
   public SerialClass create(SerialBuffer buffer) {
-    return new Chunk();
+    return new Chunk(Static.server.world);
   }
 }

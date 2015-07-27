@@ -53,8 +53,9 @@ public class BlockLever extends BlockBase {
   }
 
   public boolean place(Client client, Coords c) {
+    World world = Static.server.world;
     Lever lever = new Lever();
-    lever.init();
+    lever.init(world);
     lever.dim = c.chunk.dim;
     lever.pos.x = ((float)c.x) + 0.5f;
     lever.pos.y = ((float)c.y) + 0.09375f;  //1.5 px
@@ -65,9 +66,9 @@ public class BlockLever extends BlockBase {
     lever.ang.x = c.getXAngleA();
     lever.ang.y = c.getYAngle();
     lever.ang.z = c.getZAngleA();
-    lever.uid = Static.world().generateUID();
+    lever.uid = world.generateUID();
     c.chunk.addEntity(lever);
-    Static.world().addEntity(lever);
+    world.addEntity(lever);
     Static.server.broadcastEntitySpawn(lever);
     return super.place(client, c);
   }
@@ -78,13 +79,13 @@ public class BlockLever extends BlockBase {
     EntityBase e = c.chunk.findBlockEntity(Entities.LEVER, c);
     if (e != null) {
       c.chunk.delEntity(e);
-      Static.world().delEntity(e.uid);
+      Static.server.world.delEntity(e.uid);
       Static.server.broadcastEntityDespawn(e);
     }
   }
 
   public void useBlock(Client client, Coords c) {
-    World world = Static.world();
+    World world = Static.server.world;
     synchronized(c.chunk.lock) {
       ExtraRedstone er = (ExtraRedstone)c.chunk.getExtra(c.gx, c.gy, c.gz, Extras.REDSTONE);
       if (er == null) {

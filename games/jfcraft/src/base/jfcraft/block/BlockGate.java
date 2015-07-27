@@ -199,7 +199,7 @@ public class BlockGate extends BlockBase {
     int x = c.x;
     int y = c.y;
     int z = c.z;
-    World world = Static.world();
+    World world = Static.server.world;
     pl = world.getPowerLevel(dim,x,y+1,z,c); if (pl > powerLevel) powerLevel = pl;
     pl = world.getPowerLevel(dim,x,y-1,z,c); if (pl > powerLevel) powerLevel = pl;
     pl = world.getPowerLevel(dim,x+1,y,z,c); if (pl > powerLevel) powerLevel = pl;
