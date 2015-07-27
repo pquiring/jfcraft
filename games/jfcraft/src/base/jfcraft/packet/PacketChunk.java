@@ -26,8 +26,9 @@ public class PacketChunk extends Packet {
   //process on client side
   public void process(Client client) {
     EntityBase e[] = chunk.getEntities();
+    int pid = client.getUID();
     for(int a=0;a<e.length;a++) {
-      if (e[a].uid == client.player.uid) {
+      if (e[a].uid == pid) {
         chunk.delEntity(e[a]);
       }
     }
