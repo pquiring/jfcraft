@@ -214,7 +214,7 @@ public class Launcher extends javax.swing.JFrame {
   }//GEN-LAST:event_getPluginsActionPerformed
 
   private void startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startActionPerformed
-    if (player.getText().length() <= 3) {
+    if (player.getText().length() < 3) {
       JF.showError("Error", "Playername must be at least 3 chars");
       return;
     }
