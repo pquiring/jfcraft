@@ -709,6 +709,27 @@ public class Server {
     }
   }
 
+  public void broadcastEntityArmor(HumaniodBase entity, byte idx) {
+    int cx = Static.floor(entity.pos.x / 16.0f);
+    int cz = Static.floor(entity.pos.z / 16.0f);
+    Packet update = new PacketEntityArmor(Packets.ENTITY_ARMOR, entity.uid, entity.armors[idx], idx);
+    synchronized(clientsLock) {
+      int cnt = clients.size();
+      for(int a=0;a<cnt;a++) {
+        Client client = clients.get(a);
+        if (client.player == null) continue;
+        if (client.player == entity) continue;
+        if (client.player.dim != entity.dim) continue;
+//        if (!client.hasChunk(cx, cz)) continue;
+        int dx = Static.floor(client.player.pos.x / 16.0f) - cx;
+        int dz = Static.floor(client.player.pos.z / 16.0f) - cz;
+        if (dx > Static.maxLoadRange || dx < -Static.maxLoadRange) continue;
+        if (dz > Static.maxLoadRange || dz < -Static.maxLoadRange) continue;
+        client.serverTransport.addUpdate(update);
+      }
+    }
+  }
+
   public void broadcastRiding(VehicleBase v, CreatureBase o, boolean mount) {
     int cx = Static.floor(v.pos.x / 16.0f);
     int cz = Static.floor(v.pos.z / 16.0f);

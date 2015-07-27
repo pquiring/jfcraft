@@ -49,6 +49,7 @@ public class PacketArmorPut extends Packet {
       client.serverTransport.setArmorItem(idx, client.player.armors[idx]);
       client.hand = null;
       client.serverTransport.setHand(null);
+      server.broadcastEntityArmor(client.player, idx);
     }
   }
 
