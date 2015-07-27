@@ -17,7 +17,9 @@ I'm using my JavaForce library to use OpenGL instead of using LWJGL.
 The controls are like the original.  Plus a few extras for testing:
  c = toggle flying mode
  r/f = fly up/down (no clipping)
-The "Open To Lan" is working but is somewhat unstable.
+
+The server includes a VoIP comm system similar to TeamSpeak.
+Hold in the right CTRL button to talk (PTT).
 
 This is alpha software so please do not open bug requests.
 
