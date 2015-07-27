@@ -30,7 +30,7 @@ public class PacketHealth extends Packet {
     int uid = i1;
     float health = f1;
     CreatureBase e;
-    if (uid == client.player.uid) {
+    if (uid == client.getUID()) {
       e = client.player;
       if (health == 0) {
         Static.video.setScreen(Static.screens.screens[Client.DEAD]);

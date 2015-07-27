@@ -30,7 +30,7 @@ public class PacketAir extends Packet {
     int uid = i1;
     float air = f1;
     CreatureBase e;
-    if (uid == client.player.uid) {
+    if (uid == client.getUID()) {
       e = client.player;
     } else {
       e = (CreatureBase)client.world.getEntity(uid);

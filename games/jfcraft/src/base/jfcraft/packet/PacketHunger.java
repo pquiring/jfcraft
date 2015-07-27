@@ -30,7 +30,7 @@ public class PacketHunger extends Packet {
     int uid = i1;
     float hunger = f1;
     CreatureBase e;
-    if (uid == client.player.uid) {
+    if (uid == client.getUID()) {
       e = client.player;
     } else {
       e = (CreatureBase)client.world.getEntity(uid);
