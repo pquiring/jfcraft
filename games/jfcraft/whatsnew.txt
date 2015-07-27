@@ -1,12 +1,13 @@
 ChangeLog
 =========
 
-Jul ?, 2015 : v0.18 released!
+Jul 27, 2015 : v0.18 released!
   - players armor is now rendered
   - new /import /export commands added
     - load and save blueprints (kinda like schematics)
     - this will allow for rapid development of villages, etc.
   - a cabin is now generated randomly (the cabin is a blueprint)
+  - many bug fixes
 
 Jul 1, 2015 : v0.17 released!
   - fixed sync problem when players are in vehicles (minecart, boat)
