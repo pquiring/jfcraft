@@ -36,7 +36,9 @@ public class PacketDespawn extends Packet {
     if (chunk != null) {
       chunk.delEntity(e);
     }
-    client.world.delEntity(e.uid);
+    if (e.uid != client.getUID()) {
+      client.world.delEntity(e.uid);
+    }
   }
 
   @Override

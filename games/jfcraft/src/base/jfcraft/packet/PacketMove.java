@@ -36,7 +36,7 @@ public class PacketMove extends Packet {
     int uid = i1;
     EntityBase e = client.world.getEntity(uid);
     if (e == null) {
-//      Static.log("C:MOVE:Unknown entity:" + pm.uid);
+//      Static.log("C:MOVE:Unknown entity:" + uid);
       return;
     }
     synchronized(Static.renderLock) {  //TODO : need to eliminate this

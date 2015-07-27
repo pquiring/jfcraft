@@ -124,9 +124,6 @@ public class Chunks {
           continue;
         }
         e.uid = world.generateUID();
-        if (e.id == Entities.BOAT) {
-          Static.log("S:Boat.uid=" + e.uid);
-        }
         //ensure entity is in correct chunk
         int cx = Static.floor(e.pos.x / 16.0f);
         int cz = Static.floor(e.pos.z / 16.0f);
