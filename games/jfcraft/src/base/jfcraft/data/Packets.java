@@ -105,6 +105,7 @@ public class Packets implements SerialCreator {
     registerPacket(new PacketEnderChest(), "ENDERCHEST");
     registerPacket(new PacketSetSign(), "SETSIGN");
     registerPacket(new PacketUseVehicleInventory(), "USEVEHICLEINVENTORY");
+    registerPacket(new PacketEntityArmor(), "ENTITY_ARMOR");
   }
 
   public static byte RIDING;
@@ -135,12 +136,9 @@ public class Packets implements SerialCreator {
   public static byte SETCONTAINERITEM;
   public static byte SETINV;
   public static byte CRAFTONE;
-
-  //server -> client
   public static byte LOGIN_REPLY;
   public static byte CHUNK_REPLY;
   public static byte SETFLAGS;
-  //client -> server
   public static byte LOGIN_REQUEST;
   public static byte INVGET;
   public static byte MENUINV;
@@ -162,7 +160,6 @@ public class Packets implements SerialCreator {
   public static byte ARMORGET;
   public static byte SETSIGN;
   public static byte USEVEHICLEINVENTORY;
-  //client <-> server
   public static byte TICK;
   public static byte SETACTIVESLOT;
   public static byte ARMORPUT;
@@ -170,6 +167,7 @@ public class Packets implements SerialCreator {
   public static byte CRAFTPUT; //personal craft slots
   public static byte SETCRAFTED;
   public static byte MOVE;
+  public static byte ENTITY_ARMOR;
   public static byte PLAYER_REQUEST;
   public static byte CRAFTGET;
   public static byte DESPAWN;
