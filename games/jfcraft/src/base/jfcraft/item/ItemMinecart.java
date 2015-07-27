@@ -18,7 +18,7 @@ public class ItemMinecart extends ItemBase {
   }
   public boolean place(Client client, Coords c) {
     Minecart e = new Minecart();
-    e.init();
+    e.init(Static.server.world);
     e.dim = c.chunk.dim;
     e.uid = Static.server.world.generateUID();
     e.pos.x = c.x + 0.5f;

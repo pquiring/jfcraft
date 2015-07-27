@@ -104,12 +104,13 @@ public class Entities implements SerialCreator {
   public void initStatic(GL gl) {
     Static.log("initStatic(gl)");
     RenderData data = new RenderData();
+    World world = new World(true);
     for(int a=0;a<MAX_ID;a++) {
       EntityBase entity = regEntities[a];
       if (entity == null) continue;
       try {
         entity.initStatic(gl);
-        entity.init();
+        entity.init(world);
         entity.initInstance(gl);
         entity.buildBuffers(entity.getDest(), data);
         entity.copyBuffers(gl);

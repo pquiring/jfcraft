@@ -25,8 +25,8 @@ public class BlockDomino extends BlockBase {
     renderAsEntity = true;
     resetBoxes(Type.ENTITY);
   }
-  public void getIDs() {
-    super.getIDs();
+  public void getIDs(World world) {
+    super.getIDs(world);
     entityID = Domino.DOMINO;
   }
   public Class getIDClass() {
@@ -48,7 +48,7 @@ public class BlockDomino extends BlockBase {
   }
   public boolean place(Client client, Coords c) {
     Domino domino = new Domino();
-    domino.init();
+    domino.init(Static.server.world);
     domino.dim = c.chunk.dim;
     domino.pos.x = ((float)c.x) + 0.5f;
     domino.pos.y = ((float)c.y) + 0.5f;
@@ -57,9 +57,9 @@ public class BlockDomino extends BlockBase {
     domino.gy = c.gy;
     domino.gz = c.gz;
     domino.ang.y = c.ang.y;
-    domino.uid = Static.world().generateUID();
+    domino.uid = Static.server.world.generateUID();
     c.chunk.addEntity(domino);
-    Static.world().addEntity(domino);
+    Static.server.world.addEntity(domino);
     Static.server.broadcastEntitySpawn(domino);
     return super.place(client, c);
   }
@@ -69,7 +69,7 @@ public class BlockDomino extends BlockBase {
     EntityBase e = c.chunk.findBlockEntity(entityID, c);
     if (e != null) {
       c.chunk.delEntity(e);
-      Static.world().delEntity(e.uid);
+      Static.server.world.delEntity(e.uid);
       Static.server.broadcastEntityDespawn(e);
     }
   }

@@ -146,10 +146,9 @@ public class DialogCreateWorld extends javax.swing.JDialog {
     if (!folder.exists()) {
       folder.mkdirs();
     }
-    World world = new World();
-    Static.world.set(world);
+    World world = new World(true);
     world.init();
-    world.chunks = new Chunks(true);
+    world.chunks = new Chunks(world);
     world.name = worldName;
     world.type = "default";
     world.seed = Long.valueOf(seed.getText());

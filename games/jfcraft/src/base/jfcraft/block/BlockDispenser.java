@@ -24,9 +24,9 @@ public class BlockDispenser extends BlockDropper {
   }
 
   private void shot(EntityBase e, float x, float y, float z, Chunk chunk, int dir) {
-    e.init();
+    e.init(Static.server.world);
     e.dim = chunk.dim;
-    e.uid = Static.world().generateUID();
+    e.uid = Static.server.world.generateUID();
     e.pos.x = x;
     e.pos.y = y;
     e.pos.z = z;

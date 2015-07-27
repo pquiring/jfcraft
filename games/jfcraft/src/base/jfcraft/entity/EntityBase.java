@@ -70,8 +70,11 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public static Random r = new Random();
   public static GLMatrix mat = new GLMatrix(); //for rendering only (client side render only)
 
-  public void init() {
+  public World world;
+
+  public void init(World world) {
     //init values
+    this.world = world;
     lock = new Object();
     maxAge = -1;
     if (!isStatic) {
@@ -104,7 +107,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   /** Tests all blocks. */
   private boolean hitTest(float dx, float dy, float dz) {
-    World world = Static.world();
     float px = pos.x + dx - width2;
     float py = pos.y + dy;
     float pz = pos.z + dz - depth2;
@@ -140,7 +142,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   /** Tests if entity is in water/lava. */
   private void checkLiquids(float dx, float dy, float dz) {
-    World world = Static.world();
     float px = pos.x + dx - width2;
     float py = pos.y + dy;
     float pz = pos.z + dz - depth2;
@@ -177,7 +178,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   /** Tick all blocks within entity. */
   private void tickBlocks(float dx, float dy, float dz) {
-    World world = Static.world();
+    World world = Static.server.world;
     float px = pos.x + dx - width2;
     float py = pos.y + dy;
     float pz = pos.z + dz - depth2;
@@ -211,7 +212,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     checkLiquids(dx,dy,dz);
 
     //check right at camera position
-    char id = Static.world().getID2(dim, pos.x, pos.y + eyeHeight, pos.z);
+    char id = world.getID2(dim, pos.x, pos.y + eyeHeight, pos.z);
     underWater = id == Blocks.WATER;
     underLava = id == Blocks.LAVA;
   }
@@ -221,8 +222,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
    * @param tid = target id (0=check for any solid block to stand on)
    */
   public boolean onGround(float dx, float dy, float dz, char tid) {
-    World world = Static.world();
-
     float tx = pos.x + dx;
     float ty = pos.y + dy + height2 - Static._1_16;
     float tz = pos.z + dz;
@@ -256,8 +255,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   }
 
   public boolean hitHead() {
-    World world = Static.world();
-
     float tx = pos.x;
     float ty = pos.y + height2;
     float tz = pos.z;
@@ -433,7 +430,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
         if (onGround(0, 0, 0, (char)0)) {
           if (mode == MODE_JUMPING) mode = MODE_IDLE;
           if (!inWater && !inLava && fallBlocks > 3 && this instanceof CreatureBase) {
-            if (Static.isServer()) {
+            if (world.isServer) {
               //deal falling dmg
               Static.log("falling dmg:" + fallBlocks + ":" + this);
               fallBlocks -= 3f;
@@ -507,7 +504,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
    */
 
   public boolean move(boolean sneak, boolean stick, boolean usePath, int maxFall, int avoid) {
-    boolean server = Static.isServer();
+    boolean server = world.isServer;
     if (vel.x == 0.0f && vel.z == 0.0f) return false;
     Chunk chunk1 = null, chunk2;
     float ox=0, oy=0, oz=0;  //org pos
@@ -895,10 +892,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public Chunk getChunk() {
     int cx = Static.floor(pos.x / 16.0f);
     int cz = Static.floor(pos.z / 16.0f);
-    Chunks chunks = Static.world().chunks;
-    Chunk chunk;
-    chunk = chunks.getChunk(dim, cx, cz);
-    return chunk;
+    return world.chunks.getChunk(dim, cx, cz);
   }
 
   public BlockBase getBlock(float dx, float dy, float dz) {
@@ -931,7 +925,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public boolean hasChunk() {
     int cx = Static.floor(pos.x / 16.0f);
     int cz = Static.floor(pos.z / 16.0f);
-    return Static.world().chunks.hasChunk(dim, cx, cz);
+    return world.chunks.hasChunk(dim, cx, cz);
   }
 
   public Coords getCoords(Coords c) {
@@ -1038,7 +1032,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   }
 
   public float getLight(float sunLight) {
-    World world = Static.world();
     float bl = ((float)world.getBlockLight(dim, pos.x, pos.y + height2, pos.z)) / 15.0f;
     float sl = ((float)world.getSunLight(dim, pos.x, pos.y + height2, pos.z)) / 15.0f * sunLight;
     if (sl > bl)

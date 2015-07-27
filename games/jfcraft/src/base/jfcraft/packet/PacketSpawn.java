@@ -27,7 +27,7 @@ public class PacketSpawn extends Packet {
   public void process(Client client) {
     EntityBase e = entity;
     if (client.world.hasEntity(e.uid)) return;
-    e.init();
+    e.init(Static.client.world);
     int cx = Static.floor(e.pos.x / 16.0f);
     int cz = Static.floor(e.pos.z / 16.0f);
     Chunk chunk = client.world.chunks.getChunk(e.dim, cx, cz);

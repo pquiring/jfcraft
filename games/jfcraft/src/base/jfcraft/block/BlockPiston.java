@@ -27,8 +27,8 @@ public class BlockPiston extends BlockBase {
     isRedstone = true;
     renderAsEntity = true;
   }
-  public void getIDs() {
-    super.getIDs();
+  public void getIDs(World world) {
+    super.getIDs(world);
     if (!sticky)
       entityID = Entities.PISTON;
     else
@@ -53,9 +53,10 @@ public class BlockPiston extends BlockBase {
   }
   public boolean place(Client client, Coords c) {
     Static.log("piston place:" + c.dir + "," + c.dir_xz + "," + c.dir_y);
+    World world = Static.server.world;
     Piston piston = new Piston();
     if (sticky) piston.setSticky();
-    piston.init();
+    piston.init(world);
     piston.dim = c.chunk.dim;
     piston.pos.x = ((float)c.x) + 0.5f;
     piston.pos.y = ((float)c.y) + 0.5f;
@@ -65,9 +66,9 @@ public class BlockPiston extends BlockBase {
     piston.gz = c.gz;
     piston.ang.x = c.getXAngleA();
     piston.ang.z = c.getZAngleA();
-    piston.uid = Static.world().generateUID();
+    piston.uid = world.generateUID();
     c.chunk.addEntity(piston);
-    Static.world().addEntity(piston);
+    world.addEntity(piston);
     Static.server.broadcastEntitySpawn(piston);
     return super.place(client, c);
   }
@@ -90,7 +91,7 @@ public class BlockPiston extends BlockBase {
     EntityBase e = c.chunk.findBlockEntity(entityID, c);
     if (e != null) {
       c.chunk.delEntity(e);
-      Static.world().delEntity(e.uid);
+      Static.server.world.delEntity(e.uid);
       Static.server.broadcastEntityDespawn(e);
     }
     super.destroy(client, c, doDrop);
@@ -145,9 +146,9 @@ public class BlockPiston extends BlockBase {
         if (id1 == Blocks.AIR) break;  //all done
 
         MovingBlock mb = new MovingBlock();
-        mb.init();
+        mb.init(world);
         mb.dim = n.chunk.dim;
-        mb.uid = Static.world().generateUID();
+        mb.uid = Static.server.world.generateUID();
         mb.pos.x = n.x;
         mb.pos.y = n.y;
         mb.pos.z = n.z;
@@ -205,9 +206,9 @@ public class BlockPiston extends BlockBase {
 
       n.otherSide();
       MovingBlock mb = new MovingBlock();
-      mb.init();
+      mb.init(Static.server.world);
       mb.dim = n.chunk.dim;
-      mb.uid = Static.world().generateUID();
+      mb.uid = Static.server.world.generateUID();
       mb.pos.x = n.x;
       mb.pos.y = n.y;
       mb.pos.z = n.z;
@@ -230,7 +231,7 @@ public class BlockPiston extends BlockBase {
     int x = c.x;
     int y = c.y;
     int z = c.z;
-    World world = Static.world();
+    World world = Static.server.world;
     pl = world.getPowerLevel(dim,x,y+1,z,c); if (pl > powerLevel) powerLevel = pl;
     pl = world.getPowerLevel(dim,x,y-1,z,c); if (pl > powerLevel) powerLevel = pl;
     pl = world.getPowerLevel(dim,x+1,y,z,c); if (pl > powerLevel) powerLevel = pl;

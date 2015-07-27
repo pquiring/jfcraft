@@ -22,9 +22,9 @@ public class BlockFalling extends BlockOpaque {
       //convert to entity
       tick.toWorldCoords(chunk, c);
       MovingBlock mb = new MovingBlock();
-      mb.init();
+      mb.init(Static.server.world);
       mb.dim = chunk.dim;
-      mb.uid = Static.world().generateUID();
+      mb.uid = Static.server.world.generateUID();
       mb.pos.x = c.x;
       mb.pos.y = c.y;
       mb.pos.z = c.z;

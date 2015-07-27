@@ -45,8 +45,8 @@ public class Creeper extends CreatureBase {
     return dest;
   }
 
-  public void init() {
-    super.init();
+  public void init(World world) {
+    super.init(world);
     isStatic = true;
     width = 0.6f;
     width2 = width/2;
@@ -55,7 +55,7 @@ public class Creeper extends CreatureBase {
     depth = width;
     depth2 = width2;
     walkAngleDelta = 1.0f;
-    if (Static.isServer()) {
+    if (world.isServer) {
       ar = initArmor;
       eyeHeight = 1.3f;
       jumpVelocity = 0.58f;  //results in jump of 1.42
@@ -224,7 +224,6 @@ public class Creeper extends CreatureBase {
 
   private static Random r = new Random();
   public EntityBase spawn(Chunk chunk) {
-    World world = Static.world();
     float px = r.nextInt(16) + chunk.cx * 16.0f + 0.5f;
     int y = r.nextInt(256);
     float pz = r.nextInt(16) + chunk.cz * 16.0f + 0.5f;
@@ -236,7 +235,7 @@ public class Creeper extends CreatureBase {
       {
         py -= 1.0f;
         Creeper e = new Creeper();
-        e.init();
+        e.init(world);
         e.health = initHealth;
         e.pos.x = px;
         e.pos.y = py;

@@ -30,6 +30,13 @@ public class World implements SerialClass, SerialCreator {
   public int day;
   public boolean genSpawnAreaDone;
 
+  public boolean isClient, isServer;
+
+  public World(boolean isServer) {
+    this.isServer = isServer;
+    this.isClient = !isServer;
+  }
+
   //id mapping
   public ArrayList<String> blockMap = new ArrayList<String>();  //0-32767
   public ArrayList<String> itemMap = new ArrayList<String>();  //32768-65535
@@ -70,7 +77,7 @@ public class World implements SerialClass, SerialCreator {
         FileInputStream fis = new FileInputStream(fileName);
         byte data[] = JF.readAll(fis);
         fis.close();
-        World world = (World)coder.decodeObject(data, new World(), true);
+        World world = (World)coder.decodeObject(data, new World(true), true);
         if (world != null && world.incompatible && !listingOnly) {
           JF.showError("Error : Can not load world", "World is saved in incompatible version");
           return null;
@@ -237,7 +244,7 @@ public class World implements SerialClass, SerialCreator {
     char id;
     int cx = Static.floor(x / 16.0f);
     int cz = Static.floor(z / 16.0f);
-    Chunk chunk = Static.world().chunks.getChunk(dim, cx, cz);
+    Chunk chunk = chunks.getChunk(dim, cx, cz);
     if (chunk == null) {
       //should not happen (but could at and of loaded world)
       //make it appear to be a wall of stone
@@ -286,7 +293,7 @@ public class World implements SerialClass, SerialCreator {
   public char getID(int dim, float x, float y, float z) {
     int cx = Static.floor(x / 16.0f);
     int cz = Static.floor(z / 16.0f);
-    Chunk chunk = Static.world().chunks.getChunk(dim, cx, cz);
+    Chunk chunk = chunks.getChunk(dim, cx, cz);
     if (chunk == null) {
 //      Static.log("World.getIDAt():Chunk not found:"+dim+","+cx+","+cz);
       return Blocks.STONE;
@@ -311,7 +318,7 @@ public class World implements SerialClass, SerialCreator {
   public int getBits(int dim, float x, float y, float z) {
     int cx = Static.floor(x / 16.0f);
     int cz = Static.floor(z / 16.0f);
-    Chunk chunk = Static.world().chunks.getChunk(dim, cx, cz);
+    Chunk chunk = chunks.getChunk(dim, cx, cz);
     if (chunk == null) {
       return 0;
     }
@@ -334,7 +341,7 @@ public class World implements SerialClass, SerialCreator {
   public char getID2(int dim, float x, float y, float z) {
     int cx = Static.floor(x / 16.0f);
     int cz = Static.floor(z / 16.0f);
-    Chunk chunk = Static.world().chunks.getChunk(dim, cx, cz);
+    Chunk chunk = chunks.getChunk(dim, cx, cz);
     if (chunk == null) {
 //      Static.log("World.getIDAt():Chunk not found:"+dim+","+cx+","+cz);
       return Blocks.STONE;
@@ -359,7 +366,7 @@ public class World implements SerialClass, SerialCreator {
   public int getBlockLight(int dim, float x, float y, float z) {
     int cx = Static.floor(x / 16.0f);
     int cz = Static.floor(z / 16.0f);
-    Chunk chunk = Static.world().chunks.getChunk(dim, cx, cz);
+    Chunk chunk = chunks.getChunk(dim, cx, cz);
     if (chunk == null) {
       return 0;
     }
@@ -382,7 +389,7 @@ public class World implements SerialClass, SerialCreator {
   public int getSunLight(int dim, float x, float y, float z) {
     int cx = Static.floor(x / 16.0f);
     int cz = Static.floor(z / 16.0f);
-    Chunk chunk = Static.world().chunks.getChunk(dim, cx, cz);
+    Chunk chunk = chunks.getChunk(dim, cx, cz);
     if (chunk == null) {
       return 0;
     }
@@ -731,10 +738,10 @@ public class World implements SerialClass, SerialCreator {
     }
     //now allow everyone to find IDs as needed
     for(int idx=0;idx<bcnt;idx++) {
-      blocks[idx].getIDs();
+      blocks[idx].getIDs(this);
     }
     for(int idx=0;idx<icnt;idx++) {
-      items[idx].getIDs();
+      items[idx].getIDs(this);
     }
     for(int idx=0;idx<ecnt;idx++) {
       entities[idx].getIDs();
@@ -960,6 +967,6 @@ public class World implements SerialClass, SerialCreator {
 
   @Override
   public SerialClass create(SerialBuffer buffer) {
-    return new World();
+    return new World(true);
   }
 }

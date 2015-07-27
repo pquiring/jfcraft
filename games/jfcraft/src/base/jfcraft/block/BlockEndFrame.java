@@ -105,7 +105,7 @@ public class BlockEndFrame extends BlockBase {
     Static.log("Create EndPortal@" + cx + "," + c.y + "," + cz);
     EndPortal ep = new EndPortal();
     ep.setDiameter(3.0f);
-    ep.init();
+    ep.init(Static.server.world);
     ep.uid = Static.server.world.generateUID();
     ep.pos.x = cx + 0.5f;
     ep.pos.y = c.y;

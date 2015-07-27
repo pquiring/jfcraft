@@ -57,9 +57,9 @@ public class ItemBow extends ItemBase {
     Chunk c = client.player.getChunk();
     Arrow e = new Arrow();
     e.setOwner(client.player);
-    e.init();
+    e.init(Static.server.world);
     e.dim = c.dim;
-    e.uid = Static.world().generateUID();
+    e.uid = Static.server.world.generateUID();
     //position should be out of player's hitbox area
     client.player.calcVectors(1, v);
     e.pos.x = client.player.pos.x + v.facing.v[0];

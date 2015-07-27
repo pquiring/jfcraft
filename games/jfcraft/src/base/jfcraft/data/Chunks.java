@@ -17,13 +17,15 @@ import jfcraft.data.*;
 import jfcraft.server.*;
 import jfcraft.entity.*;
 
-public class Chunks extends ClientServer {
+public class Chunks {
   //cache of all chunks
   private HashMap<ChunkKey, Chunk> cache = new HashMap<ChunkKey, Chunk>();
   private Object lock = new Object();  //lock access to cache
 
-  public Chunks(boolean isClient) {
-    super(isClient);
+  public World world;
+
+  public Chunks(World world) {
+    this.world = world;
   }
 
   //client/server side (may return null)
@@ -109,13 +111,13 @@ public class Chunks extends ClientServer {
         removeChunk(old);
       }
     }
-    if (isClient) chunk.createObjects();
+    if (world.isClient) chunk.createObjects();
     //add entities to cache and generate uid's if server
     EntityBase es[] = chunk.getEntities();
     for(int a=0;a<es.length;a++) {
       EntityBase e = es[a];
-      e.init();
-      if (isServer) {
+      e.init(world);
+      if (world.isServer) {
         if (e.id == Entities.PLAYER) {
           //player saved to disk somehow???
           chunk.entities.remove(a);
@@ -143,7 +145,7 @@ public class Chunks extends ClientServer {
     if (N != null) {
       N.S = chunk;
       N.adjCount++;
-      if (isClient && N.adjCount == 8) {
+      if (world.isClient && N.adjCount == 8) {
         if (N.needRelight)
           Static.client.chunkLighter.add(N, 0,0,0, 15,255,15);
         else
@@ -156,7 +158,7 @@ public class Chunks extends ClientServer {
     if (S != null) {
       S.N = chunk;
       S.adjCount++;
-      if (isClient && S.adjCount == 8) {
+      if (world.isClient && S.adjCount == 8) {
         if (S.needRelight)
           Static.client.chunkLighter.add(S, 0,0,0, 15,255,15);
         else
@@ -169,7 +171,7 @@ public class Chunks extends ClientServer {
     if (E != null) {
       E.W = chunk;
       E.adjCount++;
-      if (isClient && E.adjCount == 8) {
+      if (world.isClient && E.adjCount == 8) {
         if (E.needRelight)
           Static.client.chunkLighter.add(E, 0,0,0, 15,255,15);
         else
@@ -182,7 +184,7 @@ public class Chunks extends ClientServer {
     if (W != null) {
       W.E = chunk;
       W.adjCount++;
-      if (isClient && W.adjCount == 8) {
+      if (world.isClient && W.adjCount == 8) {
         if (W.needRelight)
           Static.client.chunkLighter.add(W, 0,0,0, 15,255,15);
         else
@@ -195,7 +197,7 @@ public class Chunks extends ClientServer {
     Chunk NE = getChunk(chunk.dim, chunk.cx + 1, chunk.cz - 1);
     if (NE != null) {
       NE.adjCount++;
-      if (isClient && NE.adjCount == 8) {
+      if (world.isClient && NE.adjCount == 8) {
         if (NE.needRelight)
           Static.client.chunkLighter.add(NE, 0,0,0, 15,255,15);
         else
@@ -206,7 +208,7 @@ public class Chunks extends ClientServer {
     Chunk NW = getChunk(chunk.dim, chunk.cx - 1, chunk.cz - 1);
     if (NW != null) {
       NW.adjCount++;
-      if (isClient && NW.adjCount == 8) {
+      if (world.isClient && NW.adjCount == 8) {
         if (NW.needRelight)
           Static.client.chunkLighter.add(NW, 0,0,0, 15,255,15);
         else
@@ -217,7 +219,7 @@ public class Chunks extends ClientServer {
     Chunk SE = getChunk(chunk.dim, chunk.cx + 1, chunk.cz + 1);
     if (SE != null) {
       SE.adjCount++;
-      if (isClient && SE.adjCount == 8) {
+      if (world.isClient && SE.adjCount == 8) {
         if (SE.needRelight)
           Static.client.chunkLighter.add(SE, 0,0,0, 15,255,15);
         else
@@ -228,7 +230,7 @@ public class Chunks extends ClientServer {
     Chunk SW = getChunk(chunk.dim, chunk.cx - 1, chunk.cz + 1);
     if (SW != null) {
       SW.adjCount++;
-      if (isClient && SW.adjCount == 8) {
+      if (world.isClient && SW.adjCount == 8) {
         if (SW.needRelight)
           Static.client.chunkLighter.add(SW, 0,0,0, 15,255,15);
         else
@@ -239,7 +241,7 @@ public class Chunks extends ClientServer {
     synchronized(lock) {
       cache.put(key.clone(), chunk);
     }
-    if (isClient && chunk.adjCount == 8) {
+    if (world.isClient && chunk.adjCount == 8) {
       if (chunk.needRelight)
         Static.client.chunkLighter.add(chunk, 0,0,0, 15,255,15);
       else

@@ -37,8 +37,8 @@ public class Arrow extends EntityBase {
     return dest;
   }
 
-  public void init() {
-    super.init();
+  public void init(World world) {
+    super.init(world);
     isStatic = true;
     width = 0.5f;
     width2 = width/2f;

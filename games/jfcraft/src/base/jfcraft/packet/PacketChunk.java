@@ -46,7 +46,7 @@ public class PacketChunk extends Packet {
   @Override
   public boolean read(SerialBuffer buffer, boolean file) {
     super.read(buffer, file);
-    chunk = new Chunk();
+    chunk = new Chunk(Static.client.world);
     chunk.read(buffer, file);
     return true;
   }

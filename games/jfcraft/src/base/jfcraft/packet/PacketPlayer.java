@@ -41,6 +41,7 @@ public class PacketPlayer extends Packet {
   public boolean read(SerialBuffer buffer, boolean file) {
     super.read(buffer, file);
     player = new Player();
+    player.init(Static.client.world);
     player.read(buffer, true);  //must read everything
     player.uid = buffer.readInt();
     return true;

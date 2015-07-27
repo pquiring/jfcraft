@@ -30,8 +30,8 @@ public class BlockRedStoneComparator extends BlockBase {
     torch = Assets.getModel("torch").model;
   }
 
-  public void getIDs() {
-    super.getIDs();
+  public void getIDs(World world) {
+    super.getIDs(world);
     dropID = Items.REDSTONE_COMPARATOR_ITEM;
   }
 
@@ -137,8 +137,7 @@ public class BlockRedStoneComparator extends BlockBase {
     Coords n = c.clone();
     n.otherSide();
     n.adjacentBlock();
-    World world = Static.world();
-    inputLevel = world.getPowerLevel(dim,n.x,n.y,n.z,c);
+    inputLevel = Static.server.world.getPowerLevel(dim,n.x,n.y,n.z,c);
     int outputLevel = getPowerLevel(c);
     if (outputLevel == 0 && er.powered) {
       powerOff(null, c);

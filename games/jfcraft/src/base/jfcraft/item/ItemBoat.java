@@ -17,7 +17,7 @@ public class ItemBoat extends ItemBase {
   }
   public boolean place(Client client, Coords c) {
     Boat b = new Boat();
-    b.init();
+    b.init(Static.server.world);
     b.dim = c.chunk.dim;
     b.uid = Static.server.world.generateUID();
     b.pos.x = c.x + 0.5f;

@@ -47,7 +47,7 @@ public class BlockButton extends BlockBase {
       Static.log("BlockButton.useBlock():already active");
       return;
     }
-    World world = Static.world();
+    World world = Static.server.world;
     synchronized(c.chunk.lock) {
 //      Static.log("act button@" + c);
       er.active = true;
@@ -63,7 +63,7 @@ public class BlockButton extends BlockBase {
 //    Static.log("button:tick:" + tick.t1);
     //check supported
     tick.toWorldCoords(chunk, c);
-    Static.world().getBlock(chunk.dim, c.x, c.y, c.z, c);
+    Static.server.world.getBlock(chunk.dim, c.x, c.y, c.z, c);
     if (!checkSupported(c)) {
       destroy(null, c, true);
       chunk.delTick(tick);

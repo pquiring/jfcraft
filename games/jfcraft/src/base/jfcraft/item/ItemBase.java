@@ -413,8 +413,7 @@ public class ItemBase {
   }
 
   /** Called after all IDs have been assigned, retrieve any IDs needed for logic. (server & client side) */
-  public void getIDs() {
-    World world = Static.world();
+  public void getIDs(World world) {
     if (bakeName != null) {
       bakeID = world.getBlockID(bakeName);
     }

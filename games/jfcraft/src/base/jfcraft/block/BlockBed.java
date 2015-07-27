@@ -37,8 +37,8 @@ public class BlockBed extends BlockBase {
     model_feet = Assets.getModel("bed_feet").model;
   }
 
-  public void getIDs() {
-    super.getIDs();
+  public void getIDs(World world) {
+    super.getIDs(world);
     dropID = Items.BED_ITEM;
   }
 

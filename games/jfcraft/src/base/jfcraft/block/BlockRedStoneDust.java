@@ -28,8 +28,8 @@ public class BlockRedStoneDust extends BlockBase {
     model = Assets.getModel("facexz").model;
   }
 
-  public void getIDs() {
-    super.getIDs();
+  public void getIDs(World world) {
+    super.getIDs(world);
     dropID = Items.RED_STONE_ITEM;
   }
 
@@ -80,7 +80,7 @@ public class BlockRedStoneDust extends BlockBase {
     int x = c.x;
     int y = c.y;
     int z = c.z;
-    World world = Static.world();
+    World world = Static.server.world;
     pl = world.getPowerLevel(dim,x,y+1,z,c); if (pl > powerLevel) powerLevel = pl;
     pl = world.getPowerLevel(dim,x,y-1,z,c); if (pl > powerLevel) powerLevel = pl;
     pl = world.getPowerLevel(dim,x+1,y,z,c); if (pl > powerLevel) powerLevel = pl;

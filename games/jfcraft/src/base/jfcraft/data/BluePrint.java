@@ -254,7 +254,7 @@ public class BluePrint implements SerialClass, SerialCreator {
                 buffer.rewind();
                 e = (EntityBase)Static.entities.create(buffer);
                 if (e != null) {
-                  e.init();
+                  e.init(Static.server.world);
                   e.read(buffer, true);
                   e.pos.x -= sx + cx;
                   e.pos.y -= sy;
@@ -363,7 +363,7 @@ public class BluePrint implements SerialClass, SerialCreator {
                 buffer.rewind();
                 e = (EntityBase)Static.entities.create(buffer);
                 if (e != null) {
-                  e.init();
+                  e.init(Static.server.world);
                   e.read(buffer, true);
                   e.pos.x -= sx;
                   e.pos.y -= sy;
@@ -1049,7 +1049,7 @@ public class BluePrint implements SerialClass, SerialCreator {
     for(int a=0;a<entity_size;a++) {
       EntityBase eb = (EntityBase)Static.entities.create(buffer);
       if (eb != null) {
-        eb.init();
+        eb.init(Static.server.world);
         eb.read(buffer, file);
         entities.add(eb);
       }

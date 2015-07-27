@@ -42,8 +42,8 @@ public class Zombie extends HumaniodBase {
     return "Zombie";
   }
 
-  public void init() {
-    super.init();
+  public void init(World world) {
+    super.init(world);
     isStatic = true;
     width = 0.6f;
     width2 = width/2;
@@ -52,7 +52,7 @@ public class Zombie extends HumaniodBase {
     depth = width;
     depth2 = width2;
     walkAngleDelta = 5.0f;
-    if (Static.isServer()) {
+    if (world.isServer) {
       ar = initArmor;
       eyeHeight = 1.3f;
       jumpVelocity = 0.58f;  //results in jump of 1.42
@@ -225,7 +225,7 @@ public class Zombie extends HumaniodBase {
   }
 
   public EntityBase spawn(Chunk chunk) {
-    World world = Static.world();
+    World world = Static.server.world;
     float px = r.nextInt(16) + chunk.cx * 16.0f + 0.5f;
     int y = r.nextInt(256);
     float pz = r.nextInt(16) + chunk.cz * 16.0f + 0.5f;
@@ -237,7 +237,7 @@ public class Zombie extends HumaniodBase {
       {
         py -= 1.0f;
         Zombie e = new Zombie();
-        e.init();
+        e.init(world);
         e.dim = chunk.dim;
         e.health = initHealth;
         e.pos.x = px;

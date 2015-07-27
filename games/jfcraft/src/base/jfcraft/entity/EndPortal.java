@@ -41,8 +41,8 @@ public class EndPortal extends BlockEntity {
     return "END_PORTAL";
   }
 
-  public void init() {
-    super.init();
+  public void init(World world) {
+    super.init(world);
     isBlock = true;
   }
 

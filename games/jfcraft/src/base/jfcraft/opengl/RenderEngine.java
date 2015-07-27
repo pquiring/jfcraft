@@ -67,7 +67,7 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
 
 //interface GLInterface
   public void init(GL gl, Component comp) {
-    Static.initClientThread(null, "init (EDT)", true, false);  //actually EDT
+    Static.initClientThread("init (EDT)", true, false);  //actually EDT
 
     this.comp = comp;
 

@@ -49,10 +49,9 @@ public class Server {
   /** Starts server and create new world. */
   public boolean createWorld(String worldName) {
     Static.log("Creating world:" + worldName);
-    world = new World();
-    Static.world.set(world);
+    world = new World(true);
     world.init();
-    world.chunks = new Chunks(false);
+    world.chunks = new Chunks(world);
     world.name = worldName;
     world.type = "default";
     world.seed = 0;  //new Random().nextLong();  //use a real seed later
@@ -86,9 +85,8 @@ public class Server {
       errmsg = "World is in use";
       return false;
     }
-    Static.world.set(world);
     world.init();
-    world.chunks = new Chunks(false);
+    world.chunks = new Chunks(world);
     world.assignIDs();
     startWorld();
     return true;
@@ -234,11 +232,11 @@ public class Server {
   }
 
   public void initThread(String name, boolean stdout) {
-    Static.initServerThread(world, name, stdout, false);
+    Static.initServerThread(name, stdout, false);
   }
 
   public void initTimer(String name, boolean stdout) {
-    Static.initServerThread(world, name, stdout, true);
+    Static.initServerThread(name, stdout, true);
   }
 
   public void addClient(ServerTransport serverTransport, Client client) {
@@ -929,7 +927,7 @@ public class Server {
     player.name = name;
     player.health = 20;
     player.hunger = 20;
-    player.init();
+    player.init(world);
     return player;
   }
 
@@ -940,7 +938,7 @@ public class Server {
         byte data[] = JF.readAll(fis);
         fis.close();
         Player player = (Player)coder.decodeObject(data, Static.entities, true);
-        player.init();
+        player.init(world);
         return player;
       }
     } catch (FileNotFoundException e) {
@@ -1806,7 +1804,7 @@ public class Server {
     }
     EndPortal ep = new EndPortal();
     ep.setDiameter(5.0f);
-    ep.init();
+    ep.init(world);
     ep.uid = world.generateUID();
     ep.dim = 1;
     ep.pos.x = 7.5f;

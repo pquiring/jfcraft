@@ -51,15 +51,8 @@ public class Static {
 
   public static boolean doSteps = false;
 
-  //client or server variables
-  public static ThreadLocal<Boolean> isClient = new ThreadLocal<Boolean>();
-  public static ThreadLocal<World> world = new ThreadLocal<World>();
   public static ThreadLocal<Integer> logid = new ThreadLocal<Integer>();
   public static ServerInterface iface;
-
-  public static World world() {
-    return world.get();
-  }
 
   public static void log(String msg) {
     if (iface != null) {
@@ -101,9 +94,7 @@ public class Static {
     logid.set(id);
   }
 
-  public static void initClientThread(World world, String name, boolean stdout, boolean timer) {
-    Static.isClient.set(true);
-    Static.world.set(world);
+  public static void initClientThread(String name, boolean stdout, boolean timer) {
     Thread.currentThread().setName(name);
     initLog(name, stdout);
     if (!timer)
@@ -112,27 +103,13 @@ public class Static {
       Static.log("Timer start:" + name);
   }
 
-  public static void initServerThread(World world, String name, boolean stdout, boolean timer) {
-    Static.isClient.set(false);
-    Static.world.set(world);
+  public static void initServerThread(String name, boolean stdout, boolean timer) {
     Thread.currentThread().setName(name);
     initLog(name, stdout);
     if (!timer)
       Static.log("Thread start:" + name);
     else
       Static.log("Timer start:" + name);
-  }
-
-  public static boolean isClient() {
-    return isClient.get().booleanValue();
-  }
-
-  public static boolean isServer() {
-    return !isClient.get().booleanValue();
-  }
-
-  public static char CS() {
-    return isClient() ? 'C' : 'S';
   }
 
   //gui

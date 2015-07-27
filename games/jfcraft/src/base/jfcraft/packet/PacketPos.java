@@ -173,7 +173,7 @@ public class PacketPos extends Packet {
           if (client.s1.block.id == 0) return;
           synchronized(client.s1.chunk.lock) {
             float dmg = client.s1.block.dmg();
-            if (client.crack.dmg > 0.0f && client.crack.x != client.s1.gx || client.crack.y != client.s1.gy || client.crack.z != client.s1.gz || client.crack_cx != client.s1.cx || client.crack_cz != client.s1.cz) {
+            if (client.crack.x != client.s1.gx || client.crack.y != client.s1.gy || client.crack.z != client.s1.gz || client.crack_cx != client.s1.cx || client.crack_cz != client.s1.cz) {
               if (client.crack.dmg > 0.0f) {
                 server.broadcastDelExtra(client.player.dim, client.crack_cx * 16 + client.crack.x, client.crack.y, client.crack_cz * 16 + client.crack.z, Extras.CRACK);
               }

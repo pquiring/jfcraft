@@ -32,8 +32,8 @@ public class EnderChest extends BlockEntity {
     return dest;
   }
 
-  public void init() {
-    super.init();
+  public void init(World world) {
+    super.init(world);
     dest = new RenderDest(parts.length);
     isBlock = true;
   }
