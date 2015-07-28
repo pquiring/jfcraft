@@ -45,6 +45,8 @@ public class Settings {
   }
   public static void save() {
     try {
+      File folder = new File(Static.getBasePath());
+      if (!folder.exists()) folder.mkdir();
       XML xml = new XML();
       xml.readClass("jfcraft", current);
       FileOutputStream fos = new FileOutputStream(Static.getBasePath() + "/jfcraft.xml");

@@ -364,7 +364,6 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       dirty = true;
       int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
       if (world.isClient) {
-        Static.log("light coords:" + xyz[0]+","+ xyz[1]+","+ xyz[2]+","+ xyz[3]+","+ xyz[4]+","+ xyz[5]);
         Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
       } else {
         Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
