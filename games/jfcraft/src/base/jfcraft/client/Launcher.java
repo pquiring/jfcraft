@@ -231,7 +231,7 @@ public class Launcher extends javax.swing.JFrame {
       if (JF.isWindows() || JF.isMac())
         cp = "javaforce.jar" + File.pathSeparator + "jfcraft.jar";
       else
-        cp = "/usr/share/java/javaforce.jar" + File.pathSeparator + "/usr/share/java/jfcraft.jar";
+        cp = "javaforce.jar" + File.pathSeparator + "jfcraft.jar";
       int rows = pluginsModel.getRowCount();
       for(int row=0;row<rows;row++) {
         if ((Boolean)pluginsModel.getValueAt(row,0)) {
