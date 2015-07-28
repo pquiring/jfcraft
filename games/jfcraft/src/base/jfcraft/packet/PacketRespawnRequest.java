@@ -37,7 +37,6 @@ public class PacketRespawnRequest extends Packet {
       chunk = server.world.chunks.getChunk2(client.player.dim, cx, cz, true, true, true);
     }
     chunk.addEntity(client.player);
-    Static.log("Adding player back into world");
     server.world.addEntity(client.player);
     server.broadcastEntitySpawn(client.player);
     client.serverTransport.respawn(client.player.pos.x, client.player.pos.y, client.player.pos.z);
