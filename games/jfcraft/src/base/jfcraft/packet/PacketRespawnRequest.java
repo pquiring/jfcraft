@@ -40,7 +40,7 @@ public class PacketRespawnRequest extends Packet {
     Static.log("Adding player back into world");
     server.world.addEntity(client.player);
     server.broadcastEntitySpawn(client.player);
-    client.serverTransport.respawn(client.player.pos.x, client.player.pos.y, client.player.pos.z, Settings.current.dropItemsOnDeath);
+    client.serverTransport.respawn(client.player.pos.x, client.player.pos.y, client.player.pos.z);
   }
 
   @Override
