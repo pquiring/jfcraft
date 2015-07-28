@@ -23,9 +23,9 @@ public class PacketRespawnRequest extends Packet {
       return;
     }
     client.player.dim = 0;
-    client.player.pos.x = server.world.spawn.x + 0.5f;
+    client.player.pos.x = server.world.spawn.x;
     client.player.pos.y = server.world.spawn.y;
-    client.player.pos.z = server.world.spawn.z + 0.5f;
+    client.player.pos.z = server.world.spawn.z;
     client.player.health = 20;
     client.player.hunger = 20;
     client.player.saturation = 20;
@@ -37,6 +37,7 @@ public class PacketRespawnRequest extends Packet {
       chunk = server.world.chunks.getChunk2(client.player.dim, cx, cz, true, true, true);
     }
     chunk.addEntity(client.player);
+    Static.log("Adding player back into world");
     server.world.addEntity(client.player);
     server.broadcastEntitySpawn(client.player);
     client.serverTransport.respawn(client.player.pos.x, client.player.pos.y, client.player.pos.z, Settings.current.dropItemsOnDeath);

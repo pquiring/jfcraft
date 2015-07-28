@@ -56,6 +56,17 @@ public abstract class CreatureBase extends EntityBase {
           if (item.id == Blocks.AIR) continue;
           WorldItem.create(item, dim, pos.x, pos.y, pos.z, chunk, -1);
         }
+        if (id == Entities.PLAYER && Settings.current.dropItemsOnDeath) {
+          Player player = (Player)this;
+          for(int a=0;a<player.items.length;a++) {
+            player.items[a].clear();
+            player.client.serverTransport.setInvItem((byte)a, player.items[a]);
+          }
+          for(int a=0;a<player.armors.length;a++) {
+            player.armors[a].clear();
+            player.client.serverTransport.setArmorItem((byte)a, player.armors[a]);
+          }
+        }
       } else {
         health -= amt;
         target = from;  //switch target (if aggresive)

@@ -19,7 +19,7 @@ The controls are like the original.  Plus a few extras for testing:
  r/f = fly up/down (no clipping)
 
 The server includes a VoIP comm system similar to TeamSpeak.
-Hold in the right CTRL button to talk (PTT).
+Hold in the right CTRL key to talk (PTT).
 
 This is alpha software so please do not open bug requests.
 
