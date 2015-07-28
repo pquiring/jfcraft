@@ -45,8 +45,8 @@ public abstract class ServerTransport extends Transport {
     Packet packet = new Packet(Packets.LOGOUT);
     send(coder.encodeObject(packet, false));
   }
-  public void respawn(float x, float y, float z, boolean clearEnv) {
-    Packet packet = new PacketRespawn(Packets.RESPAWN, x,y,z, clearEnv);
+  public void respawn(float x, float y, float z) {
+    Packet packet = new PacketRespawn(Packets.RESPAWN, x,y,z);
     send(coder.encodeObject(packet, false));
   }
   public void sendPlayer(Client client) {
