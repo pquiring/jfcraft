@@ -61,7 +61,7 @@ public class PacketPos extends Packet {
       float dy = Math.abs(client.player.pos.y - f2);
       float dz = Math.abs(client.player.pos.z - f3);
       if (dx > 0.1f || dy > 0.1f || dz > 0.1f) {
-        Static.log("Error:client moved too far? " + dx + "," + dy + "," + dz + ":" + client.player.vehicle);
+        Static.log("Error:client moved too far? " + dx + "," + dy + "," + dz);
         Static.log("C=" + f1 + "," + f2 + "," + f3);
         Static.log("S=" + client.player.pos.x + "," + client.player.pos.y + "," + client.player.pos.z);
         if (false) {

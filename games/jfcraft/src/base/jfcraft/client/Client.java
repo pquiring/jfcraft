@@ -290,7 +290,7 @@ public class Client {
     //do keyboard input
     boolean up = false, dn = false, lt = false, rt = false, jump = false, sneak = false, run = false, fup = false, fdn = false;
     boolean b1 = false, b2 = false;
-    if (world != null && player != null && player.hasChunk()) {
+    if (world != null && player != null && player.hasChunk() && player.health > 0) {
       if (Static.inGame) {
         up = Static.keys[KeyEvent.VK_W];
         dn = Static.keys[KeyEvent.VK_S];
