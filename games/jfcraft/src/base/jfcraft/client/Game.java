@@ -60,6 +60,7 @@ public class Game extends RenderScreen {
       o_box = new RenderBuffers();
       o_box.type = GL.GL_LINES;
     }
+    lastx = -1;
   }
 
   public void setCursor() {
@@ -603,7 +604,6 @@ public class Game extends RenderScreen {
         menu = Static.screens.screens[Client.INVENTORY];
         menu.setup();
         Static.video.setScreen(menu);
-        lastx = -1;
         Static.inGame = false;
         break;
       case KeyEvent.VK_F1:
@@ -616,7 +616,6 @@ public class Game extends RenderScreen {
         chat = (ChatMenu)Static.screens.screens[Client.CHAT];
         chat.setup("/");
         Static.video.setScreen(chat);
-        lastx = -1;
         Static.inGame = false;
         break;
       case 'T':
@@ -624,12 +623,10 @@ public class Game extends RenderScreen {
         chat = (ChatMenu)Static.screens.screens[Client.CHAT];
         chat.setup("");
         Static.video.setScreen(chat);
-        lastx = -1;
         Static.inGame = false;
         break;
       case KeyEvent.VK_ESCAPE:
         Static.video.setScreen(Static.screens.screens[Client.PAUSE]);
-        lastx = -1;
         Static.inGame = false;
         break;
       case KeyEvent.VK_1:
@@ -698,11 +695,6 @@ public class Game extends RenderScreen {
     while (activeSlot < 0) activeSlot += 9;
     while (activeSlot > 8) activeSlot -= 9;
     Static.client.clientTransport.changeActiveSlot((byte)activeSlot);
-  }
-
-  public void enterMenu(byte idx) {
-    super.enterMenu(idx);
-    lastx = -1;
   }
 
   private final XYZ baseHandAngle = new XYZ(35.0f, 45.0f, 0f);
