@@ -265,7 +265,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   }
   /** Absorb block light in all directions and sun light that is not from above. */
   public final int absorbLight(int lvl) {
-    if (isOpaque) return 0;
+    if (isOpaque && !isPerf) return 0;
     if (lvl <= absorbLight) return 0;
     return (lvl - absorbLight);
   }
