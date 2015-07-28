@@ -60,25 +60,24 @@ public class PacketPos extends Packet {
       float dx = Math.abs(client.player.pos.x - f1);
       float dy = Math.abs(client.player.pos.y - f2);
       float dz = Math.abs(client.player.pos.z - f3);
-      if (dx > 0.1f || dy > 0.1f || dz > 0.1f) {
+      if (dx > 1f || dy > 1f || dz > 1f) {
         Static.log("Error:client moved too far? " + dx + "," + dy + "," + dz);
         Static.log("C=" + f1 + "," + f2 + "," + f3);
         Static.log("S=" + client.player.pos.x + "," + client.player.pos.y + "," + client.player.pos.z);
-        if (false) {
-          PacketMoveBack p2 = new PacketMoveBack(Packets.MOVEBACK, client.player.pos.x, client.player.pos.y, client.player.pos.z);
-          client.serverTransport.addUpdate(p2);
-          client.cheat++;
-          if (false && client.cheat > 20) {
-            client.serverTransport.close();
-            server.removeClient(client);
-            return;
-          }
-        } else {
-          client.player.pos.x = f1;
-          client.player.pos.y = f2;
-          client.player.pos.z = f3;
+        PacketMoveBack update = new PacketMoveBack(Packets.MOVEBACK, client.player.pos.x, client.player.pos.y, client.player.pos.z);
+        client.serverTransport.addUpdate(update);
+        client.cheat++;
+        if (false && client.cheat > 20) {
+          client.serverTransport.close();
+          server.removeClient(client);
+          return;
         }
       } else {
+        if (dx > 0.1f || dy > 0.1f || dz > 0.1f) {
+          Static.log("Warning:client moved too far? " + dx + "," + dy + "," + dz);
+          Static.log("C=" + f1 + "," + f2 + "," + f3);
+          Static.log("S=" + client.player.pos.x + "," + client.player.pos.y + "," + client.player.pos.z);
+        }
         client.cheat = 0;
         client.player.pos.x = f1;
         client.player.pos.y = f2;

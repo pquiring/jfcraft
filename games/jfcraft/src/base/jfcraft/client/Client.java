@@ -338,7 +338,9 @@ public class Client {
         }
       }
       if (player.vehicle == null) {
-        player.move(up, dn, lt, rt, jump, sneak, run, b1, b2, fup, fdn);
+        synchronized(Static.renderLock) {
+          player.move(up, dn, lt, rt, jump, sneak, run, b1, b2, fup, fdn);
+        }
       }
     }
     //send tick to server
