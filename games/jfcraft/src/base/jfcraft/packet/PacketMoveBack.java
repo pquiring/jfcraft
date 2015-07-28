@@ -27,9 +27,11 @@ public class PacketMoveBack extends Packet {
   //process on client side
   public void process(Client client) {
     //TODO : need to sync with tick()
-    client.player.pos.x = f1;
-    client.player.pos.y = f2;
-    client.player.pos.z = f3;
+    synchronized(Static.renderLock) {
+      client.player.pos.x = f1;
+      client.player.pos.y = f2;
+      client.player.pos.z = f3;
+    }
   }
 
   @Override
