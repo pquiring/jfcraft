@@ -7,6 +7,7 @@ package jfcraft.data;
  * Created : Mar 28, 2014
  */
 
+import java.io.*;
 import java.util.*;
 
 import javaforce.*;
@@ -73,7 +74,9 @@ public class Static {
   }
 
   private static void initLog(String name, boolean stdout) {
-    JFLog.init(getLogID(), name.replaceAll(" ", "_") + ".log", stdout);
+    File folder = new File(getBasePath() + "/logs");
+    folder.mkdirs();
+    JFLog.init(getLogID(), getBasePath() + "/logs/" + name.replaceAll(" ", "_") + ".log", stdout);
   }
 
   public static void initClientThread(String name, boolean stdout, boolean timer) {

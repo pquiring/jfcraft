@@ -32,7 +32,9 @@ public class ChunkQueueCopy {
       int pos = tail;
       while (pos != head1 && cnt != 0) {
         Chunk chunk = chunks[pos];
-        chunk.copyBuffers(gl);
+        if (chunk != null) {
+          chunk.copyBuffers(gl);
+        }
         pos++;
         if (pos == BUFSIZ) pos = 0;
         tail = pos;

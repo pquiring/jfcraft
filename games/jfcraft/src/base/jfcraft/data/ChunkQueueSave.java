@@ -20,17 +20,16 @@ public class ChunkQueueSave {
       return;
     }
     try {
-      int cnt = 0;
       int pos = tail;
       while (pos != head1) {
         Chunk chunk = chunks[pos];
-        world.chunks.saveChunk(chunk);
+        if (chunk != null) {
+          world.chunks.saveChunk(chunk);
+        }
         pos++;
         if (pos == BUFSIZ) pos = 0;
         tail = pos;
-        cnt++;
       }
-//Static.log("saved chunks:" + cnt);
     } catch (Exception e) {
       Static.log(e);
     }
