@@ -33,7 +33,7 @@ public class ChunkQueueBuild {
       int pos = tail;
       while (pos != head1 && cnt != 0) {
         Chunk chunk = chunks[pos];
-        if (chunk.canRender()) {
+        if (chunk != null && chunk.canRender()) {
           chunk.buildBuffers();
           if (next != null) next.add(chunk);
         }
