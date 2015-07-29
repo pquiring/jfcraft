@@ -54,6 +54,8 @@ public class Static {
 
   public static ServerInterface iface;
 
+  public static boolean mlogs;  //create multi logs (command line option)
+
   private static final int getLogID() {
     return Thread.currentThread().hashCode();
   }
@@ -74,9 +76,14 @@ public class Static {
   }
 
   private static void initLog(String name, boolean stdout) {
-    File folder = new File(getBasePath() + "/logs");
-    folder.mkdirs();
-    JFLog.init(getLogID(), getBasePath() + "/logs/" + name.replaceAll(" ", "_") + ".log", stdout);
+    String path = getBasePath() + "/logs";
+    new File(path).mkdirs();
+    if (mlogs) {
+      path += "/" + JF.getPID();
+      new File(path).mkdirs();
+    }
+    path += "/" + name.replaceAll(" ", "_") + ".log";
+    JFLog.init(getLogID(), path, stdout);
   }
 
   public static void initClientThread(String name, boolean stdout, boolean timer) {

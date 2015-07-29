@@ -77,6 +77,9 @@ public class Main extends javax.swing.JFrame {
   public static void main(String args[]) {
     Settings.load();
     if (args != null && args.length >= 2) {
+      if (args.length > 2 && args[2].equals("-mlogs")) {
+        Static.mlogs = true;
+      }
       if (args[0].equals("-start")) {
         startWorldCLI(args[1]);
         return;
