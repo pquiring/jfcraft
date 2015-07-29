@@ -62,6 +62,11 @@ public class Main extends javax.swing.JFrame {
    * @param args the command line arguments
    */
   public static void main(String args[]) {
+    if (args != null && args.length > 0) {
+      if (args[0].equals("-mlogs")) {
+        Static.mlogs = true;
+      }
+    }
     Settings.load();
     /* Create and display the form */
     JFLog.enableTimestamp(true);
