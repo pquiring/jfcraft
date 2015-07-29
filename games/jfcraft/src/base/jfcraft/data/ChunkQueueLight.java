@@ -44,7 +44,7 @@ public class ChunkQueueLight {
       int pos = tail;
       while (pos != head1 && cnt != 0) {
         Chunk chunk = chunks[pos];
-        if (chunk != null) {
+        if (chunk != null && chunk.canLights()) {
           int x1 = x1s[pos];
           int y1 = y1s[pos];
           int z1 = z1s[pos];
