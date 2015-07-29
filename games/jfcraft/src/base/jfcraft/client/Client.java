@@ -338,7 +338,7 @@ public class Client {
         }
       }
       if (player.vehicle == null) {
-        synchronized(Static.renderLock) {
+        synchronized(Static.clientMoveLock) {
           player.move(up, dn, lt, rt, jump, sneak, run, b1, b2, fup, fdn);
         }
       }
