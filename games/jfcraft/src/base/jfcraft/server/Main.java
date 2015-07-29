@@ -76,24 +76,30 @@ public class Main extends javax.swing.JFrame {
    */
   public static void main(String args[]) {
     Settings.load();
-    if (args != null && args.length >= 2) {
-      if (args.length > 2 && args[2].equals("-mlogs")) {
-        Static.mlogs = true;
-      }
-      if (args[0].equals("-start")) {
-        startWorldCLI(args[1]);
-        return;
-      }
-      if (args[0].equals("-startw")) {
-        startWorldGUI(args[1]);
+    boolean loadGUI = true;
+    if (args != null && args.length > 0) {
+      for(int a=0;a<args.length;a++) {
+        if (args[a].equals("-mlogs")) {
+          Static.mlogs = true;
+        }
+        if (args[a].equals("-start")) {
+          a++;
+          startWorldCLI(args[a]);
+          loadGUI = false;
+        }
+        if (args[a].equals("-startw")) {
+          a++;
+          startWorldGUI(args[a]);
+        }
       }
     }
-    /* Create and display the form */
-    java.awt.EventQueue.invokeLater(new Runnable() {
-      public void run() {
-        new Main().setVisible(true);
-      }
-    });
+    if (loadGUI) {
+      java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+          new Main().setVisible(true);
+        }
+      });
+    }
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables

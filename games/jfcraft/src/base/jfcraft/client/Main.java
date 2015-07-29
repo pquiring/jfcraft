@@ -63,8 +63,10 @@ public class Main extends javax.swing.JFrame {
    */
   public static void main(String args[]) {
     if (args != null && args.length > 0) {
-      if (args[0].equals("-mlogs")) {
-        Static.mlogs = true;
+      for(int a=0;a<args.length;a++) {
+        if (args[a].equals("-mlogs")) {
+          Static.mlogs = true;
+        }
       }
     }
     Settings.load();

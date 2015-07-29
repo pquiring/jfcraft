@@ -27,6 +27,7 @@ public class Static {
   public static RenderEngine video;
   public static AudioEngine audio;
   public static Object renderLock = new Object();  //TODO : eliminate this
+  public static Object clientMoveLock = new Object();  //TODO : eliminate this
   public static Blocks blocks = new Blocks();
   public static Items items = new Items();
   public static Recipes recipes = new Recipes();
