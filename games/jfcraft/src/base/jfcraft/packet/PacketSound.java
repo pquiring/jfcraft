@@ -37,7 +37,7 @@ public class PacketSound extends Packet {
     float dx = x - client.player.pos.x;
     float dy = y - client.player.pos.y;
     float dz = z - client.player.pos.z;
-    float dist = (float)Math.sqrt(dx * dx + dy * dy + dz * dz);
+    float dist = (float)Math.sqrt(dx * dx + dy * dy + dz * dz) * 4f;
     int vol = 100 - (int)dist;
     if (vol > 100) vol = 100;
     if (vol < 0) return;
