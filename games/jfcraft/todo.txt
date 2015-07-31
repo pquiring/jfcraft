@@ -21,8 +21,7 @@ random ticks : replace snow, remove leaves,
 support ogg audio files (JCraft:JOrbis/0.0.17) or MP3 (ffmpeg)
 XP
 suffication
-Keep track of client chunks loaded.
-fire
+fire ???
 web : move slow
 trip line
 beacon ?
