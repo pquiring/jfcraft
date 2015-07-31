@@ -21,6 +21,27 @@ The controls are like the original.  Plus a few extras for testing:
 The server includes a VoIP comm system similar to TeamSpeak.
 Hold in the right CTRL key to talk (PTT).
 
+Commands:
+/give me item [count]
+  - Gives you an item
+/tp x y z
+  - Teleports you
+/time tick
+  - Sets current time in ticks (0=midnight 600=6am 1800=6pm etc)
+/healme
+  - "Heal me I am in need of assistance" - Palley
+  - Restores all your health and hunger
+/clear
+  - Empties your inventory
+/fill x1 y1 z1 x2 y2 z2 block
+  - fills area with block
+/spawn entity
+  - spawns entity within your area
+/export x1 y1 z1 x2 y2 z2 filename
+  - exports area to a blueprint
+/import x1 y1 z1 filename [mx | my] [r90 | r180 | r270]
+  - import a blueprint
+
 This is alpha software so please do not open bug requests.
 
 Thanks.
