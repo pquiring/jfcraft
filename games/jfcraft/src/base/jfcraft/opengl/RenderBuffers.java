@@ -512,7 +512,7 @@ public class RenderBuffers implements Cloneable {
   public void alloc(GL gl) {
     if (alloced) return;
     int ids[] = new int[7];
-    gl.glGenBuffers(9, ids);
+    gl.glGenBuffers(ids.length, ids);
     vpb = ids[0];
     uvb1 = ids[1];
     uvb2 = ids[2];

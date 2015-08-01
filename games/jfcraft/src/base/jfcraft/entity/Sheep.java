@@ -24,7 +24,6 @@ public class Sheep extends CreatureBase {
 
   //render assets
   private static RenderDest dest;
-  private static String textureName, furName;
   private static Texture texture, furTexture;
 
   public static int initHealth = 10;
@@ -77,13 +76,11 @@ public class Sheep extends CreatureBase {
     }
   }
 
-  public void initStatic() {
-    textureName = "entity/sheep/sheep";
-    furName = "entity/sheep/sheep_fur";
-  }
+  public void initStatic() {}
 
   public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName, 0);
+    texture = Textures.getTexture(gl, "entity/sheep/sheep", 0);
+    furTexture = Textures.getTexture(gl, "entity/sheep/sheep_fur", 0);
     dest = new RenderDest(parts.length);
   }
 
@@ -119,7 +116,6 @@ public class Sheep extends CreatureBase {
 
   public void copyBuffers(GL gl) {
     dest.copyBuffers(gl);
-    furTexture = Textures.getTexture(gl, furName, 0);
   }
 
   public void bindTexture(GL gl) {
@@ -181,8 +177,8 @@ public class Sheep extends CreatureBase {
     for(int a=0;a<6;a++) {
       RenderBuffers buf = dest.getBuffers(a);
       setMatrixModel(gl, a, buf);
-      dest.getBuffers(a).bindBuffers(gl);
-      dest.getBuffers(a).render(gl);
+      buf.bindBuffers(gl);
+      buf.render(gl);
     }
     if (hasFur()) {
       furTexture.bind(gl);
