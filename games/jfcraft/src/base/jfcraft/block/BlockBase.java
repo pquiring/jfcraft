@@ -277,14 +277,13 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
    * Call from tick() only.
    */
   public boolean checkSupported(Coords thisBlock) {
-    //get this block
+    //get supporting block
     supportingBlock.copy(thisBlock);
     if (thisBlock.block.isDir || thisBlock.block.isDirFace) {
       supportingBlock.adjacentBlock();
     } else {
       supportingBlock.y--;
     }
-    //get supporting block
     Static.server.world.getBlock(thisBlock.chunk.dim, supportingBlock.x, supportingBlock.y, supportingBlock.z, supportingBlock);
     if ((thisBlock.block.isPlant && !supportingBlock.block.canPlantOn) || (!supportingBlock.block.canSupportBlock(thisBlock))) {
       //supporting block gone

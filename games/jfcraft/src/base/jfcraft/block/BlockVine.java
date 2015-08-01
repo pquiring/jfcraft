@@ -19,6 +19,7 @@ public class BlockVine extends BlockFace {
   public BlockVine(String id, String names[], String images[]) {
     super(id, names, images);
     isDirFace = true;
+    isSupported = true;
   }
 
   public void rtick(Chunk chunk, int x,int y,int z) {
@@ -35,6 +36,19 @@ public class BlockVine extends BlockFace {
         Static.server.broadcastSetBlock(chunk.dim, x, y, z, id, bits);
       }
     }
+  }
+
+  private static Coords supportingBlock = new Coords();
+
+  public boolean checkSupported(Coords thisBlock) {
+    //get supporting block
+    supportingBlock.copy(thisBlock);
+    supportingBlock.adjacentBlock();
+    Static.server.world.getBlock(thisBlock.chunk.dim, supportingBlock.x, supportingBlock.y, supportingBlock.z, supportingBlock);
+    if (supportingBlock.block.canSupportBlock(thisBlock)) return true;
+    //check if vines above
+    if (Static.server.world.getID(thisBlock.chunk.dim, thisBlock.x, thisBlock.y+1, thisBlock.z) == id) return true;
+    return false;
   }
 
   public boolean place(Client client, Coords c) {
