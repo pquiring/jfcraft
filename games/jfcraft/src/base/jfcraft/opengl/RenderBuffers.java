@@ -43,7 +43,9 @@ public class RenderBuffers implements Cloneable {
   public static void freeBuffers(GL gl) {
     synchronized(freeList) {
       while(freeList.size() > 0) {
-        GL.glDeleteBuffers(9, freeList.remove(0));
+        int ids[] = freeList.remove(0);
+//        Static.log("Free GL IDs:" + ids.length);
+        GL.glDeleteBuffers(ids.length, ids);
       }
     }
   }
@@ -526,7 +528,7 @@ public class RenderBuffers implements Cloneable {
   public void free(GL gl) {
     if (!alloced) return;
     int ids[] = new int[] {vpb, uvb1, uvb2, vib, lcb, slb, blb};
-    gl.glDeleteBuffers(9, ids);
+    gl.glDeleteBuffers(ids.length, ids);
     alloced = false;
   }
 
