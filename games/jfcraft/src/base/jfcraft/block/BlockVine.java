@@ -20,6 +20,7 @@ public class BlockVine extends BlockFace {
     super(id, names, images);
     isDirFace = true;
     isSupported = true;
+    dropBlock = "air";
   }
 
   public void rtick(Chunk chunk, int x,int y,int z) {
