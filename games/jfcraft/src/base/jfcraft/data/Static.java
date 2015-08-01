@@ -159,6 +159,7 @@ public class Static {
   public static final int maxLoadRange = 16;
 
   public static float gravitySpeed = 1.6f / 20f;
+  public static float climbSpeed = 5.0f / 20f;
   public static float dragSpeed = 0.4f;
   public static float termVelocityLiquid = 5.0f / 20f;
   public static float termVelocityAir = 78.4f / 20f;

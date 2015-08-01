@@ -447,6 +447,10 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     isDir = true;
     return this;
   }
+  public BlockBase setDirFace() {
+    isDirFace = true;
+    return this;
+  }
   public BlockBase setDirXZ() {
     isDir = true;
     isDirXZ = true;

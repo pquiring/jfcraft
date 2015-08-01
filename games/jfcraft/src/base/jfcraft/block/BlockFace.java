@@ -24,7 +24,6 @@ public class BlockFace extends BlockBase {
     isAlpha = false;
     isComplex = true;
     isSolid = false;
-    isDir = true;
     model = Assets.getModel("face").model;
   }
 

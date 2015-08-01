@@ -44,6 +44,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public float walkSpeed, runSpeed, sneakSpeed, swimSpeed;
   public float yDrag, xzDrag;
   public boolean inWater, inLava;  //whole body
+  public boolean inLadder, inVines;
   public boolean underWater, underLava;  //camera view
   public boolean creative;
   public float floatRad;
@@ -140,8 +141,8 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return false;
   }
 
-  /** Tests if entity is in water/lava. */
-  private void checkLiquids(float dx, float dy, float dz) {
+  /** Tests if entity is in water/lava/ladder. */
+  private void checkBlocks(float dx, float dy, float dz) {
     float px = pos.x + dx - width2;
     float py = pos.y + dy;
     float pz = pos.z + dz - depth2;
@@ -152,6 +153,8 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
     inWater = false;
     inLava = false;
+    inLadder = false;
+    inVines = false;
 
     synchronized(coords) {
       for(int x=0;x<=cx;x++) {
@@ -169,6 +172,12 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
             }
             if (coords.block.id == Blocks.LAVA) {
               inLava = true;
+            }
+            if (coords.block.id == Blocks.LADDER) {
+              inLadder = true;
+            }
+            if (coords.block.id == Blocks.VINES) {
+              inVines = true;
             }
           }
         }
@@ -209,7 +218,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     onGround = onGround(dx,dy,dz, (char)0);
     onWater = onGround(dx,dy,dz, Blocks.WATER);
 
-    checkLiquids(dx,dy,dz);
+    checkBlocks(dx,dy,dz);
 
     //check right at camera position
     char id = world.getID2(dim, pos.x, pos.y + eyeHeight, pos.z);
@@ -327,7 +336,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     }
 
     if (!nowOnGround && avoid != AVOID_NONE && !inWater && !inLava) {
-      checkLiquids(dx,dy - 0.5f,dz);
+      checkBlocks(dx,dy - 0.5f,dz);
       if ((avoid & AVOID_WATER) == AVOID_WATER && inWater) {
         inWater = false;
         return -5;
@@ -390,7 +399,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     //apply drag
     if (vel.y > 0.0f) vel.y -= yDrag / 20f; else vel.y += yDrag / 20f;
     //apply max
-    if (inWater || inLava) {
+    if (inWater || inLava || inLadder || inVines) {
       fallBlocks = 0;
       if (vel.y < -Static.termVelocityLiquid) vel.y = -Static.termVelocityLiquid;
     } else {
@@ -509,6 +518,8 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     Chunk chunk1 = null, chunk2;
     float ox=0, oy=0, oz=0;  //org pos
 
+    updateFlags(0,0,0);
+
     if (server) {
       chunk1 = getChunk();
       if (chunk1 == null) return false;
@@ -520,6 +531,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     float step;
     int ret = -1;
     boolean moved = false;
+    boolean climb = false;
     //try to move in one step
     if (vel.x < 1 && vel.z < 1 && mode != MODE_FLYING && !usePath) {
       ret = inBlock(vel.x,0,vel.z, sneak, maxFall, avoid);
@@ -572,6 +584,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
                 }
                 xVel = 0.0f;
                 vel.x = 0.0f;
+                if (inLadder || inVines) climb = true;
                 break;
               case -3:
               case -4:
@@ -607,6 +620,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
                 }
                 xVel = 0.0f;
                 vel.x = 0.0f;
+                if (inLadder || inVines) climb = true;
                 break;
               case -3:
               case -4:
@@ -645,6 +659,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
                 }
                 zVel = 0.0f;
                 vel.z = 0.0f;
+                if (inLadder || inVines) climb = true;
                 break;
               case -3:
               case -4:
@@ -680,6 +695,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
                 }
                 zVel = 0.0f;
                 vel.z = 0.0f;
+                if (inLadder || inVines) climb = true;
                 break;
               case -3:
               case -4:
@@ -694,6 +710,11 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
           }
         }
       break;
+    }
+
+    if (climb) {
+      //use ladder/vines
+      vel.y = Static.climbSpeed;
     }
 
     if (server) {
