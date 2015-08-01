@@ -681,11 +681,11 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   public void buildBuffers() {
 //    if (cx == -1 && cz == 0) Static.log("buildBuffers:" + cx + "," + cz);
     synchronized(lock) {
-      char id, xid;
+      char id, id2;
       int _bits;
       byte _ll;
       int crack;
-      BlockBase block = null, adjBlock, xblock = null;
+      BlockBase block = null, adjBlock, block2 = null;
       RenderData data = new RenderData();
       data.chunk = this;
       //reset all objects
@@ -694,6 +694,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         dest.getBuffers(a).reset();
       }
       for(int y=0;y<256;y++) {  //+ - 256
+        if (blocks[y] == null && blocks2[y] == null) continue;
         data.y = y;
         for(int z=0;z<16;z++) {  //+ - 16
           data.z = z;
@@ -710,10 +711,10 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             }
             data.crack = crack;
             id = getID(x,y,z);
-            xid = getID2(x,y,z);
+            id2 = getID2(x,y,z);
             boolean hasBlock = id != 0;
-            boolean hasExtra = xid != 0;
-            if (!hasBlock && !hasExtra) {
+            boolean hasBlock2 = id2 != 0;
+            if (!hasBlock && !hasBlock2) {
               continue;
             }
             if (hasBlock) {
@@ -723,12 +724,12 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
               block = Static.blocks.blocks[id];
               data.opaque[Direction.X] = block.isOpaque;
             }
-            if (hasExtra) {
+            if (hasBlock2) {
               _bits = getBits2(x,y,z);
               data.dir2[Direction.X] = getDir(_bits);
               data.var2[Direction.X] = getVar(_bits);
-              data.id2[Direction.X] = xid;
-              xblock = Static.blocks.blocks[xid];
+              data.id2[Direction.X] = id2;
+              block2 = Static.blocks.blocks[id2];
             }
             _ll = getLights(x,y,z);
             data.sl[Direction.X] = (_ll & 0x0f) / 15.0f;
@@ -744,7 +745,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
               _ll = getLights(x,y-1,z);
               data.sl[Direction.B] = (_ll & 0x0f) / 15.0f;
               data.bl[Direction.B] = ((_ll & 0xf0) >> 4) / 15.0f;
-              if (hasExtra) {
+              if (hasBlock2) {
                 data.id2[Direction.B] = getID2(x,y-1,z);
                 _bits = getBits2(x,y-1,z);
                 data.dir2[Direction.B] = getDir(_bits);
@@ -767,7 +768,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
               _ll = getLights(x,y+1,z);
               data.sl[Direction.A] = (_ll & 0x0f) / 15.0f;
               data.bl[Direction.A] = ((_ll & 0xf0) >> 4) / 15.0f;
-              if (hasExtra) {
+              if (hasBlock2) {
                 data.id2[Direction.A] = getID2(x,y+1,z);
                 _bits = getBits2(x,y+1,z);
                 data.dir2[Direction.A] = getDir(_bits);
@@ -789,7 +790,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             _ll = getLights(x,y,z-1);
             data.sl[Direction.N] = (_ll & 0x0f) / 15.0f;
             data.bl[Direction.N] = ((_ll & 0xf0) >> 4) / 15.0f;
-            if (hasExtra) {
+            if (hasBlock2) {
               data.id2[Direction.N] = getID2(x,y,z-1);
               _bits = getBits2(x,y,z-1);
               data.dir2[Direction.N] = getDir(_bits);
@@ -805,7 +806,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             _ll = getLights(x,y,z+1);
             data.sl[Direction.S] = (_ll & 0x0f) / 15.0f;
             data.bl[Direction.S] = ((_ll & 0xf0) >> 4) / 15.0f;
-            if (hasExtra) {
+            if (hasBlock2) {
               data.id2[Direction.S] = getID2(x,y,z+1);
               _bits = getBits2(x,y,z+1);
               data.dir2[Direction.S] = getDir(_bits);
@@ -821,7 +822,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             _ll = getLights(x-1,y,z);
             data.sl[Direction.W] = (_ll & 0x0f) / 15.0f;
             data.bl[Direction.W] = ((_ll & 0xf0) >> 4) / 15.0f;
-            if (hasExtra) {
+            if (hasBlock2) {
               data.id2[Direction.W] = getID2(x-1,y,z);
               _bits = getBits2(x-1,y,z);
               data.dir2[Direction.W] = getDir(_bits);
@@ -837,7 +838,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             _ll = getLights(x+1,y,z);
             data.sl[Direction.E] = (_ll & 0x0f) / 15.0f;
             data.bl[Direction.E] = ((_ll & 0xf0) >> 4) / 15.0f;
-            if (hasExtra) {
+            if (hasBlock2) {
               data.id2[Direction.E] = getID2(x+1,y,z);
               _bits = getBits2(x+1,y,z);
               data.dir2[Direction.E] = getDir(_bits);
@@ -848,9 +849,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
               data.adjLight = !block.isComplex;
               block.buildBuffers(dest, data);
             }
-            if (hasExtra) {
-              data.adjLight = !xblock.isComplex;
-              xblock.buildBuffers(dest, data);
+            if (hasBlock2) {
+              data.adjLight = !block2.isComplex;
+              block2.buildBuffers(dest, data);
             }
           }
         }
