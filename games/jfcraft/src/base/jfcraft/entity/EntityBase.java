@@ -44,7 +44,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public float walkSpeed, runSpeed, sneakSpeed, swimSpeed;
   public float yDrag, xzDrag;
   public boolean inWater, inLava;  //whole body
-  public boolean inLadder, inVines;
+  public boolean inLadder, inVines, inWeb;
   public boolean underWater, underLava;  //camera view
   public boolean creative;
   public float floatRad;
@@ -155,6 +155,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     inLava = false;
     inLadder = false;
     inVines = false;
+    inWeb = false;
 
     synchronized(coords) {
       for(int x=0;x<=cx;x++) {
@@ -178,6 +179,9 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
             }
             if (coords.block.id == Blocks.VINES) {
               inVines = true;
+            }
+            if (coords.block.id == Blocks.WEB) {
+              inWeb = true;
             }
           }
         }
@@ -399,9 +403,16 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     //apply drag
     if (vel.y > 0.0f) vel.y -= yDrag / 20f; else vel.y += yDrag / 20f;
     //apply max
-    if (inWater || inLava || inLadder || inVines) {
+    if (inWeb) {
+      fallBlocks = 0;
+      if (vel.y < -Static.termVelocityWeb) vel.y = -Static.termVelocityWeb;
+      else if (vel.y > Static.termVelocityWeb) vel.y = Static.termVelocityWeb;
+    } if (inWater || inLava) {
       fallBlocks = 0;
       if (vel.y < -Static.termVelocityLiquid) vel.y = -Static.termVelocityLiquid;
+    } else if (inLadder || inVines) {
+      fallBlocks = 0;
+      if (vel.y < -Static.termVelocityClimb) vel.y = -Static.termVelocityClimb;
     } else {
       if (vel.y < -Static.termVelocityAir) vel.y = -Static.termVelocityAir;
     }
@@ -519,6 +530,11 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     float ox=0, oy=0, oz=0;  //org pos
 
     updateFlags(0,0,0);
+
+    if (inWeb) {
+      vel.x /= Static.webVelocityScale;
+      vel.z /= Static.webVelocityScale;
+    }
 
     if (server) {
       chunk1 = getChunk();

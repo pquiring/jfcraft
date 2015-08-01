@@ -389,7 +389,7 @@ public class Blocks {
       , new String[] {"furnace_top", "furnace_front_on", "furnace_side", "cobblestone"})
       .setLight((byte)13)
     );
-    registerBlock(new BlockFace("LADDER", new String[] {"Ladder"}, new String[] {"ladder"}).setDirFace());
+    registerBlock(new BlockLadder("LADDER", new String[] {"Ladder"}, new String[] {"ladder"}));
     registerBlock(new BlockRail("RAIL", new String[] {"Rail"}, new String[] {"rail_normal", "rail_normal_turned"}));
     registerBlock(new BlockStairs("STAIRS_STONE", new String[] {"Stairs"}, new String[] {"stone"}));  //fix me
     registerBlock(new BlockLever("LEVER", new String[] {"Lever"}, new String[] {"lever", "stone"}));

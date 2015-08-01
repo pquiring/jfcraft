@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+Aug 1, 2015 : v0.19 released!
+  - fix major opengl resource leak
+  - climb ladders & vines
+  - leaves decay (like a branch would, not randomly)
+
 Jul 31, 2015 : v0.18 released!
   - players armor is now rendered
   - new /import /export commands added

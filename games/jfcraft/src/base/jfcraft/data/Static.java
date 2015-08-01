@@ -161,6 +161,9 @@ public class Static {
   public static float gravitySpeed = 1.6f / 20f;
   public static float climbSpeed = 5.0f / 20f;
   public static float dragSpeed = 0.4f;
+  public static float termVelocityClimb = 5.0f / 20f;
+  public static float termVelocityWeb = 1.0f / 20f;
+  public static float webVelocityScale = 5.0f;
   public static float termVelocityLiquid = 5.0f / 20f;
   public static float termVelocityAir = 78.4f / 20f;
   public static Noise noises[];
