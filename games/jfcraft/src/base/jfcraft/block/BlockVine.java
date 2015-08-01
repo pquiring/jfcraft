@@ -62,4 +62,11 @@ public class BlockVine extends BlockFace {
     }
     return super.place(client, c);
   }
+
+  private static ArrayList<Box> empty = new ArrayList<Box>();
+
+  public ArrayList<Box> getBoxes(Coords c, Type type) {
+    if (type == Type.ENTITY) return empty;
+    return super.getBoxes(c, type);
+  }
 }
