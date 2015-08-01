@@ -17,7 +17,7 @@ brewing (potions)
 more sounds and music (jfMusic)
 particles (client side only entity)
 double chest
-random ticks : replace snow, remove leaves,
+random ticks : replace snow
 support ogg audio files (JCraft:JOrbis/0.0.17) or MP3 (ffmpeg)
 XP
 suffication
