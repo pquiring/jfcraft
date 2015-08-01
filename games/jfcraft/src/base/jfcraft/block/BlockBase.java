@@ -273,21 +273,22 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     return isSolid;
   }
   private static Coords supportingBlock = new Coords();
+  /** Check if supported block is present.
+   * Call from tick() only.
+   */
   public boolean checkSupported(Coords thisBlock) {
     //get this block
-    synchronized(supportingBlock) {
-      supportingBlock.copy(thisBlock);
-      if (thisBlock.block.isDir || thisBlock.block.isDirFace) {
-        supportingBlock.adjacentBlock();
-      } else {
-        supportingBlock.y--;
-      }
-      //get supporting block
-      Static.server.world.getBlock(thisBlock.chunk.dim, supportingBlock.x, supportingBlock.y, supportingBlock.z, supportingBlock);
-      if ((thisBlock.block.isPlant && !supportingBlock.block.canPlantOn) || (!supportingBlock.block.canSupportBlock(thisBlock))) {
-        //supporting block gone
-        return false;
-      }
+    supportingBlock.copy(thisBlock);
+    if (thisBlock.block.isDir || thisBlock.block.isDirFace) {
+      supportingBlock.adjacentBlock();
+    } else {
+      supportingBlock.y--;
+    }
+    //get supporting block
+    Static.server.world.getBlock(thisBlock.chunk.dim, supportingBlock.x, supportingBlock.y, supportingBlock.z, supportingBlock);
+    if ((thisBlock.block.isPlant && !supportingBlock.block.canPlantOn) || (!supportingBlock.block.canSupportBlock(thisBlock))) {
+      //supporting block gone
+      return false;
     }
     return true;
   }

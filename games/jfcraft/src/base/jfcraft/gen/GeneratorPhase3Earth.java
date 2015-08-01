@@ -96,19 +96,17 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
     setBlock(x  ,y+3,z  ,Blocks.WOOD, 0, var);
     setBlock(x  ,y+4,z  ,Blocks.WOOD, 0, var);
 
-    setBlock(x  ,y+5,z  ,Blocks.LEAVES, 0, var);
-    setBlock(x  ,y+4,z-1,Blocks.LEAVES, 0, var);
-    setBlock(x  ,y+4,z+1,Blocks.LEAVES, 0, var);
-    setBlock(x-1,y+4,z  ,Blocks.LEAVES, 0, var);
-    setBlock(x-1,y+4,z-1,Blocks.LEAVES, 0, var);
-    setBlock(x-1,y+4,z+1,Blocks.LEAVES, 0, var);
-    setBlock(x+1,y+4,z  ,Blocks.LEAVES, 0, var);
-    setBlock(x+1,y+4,z-1,Blocks.LEAVES, 0, var);
-    setBlock(x+1,y+4,z+1,Blocks.LEAVES, 0, var);
+    setBlock(x  ,y+5,z  ,Blocks.LEAVES, 0, Chunk.makeBits(B,var));
+    setBlock(x  ,y+4,z-1,Blocks.LEAVES, 0, Chunk.makeBits(S,var));
+    setBlock(x  ,y+4,z+1,Blocks.LEAVES, 0, Chunk.makeBits(N,var));
+    setBlock(x-1,y+4,z  ,Blocks.LEAVES, 0, Chunk.makeBits(E,var));
+    setBlock(x-1,y+4,z-1,Blocks.LEAVES, 0, Chunk.makeBits(E,var));  //SE
+    setBlock(x-1,y+4,z+1,Blocks.LEAVES, 0, Chunk.makeBits(E,var));  //NW
+    setBlock(x+1,y+4,z  ,Blocks.LEAVES, 0, Chunk.makeBits(W,var));
+    setBlock(x+1,y+4,z-1,Blocks.LEAVES, 0, Chunk.makeBits(W,var));  //SW
+    setBlock(x+1,y+4,z+1,Blocks.LEAVES, 0, Chunk.makeBits(W,var));  //NW
     if (!snow) return;
     //place snow on top of tree
-
-    //BUG : no snow and leaves are in the dark
     setBlock(x  ,y+6,z  ,Blocks.SNOW, 0, 0);
     setBlock(x  ,y+5,z-1,Blocks.SNOW, 0, 0);
     setBlock(x  ,y+5,z+1,Blocks.SNOW, 0, 0);
