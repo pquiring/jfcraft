@@ -33,7 +33,10 @@ public abstract class RenderScreen {
   private static Timer cursorTimer;
 
   private static RenderBuffers o_text;
-  private static GLMatrix ortho = new GLMatrix();
+
+  public static GLMatrix orthoItem = new GLMatrix();
+  public static GLMatrix orthoBlock = new GLMatrix();
+  public static GLMatrix orthoPlayer = new GLMatrix();
 
   public static int fontSize = 12;
 
@@ -51,6 +54,15 @@ public abstract class RenderScreen {
   public ArrayList<Button> buttons = new ArrayList<Button>();
   public ArrayList<TextField> fields = new ArrayList<TextField>();
   public ArrayList<ScrollBar> scrolls = new ArrayList<ScrollBar>();
+
+  public static void initStatic() {
+    //ortho(left, right, bottom, top, near, far)
+    orthoItem.ortho(0, 1, 1, 0, 0, 1);
+    orthoBlock.ortho(-0.15f, 1.60f, -0.50f, 1.35f, -2, 2);  //trial and error
+    orthoBlock.addRotate(35, 1,0,0);
+    orthoBlock.addRotate(45, 0,1,0);
+    orthoPlayer.ortho(-1, 1, 0, 2, -1, 1);
+  }
 
   private int getFieldIndex() {
     if (focus == null) return 0;
@@ -161,10 +173,9 @@ public abstract class RenderScreen {
   /** Sets a standard 0,0-1,1 ortho matrix for gui_width/gui_height. */
   public void setOrtho(GL gl) {
     //left right bottom top near far
-    ortho.ortho(0, 1, 1, 0, 0, 1);
+    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoItem.m);  //perspective matrix
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
-    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, ortho.m);  //perspective matrix
     float vpy = 0;
     switch (gui_position) {
       case TOP: vpy = (int)(Static.height - (gui_height * Static.scale)); break;
@@ -177,10 +188,9 @@ public abstract class RenderScreen {
   /** Sets a standard 0,0-1,1 ortho matrix for item/text. */
   public void setOrthoItem(GL gl, int x, int y) {
     //left right bottom top near far
-    ortho.ortho(0, 1, 1, 0, 0, 1);
+    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoItem.m);  //perspective matrix
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
-    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, ortho.m);  //perspective matrix
     float vpy = 0;
     switch (gui_position) {
       case TOP: vpy = (int)(Static.height - gui_height) - y; break;
@@ -193,12 +203,9 @@ public abstract class RenderScreen {
   /** Sets a standard 0,0-1,1 ortho matrix for block. */
   public void setOrthoBlock(GL gl, int x, int y) {
     //left right bottom top near far
-    ortho.ortho(-0.15f, 1.60f, -0.50f, 1.35f, -2, 2);  //trial and error
-    ortho.addRotate(35, 1,0,0);
-    ortho.addRotate(45, 0,1,0);
+    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoBlock.m);  //perspective matrix
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
-    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, ortho.m);  //perspective matrix
     float vpy = 0;
     switch (gui_position) {
       case TOP: vpy = (Static.height - gui_height) - y; break;
@@ -491,6 +498,8 @@ public abstract class RenderScreen {
         data.dir[X] = block.getPreferredDir();
         if (block.isVar) {
           data.var[X] = item.var;
+        } else {
+          data.var[X] = 0;
         }
         block.buildBuffers(o_items, data);
         buffersIdx = block.buffersIdx;
@@ -549,7 +558,6 @@ public abstract class RenderScreen {
     gui_height = height;
   }
 
-  private static GLMatrix mat_shade = null;
   private static RenderBuffers o_shade = null;
 
   /** Render a shade over whole screen.
@@ -563,12 +571,7 @@ public abstract class RenderScreen {
    * Assumes view/model matrix are set to identity.
    */
   public void renderShade(GL gl, int x, int y, int w, int h) {
-    if (mat_shade == null) {
-      mat_shade = new GLMatrix();
-      mat_shade.setIdentity();
-      mat_shade.ortho(0, 1, 1, 0, 0, 1);
-    }
-    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, mat_shade.m);
+    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoItem.m);
     gl.glViewport(x, y, w, h);
     if (o_shade == null) {
       o_shade = new RenderBuffers();

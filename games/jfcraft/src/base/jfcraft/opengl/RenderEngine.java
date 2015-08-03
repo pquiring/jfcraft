@@ -43,6 +43,7 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
     screen = initScreen;
     screen.setup();
     Static.video = this;
+    RenderScreen.initStatic();
   }
 
   public void loadProgram(GL gl) {

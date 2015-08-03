@@ -24,7 +24,6 @@ public class InventoryMenu extends RenderScreen {
   private int mx, my;
   private final int gui_width = 350, gui_height = 330;  //size of menu
   private Player player;
-  private GLMatrix ortho = new GLMatrix();
 
   public InventoryMenu() {
     id = Client.INVENTORY;
@@ -251,15 +250,14 @@ public class InventoryMenu extends RenderScreen {
 
   /** Sets an ortho matrix to display player in inventory menu */
   public void setOrthoPlayer(GL gl) {
+    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoPlayer.m);  //perspective matrix
     float x = 52;
     float y = 155;
     float w = 104;
     float h = 140;
     //left right bottom top near far
-    ortho.ortho(-1, 1, 0, 2, -1, 1);
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
-    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, ortho.m);  //perspective matrix
     float vpy = 0;
     switch (gui_position) {
       case TOP: vpy = (int)(Static.height - gui_height) - y; break;
@@ -268,5 +266,4 @@ public class InventoryMenu extends RenderScreen {
     }
     gl.glViewport((int)(offsetX + x * Static.scale), (int)vpy, (int)(w * Static.scale), (int)(h * Static.scale));
   }
-
 }
