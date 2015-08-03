@@ -191,7 +191,9 @@ public class Game extends RenderScreen {
     gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, perspective.m);  //perspective matrix
 
     gl.glUniform1f(Static.uniformSunLight, 1.0f);
+    if (!Static.debugDisableFog) gl.glUniform1i(Static.uniformEnableFog, 0);
     Static.dims.dims[dim].getEnvironment().render(gl, world.time, sunLight, Static.client);
+    if (!Static.debugDisableFog) gl.glUniform1i(Static.uniformEnableFog, 1);
 
     view.setIdentity();
     synchronized(Static.client.ang) {
@@ -584,6 +586,7 @@ public class Game extends RenderScreen {
     gui_position = CENTER;
 
 //    pro.print();
+    if (!Static.debugDisableFog) gl.glUniform1i(Static.uniformEnableFog, 0);
   }
 
   public void keyPressed(int vk) {

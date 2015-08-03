@@ -25,10 +25,12 @@ public class FragmentShader {
 "uniform float uAlphaFactor;\n" +
 "uniform bool uUseTextures;\n" +
 "uniform bool uUseFog;\n" +
-"uniform vec3 uFogColor;\n" +
+"uniform vec4 uFogColor;\n" +
+"uniform float uFogNear;\n" +
+"uniform float uFogFar;\n" +
 "uniform bool uUseHorsePattern;\n" +
 "uniform bool uUseHorseArmor;\n" +
-    //there is usually at least 16 texture units available
+"\n" +    //there is usually at least 16 texture units available
 "uniform sampler2D uTexture;\n" +  //unit 0
 "uniform sampler2D uCrack;\n" +  //unit 1
 "uniform sampler2D uHorsePattern;\n" +  //unit 2
@@ -70,13 +72,10 @@ public class FragmentShader {
 "    textureColor.a = 1.0;" +
 "  }\n" +
 "  textureColor.a *= uAlphaFactor;\n" +
-"  if (uUseFog) {\n" +
+"  if (uUseFog && vLength > uFogNear) {\n" +
 "    float fogFactor;\n" +
-"    if (vLength < 32.0)\n" +
-"      fogFactor = 0.0;\n" +
-"    else\n" +
-"      fogFactor = clamp((vLength - 32.0) / 64.0, 0.0, 1.0);\n" +    //simple linear fog
-"    color = mix(color, uFogColor, fogFactor);\n" +
+"    fogFactor = clamp((vLength - uFogNear) / (uFogFar - uFogNear), 0.0, 1.0);\n" +    //simple linear fog
+"    textureColor = mix(textureColor, uFogColor, fogFactor);\n" +
 "  }\n" +
 "  gl_FragColor = textureColor;\n" +
 "}\n";

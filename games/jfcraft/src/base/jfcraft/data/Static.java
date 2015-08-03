@@ -50,6 +50,7 @@ public class Static {
   public static boolean debugBug = false;
   public static boolean debugDisableRandomTicks = false;
   public static boolean debugPurgeEntities = false;
+  public static boolean debugDisableFog = true;
 
   public static boolean doSteps = false;
 
@@ -126,6 +127,8 @@ public class Static {
   public static int uniformEnableHorsePattern;
   public static int uniformEnableHorseArmor;
   public static int uniformFogColor;
+  public static int uniformFogNear;
+  public static int uniformFogFar;
   public static int uniformTexture;
   public static int uniformCrack;
   public static int uniformHorsePattern;

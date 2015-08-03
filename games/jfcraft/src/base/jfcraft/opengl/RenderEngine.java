@@ -149,6 +149,8 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
     Static.uniformEnableHorsePattern = gl.glGetUniformLocation(program, "uUseHorsePattern");
     Static.uniformEnableHorseArmor = gl.glGetUniformLocation(program, "uUseHorseArmor");
     Static.uniformFogColor = gl.glGetUniformLocation(program, "uFogColor");
+    Static.uniformFogNear = gl.glGetUniformLocation(program, "uFogNear");
+    Static.uniformFogFar = gl.glGetUniformLocation(program, "uFogFar");
     Static.uniformTexture = gl.glGetUniformLocation(program, "uTexture");
     Static.uniformCrack = gl.glGetUniformLocation(program, "uCrack");
     Static.uniformHorsePattern = gl.glGetUniformLocation(program, "uHorsePattern");
@@ -158,9 +160,11 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
     gl.glUniform1f(Static.uniformAlphaFactor, 1.0f);
     gl.glUniform1i(Static.uniformEnableTextures, 1);
     gl.glUniform1i(Static.uniformEnableFog, 0);
+    gl.glUniform1f(Static.uniformFogNear, Settings.current.loadRange * 16f);
+    gl.glUniform1f(Static.uniformFogFar, Settings.current.loadRange * 16f + 16f);
     gl.glUniform1i(Static.uniformEnableHorsePattern, 0);
     gl.glUniform1i(Static.uniformEnableHorseArmor, 0);
-    gl.glUniform3fv(Static.uniformFogColor, 1, new float[] {0.0f, 0.0f, 0.0f});
+    gl.glUniform4fv(Static.uniformFogColor, 1, new float[] {0.2f, 0.2f, 0.6f, 1.0f});  //sky blue
     gl.glUniform1i(Static.uniformTexture, 0);
     gl.glUniform1i(Static.uniformCrack, 1);
     gl.glUniform1i(Static.uniformHorsePattern, 2);
