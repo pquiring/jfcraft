@@ -216,6 +216,10 @@ public class Player extends HumaniodBase {
     renderItemInHand(gl);
   }
 
+  public float getBuoyant() {
+    return 0f;
+  }
+
   public void ctick() {
     float delta = 0;
     switch (mode) {

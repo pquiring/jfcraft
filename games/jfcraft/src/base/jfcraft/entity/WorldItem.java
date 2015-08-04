@@ -115,10 +115,9 @@ public class WorldItem extends EntityBase {
   }
   public void tick() {
     ctick();
-    boolean moved = false;
-    if (gravity(0)) moved = true;
-    if (move(false, false, false, -1, AVOID_NONE)) moved = true;
-    if (moved) Static.server.broadcastEntityMove(this, false);
+    if (move(false, false, false, -1, AVOID_NONE)) {
+      Static.server.broadcastEntityMove(this, false);
+    }
     if (age > 3 * 20) {
       //check if player is overlapping me
       EntityBase es[] = Static.server.world.getEntities();

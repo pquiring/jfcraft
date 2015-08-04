@@ -197,16 +197,7 @@ public class Sheep extends CreatureBase {
   public void tick() {
     super.tick();
     //do AI
-    updateFlags(0,0,0);
-    boolean fell;
-    if (inWater && mode != MODE_FLYING) {
-      fell = gravity(0.5f + (float)Math.sin(floatRad) * 0.25f);
-      floatRad += 0.314f;
-      if (floatRad > Static.PIx2) floatRad = 0f;
-    } else {
-      fell = gravity(0);
-    }
-    boolean wasMoving = mode != MODE_IDLE;
+    boolean moved;
     //random walking
     if (Static.debugRotate) {
       //test rotate in a spot
@@ -215,18 +206,12 @@ public class Sheep extends CreatureBase {
       ang.x += 1.0f;
       if (ang.x > 45.0f) { ang.x = -45.0f; }
       mode = MODE_WALK;
+      moved = true;
     } else {
       randomWalking();
-      if (mode != MODE_IDLE) {
-        moveEntity();
-      } else {
-        if (onGround) {
-          vel.x = 0;
-          vel.z = 0;
-        }
-      }
+      moved = moveEntity();
     }
-    if (fell || mode != MODE_IDLE || wasMoving) Static.server.broadcastEntityMove(this, false);
+    if (moved) Static.server.broadcastEntityMove(this, false);
   }
 
   private static Random r = new Random();

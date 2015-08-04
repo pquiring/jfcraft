@@ -324,6 +324,8 @@ public abstract class CreatureBase extends EntityBase {
         }
       } else {
         mode = MODE_IDLE;
+        vel.x = 0;
+        vel.z = 0;
       }
     }
     ang.x = angX;
@@ -335,10 +337,9 @@ public abstract class CreatureBase extends EntityBase {
   /** Moves a creature (animal or monster)
    *
    */
-  public void moveEntity() {
+  public boolean moveEntity() {
   //  if (!onGround && !inWater && mode != MODE_JUMPING) return;  //horse can jump and move
     float speed = getSpeed(mode);
-    if (speed == 0f) return;
     speed /= 20f;
     mMat.setIdentity();
     mMat.addRotate(ang.y, 0, 1, 0);
@@ -351,7 +352,9 @@ public abstract class CreatureBase extends EntityBase {
       target == null ? (mode == MODE_RUN ? AVOID_NONE : AVOID_LAVA_WATER) : AVOID_LAVA
     )) {
       mode = MODE_IDLE;
+      return false;
     }
+    return true;
   }
 
   public boolean cracks() {

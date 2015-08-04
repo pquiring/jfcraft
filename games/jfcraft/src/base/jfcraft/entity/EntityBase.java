@@ -368,7 +368,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
    *
    * @param depth = buoyant depth (floating entity) (0=not buoyant)
    */
-  public boolean gravity(float depth) {
+  private boolean gravity(float depth) {
     updateFlags(0,depth,0);
     if (mode == MODE_FLYING) {
       fallBlocks = 0;
@@ -508,6 +508,17 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return false;
   }
 
+  /** How deep creatures will auto float in water.*/
+  public float getBuoyant() {
+    if (inWater && mode != MODE_FLYING) {
+      floatRad += 0.314f;
+      if (floatRad > Static.PIx2) floatRad = 0f;
+      return 0.5f + (float)Math.sin(floatRad) * 0.25f;
+    } else {
+      return 0;
+    }
+  }
+
   public static final int AVOID_NONE = 0;
   public static final int AVOID_LAVA = 1;
   public static final int AVOID_WATER = 2;
@@ -525,7 +536,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   public boolean move(boolean sneak, boolean stick, boolean usePath, int maxFall, int avoid) {
     boolean server = world.isServer;
-    if (vel.x == 0.0f && vel.z == 0.0f) return false;
     Chunk chunk1 = null, chunk2;
     float ox=0, oy=0, oz=0;  //org pos
 
@@ -547,6 +557,15 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     float step;
     int ret = -1;
     boolean moved = false;
+
+    if ((inLadder || inVines) && sneak) {
+      //hold position up/down
+    } else {
+      if (gravity(getBuoyant())) moved = true;
+    }
+
+    if (vel.x == 0.0f && vel.z == 0.0f) return moved;
+
     boolean climb = false;
     //try to move in one step
     if (vel.x < 1 && vel.z < 1 && mode != MODE_FLYING && !usePath) {
@@ -784,7 +803,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     boolean jump, boolean sneak, boolean run, boolean b1, boolean b2,
     boolean fup, boolean fdn)
   {
-    gravity(0);
     float speed = 0;
     boolean flying = mode == MODE_FLYING;
     if (inWater || inLava) {

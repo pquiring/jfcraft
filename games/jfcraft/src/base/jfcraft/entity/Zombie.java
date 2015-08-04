@@ -183,15 +183,6 @@ public class Zombie extends HumaniodBase {
   }
 
   public void tick() {
-    updateFlags(0,0,0);
-    boolean fell;
-    if (inWater && mode != MODE_FLYING) {
-      fell = gravity(0.5f + (float)Math.sin(floatRad) * 0.25f);
-      floatRad += 0.314f;
-      if (floatRad > Static.PIx2) floatRad = 0f;
-    } else {
-      fell = gravity(0);
-    }
     if (target == null) {
       //getTarget();  //test!
     } else {
@@ -199,7 +190,7 @@ public class Zombie extends HumaniodBase {
         target = null;
       }
     }
-    boolean wasMoving = mode != MODE_IDLE;
+    boolean moved;
     if (Static.debugRotate) {
       //test rotate in a spot
       ang.y += 1.0f;
@@ -207,20 +198,16 @@ public class Zombie extends HumaniodBase {
       ang.x += 1.0f;
       if (ang.x > 45.0f) { ang.x = -45.0f; }
       mode = MODE_WALK;
+      moved = true;
     } else {
       if (target != null) {
         moveToTarget();
       } else {
         randomWalking();
       }
-      if (mode != MODE_IDLE) {
-        moveEntity();
-      } else {
-        vel.x = 0;
-        vel.z = 0;
-      }
+      moved = moveEntity();
     }
-    if (fell || target != null || mode != MODE_IDLE || wasMoving) Static.server.broadcastEntityMove(this, false);
+    if (target != null || moved) Static.server.broadcastEntityMove(this, false);
     super.tick();
   }
 

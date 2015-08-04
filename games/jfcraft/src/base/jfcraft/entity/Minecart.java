@@ -206,7 +206,6 @@ public class Minecart extends VehicleBase {
 
   public void tick() {
     super.tick();
-    boolean fell = false;
     boolean moved = false;
     boolean wasOnRail = onRail;
     updateFlags(0,0,0);
@@ -232,11 +231,10 @@ public class Minecart extends VehicleBase {
         }
         break;
       case -1:
-        fell = gravity(0);
         moved = move(false, false, false, -1, AVOID_NONE);
         break;
     }
-    if (fell || moved || (wasOnRail != onRail)) {
+    if (moved || (wasOnRail != onRail)) {
       Static.server.broadcastEntityMove(this, false);
     }
     if (occupant != null) {

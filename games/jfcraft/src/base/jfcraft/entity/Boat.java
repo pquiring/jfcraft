@@ -157,9 +157,8 @@ public class Boat extends VehicleBase {
         ang.y = occupant.ang.y;
       }
     }
-    boolean fell = gravity(0.25f);
     boolean moved = move(false, true, false, -1, AVOID_NONE);
-    if (fell || moved) {
+    if (moved) {
       Static.server.broadcastEntityMove(this, false);
     }
     if (occupant != null) {

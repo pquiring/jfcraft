@@ -181,15 +181,6 @@ public class Creeper extends CreatureBase {
   public int walkLength;
 
   public void tick() {
-    updateFlags(0,0,0);
-    boolean fell;
-    if (inWater && mode != MODE_FLYING) {
-      fell = gravity(0.5f + (float)Math.sin(floatRad) * 0.25f);
-      floatRad += 0.314f;
-      if (floatRad > Static.PIx2) floatRad = 0f;
-    } else {
-      fell = gravity(0);
-    }
     if (target == null) {
       //getTarget();  //test!
     } else {
@@ -218,7 +209,7 @@ public class Creeper extends CreatureBase {
         vel.z = 0;
       }
     }
-    if (fell || target != null || mode != MODE_IDLE || wasMoving) Static.server.broadcastEntityMove(this, false);
+    if (target != null || mode != MODE_IDLE || wasMoving) Static.server.broadcastEntityMove(this, false);
     super.tick();
   }
 

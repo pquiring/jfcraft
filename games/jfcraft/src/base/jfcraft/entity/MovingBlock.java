@@ -61,6 +61,11 @@ public class MovingBlock extends EntityBase {
     obj.getBuffers(buffersIdx).bindBuffers(gl);
     obj.getBuffers(buffersIdx).render(gl);
   }
+
+  public float getBuoyant() {
+    return 0f;
+  }
+
   public void tick() {
     Chunk chunk1, chunk2 = null;
     chunk1 = getChunk();

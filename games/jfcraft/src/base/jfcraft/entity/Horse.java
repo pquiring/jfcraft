@@ -444,17 +444,9 @@ public class Horse extends VehicleBase {
 
   public void tick() {
     super.tick();
+    boolean moved;
     //do AI
     updateFlags(0,0,0);
-    boolean fell;
-    if (inWater && mode != MODE_FLYING) {
-      fell = gravity(0.5f + (float)Math.sin(floatRad) * 0.25f);
-      floatRad += 0.314f;
-      if (floatRad > Static.PIx2) floatRad = 0f;
-    } else {
-      fell = gravity(0);
-    }
-    boolean wasMoving = mode != MODE_IDLE;
     //random walking
     if (Static.debugRotate) {
       //test rotate in a spot
@@ -463,6 +455,7 @@ public class Horse extends VehicleBase {
       ang.x += 1.0f;
       if (ang.x > 360.0f) { ang.x = 0.0f; }
       mode = MODE_WALK;
+      moved = true;
     } else {
       if (occupant != null && isTamed() && haveSaddle()) {
         mode = MODE_IDLE;
@@ -479,18 +472,11 @@ public class Horse extends VehicleBase {
         }
         ang.y = occupant.ang.y;
         if (dn) ang.y += 180f;
-        moveEntity();
+        moved = moveEntity();
         if (dn) ang.y -= 180f;
       } else {
         randomWalking();
-        if (mode != MODE_IDLE) {
-          moveEntity();
-        } else {
-          if (onGround) {
-            vel.x = 0;
-            vel.z = 0;
-          }
-        }
+        moved = moveEntity();
         if (occupant != null && !isTamed()) {
           tameCounter++;
           if (tameCounter == 20 * 15) {
@@ -508,7 +494,7 @@ public class Horse extends VehicleBase {
         }
       }
     }
-    if (fell || mode != MODE_IDLE || wasMoving) {
+    if (moved) {
       Static.server.broadcastEntityMove(this, false);
     }
     if (occupant != null) {
