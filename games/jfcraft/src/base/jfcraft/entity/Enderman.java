@@ -11,6 +11,7 @@ import java.util.*;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.audio.*;
 import jfcraft.data.*;
@@ -74,8 +75,8 @@ public class Enderman extends HumaniodBase {
     dest = new RenderDest(parts.length);
   }
 
-  public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName, 0);
+  public void initStaticGL() {
+    texture = Textures.getTexture(textureName, 0);
   }
 
   private static String parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG", "JAW"};
@@ -105,17 +106,17 @@ public class Enderman extends HumaniodBase {
     }
   }
 
-  public void copyBuffers(GL gl) {
-    dest.copyBuffers(gl);
+  public void copyBuffers() {
+    dest.copyBuffers();
   }
 
-  public void bindTexture(GL gl) {
-    texture.bind(gl);
+  public void bindTexture() {
+    texture.bind();
   }
 
   private static final int JAW = 6;
 
-  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     switch (bodyPart) {
@@ -149,7 +150,7 @@ public class Enderman extends HumaniodBase {
         break;
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
   public void ctick() {
@@ -175,13 +176,13 @@ public class Enderman extends HumaniodBase {
     }
   }
 
-  public void render(GL gl) {
+  public void render() {
     for(int a=0;a<dest.count();a++) {
       RenderBuffers buf = dest.getBuffers(a);
       if (buf.isBufferEmpty()) continue;
-      setMatrixModel(gl, a, buf);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      setMatrixModel(a, buf);
+      buf.bindBuffers();
+      buf.render();
     }
   }
 

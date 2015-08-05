@@ -14,6 +14,7 @@ import java.util.*;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.data.*;
 import jfcraft.block.*;

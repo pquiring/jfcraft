@@ -11,6 +11,7 @@ package jfcraft.entity;
  */
 
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.client.*;
 import jfcraft.item.*;
@@ -74,9 +75,9 @@ public class Player extends HumaniodBase {
     legLength = 0.625f;
   }
 
-  public void initStatic(GL gl) {
-    super.initStatic(gl);  //HumanoidBase
-    texture = Textures.getTexture(gl, "entity/steve", 0);
+  public void initStaticGL() {
+    super.initStaticGL();  //HumanoidBase
+    texture = Textures.getTexture("entity/steve", 0);
     dest = new RenderDest(parts.length);
   }
 
@@ -148,11 +149,11 @@ public class Player extends HumaniodBase {
     return dest.getBuffers(R_ARM);
   }
 
-  public void bindTexture(GL gl) {
-    texture.bind(gl);
+  public void bindTexture() {
+    texture.bind();
   }
 
-  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     switch (bodyPart) {
@@ -202,18 +203,18 @@ public class Player extends HumaniodBase {
       mat.addScale(scale, scale, scale);
       mat.addTranslate2(-buf.center.x, -buf.center.y, -buf.center.z);
     }
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
-  public void render(GL gl) {
+  public void render() {
     for(int a=0;a<dest.count();a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      setMatrixModel(gl, a, buf);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      setMatrixModel(a, buf);
+      buf.bindBuffers();
+      buf.render();
     }
-    renderArmor(gl);
-    renderItemInHand(gl);
+    renderArmor();
+    renderItemInHand();
   }
 
   public float getBuoyant() {
@@ -243,9 +244,9 @@ public class Player extends HumaniodBase {
     }
   }
 
-  public void copyBuffers(GL gl) {
-    super.copyBuffers(gl);  //HumaniodBase
-    dest.copyBuffers(gl);
+  public void copyBuffers() {
+    super.copyBuffers();  //HumaniodBase
+    dest.copyBuffers();
   }
 
   private static final byte ver = 0;

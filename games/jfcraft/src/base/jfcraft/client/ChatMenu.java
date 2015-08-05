@@ -7,10 +7,13 @@ package jfcraft.client;
  * Created : Apr 2, 2014
  */
 
-import java.awt.event.*;
 import java.util.*;
 
+import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.*;
+
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 //import jfcraft.server.*;
 import jfcraft.opengl.*;
@@ -28,9 +31,9 @@ public class ChatMenu extends RenderScreen {
   private String current;
   private int idx;
 
-  public void init(GL gl) {
-    super.init(gl);
-    chat = addTextField(gl, "", 5, 512 - fontSize * 6, 512-10, true, 127, false, 1);
+  public void init() {
+    super.init();
+    chat = addTextField("", 5, 512 - fontSize * 6, 512-10, true, 127, false, 1);
   }
 
   public void setup() {
@@ -42,21 +45,21 @@ public class ChatMenu extends RenderScreen {
     initTxt = cmd;
   }
 
-  public void render(GL gl, int width, int height) {
+  public void render(int width, int height) {
     if (initTxt != null) {
       chat.setText(initTxt);
       current = initTxt;
       idx = history.size();
       initTxt = null;
     }
-    Static.game.render(gl, width, height);
+    Static.game.render(width, height);
     setMenuSize(512, 512);
     reset();
-    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, identity.m);  //view matrix
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, identity.m);  //model matrix
-    setOrtho(gl);
-    renderFields(gl);
-    renderText(gl);
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
+    setOrtho();
+    renderFields();
+    renderText();
 
     Static.client.chatTime = 5 * 20;
   }
@@ -64,7 +67,7 @@ public class ChatMenu extends RenderScreen {
   public void keyPressed(int vk) {
     super.keyPressed(vk);
     switch (vk) {
-      case KeyEvent.VK_UP:
+      case SWTVK.VK_UP:
         if (idx == 0) break;
         if (idx == history.size()) {
           current = chat.getText();
@@ -72,7 +75,7 @@ public class ChatMenu extends RenderScreen {
         idx--;
         chat.setText(history.get(idx));
         break;
-      case KeyEvent.VK_DOWN:
+      case SWTVK.VK_DOWN:
         if (idx == history.size()) break;
         idx++;
         if (idx == history.size()) {
@@ -81,24 +84,24 @@ public class ChatMenu extends RenderScreen {
           chat.setText(history.get(idx));
         }
         break;
-      case KeyEvent.VK_ESCAPE:
+      case SWTVK.VK_ESCAPE:
         leaveMenu();
         break;
-      case KeyEvent.VK_ENTER:
+      case SWTVK.VK_ENTER:
         String msg = chat.getText();
         if (msg.length() > 0) {
           Static.client.clientTransport.sendMsg(msg);
           history.add(msg);
         }
         Static.video.setScreen(Static.game);
-        Static.game.setCursor();
+        setCursor(true);
         Static.inGame = true;
         break;
     }
   }
 
-  public void resize(GL gl, int width, int height) {
-    Static.game.resize(gl, width, height);
+  public void resize(int width, int height) {
+    Static.game.resize(width, height);
   }
 
   public void mousePressed(int x, int y, int button) {

@@ -11,6 +11,7 @@ import java.util.*;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.audio.*;
 import jfcraft.data.*;
@@ -73,8 +74,8 @@ public class Skeleton extends HumaniodBase {
     textureName = "entity/skeleton/skeleton";
   }
 
-  public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName, 0);
+  public void initStaticGL() {
+    texture = Textures.getTexture(textureName, 0);
     dest = new RenderDest(parts.length);
   }
 
@@ -105,15 +106,15 @@ public class Skeleton extends HumaniodBase {
     }
   }
 
-  public void copyBuffers(GL gl) {
-    dest.copyBuffers(gl);
+  public void copyBuffers() {
+    dest.copyBuffers();
   }
 
-  public void bindTexture(GL gl) {
-    texture.bind(gl);
+  public void bindTexture() {
+    texture.bind();
   }
 
-  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     switch (bodyPart) {
@@ -146,7 +147,7 @@ public class Skeleton extends HumaniodBase {
         break;
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
   public void ctick() {
@@ -172,16 +173,16 @@ public class Skeleton extends HumaniodBase {
     }
   }
 
-  public void render(GL gl) {
-    gl.glDisable(GL.GL_CULL_FACE);
+  public void render() {
+    glDisable(GL_CULL_FACE);
     for(int a=0;a<dest.count();a++) {
       RenderBuffers buf = dest.getBuffers(a);
       if (buf.isBufferEmpty()) continue;
-      setMatrixModel(gl, a, buf);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      setMatrixModel(a, buf);
+      buf.bindBuffers();
+      buf.render();
     }
-    gl.glEnable(GL.GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
   }
 
   public void tick() {

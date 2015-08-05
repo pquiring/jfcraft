@@ -47,10 +47,10 @@ public class RenderDest {
     }
   }
 
-  public void copyBuffers(GL gl) {
+  public void copyBuffers() {
     for(int a=0;a<buffers.length;a++) {
       if (buffers[a] != null) {
-        buffers[a].copyBuffers(gl);
+        buffers[a].copyBuffers();
       }
     }
   }

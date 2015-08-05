@@ -448,14 +448,14 @@ public class ItemBase {
     return armorParts[layer].length;
   }
 
-  public void bindArmorTexture(GL gl, int layer) {
+  public void bindArmorTexture(int layer) {
     if (armorTextures == null) {
       armorTextures = new Texture[armorTextureNames.length];
       for(int a=0;a<armorTextureNames.length;a++) {
-        armorTextures[a] = Textures.getTexture(gl, armorTextureNames[a], 0);
+        armorTextures[a] = Textures.getTexture(armorTextureNames[a], 0);
       }
     }
-    armorTextures[layer].bind(gl);
+    armorTextures[layer].bind();
   }
 
   public float getArmorScale(int layer) {

@@ -6,6 +6,7 @@ package jfcraft.entity;
  */
 
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.block.*;
 import jfcraft.data.*;
@@ -62,12 +63,12 @@ public class Minecart extends VehicleBase {
     model = Assets.getModel("minecart").model;
   }
 
-  public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName, 0);
+  public void initStaticGL() {
+    texture = Textures.getTexture(textureName, 0);
   }
 
-  public void initInstance(GL gl) {
-    super.initInstance(gl);
+  public void initInstance() {
+    super.initInstance();
   }
 
   private static final int BASE = 0;
@@ -113,30 +114,30 @@ public class Minecart extends VehicleBase {
     needCopyBuffers = true;
   }
 
-  public void bindTexture(GL gl) {
-    texture.bind(gl);
+  public void bindTexture() {
+    texture.bind();
   }
 
-  public void copyBuffers(GL gl) {
-    dest.copyBuffers(gl);
+  public void copyBuffers() {
+    dest.copyBuffers();
   }
 
-  private void setMatrixModel(GL gl, int bodyPart) {
+  private void setMatrixModel(int bodyPart) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     mat.addTranslate(pos.x, pos.y + 0.5f, pos.z);
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
-  public void render(GL gl) {
+  public void render() {
     int cnt = parts.length;
     for(int a=0;a<cnt;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      setMatrixModel(gl, a);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      setMatrixModel(a);
+      buf.bindBuffers();
+      buf.render();
     }
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, Static.identity.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
   }
 
   private void offRail() {

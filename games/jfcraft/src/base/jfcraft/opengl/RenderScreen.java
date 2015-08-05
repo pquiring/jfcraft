@@ -11,8 +11,9 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.*;
 
-import javaforce.gl.*;
 import javaforce.*;
+import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.block.*;
 import jfcraft.client.*;
@@ -55,7 +56,7 @@ public abstract class RenderScreen {
   public ArrayList<TextField> fields = new ArrayList<TextField>();
   public ArrayList<ScrollBar> scrolls = new ArrayList<ScrollBar>();
 
-  public static void initStatic() {
+  public static void initStaticGL() {
     //ortho(left, right, bottom, top, near, far)
     orthoItem.ortho(0, 1, 1, 0, 0, 1);
     orthoBlock.ortho(-0.15f, 1.60f, -0.50f, 1.35f, -2, 2);  //trial and error
@@ -72,9 +73,9 @@ public abstract class RenderScreen {
     return -1;
   }
 
-  public abstract void render(GL gl, int width, int height);
+  public abstract void render(int width, int height);
   public void process() {};
-  public void resize(GL gl, int width, int height) {}
+  public void resize(int width, int height) {}
   public void mousePressed(int x,int y,int but) {
     for(int a=0;a<buttons.size();a++) {
       Button button = buttons.get(a);
@@ -122,15 +123,15 @@ public abstract class RenderScreen {
     return pt / max;
   }
 
-  public static void initStatic(GL gl) {
+  public static void initStatic() {
     if (t_widgets == null) {
-      t_widgets = Textures.getTexture(gl, "gui/widgets", 0);
+      t_widgets = Textures.getTexture("gui/widgets", 0);
     }
     if (t_icons == null) {
-      t_icons = Textures.getTexture(gl, "gui/icons", 0);
+      t_icons = Textures.getTexture("gui/icons", 0);
     }
     if (t_text == null) {
-      t_text = Textures.getTexture(gl, "font/ascii", 0);
+      t_text = Textures.getTexture("font/ascii", 0);
     }
     if (o_text == null) {
       o_text = new RenderBuffers();
@@ -139,14 +140,14 @@ public abstract class RenderScreen {
       JFImage pixel = new JFImage(1,1);
       pixel.putPixel(0, 0, 0xffffff);  //white pixel
       t_white = new Texture();
-      t_white.load(gl, pixel);
+      t_white.load(pixel);
     }
     if (t_white50 == null) {
       JFImage pixel = new JFImage(1,1);
       pixel.putPixel(0, 0, 0xffffff);  //white pixel
       pixel.putAlpha(0, 0, 0x80);  //50% transparent
       t_white50 = new Texture();
-      t_white50.load(gl, pixel);
+      t_white50.load(pixel);
     }
     if (cursorTimer == null) {
       cursorTimer = new Timer();
@@ -161,7 +162,7 @@ public abstract class RenderScreen {
   /** Setup anything need to show menu each time. */
   public void setup() {}
 
-  public void init(GL gl) {
+  public void init() {
     data.crack = -1;
   }
 
@@ -171,9 +172,9 @@ public abstract class RenderScreen {
   public static int gui_position = CENTER;  //TOP CENTER BOTTOM
 
   /** Sets a standard 0,0-1,1 ortho matrix for gui_width/gui_height. */
-  public void setOrtho(GL gl) {
+  public void setOrtho() {
     //left right bottom top near far
-    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoItem.m);  //perspective matrix
+    glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, orthoItem.m);  //perspective matrix
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
     float vpy = 0;
@@ -182,13 +183,13 @@ public abstract class RenderScreen {
       case CENTER: vpy = offsetY; break;
       case BOTTOM: vpy = 0; break;
     }
-    gl.glViewport((int)offsetX, (int)vpy, (int)(gui_width * Static.scale), (int)(gui_height * Static.scale));
+    glViewport((int)offsetX, (int)vpy, (int)(gui_width * Static.scale), (int)(gui_height * Static.scale));
   }
 
   /** Sets a standard 0,0-1,1 ortho matrix for item/text. */
-  public void setOrthoItem(GL gl, int x, int y) {
+  public void setOrthoItem(int x, int y) {
     //left right bottom top near far
-    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoItem.m);  //perspective matrix
+    glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoItem.m);  //perspective matrix
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
     float vpy = 0;
@@ -197,13 +198,13 @@ public abstract class RenderScreen {
       case CENTER: vpy = (int)(offsetY + (gui_height - y) * Static.scale); break;
       case BOTTOM: vpy = (int)((gui_height - y) * Static.scale); break;
     }
-    gl.glViewport((int)(offsetX + ((float)x) * Static.scale), (int)vpy, (int)(36 * Static.scale), (int)(36 * Static.scale));
+    glViewport((int)(offsetX + ((float)x) * Static.scale), (int)vpy, (int)(36 * Static.scale), (int)(36 * Static.scale));
   }
 
   /** Sets a standard 0,0-1,1 ortho matrix for block. */
-  public void setOrthoBlock(GL gl, int x, int y) {
+  public void setOrthoBlock(int x, int y) {
     //left right bottom top near far
-    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoBlock.m);  //perspective matrix
+    glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoBlock.m);  //perspective matrix
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
     float vpy = 0;
@@ -212,11 +213,11 @@ public abstract class RenderScreen {
       case CENTER: vpy = (offsetY + (gui_height - y) * Static.scale); break;
       case BOTTOM: vpy = ((gui_height - y) * Static.scale); break;
     }
-    gl.glViewport((int)(offsetX + ((float)x) * Static.scale), (int)vpy, (int)(36 * Static.scale), (int)(36 * Static.scale));
+    glViewport((int)(offsetX + ((float)x) * Static.scale), (int)vpy, (int)(36 * Static.scale), (int)(36 * Static.scale));
   }
 
   /** Creates a 0,0-1,1 menu object. */
-  public RenderBuffers createOrthoMenu(GL gl) {
+  public RenderBuffers createOrthoMenu() {
     RenderBuffers o_menu = new RenderBuffers();
     //create vertex data
     o_menu.addVertex(0,0,0, 0,0);  //OPTZ : switch all to this format
@@ -227,12 +228,12 @@ public abstract class RenderScreen {
     for(int a=0;a<4;a++) {
       o_menu.addDefault();
     }
-    o_menu.copyBuffers(gl);
+    o_menu.copyBuffers();
     return o_menu;
   }
 
   /** Creates a 0,0-1,1 menu object with a partial image coords (upper left corner) using gui totalSize. */
-  public RenderBuffers createMenu(GL gl) {
+  public RenderBuffers createMenu() {
     RenderBuffers o_menu = new RenderBuffers();
     //create vertex data
     o_menu.addVertex(new float[] {0,0,0}, new float[] {0,0});
@@ -243,7 +244,7 @@ public abstract class RenderScreen {
     for(int a=0;a<4;a++) {
       o_menu.addDefault();
     }
-    o_menu.copyBuffers(gl);
+    o_menu.copyBuffers();
     return o_menu;
   }
 
@@ -252,7 +253,7 @@ public abstract class RenderScreen {
    * tx/y = images coords position
    * width/height = totalSize of menu
    */
-  public RenderBuffers createMenu(GL gl,
+  public RenderBuffers createMenu(
     int sx1,int sy1,
     int tx1,int ty1,
     int width,int height)
@@ -279,7 +280,7 @@ public abstract class RenderScreen {
     for(int a=0;a<4;a++) {
       o_menu.addDefault();
     }
-    o_menu.copyBuffers(gl);
+    o_menu.copyBuffers();
     return o_menu;
   }
 
@@ -289,7 +290,7 @@ public abstract class RenderScreen {
    * swidth/sheight = totalSize of menu on screen
    * twidth/theight = images totalSize of menu
    */
-  public RenderBuffers createMenu(GL gl, int sx1,int sy1,int tx1,int ty1,int swidth,int sheight,int twidth, int theight) {
+  public RenderBuffers createMenu(int sx1,int sy1,int tx1,int ty1,int swidth,int sheight,int twidth, int theight) {
     RenderBuffers o_menu = new RenderBuffers();
     //create vertex data
     float fsw = swidth / gui_width;
@@ -312,11 +313,11 @@ public abstract class RenderScreen {
     for(int a=0;a<4;a++) {
       o_menu.addDefault();
     }
-    o_menu.copyBuffers(gl);
+    o_menu.copyBuffers();
     return o_menu;
   }
 
-  public void recreateMenu(GL gl, RenderBuffers o_menu, int sx1,int sy1,int tx1,int ty1,int width,int height) {
+  public void recreateMenu(RenderBuffers o_menu, int sx1,int sy1,int tx1,int ty1,int width,int height) {
     o_menu.reset();
     //create vertex data
     float fsw = width / gui_width;
@@ -339,7 +340,7 @@ public abstract class RenderScreen {
     for(int a=0;a<4;a++) {
       o_menu.addDefault();
     }
-    o_menu.copyBuffers(gl);
+    o_menu.copyBuffers();
   }
 
   /** Resets text and bars. */
@@ -427,35 +428,35 @@ public abstract class RenderScreen {
       , 0, 0, 1, 1, clr);
   }
 
-  public void renderText(GL gl) {
-    setOrtho(gl);
-    t_text.bind(gl);
-    o_text.copyBuffers(gl);
-    o_text.bindBuffers(gl);
-    o_text.render(gl);
+  public void renderText() {
+    setOrtho();
+    t_text.bind();
+    o_text.copyBuffers();
+    o_text.bindBuffers();
+    o_text.render();
   }
 
-  public void renderBars(GL gl) {
+  public void renderBars() {
     if (!o_bars.isArrayEmpty()) {
-      setOrtho(gl);
-      t_white.bind(gl);
-      o_bars.copyBuffers(gl);
-      o_bars.bindBuffers(gl);
-      o_bars.render(gl);
+      setOrtho();
+      t_white.bind();
+      o_bars.copyBuffers();
+      o_bars.bindBuffers();
+      o_bars.render();
     }
   }
 
-  public void renderBars50(GL gl) {
+  public void renderBars50() {
     if (!o_bars50.isArrayEmpty()) {
-      setOrtho(gl);
-      t_white50.bind(gl);
-      o_bars50.copyBuffers(gl);
-      o_bars50.bindBuffers(gl);
-      o_bars50.render(gl);
+      setOrtho();
+      t_white50.bind();
+      o_bars50.copyBuffers();
+      o_bars50.bindBuffers();
+      o_bars50.render();
     }
   }
 
-  public void renderItem(GL gl, Item item, int x, int y) {
+  public void renderItem(Item item, int x, int y) {
     if (item.id == 0) return;
     if (o_items == null) {
       o_items = new RenderDest(Chunk.buffersCount);
@@ -470,25 +471,25 @@ public abstract class RenderScreen {
       BlockBase block = Static.blocks.blocks[item.id];
       texture = Static.blocks.stitched;
       if (block.renderAsEntity) {
-        setOrthoBlock(gl, x, y);
+        setOrthoBlock(x, y);
         EntityBase eb = Static.entities.entities[block.entityID];
         eb.pos.x = 0.5f;
         eb.pos.y = 0.5f;
         eb.pos.z = 0.5f;
         eb.ang.y = -90;
         eb.setScale(1.0f);
-        eb.bindTexture(gl);
-        gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
-        gl.glDepthFunc(GL.GL_LEQUAL);
-        eb.render(gl);
-        gl.glDepthFunc(GL.GL_ALWAYS);
+        eb.bindTexture();
+        glClear(GL.GL_DEPTH_BUFFER_BIT);
+        glDepthFunc(GL.GL_LEQUAL);
+        eb.render();
+        glDepthFunc(GL.GL_ALWAYS);
         return;
       } else if (block.renderAsItem) {
-        setOrthoItem(gl, x, y);
+        setOrthoItem(x, y);
         block.addFaceInvItem(o_items.getBuffers(0), item.var, block.isGreen);
         buffersIdx = 0;
       } else {
-        setOrthoBlock(gl, x, y);
+        setOrthoBlock(x, y);
         data.x = 0;
         data.y = 0;
         data.z = 0;
@@ -505,7 +506,7 @@ public abstract class RenderScreen {
         buffersIdx = block.buffersIdx;
       }
     } else {
-      setOrthoItem(gl, x, y);
+      setOrthoItem(x, y);
       ItemBase itembase = Static.items.items[item.id];
       texture = Static.items.stitched;
       buffersIdx = 0;
@@ -516,14 +517,14 @@ public abstract class RenderScreen {
         }
       }
     }
-    texture.bind(gl);
+    texture.bind();
     RenderBuffers obj = o_items.getBuffers(buffersIdx);
-    obj.copyBuffers(gl);
-    obj.bindBuffers(gl);
-    obj.render(gl);
+    obj.copyBuffers();
+    obj.bindBuffers();
+    obj.render();
   }
 
-  public void renderItemName(GL gl, Item item, int x,int y) {
+  public void renderItemName(Item item, int x,int y) {
     ItemBase itembase = Static.items.items[item.id];
     String txt = itembase.getName(item.var);
     x += fontSize;
@@ -543,13 +544,8 @@ public abstract class RenderScreen {
 
   public void leaveMenu() {
     Static.video.setScreen(Static.game);
-    Static.game.setCursor();
+    setCursor(false);
     Static.inGame = true;
-  }
-
-  /** Sets a default cursor */
-  public void setCursor() {
-    Main.frame.setCursor(Cursor.getDefaultCursor());
   }
 
   /** Sets the size of the menu on screen (effects mouse coords, etc.). */
@@ -563,16 +559,16 @@ public abstract class RenderScreen {
   /** Render a shade over whole screen.
    * Assumes view/model matrix are set to identity.
    */
-  public void renderShade(GL gl) {
-    renderShade(gl,0,0,(int)Static.width,(int)Static.height);
+  public void renderShade() {
+    renderShade(0,0,(int)Static.width,(int)Static.height);
   }
 
   /** Render a shade over area.
    * Assumes view/model matrix are set to identity.
    */
-  public void renderShade(GL gl, int x, int y, int w, int h) {
-    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoItem.m);
-    gl.glViewport(x, y, w, h);
+  public void renderShade(int x, int y, int w, int h) {
+    glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoItem.m);
+    glViewport(x, y, w, h);
     if (o_shade == null) {
       o_shade = new RenderBuffers();
       o_shade.addVertex(new float[]{0, 0, 0}, new float[]{0, 0});
@@ -583,11 +579,11 @@ public abstract class RenderScreen {
       for (int a = 0; a < 4; a++) {
         o_shade.addDefault(Static.black);
       }
-      o_shade.copyBuffers(gl);
+      o_shade.copyBuffers();
     }
-    t_white50.bind(gl);
-    o_shade.bindBuffers(gl);
-    o_shade.render(gl);
+    t_white50.bind();
+    o_shade.bindBuffers();
+    o_shade.render();
   }
 
   public static class Button {
@@ -635,7 +631,7 @@ public abstract class RenderScreen {
       } else if (ch == 127) {
         //delete();  //done in keyPressed()
       } else {
-        if (ch < 13) return;
+        if (ch <= 13) return;
         if (txt.length() == max) return;
         txt.insert(cpos, ch);
         cpos++;
@@ -732,7 +728,7 @@ public abstract class RenderScreen {
     }
   }
 
-  public Button addButton(GL gl, String txt,int x1,int y1,int width, Runnable r) {
+  public Button addButton(String txt,int x1,int y1,int width, Runnable r) {
     int sl = txt.length();  //TODO : calc font chars
     Button button = new Button();
     button.r = r;
@@ -743,26 +739,26 @@ public abstract class RenderScreen {
     button.tx = x1 + width/2 - (sl * fontSize)/2;  //fontSize-1 ???
     button.ty = y1 + 40/2 + fontSize/2;
     button.txt = txt;
-    button.left = createMenu(gl, x1, y1, 0, 133, width/2, 40, width/2, 40);
-    button.right = createMenu(gl, x1 + width/2, y1, 400 - width/2, 133, width/2, 40, width/2, 40);
+    button.left = createMenu(x1, y1, 0, 133, width/2, 40, width/2, 40);
+    button.right = createMenu(x1 + width/2, y1, 400 - width/2, 133, width/2, 40, width/2, 40);
     buttons.add(button);
     return button;
   }
 
-  public void renderButtons(GL gl) {
-    setOrtho(gl);
-    t_widgets.bind(gl);
+  public void renderButtons() {
+    setOrtho();
+    t_widgets.bind();
     for(int a=0;a<buttons.size();a++) {
       Button button = buttons.get(a);
       addText(button.tx, button.ty, button.txt, button.clr);
-      button.left.bindBuffers(gl);
-      button.left.render(gl);
-      button.right.bindBuffers(gl);
-      button.right.render(gl);
+      button.left.bindBuffers();
+      button.left.render();
+      button.right.bindBuffers();
+      button.right.render();
     }
   }
 
-  public TextField addTextField(GL gl, String txt, int x1, int y1, int width, boolean back, int max, boolean center, int scale) {
+  public TextField addTextField(String txt, int x1, int y1, int width, boolean back, int max, boolean center, int scale) {
     TextField field = new TextField();
     field.x1 = x1;
     field.y1 = y1;
@@ -782,23 +778,23 @@ public abstract class RenderScreen {
       field.i_back.fill(0, 0, width, 15, 0);
 //      field.i_back.box(0, 0, width-1, 14, 0xffffff);
       field.t_back = new Texture();
-      field.t_back.load(gl, field.i_back);
+      field.t_back.load(field.i_back);
       field.o_back = new RenderBuffers();
       field.o_back.addFace2D(x1 / 512.0f, y1 / 512.0f, 0, 0, width / 512.0f, 15 / 512.0f, Static.white);
-      field.o_back.copyBuffers(gl);
+      field.o_back.copyBuffers();
     }
     fields.add(field);
     return field;
   }
 
-  public void renderFields(GL gl) {
-    setOrtho(gl);
+  public void renderFields() {
+    setOrtho();
     for(int a=0;a<fields.size();a++) {
       TextField field = fields.get(a);
       if (field.t_back != null) {
-        field.t_back.bind(gl);
-        field.o_back.bindBuffers(gl);
-        field.o_back.render(gl);
+        field.t_back.bind();
+        field.o_back.bindBuffers();
+        field.o_back.render();
       }
       int x = field.x1;
       int y = field.y1;
@@ -824,7 +820,7 @@ public abstract class RenderScreen {
   }
 
   /** Adds a vertical scroll bar. */
-  public ScrollBar addScrollBar(GL gl, int x1, int y1, int width, int height, int size) {
+  public ScrollBar addScrollBar(int x1, int y1, int width, int height, int size) {
     ScrollBar sb = new ScrollBar();
     int x2 = x1 + width;
     int y2 = y1 + height;
@@ -848,17 +844,17 @@ public abstract class RenderScreen {
     return sb;
   }
 
-  public void renderScrollBars(GL gl) {
-    setOrtho(gl);
-    t_white.bind(gl);
+  public void renderScrollBars() {
+    setOrtho();
+    t_white.bind();
     for(int a=0;a<scrolls.size();a++) {
       ScrollBar sb = scrolls.get(a);
       sb.button.addFace2D(sb.x1 / 512.0f, sb.y1 / 512.0f, sb.x2 / 512.0f, sb.y2 / 512.0f, 0,0,1,1,Static.white);
-      sb.back.bindBuffers(gl);
-      sb.back.render(gl);
-      sb.button.copyBuffers(gl);
-      sb.button.bindBuffers(gl);
-      sb.button.render(gl);
+      sb.back.bindBuffers();
+      sb.back.render();
+      sb.button.copyBuffers();
+      sb.button.bindBuffers();
+      sb.button.render();
     }
   }
 
@@ -868,5 +864,9 @@ public abstract class RenderScreen {
 
   public void setScreen(RenderScreen screen) {
     Static.video.setScreen(screen);
+  }
+
+  public void setCursor(boolean state) {
+    MainSWT.setCursor(state);
   }
 }

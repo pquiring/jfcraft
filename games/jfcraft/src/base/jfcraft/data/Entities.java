@@ -101,7 +101,7 @@ public class Entities implements SerialCreator {
     }
   }
 
-  public void initStatic(GL gl) {
+  public void initStaticGL() {
     Static.log("initStatic(gl)");
     RenderData data = new RenderData();
     World world = new World(true);
@@ -109,11 +109,11 @@ public class Entities implements SerialCreator {
       EntityBase entity = regEntities[a];
       if (entity == null) continue;
       try {
-        entity.initStatic(gl);
+        entity.initStaticGL();
         entity.init(world);
-        entity.initInstance(gl);
+        entity.initInstance();
         entity.buildBuffers(entity.getDest(), data);
-        entity.copyBuffers(gl);
+        entity.copyBuffers();
       } catch (Exception e) {
         Static.log(e);
       }
@@ -154,7 +154,6 @@ public class Entities implements SerialCreator {
     return mobs.toArray(new EntityBase[0]);
   }
 
-  @Override
   public SerialClass create(SerialBuffer buffer) {
     int type = buffer.peekInt(1);
     EntityBase base = Static.entities.entities[type];

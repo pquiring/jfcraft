@@ -36,13 +36,11 @@ public class Packet implements SerialClass {
     Static.logTrace("Error:Packet.process() called (server side)");
   }
 
-  @Override
   public boolean write(SerialBuffer buffer, boolean file) {
     buffer.writeByte(cmd);
     return true;
   }
 
-  @Override
   public boolean read(SerialBuffer buffer, boolean file) {
     cmd = buffer.readByte();
     return true;

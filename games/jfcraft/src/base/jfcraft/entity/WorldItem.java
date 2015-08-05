@@ -7,6 +7,7 @@ package jfcraft.entity;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.block.*;
 import jfcraft.client.*;
@@ -50,8 +51,8 @@ public class WorldItem extends EntityBase {
     xzDrag = 0.5f;
     maxAge = 20 * 60 * 5;  //5 mins
   }
-  public void initInstance(GL gl) {
-    super.initInstance(gl);
+  public void initInstance() {
+    super.initInstance();
     if (item == null) return;
     obj = new RenderDest(2);  //DEST_...
     if (Static.isBlock(item.id)) {
@@ -84,33 +85,33 @@ public class WorldItem extends EntityBase {
       texture = baseitem.textures[0].texture;
     }
     RenderBuffers buf = obj.getBuffers(buffersIdx);
-    buf.copyBuffers(gl);
+    buf.copyBuffers();
   }
-  public void bindTexture(GL gl) {
+  public void bindTexture() {
     if (texture != null) {
-      texture.bind(gl);
+      texture.bind();
     } else if (entity != null) {
-      entity.bindTexture(gl);
+      entity.bindTexture();
     }
   }
-  public void render(GL gl) {
+  public void render() {
     if (entity != null) {
       entity.pos.x = pos.x;
       entity.pos.y = pos.y + 0.125f;  //0.5f * 0.25f = 0.125f
       entity.pos.z = pos.z;
       entity.ang.y = ang.y;
       entity.setScale(0.25f);
-      entity.render(gl);
+      entity.render();
     } else {
       mat.setIdentity();
       mat.addRotate(ang.y, 0, 1, 0);
       mat.addTranslate(pos.x, pos.y, pos.z);
       float scale = 0.25f;
       mat.addScale(scale, scale, scale);
-      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);
+      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);
       RenderBuffers buf = obj.getBuffers(buffersIdx);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      buf.bindBuffers();
+      buf.render();
     }
   }
   public void tick() {

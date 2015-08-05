@@ -7,10 +7,12 @@ package jfcraft.client;
  * Created : Apr 21, 2014
  */
 
-import java.awt.event.KeyEvent;
+import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.*;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.opengl.*;
 import jfcraft.data.*;
@@ -28,7 +30,7 @@ public class ChestMenu extends RenderScreen {
   }
 
   public void setup() {
-    setCursor();
+    setCursor(true);
     ExtraContainer chest = Static.client.container;
     if (chest == null) {
       Static.log("Error:ChestMenu setup but not ready");
@@ -45,40 +47,40 @@ public class ChestMenu extends RenderScreen {
     }
   }
 
-  public void render(GL gl, int width, int height) {
-    Static.game.render(gl, width, height);
+  public void render(int width, int height) {
+    Static.game.render(width, height);
     setMenuSize(gui_width, gui_height);
     ExtraContainer chest = Static.client.container;
     if (chest == null) return;
 
     if (t_menu == null) {
-      t_menu = Textures.getTexture(gl, "gui/container/generic_54", 0);
+      t_menu = Textures.getTexture("gui/container/generic_54", 0);
     }
 
     if (o_menu == null) {
       if (chest.items.length == 6*9) {
-        o_menu = createMenu(gl);
+        o_menu = createMenu();
       } else {
-        o_menu = createMenu(gl, 0,0, 0,0, 351,34);
-        o_menu2 = createMenu(gl, 0,34, 0,34 + 3*36, 351,443 - 3*36);
+        o_menu = createMenu(0,0, 0,0, 351,34);
+        o_menu2 = createMenu(0,34, 0,34 + 3*36, 351,443 - 3*36);
       }
     }
 
-    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, identity.m);  //view matrix
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, identity.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
-    super.renderShade(gl);
+    super.renderShade();
 
-    gl.glDepthFunc(GL.GL_ALWAYS);
+    glDepthFunc(GL_ALWAYS);
 
-    setOrtho(gl);
+    setOrtho();
 
-    t_menu.bind(gl);
-    o_menu.bindBuffers(gl);
-    o_menu.render(gl);
+    t_menu.bind();
+    o_menu.bindBuffers();
+    o_menu.render();
     if (o_menu2 != null) {
-      o_menu2.bindBuffers(gl);
-      o_menu2.render(gl);
+      o_menu2.bindBuffers();
+      o_menu2.render();
     }
 
     reset();
@@ -92,7 +94,7 @@ public class ChestMenu extends RenderScreen {
       }
       Item item = Static.client.player.items[a];
       if (item.id != 0) {
-        renderItem(gl,item,x,y);
+        renderItem(item,x,y);
       }
       x += 36;
     }
@@ -102,7 +104,7 @@ public class ChestMenu extends RenderScreen {
     for(int a=0;a<9;a++) {
       Item item = Static.client.player.items[a];
       if (item.id != 0) {
-        renderItem(gl,item,x,y);
+        renderItem(item,x,y);
       }
       x += 36;
     }
@@ -119,7 +121,7 @@ public class ChestMenu extends RenderScreen {
       }
       item = chest.items[a];
       if (item != null && item.id != 0) {
-        renderItem(gl,item,x,y);
+        renderItem(item,x,y);
       }
       x += 36;
     }
@@ -127,17 +129,17 @@ public class ChestMenu extends RenderScreen {
     //render item in hand
     item = Static.client.hand;
     if (item != null) {
-      renderItem(gl,item,mx,my);
+      renderItem(item,mx,my);
     }
 
-    renderText(gl);
-    renderBars(gl);
+    renderText();
+    renderBars();
 
     if (item != null) {
       reset();
-      renderItemName(gl, item, mx, my);
-      renderBars50(gl);
-      renderText(gl);
+      renderItemName(item, mx, my);
+      renderBars50();
+      renderText();
     } else {
       //TODO : render item name under mouse
     }
@@ -146,8 +148,8 @@ public class ChestMenu extends RenderScreen {
   public void keyPressed(int vk) {
     super.keyPressed(vk);
     switch (vk) {
-      case KeyEvent.VK_E:
-      case KeyEvent.VK_ESCAPE:
+      case SWTVK.VK_E:
+      case SWTVK.VK_ESCAPE:
         Static.client.container = null;
         Static.client.clientTransport.leaveMenu();
         leaveMenu();
@@ -155,8 +157,8 @@ public class ChestMenu extends RenderScreen {
     }
   }
 
-  public void resize(GL gl, int width, int height) {
-    Static.game.resize(gl, width, height);
+  public void resize(int width, int height) {
+    Static.game.resize(width, height);
   }
 
   public void mousePressed(int x, int y, int button) {

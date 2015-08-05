@@ -21,7 +21,7 @@ public abstract class HumaniodBase extends CreatureBase {
 
   private static String parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG"};
 
-  public void initStatic(GL gl) {
+  public void initStatic() {
     dest = new RenderDest(parts.length);
   }
 
@@ -58,8 +58,8 @@ public abstract class HumaniodBase extends CreatureBase {
     }
   }
 
-  public void copyBuffers(GL gl) {
-    dest.copyBuffers(gl);
+  public void copyBuffers() {
+    dest.copyBuffers();
   }
 
   public HumaniodBase(int itemCnt, int armorCnt) {
@@ -73,7 +73,7 @@ public abstract class HumaniodBase extends CreatureBase {
     }
   }
 
-  public void renderArmor(GL gl) {
+  public void renderArmor() {
     int cnt = armors.length;
     for(int a=0;a<cnt;a++) {
       char id = armors[a].id;
@@ -82,21 +82,21 @@ public abstract class HumaniodBase extends CreatureBase {
       int layers = item.getArmorLayers();
       for(int layer=0;layer<layers;layer++) {
         int parts = item.getArmorParts(layer);
-        item.bindArmorTexture(gl, layer);
+        item.bindArmorTexture(layer);
         scale = item.getArmorScale(layer);
         for(int partidx=0;partidx<parts;partidx++) {
           int part = item.getArmorPart(layer, partidx);
           RenderBuffers buf = dest.getBuffers(part);
-          setMatrixModel(gl, part, buf);
-          buf.bindBuffers(gl);
-          buf.render(gl);
+          setMatrixModel(part, buf);
+          buf.bindBuffers();
+          buf.render();
         }
       }
     }
     scale = 1.0f;
   }
 
-  public void renderItemInHand(GL gl) {
+  public void renderItemInHand() {
     //TODO
   }
 

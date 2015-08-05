@@ -601,14 +601,14 @@ public class Items {
     }
   }
 
-  public void initTexture(GL gl) {
-    stitched.load(gl);
+  public void initTexture() {
+    stitched.load();
     //load all independant textures
     texturesCount = textures.size();
     for(int a=0;a<textures.size();a++) {
       Texture t = textures.get(a);
       AssetImage ai = others.get(a);
-      t.load(gl, ai.image);
+      t.load(ai.image);
     }
   }
 }

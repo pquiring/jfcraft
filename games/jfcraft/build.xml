@@ -8,7 +8,6 @@
   <property name="msi" location="jfcraft"/>
   <property name="src" location="src/base"/>
   <property name="build" location="classes"/>
-  <property name="classpath" location="javaforce.jar"/>
   <property name="version" value="0.19"/>
 
   <import file="${home}/base.xml"/>
@@ -16,6 +15,14 @@
   <target name="depjars">
     <jar destfile="javaforce.jar">
       <zipfileset src="../../jars/javaforce.jar"/>
+      <manifest>
+        <attribute name="Trusted-Library" value="true"/>
+        <attribute name="Permissions" value="all-permissions"/>
+        <attribute name="Codebase" value="jfcraft.sourceforge.net"/>
+      </manifest>
+    </jar>
+    <jar destfile="swt.jar">
+      <zipfileset src="../../jars/swt-win64.jar"/>
       <manifest>
         <attribute name="Trusted-Library" value="true"/>
         <attribute name="Permissions" value="all-permissions"/>
@@ -31,7 +38,8 @@
     <!-- Compile the java code from ${src} into ${build} -->
     <mkdir dir="${build}"/>
     <javac srcdir="${src}" destdir="${build}" target="1.6" source="1.6" debug="true" includeantruntime="false">
-      <classpath path="${classpath}"/>
+      <classpath path="javaforce.jar"/>
+      <classpath path="swt.jar"/>
     </javac>
   </target>
 

@@ -8,6 +8,7 @@ package jfcraft.client;
  */
 
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 //import jfcraft.server.*;
 import jfcraft.opengl.*;
@@ -20,17 +21,17 @@ public class DeadMenu extends RenderScreen {
   }
 
   public void setup() {
-    setCursor();
+    setCursor(true);
     super.setMenuSize(512, 512);
     Static.inGame = false;
   }
 
-  public void init(GL gl) {
-    super.init(gl);
-    addButton(gl, "Respawn", 56, 40, 400, new Runnable() {public void run() {
+  public void init() {
+    super.init();
+    addButton("Respawn", 56, 40, 400, new Runnable() {public void run() {
       Static.client.clientTransport.respawn();
     }});
-    addButton(gl, "Quit", 56, 390, 400, new Runnable() {public void run() {
+    addButton("Quit", 56, 390, 400, new Runnable() {public void run() {
       Static.client.clientTransport.logout();
       Static.client.clientTransport.close();
       if (Static.server != null) {
@@ -40,20 +41,20 @@ public class DeadMenu extends RenderScreen {
     }});
   }
 
-  public void render(GL gl, int width, int height) {
-    Static.game.render(gl, width, height);
+  public void render(int width, int height) {
+    Static.game.render(width, height);
     setMenuSize(512, 512);
     reset();
-    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, identity.m);  //view matrix
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, identity.m);  //model matrix
-    super.renderShade(gl);
-    setOrtho(gl);
-    renderButtons(gl);
-    renderText(gl);
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
+    super.renderShade();
+    setOrtho();
+    renderButtons();
+    renderText();
   }
 
-  public void resize(GL gl, int width, int height) {
-    Static.game.resize(gl, width, height);
+  public void resize(int width, int height) {
+    Static.game.resize(width, height);
   }
 
   public void mousePressed(int x, int y, int button) {

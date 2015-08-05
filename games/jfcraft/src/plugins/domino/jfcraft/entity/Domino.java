@@ -7,6 +7,7 @@ package jfcraft.entity;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.data.*;
 import jfcraft.block.*;
@@ -60,12 +61,12 @@ public class Domino extends BlockEntity {
     textureName = "entity/domino";
   }
 
-  public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName, 0);
+  public void initStaticGL() {
+    texture = Textures.getTexture(textureName, 0);
   }
 
-  public void initInstance(GL gl) {
-    super.initInstance(gl);
+  public void initInstance() {
+    super.initInstance();
   }
 
   private static String parts[] = {"DOMINO"};
@@ -104,15 +105,15 @@ public class Domino extends BlockEntity {
     }
   }
 
-  public void bindTexture(GL gl) {
-    texture.bind(gl);
+  public void bindTexture() {
+    texture.bind();
   }
 
-  public void copyBuffers(GL gl) {
-    dest.copyBuffers(gl);
+  public void copyBuffers() {
+    dest.copyBuffers();
   }
 
-  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     mat.addTranslate2(buf.org.x, buf.org.y, buf.org.z);
@@ -122,17 +123,17 @@ public class Domino extends BlockEntity {
     if (scale != 1.0f) {
       mat.addScale(scale, scale, scale);
     }
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
-  public void render(GL gl) {
+  public void render() {
     for(int a=0;a<dest.count();a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      setMatrixModel(gl, a, buf);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      setMatrixModel(a, buf);
+      buf.bindBuffers();
+      buf.render();
     }
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, Static.identity.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
   }
 
   public void fall(float dir) {

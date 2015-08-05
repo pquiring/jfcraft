@@ -8,7 +8,6 @@ package jfcraft.client;
  */
 
 import java.util.*;
-import java.awt.event.*;
 
 import javaforce.*;
 import javaforce.gl.*;
@@ -281,7 +280,7 @@ public class Client {
       itemTextTime--;
     }
     if (sip != null && Settings.current.ptt) {
-      sip.setMute(!Static.r_keys[KeyEvent.VK_CONTROL]);
+      sip.setMute(!Static.r_keys[SWTVK.VK_CONTROL]);
     }
     //update animation frames
     Game.advanceAnimation = true;
@@ -292,15 +291,15 @@ public class Client {
     boolean b1 = false, b2 = false;
     if (world != null && player != null && player.hasChunk() && player.health > 0) {
       if (Static.inGame) {
-        up = Static.keys[KeyEvent.VK_W];
-        dn = Static.keys[KeyEvent.VK_S];
-        lt = Static.keys[KeyEvent.VK_A];
-        rt = Static.keys[KeyEvent.VK_D];
-        jump = Static.keys[KeyEvent.VK_SPACE];
-        sneak = Static.keys[KeyEvent.VK_SHIFT];
-        run = Static.keys[KeyEvent.VK_CONTROL];
-        fup = Static.keys[KeyEvent.VK_R];
-        fdn = Static.keys[KeyEvent.VK_F];
+        up = Static.keys[SWTVK.VK_W];
+        dn = Static.keys[SWTVK.VK_S];
+        lt = Static.keys[SWTVK.VK_A];
+        rt = Static.keys[SWTVK.VK_D];
+        jump = Static.keys[SWTVK.VK_SPACE];
+        sneak = Static.keys[SWTVK.VK_SHIFT];
+        run = Static.keys[SWTVK.VK_CONTROL];
+        fup = Static.keys[SWTVK.VK_R];
+        fdn = Static.keys[SWTVK.VK_F];
         if (Static.button[1] || Static.buttonClick[1]) b1 = true;
         Static.buttonClick[1] = false;
         if (Static.button[3] || Static.buttonClick[3]) b2 = true;
@@ -311,25 +310,25 @@ public class Client {
         }
 
         //rotate player (client side only)
-        if (Static.keys[KeyEvent.VK_UP]) {
+        if (Static.keys[SWTVK.VK_UP]) {
           player.rotateX(5.0f);
         }
-        if (Static.keys[KeyEvent.VK_DOWN]) {
+        if (Static.keys[SWTVK.VK_DOWN]) {
           player.rotateX(-5.0f);
         }
-        if (Static.keys[KeyEvent.VK_LEFT]) {
+        if (Static.keys[SWTVK.VK_LEFT]) {
           player.rotateY(-5.0f);
         }
-        if (Static.keys[KeyEvent.VK_RIGHT]) {
+        if (Static.keys[SWTVK.VK_RIGHT]) {
           player.rotateY(5.0f);
         }
 
-        if (Static.keys[KeyEvent.VK_Q]) {
-          Static.keys[KeyEvent.VK_Q] = false;
+        if (Static.keys[SWTVK.VK_Q]) {
+          Static.keys[SWTVK.VK_Q] = false;
           clientTransport.drop();
         }
-        if (Static.keys[KeyEvent.VK_C]) {
-          Static.keys[KeyEvent.VK_C] = false;
+        if (Static.keys[SWTVK.VK_C]) {
+          Static.keys[SWTVK.VK_C] = false;
           clientTransport.gamemode();
           if (player.mode == EntityBase.MODE_FLYING)
             player.mode = EntityBase.MODE_WALK;
@@ -523,7 +522,7 @@ public class Client {
     if (hand != null && crafted != null) {
       if (hand.id != crafted.id) return;
     }
-    if (Static.keys[KeyEvent.VK_SHIFT]) {
+    if (Static.keys[SWTVK.VK_SHIFT]) {
       //make all possible
       clientTransport.craftAll();
     } else {

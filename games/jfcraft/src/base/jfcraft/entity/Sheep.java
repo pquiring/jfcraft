@@ -11,6 +11,7 @@ import java.util.*;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 import jfcraft.client.Client;
 
 import jfcraft.audio.*;
@@ -78,9 +79,9 @@ public class Sheep extends CreatureBase {
 
   public void initStatic() {}
 
-  public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, "entity/sheep/sheep", 0);
-    furTexture = Textures.getTexture(gl, "entity/sheep/sheep_fur", 0);
+  public void initStaticGL() {
+    texture = Textures.getTexture("entity/sheep/sheep", 0);
+    furTexture = Textures.getTexture("entity/sheep/sheep_fur", 0);
     dest = new RenderDest(parts.length);
   }
 
@@ -114,15 +115,15 @@ public class Sheep extends CreatureBase {
     }
   }
 
-  public void copyBuffers(GL gl) {
-    dest.copyBuffers(gl);
+  public void copyBuffers() {
+    dest.copyBuffers();
   }
 
-  public void bindTexture(GL gl) {
-    texture.bind(gl);
+  public void bindTexture() {
+    texture.bind();
   }
 
-  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     switch (bodyPart) {
@@ -147,7 +148,7 @@ public class Sheep extends CreatureBase {
         break;
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
   public void ctick() {
@@ -173,20 +174,20 @@ public class Sheep extends CreatureBase {
     }
   }
 
-  public void render(GL gl) {
+  public void render() {
     for(int a=0;a<6;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      setMatrixModel(gl, a, buf);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      setMatrixModel(a, buf);
+      buf.bindBuffers();
+      buf.render();
     }
     if (hasFur()) {
-      furTexture.bind(gl);
+      furTexture.bind();
       for(int a=6;a<12;a++) {
         RenderBuffers buf = dest.getBuffers(a);
-        setMatrixModel(gl, a-6, buf);
-        dest.getBuffers(a).bindBuffers(gl);
-        dest.getBuffers(a).render(gl);
+        setMatrixModel(a-6, buf);
+        dest.getBuffers(a).bindBuffers();
+        dest.getBuffers(a).render();
       }
     }
   }

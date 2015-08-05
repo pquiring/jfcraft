@@ -45,7 +45,6 @@ public class Extras implements SerialCreator {
     registerExtra(new ExtraHorse());
   }
 
-  @Override
   public SerialClass create(SerialBuffer buffer) {
     int type = buffer.peekByte(1);
     ExtraBase base = Static.extras.extras[type];

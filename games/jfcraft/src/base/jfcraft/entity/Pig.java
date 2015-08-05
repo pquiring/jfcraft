@@ -11,6 +11,7 @@ import java.util.*;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.audio.*;
 import jfcraft.data.*;
@@ -64,12 +65,12 @@ public class Pig extends CreatureBase {
     textureName = "entity/pig/pig";
   }
 
-  public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName, 0);
+  public void initStaticGL() {
+    texture = Textures.getTexture(textureName, 0);
   }
 
-  public void initInstance(GL gl) {
-    super.initInstance(gl);
+  public void initInstance() {
+    super.initInstance();
     dest = new RenderDest(parts.length);
   }
 
@@ -102,15 +103,15 @@ public class Pig extends CreatureBase {
     }
   }
 
-  public void copyBuffers(GL gl) {
-    dest.copyBuffers(gl);
+  public void copyBuffers() {
+    dest.copyBuffers();
   }
 
-  public void bindTexture(GL gl) {
-    texture.bind(gl);
+  public void bindTexture() {
+    texture.bind();
   }
 
-  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     switch (bodyPart) {
@@ -136,7 +137,7 @@ public class Pig extends CreatureBase {
         break;
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
   public void ctick() {
@@ -162,12 +163,12 @@ public class Pig extends CreatureBase {
     }
   }
 
-  public void render(GL gl) {
+  public void render() {
     for(int a=0;a<dest.count();a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      setMatrixModel(gl, a, buf);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      setMatrixModel(a, buf);
+      buf.bindBuffers();
+      buf.render();
     }
   }
 

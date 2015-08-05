@@ -11,6 +11,6 @@ import javaforce.gl.*;
 
 public interface RenderSource {
   public void buildBuffers(RenderDest dest, RenderData data);
-  public void bindTexture(GL gl);
-  public void render(GL gl);
+  public void bindTexture();
+  public void render();
 }

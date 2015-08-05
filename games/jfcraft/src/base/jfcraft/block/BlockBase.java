@@ -532,7 +532,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public void init() {
   }
 
-  public void init(GL gl) {
+  public void initGL() {
   }
 
   public int rotateSide(int side, int dir) {
@@ -643,9 +643,9 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     }
   }
 
-  public void bindTexture(GL gl) {}
+  public void bindTexture() {}
 
-  public void render(GL gl) {}
+  public void render() {}
 
   private static Faces faces = new Faces();
 

@@ -228,7 +228,6 @@ public class PanelServer extends javax.swing.JPanel implements ServerInterface {
 
   //ServerInterface
 
-  @Override
   public void clientAdded(String name) {
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
@@ -237,7 +236,6 @@ public class PanelServer extends javax.swing.JPanel implements ServerInterface {
     });
   }
 
-  @Override
   public void clientDropped(String name) {
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
@@ -246,7 +244,6 @@ public class PanelServer extends javax.swing.JPanel implements ServerInterface {
     });
   }
 
-  @Override
   public void log(String msg) {
     synchronized(fullLog) {
       fullLog.add(msg);
@@ -269,7 +266,6 @@ public class PanelServer extends javax.swing.JPanel implements ServerInterface {
     });
   }
 
-  @Override
   public void ready() {
     Main.server.startNetworking();
   }

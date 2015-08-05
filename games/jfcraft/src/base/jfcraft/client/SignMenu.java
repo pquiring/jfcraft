@@ -8,6 +8,7 @@ package jfcraft.client;
  */
 
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 //import jfcraft.server.*;
 import jfcraft.opengl.*;
@@ -21,9 +22,9 @@ public class SignMenu extends RenderScreen {
   private Texture t_board;
   private RenderBuffers b_board;
 
-  public void init(GL gl) {
-    super.init(gl);
-    addButton(gl, "Done", 56, 390, 400, new Runnable() {public void run() {
+  public void init() {
+    super.init();
+    addButton("Done", 56, 390, 400, new Runnable() {public void run() {
       String txt[] = new String[4];
       for(int a=0;a<4;a++) {
         txt[a] = fields.get(a).getText();
@@ -33,10 +34,10 @@ public class SignMenu extends RenderScreen {
       leaveMenu();
     }});
     for(int a=0;a<4;a++) {
-      addTextField(gl, "", 52, 40 + a * fontSize * 2, 408, false, 15, true, 2);
+      addTextField("", 52, 40 + a * fontSize * 2, 408, false, 15, true, 2);
     }
-    t_board = Textures.getTexture(gl, "blocks/planks_oak", 0);
-    b_board = createMenu(gl, 76, 40, 0, 0, 360, fontSize * 2 * 4);
+    t_board = Textures.getTexture("blocks/planks_oak", 0);
+    b_board = createMenu(76, 40, 0, 0, 360, fontSize * 2 * 4);
   }
 
   public void setup() {
@@ -44,29 +45,28 @@ public class SignMenu extends RenderScreen {
       fields.get(a).setText("");
     }
     setFocus(fields.get(0));
+    setCursor(true);
+    Static.inGame = false;
   }
 
-  public void render(GL gl, int width, int height) {
-    setCursor();
-    Static.inGame = false;
-
-    Static.game.render(gl, width, height);
+  public void render(int width, int height) {
+    Static.game.render(width, height);
     setMenuSize(512, 512);
     reset();
-    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, Static.identity.m);  //view matrix
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, Static.identity.m);  //model matrix
-    renderShade(gl);
-    setOrtho(gl);
-    t_board.bind(gl);
-    b_board.bindBuffers(gl);
-    b_board.render(gl);
-    renderButtons(gl);
-    renderFields(gl);
-    renderText(gl);
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, Static.identity.m);  //view matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
+    renderShade();
+    setOrtho();
+    t_board.bind();
+    b_board.bindBuffers();
+    b_board.render();
+    renderButtons();
+    renderFields();
+    renderText();
   }
 
-  public void resize(GL gl, int width, int height) {
-    Static.game.resize(gl, width, height);
+  public void resize(int width, int height) {
+    Static.game.resize(width, height);
   }
 
   public void mousePressed(int x, int y, int button) {

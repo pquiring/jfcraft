@@ -48,7 +48,7 @@ public class Main extends javax.swing.JFrame {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
-    canvas = new GLCanvas();
+//    canvas = new GLCanvas();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
     setName("Main"); // NOI18N
@@ -90,7 +90,7 @@ public class Main extends javax.swing.JFrame {
   }
 
   private void init() {
-    ((GLCanvas)canvas).init(new RenderEngine(new Loading()));
+//    ((GLCanvas)canvas).init(new RenderEngine(new Loading()));
   }
 
   public static JFrame frame;

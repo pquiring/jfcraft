@@ -11,6 +11,7 @@ import java.util.*;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.audio.*;
 import jfcraft.data.*;
@@ -82,11 +83,11 @@ public class Turtle extends CreatureBase {
     dest = new RenderDest(parts.length);
   }
 
-  public void initStatic(GL gl) {
+  public void initStaticGL() {
     textures = new Texture[3];
-    textures[0] = Textures.getTexture(gl, "entity/turtle/green", 0);
-    textures[1] = Textures.getTexture(gl, "entity/turtle/blue", 0);
-    textures[2] = Textures.getTexture(gl, "entity/turtle/red", 0);
+    textures[0] = Textures.getTexture("entity/turtle/green", 0);
+    textures[1] = Textures.getTexture("entity/turtle/blue", 0);
+    textures[2] = Textures.getTexture("entity/turtle/red", 0);
   }
 
   private static String parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG", "TAIL"};
@@ -118,15 +119,15 @@ public class Turtle extends CreatureBase {
     }
   }
 
-  public void copyBuffers(GL gl) {
-    dest.copyBuffers(gl);
+  public void copyBuffers() {
+    dest.copyBuffers();
   }
 
-  public void bindTexture(GL gl) {
-    textures[color].bind(gl);
+  public void bindTexture() {
+    textures[color].bind();
   }
 
-  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     switch (bodyPart) {
@@ -152,7 +153,7 @@ public class Turtle extends CreatureBase {
         break;
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
   public void ctick() {
@@ -178,12 +179,12 @@ public class Turtle extends CreatureBase {
     }
   }
 
-  public void render(GL gl) {
+  public void render() {
     for(int a=0;a<dest.count();a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      setMatrixModel(gl, a, buf);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      setMatrixModel(a, buf);
+      buf.bindBuffers();
+      buf.render();
     }
   }
 

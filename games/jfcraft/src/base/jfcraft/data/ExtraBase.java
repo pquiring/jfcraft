@@ -22,7 +22,6 @@ public abstract class ExtraBase implements SerialClass {
 
   private static final byte ver = 0;
 
-  @Override
   public boolean write(SerialBuffer buffer, boolean file) {
     buffer.writeByte(ver);
     buffer.writeByte(id);
@@ -32,7 +31,6 @@ public abstract class ExtraBase implements SerialClass {
     return true;
   }
 
-  @Override
   public boolean read(SerialBuffer buffer, boolean file) {
     byte ver = buffer.readByte();
     id = buffer.readByte();

@@ -9,6 +9,7 @@ package jfcraft.client;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.data.*;
 import jfcraft.opengl.*;
@@ -26,39 +27,39 @@ public class Loading extends RenderScreen {
     new Thread() {public void run() {load();}}.start();
   }
 
-  public void render(GL gl, int width, int height) {
+  public void render(int width, int height) {
     setMenuSize(512, 512);
 
-    gl.glViewport(0, 0, width, height);
-    gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT);
-    gl.glDepthFunc(GL.GL_ALWAYS);
-    setOrtho(gl);
+    glViewport(0, 0, width, height);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glDepthFunc(GL_ALWAYS);
+    setOrtho();
 
-    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, identity.m);  //view matrix
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, identity.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     if (t_back == null) {
-      t_back = Textures.getTexture2(gl, "title.png");
+      t_back = Textures.getTexture2("title.png");
     }
 
     if (o_back == null) {
-      o_back = createMenu(gl);
+      o_back = createMenu();
     }
 
-    t_back.bind(gl);
-    o_back.bindBuffers(gl);
-    o_back.render(gl);
+    t_back.bind();
+    o_back.bindBuffers();
+    o_back.render();
 
     if (done && cnt > 10) {
-      load(gl);
+      loadGL();
       Static.video.setScreen(Static.screens.screens[Client.MAIN]);
     }
     cnt++;
   }
 
-  public void resize(GL gl, int width, int height) {
-    super.resize(gl, width, height);
+  public void resize(int width, int height) {
+    super.resize(width, height);
   }
 
   public void mousePressed(int x, int y, int button) {
@@ -80,14 +81,14 @@ public class Loading extends RenderScreen {
     done = true;
   }
 
-  private void load(GL gl) {
+  private void loadGL() {
     try {
-      Static.blocks.initTexture(gl);
-      Static.items.initTexture(gl);
+      Static.blocks.initTexture();
+      Static.items.initTexture();
       Static.entities.initStatic();
-      Static.entities.initStatic(gl);
-      RenderScreen.initStatic(gl);
-      Static.screens.init(gl);
+      Static.entities.initStaticGL();
+      RenderScreen.initStatic();
+      Static.screens.init();
     } catch (Exception e) {
       Static.log(e);
     }

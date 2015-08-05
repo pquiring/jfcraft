@@ -26,14 +26,14 @@ public class ChunkQueueCopy {
     this.max = max;
   }
 
-  public void process(GL gl) {
+  public void process() {
     try {
       int cnt = max;
       int pos = tail;
       while (pos != head1 && cnt != 0) {
         Chunk chunk = chunks[pos];
         if (chunk != null) {
-          chunk.copyBuffers(gl);
+          chunk.copyBuffers();
         }
         pos++;
         if (pos == BUFSIZ) pos = 0;

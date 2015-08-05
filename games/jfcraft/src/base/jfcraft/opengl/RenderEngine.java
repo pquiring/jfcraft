@@ -7,85 +7,78 @@ package jfcraft.opengl;
  * Created Sept 18, 2013
  */
 
-import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
-import javax.swing.*;
+
+import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.opengl.*;
+import org.eclipse.swt.events.*;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.audio.*;
+import jfcraft.client.MainSWT;
 import jfcraft.data.*;
 import static jfcraft.opengl.RenderScreen.gui_height;
 import static jfcraft.opengl.RenderScreen.gui_width;
 import jfcraft.plugin.PluginLoader;
 
-public class RenderEngine implements WindowListener, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener
-, FocusListener, GLInterface {
+public class RenderEngine implements MouseListener, KeyListener, MouseMoveListener, MouseWheelListener, FocusListener, ControlListener, ShellListener {
   public static ArrayList<AssetImage> animatedTextures = new ArrayList<AssetImage>();
   private java.util.Timer frTimer, fpsTimer, hsTimer;
   private final Object fpsLock = new Object();
   private int fpsCounter;
 
-  private Component comp, focus;
-
   private final int FPS = 60;
-
-  private boolean ready = false;
 
   private Object screenLock = new Object();
   private RenderScreen screen;
 
   public int fragShader, vertexShader, program;
 
+  private Widget focus;
+
   public RenderEngine(RenderScreen initScreen) {
     screen = initScreen;
     screen.setup();
     Static.video = this;
-    RenderScreen.initStatic();
+    RenderScreen.initStaticGL();
   }
 
-  public void loadProgram(GL gl) {
+  public void loadProgram() {
     //TODO : delete old program
-    vertexShader = gl.glCreateShader(GL.GL_VERTEX_SHADER);
-    gl.glShaderSource(vertexShader, 1, new String[] {VertexShader.source}, null);
-    gl.glCompileShader(vertexShader);
-    Static.log("vertex log=" + gl.glGetShaderInfoLog(vertexShader));
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, new String[] {VertexShader.source}, null);
+    glCompileShader(vertexShader);
+    Static.log("vertex log=" + glGetShaderInfoLog(vertexShader));
 
-    fragShader = gl.glCreateShader(GL.GL_FRAGMENT_SHADER);
-    gl.glShaderSource(fragShader, 1, new String[] {FragmentShader.source}, null);
-    gl.glCompileShader(fragShader);
-    Static.log("fragment log=" + gl.glGetShaderInfoLog(fragShader));
+    fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragShader, 1, new String[] {FragmentShader.source}, null);
+    glCompileShader(fragShader);
+    Static.log("fragment log=" + glGetShaderInfoLog(fragShader));
 
-    program = gl.glCreateProgram();
-    gl.glAttachShader(program, vertexShader);
-    gl.glAttachShader(program, fragShader);
-    gl.glLinkProgram(program);
-    Static.log("program log=" + gl.glGetProgramInfoLog(program));
-    gl.glUseProgram(program);
+    program = glCreateProgram();
+    glAttachShader(program, vertexShader);
+    glAttachShader(program, fragShader);
+    glLinkProgram(program);
+    Static.log("program log=" + glGetProgramInfoLog(program));
+    glUseProgram(program);
   }
 
-//interface GLInterface
-  public void init(GL gl, Component comp) {
+  public void init(GLCanvas canvas, Shell shell) {
     Static.initClientThread("init (EDT)", true, false);  //actually EDT
 
-    this.comp = comp;
+    shell.addShellListener(this);
+    shell.addControlListener(this);
 
-    Window w;
-
-    if (comp instanceof Window) {
-      w = (Window)comp;
-    } else {
-      w = SwingUtilities.getWindowAncestor(comp);
-    }
-
-    w.addWindowListener(this);
-    comp.addMouseListener(this);
-    comp.addKeyListener(this);
-    comp.addFocusListener(this);
-    comp.addMouseMotionListener(this);
-    comp.addMouseWheelListener(this);
+    canvas.addMouseListener(this);
+    canvas.addKeyListener(this);
+    canvas.addFocusListener(this);
+    canvas.addMouseMoveListener(this);
+    canvas.addMouseWheelListener(this);
 
     Static.log("JVM.version=" + System.getProperty("java.version"));
     Static.log("JVM.vendor=" + System.getProperty("java.vendor"));
@@ -93,84 +86,82 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
 
     Static.log("JF.version=" + JF.getVersion());
 
-    Static.log("GL Version=" + gl.glGetString(GL.GL_VERSION));
-    Static.glver = gl.getVersion();
+    Static.log("GL Version=" + glGetString(GL_VERSION));
+
+    Static.glver = getVersion();
     if (Static.glver[0] < 2) {
-      w.setVisible(false);
-      w.dispose();
       JF.showError("Error", "OpenGL Version < 2.0");
       System.exit(0);
     }
 
     int max[] = new int[1];
-    gl.glGetIntegerv(GL.GL_MAX_TEXTURE_SIZE, max);
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, max);
     Static.log("max texture size=" + max[0]);
     Static.max_texture_size = max[0];
 
-    gl.glGetIntegerv(GL.GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, max);
+    glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, max);
     Static.log("max texture units=" + max[0]);
 
-    resize(gl, comp.getWidth(), comp.getHeight());
+    Point pt = canvas.getSize();
+    resize(pt.x, pt.y);
 
     //setup opengl
-    gl.glFrontFace(GL.GL_CCW);  //3DS uses GL_CCW
-    gl.glEnable(GL.GL_CULL_FACE);  //don't draw back sides
-    gl.glEnable(GL.GL_DEPTH_TEST);
-    gl.glDepthFunc(GL.GL_LEQUAL);
-    gl.glEnable(GL.GL_BLEND);
-    gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-    gl.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1);
-    gl.glEnable(GL.GL_TEXTURE_2D);
-    gl.glActiveTexture(GL.GL_TEXTURE0);
+    glFrontFace(GL_CCW);  //3DS uses GL_CCW
+    glEnable(GL_CULL_FACE);  //don't draw back sides
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glEnable(GL_TEXTURE_2D);
+    glActiveTexture(GL_TEXTURE0);
 
-    loadProgram(gl);
+    loadProgram();
 
-    Static.attribTextureCoords = gl.glGetAttribLocation(program, "aTextureCoord");
-    gl.glEnableVertexAttribArray(Static.attribTextureCoords);
-    Static.attribTextureCoords2 = gl.glGetAttribLocation(program, "aTextureCoord2");
-    gl.glEnableVertexAttribArray(Static.attribTextureCoords2);
-    Static.attribVertex = gl.glGetAttribLocation(program, "aVertexPosition");
-    gl.glEnableVertexAttribArray(Static.attribVertex);
-    Static.attribColor = gl.glGetAttribLocation(program, "aLightColor");
-    gl.glEnableVertexAttribArray(Static.attribColor);
-    Static.attribSunLight = gl.glGetAttribLocation(program, "aSunLightPercent");
-    gl.glEnableVertexAttribArray(Static.attribSunLight);
-    Static.attribBlockLight = gl.glGetAttribLocation(program, "aBlockLightPercent");
-    gl.glEnableVertexAttribArray(Static.attribBlockLight);
+    Static.attribTextureCoords = glGetAttribLocation(program, "aTextureCoord");
+    glEnableVertexAttribArray(Static.attribTextureCoords);
+    Static.attribTextureCoords2 = glGetAttribLocation(program, "aTextureCoord2");
+    glEnableVertexAttribArray(Static.attribTextureCoords2);
+    Static.attribVertex = glGetAttribLocation(program, "aVertexPosition");
+    glEnableVertexAttribArray(Static.attribVertex);
+    Static.attribColor = glGetAttribLocation(program, "aLightColor");
+    glEnableVertexAttribArray(Static.attribColor);
+    Static.attribSunLight = glGetAttribLocation(program, "aSunLightPercent");
+    glEnableVertexAttribArray(Static.attribSunLight);
+    Static.attribBlockLight = glGetAttribLocation(program, "aBlockLightPercent");
+    glEnableVertexAttribArray(Static.attribBlockLight);
 
-    Static.uniformMatrixPerspective = gl.glGetUniformLocation(program, "uPMatrix");
-    Static.uniformMatrixModel = gl.glGetUniformLocation(program, "uMMatrix");
-    Static.uniformMatrixView = gl.glGetUniformLocation(program, "uVMatrix");
+    Static.uniformMatrixPerspective = glGetUniformLocation(program, "uPMatrix");
+    Static.uniformMatrixModel = glGetUniformLocation(program, "uMMatrix");
+    Static.uniformMatrixView = glGetUniformLocation(program, "uVMatrix");
 
-    Static.uniformSunLight = gl.glGetUniformLocation(program, "uSunLightNow");
-    Static.uniformAlphaFactor = gl.glGetUniformLocation(program, "uAlphaFactor");
-    Static.uniformEnableTextures = gl.glGetUniformLocation(program, "uUseTextures");
-    Static.uniformEnableFog = gl.glGetUniformLocation(program, "uUseFog");
-    Static.uniformEnableHorsePattern = gl.glGetUniformLocation(program, "uUseHorsePattern");
-    Static.uniformEnableHorseArmor = gl.glGetUniformLocation(program, "uUseHorseArmor");
-    Static.uniformFogColor = gl.glGetUniformLocation(program, "uFogColor");
-    Static.uniformFogNear = gl.glGetUniformLocation(program, "uFogNear");
-    Static.uniformFogFar = gl.glGetUniformLocation(program, "uFogFar");
-    Static.uniformTexture = gl.glGetUniformLocation(program, "uTexture");
-    Static.uniformCrack = gl.glGetUniformLocation(program, "uCrack");
-    Static.uniformHorsePattern = gl.glGetUniformLocation(program, "uHorsePattern");
-    Static.uniformHorseArmor = gl.glGetUniformLocation(program, "uHorseArmor");
+    Static.uniformSunLight = glGetUniformLocation(program, "uSunLightNow");
+    Static.uniformAlphaFactor = glGetUniformLocation(program, "uAlphaFactor");
+    Static.uniformEnableTextures = glGetUniformLocation(program, "uUseTextures");
+    Static.uniformEnableFog = glGetUniformLocation(program, "uUseFog");
+    Static.uniformEnableHorsePattern = glGetUniformLocation(program, "uUseHorsePattern");
+    Static.uniformEnableHorseArmor = glGetUniformLocation(program, "uUseHorseArmor");
+    Static.uniformFogColor = glGetUniformLocation(program, "uFogColor");
+    Static.uniformFogNear = glGetUniformLocation(program, "uFogNear");
+    Static.uniformFogFar = glGetUniformLocation(program, "uFogFar");
+    Static.uniformTexture = glGetUniformLocation(program, "uTexture");
+    Static.uniformCrack = glGetUniformLocation(program, "uCrack");
+    Static.uniformHorsePattern = glGetUniformLocation(program, "uHorsePattern");
+    Static.uniformHorseArmor = glGetUniformLocation(program, "uHorseArmor");
 
-    gl.glUniform1f(Static.uniformSunLight, 1.0f);
-    gl.glUniform1f(Static.uniformAlphaFactor, 1.0f);
-    gl.glUniform1i(Static.uniformEnableTextures, 1);
-    gl.glUniform1i(Static.uniformEnableFog, 0);
-    gl.glUniform1f(Static.uniformFogNear, Settings.current.loadRange * 16f);
-    gl.glUniform1f(Static.uniformFogFar, Settings.current.loadRange * 16f + 16f);
-    gl.glUniform1i(Static.uniformEnableHorsePattern, 0);
-    gl.glUniform1i(Static.uniformEnableHorseArmor, 0);
-    gl.glUniform4fv(Static.uniformFogColor, 1, new float[] {0.2f, 0.2f, 0.6f, 1.0f});  //sky blue
-    gl.glUniform1i(Static.uniformTexture, 0);
-    gl.glUniform1i(Static.uniformCrack, 1);
-    gl.glUniform1i(Static.uniformHorsePattern, 2);
-    gl.glUniform1i(Static.uniformHorseArmor, 3);
-
-    ready = true;
+    glUniform1f(Static.uniformSunLight, 1.0f);
+    glUniform1f(Static.uniformAlphaFactor, 1.0f);
+    glUniform1i(Static.uniformEnableTextures, 1);
+    glUniform1i(Static.uniformEnableFog, 0);
+    glUniform1f(Static.uniformFogNear, Settings.current.loadRange * 16f);
+    glUniform1f(Static.uniformFogFar, Settings.current.loadRange * 16f + 16f);
+    glUniform1i(Static.uniformEnableHorsePattern, 0);
+    glUniform1i(Static.uniformEnableHorseArmor, 0);
+    glUniform4fv(Static.uniformFogColor, 1, new float[] {0.2f, 0.2f, 0.6f, 1.0f});  //sky blue
+    glUniform1i(Static.uniformTexture, 0);
+    glUniform1i(Static.uniformCrack, 1);
+    glUniform1i(Static.uniformHorsePattern, 2);
+    glUniform1i(Static.uniformHorseArmor, 3);
 
     //setup timers
     frTimer = new java.util.Timer();
@@ -210,7 +201,7 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
   }
 
   private final void repaint() {
-    comp.repaint();
+    MainSWT.render();
   }
 
   private boolean nextFrame;
@@ -220,17 +211,17 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
     nextFrame = true;
   }
 
-  public void render(GL gl) {
-    if (!ready) return;
-    RenderBuffers.freeBuffers(gl);
+  public void render() {
+//    Static.log("render");
+    RenderBuffers.freeBuffers();
     if (screen != null) {
       try {
         long start = System.currentTimeMillis();
-        gl.glDepthFunc(GL.GL_LEQUAL);
+        glDepthFunc(GL_LEQUAL);
         synchronized(screenLock) {
           if (nextFrame && processed) {
-            screen.render(gl, (int)Static.width, (int)Static.height);
-            gl.swap();
+            screen.render((int)Static.width, (int)Static.height);
+            MainSWT.swap();
             nextFrame = false;
             processed = false;
             synchronized(fpsLock) {
@@ -239,7 +230,7 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
           } else {
             processed = true;
             if (Static.game != null) {
-              Static.game.process(gl);
+              Static.game.process();
             }
           }
         }
@@ -254,7 +245,7 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
     }
   }
 
-  public void resize(GL gl, int width, int height) {
+  public void resize(int width, int height) {
     Static.width = width;
     Static.height = height;
 
@@ -275,97 +266,105 @@ public class RenderEngine implements WindowListener, KeyListener, MouseListener,
     }
 
     if (screen != null) {
-      screen.resize(gl, width, height);
+      screen.resize(width, height);
     }
   }
 
   /** Advance all animated textures to next frame. */
-  public static void advanceAnimation(GL gl) {
+  public static void advanceAnimation() {
     int cnt = animatedTextures.size();
-    Static.blocks.stitched.bind(gl);
+    Static.blocks.stitched.bind();
     for(int a=0;a<cnt;a++) {
-      animatedTextures.get(a).nextFrame(gl);
+      animatedTextures.get(a).nextFrame();
     }
   }
-
-//interface WindowListener
-  public void windowOpened(WindowEvent e) { }
-  public void windowClosing(WindowEvent e) {
-    System.exit(0);
-  }
-  public void windowClosed(WindowEvent e) { }
-  public void windowIconified(WindowEvent e) { }
-  public void windowDeiconified(WindowEvent e) { }
-  public void windowActivated(WindowEvent e) { }
-  public void windowDeactivated(WindowEvent e) { }
 
 //interface KeyListener
   public void keyPressed(KeyEvent e) {
-    if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_RIGHT) {
-      Static.r_keys[e.getKeyCode()] = true;
+    Static.log("keyP:" + e.keyCode + "," + e.character + "," + e.keyLocation);
+    int vk = SWTVK.convert(e.keyCode);
+    if (vk >= 1024) return;
+    if (e.keyLocation == SWT.RIGHT) {
+      Static.r_keys[vk] = true;
     } else {
-      Static.keys[e.getKeyCode()] = true;
+      Static.keys[vk] = true;
     }
-    screen.keyPressed(e.getKeyCode());
+    if (e.character != 0) {
+      screen.keyTyped(e.character);
+    }
+    screen.keyPressed(vk);
   }
   public void keyReleased(KeyEvent e) {
-    if (e.getKeyLocation() == KeyEvent.KEY_LOCATION_RIGHT) {
-      Static.r_keys[e.getKeyCode()] = false;
+    Static.log("keyR:" + e.keyCode + "," + e.character + "," + e.keyLocation);
+    int vk = SWTVK.convert(e.keyCode);
+    if (vk >= 1024) return;
+    if (e.keyLocation == SWT.RIGHT) {
+      Static.r_keys[vk] = false;
     } else {
-      Static.keys[e.getKeyCode()] = false;
+      Static.keys[vk] = false;
     }
-    screen.keyReleased(e.getKeyCode());
-  }
-  public void keyTyped(KeyEvent e) {
-//    Static.log("key=" + e);
-    screen.keyTyped(e.getKeyChar());
+    screen.keyReleased(vk);
   }
 
 //interface MouseListener
-  public void mouseClicked(MouseEvent e) { }
-  public void mousePressed(MouseEvent e) {
+  public void mouseDoubleClick(MouseEvent e) {}
+  public void mouseDown(MouseEvent e) {
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
-    int x = (int)((((float)e.getX()) - offsetX) / Static.scale);
-    int y = (int)((((float)e.getY()) - offsetY) / Static.scale);
-    screen.mousePressed(x, y, e.getButton());
+    int x = (int)((((float)e.x) - offsetX) / Static.scale);
+    int y = (int)((((float)e.y) - offsetY) / Static.scale);
+    screen.mousePressed(x, y, e.button);
   }
-  public void mouseReleased(MouseEvent e) {
+  public void mouseUp(MouseEvent e) {
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
-    int x = (int)((((float)e.getX()) - offsetX) / Static.scale);
-    int y = (int)((((float)e.getY()) - offsetY) / Static.scale);
-    screen.mouseReleased(x, y, e.getButton());
+    int x = (int)((((float)e.x) - offsetX) / Static.scale);
+    int y = (int)((((float)e.y) - offsetY) / Static.scale);
+    screen.mouseReleased(x, y, e.button);
   }
-  public void mouseEntered(MouseEvent e) { }
-  public void mouseExited(MouseEvent e) { }
 
 //interface FocusListener
   public void focusGained(FocusEvent e) {
-    focus = e.getComponent();
+    focus = e.widget;
   }
 
   public void focusLost(FocusEvent e) {
     focus = null;
   }
 
-  public void mouseDragged(MouseEvent e) {
+  public void mouseMove(MouseEvent e) {
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
-    int x = (int)((((float)e.getX()) - offsetX) / Static.scale);
-    int y = (int)((((float)e.getY()) - offsetY) / Static.scale);
-    screen.mouseMoved(x, y, e.getButton());
+    int x = (int)((((float)e.x) - offsetX) / Static.scale);
+    int y = (int)((((float)e.y) - offsetY) / Static.scale);
+    screen.mouseMoved(x, y, e.button);
   }
 
-  public void mouseMoved(MouseEvent e) {
-    float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
-    float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
-    int x = (int)((((float)e.getX()) - offsetX) / Static.scale);
-    int y = (int)((((float)e.getY()) - offsetY) / Static.scale);
-    screen.mouseMoved(x, y, e.getButton());
+  public void mouseScrolled(MouseEvent e) {
+    screen.mouseWheel(e.count);
   }
 
-  public void mouseWheelMoved(MouseWheelEvent e) {
-    screen.mouseWheel(e.getWheelRotation());
+//interface ControlListener
+  public void controlMoved(ControlEvent e) {
   }
+
+  public void controlResized(ControlEvent e) {
+    MainSWT.layout();
+    Point pt = MainSWT.getCanvasSize();
+    resize(pt.x, pt.y);
+  }
+
+//interface ShellListener
+  public void shellActivated(ShellEvent e) {}
+
+  public void shellClosed(ShellEvent e) {
+    //TODO : shutdown gracefully
+    System.exit(0);
+  }
+
+  public void shellDeactivated(ShellEvent e) {}
+
+  public void shellDeiconified(ShellEvent e) {}
+
+  public void shellIconified(ShellEvent e) {}
 }

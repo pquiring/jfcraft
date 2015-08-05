@@ -11,6 +11,7 @@ import java.util.*;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.audio.*;
 import jfcraft.client.*;
@@ -164,13 +165,13 @@ public class Horse extends VehicleBase {
     "entity/horse/armor/horse_armor_diamond",
   };
 
-  public void initStatic(GL gl) {
+  public void initStaticGL() {
     textures = new Texture[textureNames.length];
     int unit = 0;
     for(int a=0;a<textureNames.length;a++) {
       if (a == 11) unit = 2;  //markings
       if (a == 15) unit = 3;  //armor
-      textures[a] = Textures.getTexture(gl, textureNames[a], unit);
+      textures[a] = Textures.getTexture(textureNames[a], unit);
     }
   }
 
@@ -255,32 +256,32 @@ public class Horse extends VehicleBase {
     }
   }
 
-  public void bindTexture(GL gl) {
-    textures[type].bind(gl);
+  public void bindTexture() {
+    textures[type].bind();
     if (pattern != PATTERN_NONE) {
-      textures[pattern].bind(gl);
-      gl.glUniform1i(Static.uniformEnableHorsePattern, 1);
+      textures[pattern].bind();
+      glUniform1i(Static.uniformEnableHorsePattern, 1);
     }
     if (haveArmor(FLAG_ARMOR_IRON)) {
-      textures[15].bind(gl);
-      gl.glUniform1i(Static.uniformEnableHorseArmor, 1);
+      textures[15].bind();
+      glUniform1i(Static.uniformEnableHorseArmor, 1);
     }
     else if (haveArmor(FLAG_ARMOR_GOLD)) {
-      textures[16].bind(gl);
-      gl.glUniform1i(Static.uniformEnableHorseArmor, 1);
+      textures[16].bind();
+      glUniform1i(Static.uniformEnableHorseArmor, 1);
     }
     else if (haveArmor(FLAG_ARMOR_DIAMOND)) {
-      textures[17].bind(gl);
-      gl.glUniform1i(Static.uniformEnableHorseArmor, 1);
+      textures[17].bind();
+      glUniform1i(Static.uniformEnableHorseArmor, 1);
     }
   }
 
-  public void copyBuffers(GL gl) {
-    dest.copyBuffers(gl);
+  public void copyBuffers() {
+    dest.copyBuffers();
   }
 
   //transforms are applied in reverse
-  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {
+  public void setMatrixModel(int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     switch (bodyPart) {
@@ -371,46 +372,46 @@ public class Horse extends VehicleBase {
         break;
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
-  public void render(GL gl) {
+  public void render() {
     for(int a=0;a<commonParts.length;a++) {
       int part = commonParts[a];
       RenderBuffers buf = dest.getBuffers(part);
-      setMatrixModel(gl, part, buf);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      setMatrixModel(part, buf);
+      buf.bindBuffers();
+      buf.render();
     }
     int ep[] = extraParts[type];
     int cnt = ep.length;
     for(int a=0;a<cnt;a++) {
       int part = ep[a];
       RenderBuffers buf = dest.getBuffers(part);
-      setMatrixModel(gl, part, buf);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      setMatrixModel(part, buf);
+      buf.bindBuffers();
+      buf.render();
     }
-    gl.glUniform1i(Static.uniformEnableHorsePattern, 0);
-    gl.glUniform1i(Static.uniformEnableHorseArmor, 0);
+    glUniform1i(Static.uniformEnableHorsePattern, 0);
+    glUniform1i(Static.uniformEnableHorseArmor, 0);
     if (haveChest()) {
       int part = CHEST;
       RenderBuffers buf = dest.getBuffers(part);
-      setMatrixModel(gl, part, buf);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      setMatrixModel(part, buf);
+      buf.bindBuffers();
+      buf.render();
     }
     if (haveSaddle()) {
       int part = SADDLE_SEAT;
       RenderBuffers buf = dest.getBuffers(part);
-      setMatrixModel(gl, part, buf);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      setMatrixModel(part, buf);
+      buf.bindBuffers();
+      buf.render();
       part = SADDLE_HEAD;
       buf = dest.getBuffers(part);
-      setMatrixModel(gl, part, buf);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      setMatrixModel(part, buf);
+      buf.bindBuffers();
+      buf.render();
     }
   }
 

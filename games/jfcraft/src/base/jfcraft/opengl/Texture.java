@@ -9,6 +9,7 @@ package jfcraft.opengl;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.block.*;
 import jfcraft.data.Static;
@@ -113,43 +114,43 @@ public class Texture {
     return null;  //no place available (call expandImage())
   }
 
-  public void load(GL gl) {
-    load(gl, image);
+  public void load() {
+    load(image);
   }
 
-  public void load(GL gl, JFImage image) {
+  public void load(JFImage image) {
     int ids[] = new int[1];
     ids[0] = -1;
-    gl.glGenTextures(1, ids);
+    glGenTextures(1, ids);
     if (ids[0] == -1) {
       JF.showError("Error", "glGenTextures failed");
       System.exit(0);
     }
     glid = ids[0];
-    gl.glActiveTexture(GL.GL_TEXTURE0 + unit);
-    gl.glBindTexture(GL.GL_TEXTURE_2D, glid);
-    gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
-    gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
+    glActiveTexture(GL_TEXTURE0 + unit);
+    glBindTexture(GL_TEXTURE_2D, glid);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     if (mipmaps) {
-      gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST_MIPMAP_NEAREST);
-      gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST_MIPMAP_NEAREST);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     } else {
-      gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST);
-      gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     }
-    gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, 4, image.getWidth(), image.getHeight(), 0, GL.GL_BGRA
-      , GL.GL_UNSIGNED_BYTE, image.getPixels());
+    glTexImage2D(GL_TEXTURE_2D, 0, 4, image.getWidth(), image.getHeight(), 0, GL_BGRA
+      , GL_UNSIGNED_BYTE, image.getPixels());
   }
 
-  public void unload(GL gl) {
+  public void unload() {
     int ids[] = new int[1];
     ids[0] = glid;
-    gl.glDeleteTextures(1, ids, 0);
+    glDeleteTextures(1, ids);
   }
 
-  public void bind(GL gl) {
-    gl.glActiveTexture(GL.GL_TEXTURE0 + unit);
-    gl.glBindTexture(GL.GL_TEXTURE_2D, glid);
+  public void bind() {
+    glActiveTexture(GL_TEXTURE0 + unit);
+    glBindTexture(GL_TEXTURE_2D, glid);
   }
 
   /** Returns a SubTexture that is part of this texture. */

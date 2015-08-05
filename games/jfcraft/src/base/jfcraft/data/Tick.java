@@ -36,7 +36,6 @@ public class Tick implements SerialClass, SerialCreator {
 
   public static final byte ver = 0;
 
-  @Override
   public boolean write(SerialBuffer buffer, boolean file) {
     buffer.writeByte(ver);
     buffer.writeShort(x);
@@ -47,7 +46,6 @@ public class Tick implements SerialClass, SerialCreator {
     return true;
   }
 
-  @Override
   public boolean read(SerialBuffer buffer, boolean file) {
     byte ver = buffer.readByte();
     x = buffer.readShort();
@@ -58,7 +56,6 @@ public class Tick implements SerialClass, SerialCreator {
     return true;
   }
 
-  @Override
   public SerialClass create(SerialBuffer buffer) {
     return new Tick();
   }

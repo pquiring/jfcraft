@@ -8,6 +8,7 @@ package jfcraft.client;
  */
 
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.opengl.*;
 import jfcraft.data.*;
@@ -21,68 +22,68 @@ public class MainMenu extends RenderScreen {
     id = Client.MAIN;
   }
 
-  public void init(GL gl) {
-    super.init(gl);
+  public void init() {
+    super.init();
     clear();
-    addButton(gl, "Single Player", 56, 200, 400, new Runnable() {public void run() {
+    addButton("Single Player", 56, 200, 400, new Runnable() {public void run() {
       //single player
       if (!Static.blocks.valid) return;
       Static.video.setScreen(Static.screens.screens[Client.SINGLE]);
     }});
-    addButton(gl, "Multi Player", 56, 300, 400, new Runnable() {public void run() {
+    addButton("Multi Player", 56, 300, 400, new Runnable() {public void run() {
       //multi player
       if (!Static.blocks.valid) return;
       Static.video.setScreen(Static.screens.screens[Client.MULTI]);
     }});
-    addButton(gl, "Options", 56, 400, 190, new Runnable() {public void run() {
+    addButton("Options", 56, 400, 190, new Runnable() {public void run() {
       //options
 //      Static.engine.setScene(?);
       return;
     }});
-    addButton(gl, "Quit", 266, 400, 190, new Runnable() {public void run() {
+    addButton("Quit", 266, 400, 190, new Runnable() {public void run() {
       //quit
       System.exit(0);
     }});
   }
 
-  public void render(GL gl, int width, int height) {
+  public void render(int width, int height) {
     setMenuSize(512, 512);
 
     if (t_menu == null) {
-      t_menu = Textures.getTexture(gl, "jfcraft/mainmenu", 0);
+      t_menu = Textures.getTexture("jfcraft/mainmenu", 0);
     }
 
     if (o_menu == null) {
-      o_menu = createMenu(gl);
+      o_menu = createMenu();
     }
 
     reset();
 
     //now render stuff
-    gl.glViewport(0, 0, width, height);
-    gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT);
+    glViewport(0, 0, width, height);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    gl.glDepthFunc(GL.GL_ALWAYS);
+    glDepthFunc(GL_ALWAYS);
 
-    setOrtho(gl);
+    setOrtho();
 
-    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, identity.m);  //view matrix
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, identity.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
-    t_menu.bind(gl);
-    o_menu.bindBuffers(gl);
-    o_menu.render(gl);
+    t_menu.bind();
+    o_menu.bindBuffers();
+    o_menu.render();
 
-    renderButtons(gl);
-    renderText(gl);
+    renderButtons();
+    renderText();
 
 //    Item item = new Item(Blocks.GRASS);
-//    renderItem(gl, item, 50, 50);
+//    renderItem(item, 50, 50);
   }
 
-  public void resize(GL gl, int width, int height) {
-    super.resize(gl, width, height);
+  public void resize(int width, int height) {
+    super.resize(width, height);
   }
 
   public void mousePressed(int x, int y, int button) {

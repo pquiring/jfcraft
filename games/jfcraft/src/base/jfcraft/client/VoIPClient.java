@@ -377,7 +377,6 @@ public class VoIPClient implements SIPClientInterface, RTPInterface {
 
   //SIPClientInterface
 
-  @Override
   public void onRegister(SIPClient sip, boolean status) {
     if (!status) {
       //register failed?
@@ -398,15 +397,12 @@ public class VoIPClient implements SIPClientInterface, RTPInterface {
     }
   }
 
-  @Override
   public void onTrying(SIPClient sip, String callid) {
   }
 
-  @Override
   public void onRinging(SIPClient sip, String callid) {
   }
 
-  @Override
   public void onSuccess(SIPClient sip, String callid, SDP sdp, boolean complete) {
     if (!complete) return; //183?
     if (success) return; //already done
@@ -426,77 +422,60 @@ public class VoIPClient implements SIPClientInterface, RTPInterface {
     startTimer();
   }
 
-  @Override
   public void onBye(SIPClient sip, String callid) {
     stop();
   }
 
-  @Override
   public int onInvite(SIPClient sip, String callid, String fromid, String fromnumber, SDP sdp) {
     //no inbound calls please
     return 404;
   }
 
-  @Override
   public void onCancel(SIPClient sip, String callid, int errCode) {
     stop();
   }
 
-  @Override
   public void onRefer(SIPClient sip, String callid) {
   }
 
-  @Override
   public void onNotify(SIPClient sip, String callid, String cmd, String data) {
   }
 
-  @Override
   public void onAck(SIPClient sip, String callid, SDP sdp) {
   }
 
   //RTPInterface
 
-  @Override
   public void rtpSamples(RTPChannel rtp) {
   }
 
-  @Override
   public void rtpDigit(RTPChannel rtp, char digit) {
   }
 
-  @Override
   public void rtpPacket(RTPChannel rtp, byte[] bytes, int off, int length) {
   }
 
-  @Override
   public void rtcpPacket(RTPChannel rtp, byte[] bytes, int off, int length) {
   }
 
-  @Override
   public void rtpH263(RTPChannel rtp, byte[] bytes, int off, int length) {
   }
 
-  @Override
   public void rtpH263_1998(RTPChannel rtp, byte[] bytes, int off, int length) {
   }
 
-  @Override
   public void rtpH263_2000(RTPChannel rtp, byte[] bytes, int off, int length) {
   }
 
-  @Override
   public void rtpH264(RTPChannel rtp, byte[] bytes, int off, int length) {
   }
 
-  @Override
   public void rtpVP8(RTPChannel rtp, byte[] bytes, int off, int length) {
   }
 
-  @Override
   public void rtpJPEG(RTPChannel rtp, byte[] bytes, int off, int length) {
   }
 
-  @Override
   public void rtpInactive(RTPChannel rtp) {
   }
 }

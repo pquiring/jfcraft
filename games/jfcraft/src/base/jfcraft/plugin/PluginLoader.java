@@ -34,6 +34,7 @@ public class PluginLoader {
     for(int a=0;a<jars.length;a++) {
       if (jars[a].equals("javaforce.jar")) continue;
       if (jars[a].equals("jfcraft.jar")) continue;
+      if (jars[a].equals("swt.jar")) continue;
       try {
         ZipFile zf = new ZipFile(jars[a]);
         ZipEntry ze = zf.getEntry("plugin.properties");
@@ -132,7 +133,6 @@ public class PluginLoader {
       names.add(plugins.get(a).getName());
     }
     names.sort(new Comparator<String>() {
-      @Override
       public int compare(String o1, String o2) {
         return o1.compareTo(o2);
       }

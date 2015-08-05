@@ -7,6 +7,7 @@ package jfcraft.entity;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.data.*;
 import jfcraft.opengl.*;
@@ -57,12 +58,12 @@ public class EndPortal extends BlockEntity {
     ts = 1.0f;
   }
 
-  public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName, 0);
+  public void initStaticGL() {
+    texture = Textures.getTexture(textureName, 0);
   }
 
-  public void initInstance(GL gl) {
-    super.initInstance(gl);
+  public void initInstance() {
+    super.initInstance();
     dest = new RenderDest(1);
   }
 
@@ -71,24 +72,24 @@ public class EndPortal extends BlockEntity {
     dest.getBuffers(0).addFaceAB(-dia2, 0.5f, -dia2, dia2, 0.5f, dia2, 0, 0, 1, 1, data);
   }
 
-  public void bindTexture(GL gl) {
-    texture.bind(gl);
+  public void bindTexture() {
+    texture.bind();
   }
 
-  public void copyBuffers(GL gl) {
-    dest.copyBuffers(gl);
+  public void copyBuffers() {
+    dest.copyBuffers();
   }
 
-  private void setMatrixModel(GL gl, int bodyPart) {
+  private void setMatrixModel(int bodyPart) {
     mat.setIdentity();
     mat.addTranslate(pos.x, pos.y, pos.z);
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
-  public void render(GL gl) {
-    setMatrixModel(gl, 0);
-    dest.getBuffers(0).bindBuffers(gl);
-    dest.getBuffers(0).render(gl);
+  public void render() {
+    setMatrixModel(0);
+    dest.getBuffers(0).bindBuffers();
+    dest.getBuffers(0).render();
   }
 
   private static final byte ver = 0;

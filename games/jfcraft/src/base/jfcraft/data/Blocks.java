@@ -813,9 +813,9 @@ public class Blocks {
     return null;
   }
 
-  public void initTexture(GL gl) {
-    stitched.load(gl);
-    cracks.load(gl);
+  public void initTexture() {
+    stitched.load();
+    cracks.load();
   }
 
   public void initPerf() {

@@ -7,12 +7,15 @@ package jfcraft.client;
  * Created : Mar 24, 2014
  */
 
-import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
+import java.awt.Robot;
+
+import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.*;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.block.*;
 import jfcraft.data.*;
@@ -50,7 +53,7 @@ public class Game extends RenderScreen {
   public void setup() {
     Static.game = this;
     world = Static.client.world;
-    setCursor();
+    setCursor(false);
     Static.inGame = true;
     if (hand == null) {
       Player player = (Player)Static.entities.entities[Entities.PLAYER];
@@ -58,25 +61,18 @@ public class Game extends RenderScreen {
     }
     if (o_box == null) {
       o_box = new RenderBuffers();
-      o_box.type = GL.GL_LINES;
+      o_box.type = GL_LINES;
     }
     lastx = -1;
   }
 
-  public void setCursor() {
-    JFImage cursorImage = new JFImage(32,32);
-    cursorImage.fill(0, 0, 32, 32, 0, true);
-    Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImage.getImage(), new Point(0,0), "hidden");
-    Main.frame.setCursor(cursor);
-  }
-
-  public void init(GL gl) {
-    super.init(gl);
+  public void init() {
+    super.init();
     if (o_slots == null) {
-      o_slots = createMenu(gl, 75,470, 0,0, 361,42);
+      o_slots = createMenu(75,470, 0,0, 361,42);
     }
     if (o_cross == null) {
-      o_cross = createMenu(gl, 240,240, 0,0, 32,32);
+      o_cross = createMenu(240,240, 0,0, 32,32);
     }
     if (o_icons == null) {
       o_icons = new RenderBuffers();
@@ -85,17 +81,17 @@ public class Game extends RenderScreen {
       view = new GLMatrix();
     }
     if (o_active == null) {
-      o_active = createMenu(gl, 75, 470, 1,45, 46,46);
+      o_active = createMenu(75, 470, 1,45, 46,46);
     }
   }
 
   private float sunLight;
 
-  public void render(GL gl, int width, int height) {
+  public void render(int width, int height) {
     synchronized(Static.renderLock) {
       this.width = width;
       this.height = height;
-      render(gl);
+      render();
     }
   }
 
@@ -113,19 +109,19 @@ public class Game extends RenderScreen {
   private float v2[] = new float[2];
   private int boxPoly[] = new int[] {0,1, 2,3, 0,2, 1,3, 4,5, 6,7, 4,6, 5,7, 0,4, 1,5, 2,6, 3,7};
 
-  public void process(GL gl) {
+  public void process() {
     if (advanceAnimation) {
-      RenderEngine.advanceAnimation(gl);
+      RenderEngine.advanceAnimation();
       advanceAnimation = false;
     }
     Static.client.chunkLighter.process();
     Static.client.chunkBuilder.process();
-    Static.client.chunkCopier.process(gl);
+    Static.client.chunkCopier.process();
   }
 
   private Profiler pro = new Profiler("r:");
 
-  public void render(GL gl) {
+  public void render() {
     pro.start();
     setMenuSize(512, 512);
 
@@ -134,7 +130,7 @@ public class Game extends RenderScreen {
     int dim = Static.client.player.dim;
     if (!dim_env_inited[dim]) {
       Static.log("Environment init:" + dim);
-      Static.dims.dims[dim].getEnvironment().init(gl);
+      Static.dims.dims[dim].getEnvironment().init();
       dim_env_inited[dim] = true;
     }
 
@@ -153,7 +149,7 @@ public class Game extends RenderScreen {
       return;
     }
 
-    recreateMenu(gl, o_active, 75 + Static.client.activeSlot * 40,470, 1,45, 46,46);
+    recreateMenu(o_active, 75 + Static.client.activeSlot * 40,470, 1,45, 46,46);
 
     int cx = Static.floor(Static.client.player.pos.x / 16.0f);
     int cz = Static.floor(Static.client.player.pos.z / 16.0f);
@@ -162,7 +158,7 @@ public class Game extends RenderScreen {
     Chunk chunks[] = Static.client.world.chunks.getChunks();
 
     //now render stuff
-    gl.glDepthMask(true);
+    glDepthMask(true);
     //set sunlight level
     if (world.time >= 19000 || world.time <= 5000) {
       //moon light
@@ -179,21 +175,21 @@ public class Game extends RenderScreen {
       sunLight = 1.0f - ((((float)world.time) - 17000.0f) / 2000.0f);
       if (sunLight < 0.1f) sunLight = 0.1f;
     }
-    gl.glViewport(0, 0, width, height);
-    gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT);
+    glViewport(0, 0, width, height);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     if (perspective == null) {
       perspective = new GLMatrix();
       perspective.setIdentity();
       float ratio = ((float)width) / ((float)height);
       perspective.perspective(fov, ratio, zNear, zFar);
     }
-    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, perspective.m);  //perspective matrix
+    glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, perspective.m);  //perspective matrix
 
-    gl.glUniform1f(Static.uniformSunLight, 1.0f);
-    if (!Static.debugDisableFog) gl.glUniform1i(Static.uniformEnableFog, 0);
-    Static.dims.dims[dim].getEnvironment().render(gl, world.time, sunLight, Static.client);
-    if (!Static.debugDisableFog) gl.glUniform1i(Static.uniformEnableFog, 1);
+    glUniform1f(Static.uniformSunLight, 1.0f);
+    if (!Static.debugDisableFog) glUniform1i(Static.uniformEnableFog, 0);
+    Static.dims.dims[dim].getEnvironment().render(world.time, sunLight, Static.client);
+    if (!Static.debugDisableFog) glUniform1i(Static.uniformEnableFog, 1);
 
     view.setIdentity();
     synchronized(Static.client.ang) {
@@ -201,9 +197,9 @@ public class Game extends RenderScreen {
       view.addRotate(Static.client.ang.y, 0, 1, 0);
     }
     view.addTranslate2(-Static.client.player.pos.x, -Static.client.player.pos.y -Static.client.player.eyeHeight, -Static.client.player.pos.z);
-    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, view.m);  //view matrix
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
 
-    Static.blocks.stitched.bind(gl);
+    Static.blocks.stitched.bind();
     int cnt = 0;
     RenderBuffers obj;
     String dmsg = "";
@@ -222,9 +218,9 @@ public class Game extends RenderScreen {
       chunk.inRange = true;
       obj = chunk.dest.getBuffers(Chunk.DEST_NORMAL);
       if (obj.isBufferEmpty()) continue;
-      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, chunk.mat.m);  //model matrix
-      obj.bindBuffers(gl);
-      obj.render(gl);
+      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, chunk.mat.m);  //model matrix
+      obj.bindBuffers();
+      obj.render();
       cnt++;
     }
 
@@ -253,13 +249,13 @@ public class Game extends RenderScreen {
         //add 12 lines
         o_box.addPoly(boxPoly);
       }
-      o_box.copyBuffers(gl);
+      o_box.copyBuffers();
       o_box.mat.setTranslate(Static.client.selection.x, Static.client.selection.y, Static.client.selection.z);
-      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, o_box.mat.m);  //model matrix
-      o_box.bindBuffers(gl);
-      gl.glUniform1i(Static.uniformEnableTextures, 0);
-      o_box.render(gl);
-      gl.glUniform1i(Static.uniformEnableTextures, 1);
+      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, o_box.mat.m);  //model matrix
+      o_box.bindBuffers();
+      glUniform1i(Static.uniformEnableTextures, 0);
+      o_box.render();
+      glUniform1i(Static.uniformEnableTextures, 1);
     }
     if (Static.client.selection.entity != null) {
       o_box.reset();
@@ -290,13 +286,13 @@ public class Game extends RenderScreen {
       }
       //add 12 lines
       o_box.addPoly(boxPoly);
-      o_box.copyBuffers(gl);
+      o_box.copyBuffers();
       o_box.mat.setTranslate(0,0,0);
-      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, o_box.mat.m);  //model matrix
-      o_box.bindBuffers(gl);
-      gl.glUniform1i(Static.uniformEnableTextures, 0);
-      o_box.render(gl);
-      gl.glUniform1i(Static.uniformEnableTextures, 1);
+      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, o_box.mat.m);  //model matrix
+      o_box.bindBuffers();
+      glUniform1i(Static.uniformEnableTextures, 0);
+      o_box.render();
+      glUniform1i(Static.uniformEnableTextures, 1);
     }
 
     pro.next();
@@ -313,7 +309,7 @@ public class Game extends RenderScreen {
         EntityBase e = es[b];
         if (e.uid == Static.client.player.uid) continue;  //do not render self
         if (!e.instanceInited) {
-          e.initInstance(gl);
+          e.initInstance();
         }
         if (!e.isStatic) {
           if (e.dirty) {
@@ -321,36 +317,36 @@ public class Game extends RenderScreen {
             e.dirty = false;
           }
           if (e.needCopyBuffers) {
-            e.copyBuffers(gl);
+            e.copyBuffers();
             e.needCopyBuffers = false;
           }
         }
         float elight = e.getLight(sunLight);
-        gl.glUniform1f(Static.uniformSunLight, elight);
-        e.bindTexture(gl);
-        e.render(gl);
+        glUniform1f(Static.uniformSunLight, elight);
+        e.bindTexture();
+        e.render();
       }
     }
-    gl.glUniform1f(Static.uniformSunLight, sunLight);
+    glUniform1f(Static.uniformSunLight, sunLight);
 
     pro.next();
 
     //render text
-    t_text.bind(gl);
+    t_text.bind();
     for(int a=0;a<chunks.length;a++) {
       Chunk chunk = chunks[a];
       if (!chunk.inRange) continue;
       if (!chunk.dest.exists(Chunk.DEST_TEXT)) continue;
       obj = chunk.dest.getBuffers(Chunk.DEST_TEXT);
       if (obj.isBufferEmpty()) continue;
-      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, chunk.mat.m);  //model matrix
-      obj.bindBuffers(gl);
-      obj.render(gl);
+      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, chunk.mat.m);  //model matrix
+      obj.bindBuffers();
+      obj.render();
     }
 
     //now render alpha stuff
-    gl.glDepthMask(false);  //turn off depth buffer updates
-    Static.blocks.stitched.bind(gl);
+    glDepthMask(false);  //turn off depth buffer updates
+    Static.blocks.stitched.bind();
 
     pro.next();
 
@@ -361,34 +357,34 @@ public class Game extends RenderScreen {
       if (!chunk.dest.exists(Chunk.DEST_ALPHA)) continue;
       obj = chunk.dest.getBuffers(Chunk.DEST_ALPHA);
       if (obj.isBufferEmpty()) continue;
-      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, chunk.mat.m);  //model matrix
-      obj.bindBuffers(gl);
-      obj.render(gl);
+      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, chunk.mat.m);  //model matrix
+      obj.bindBuffers();
+      obj.render();
     }
 
     //TODO : render particles, etc.
     pro.next();
 
     if (showControls) {
-      gl.glDepthMask(true);  //turn on depth buffer updates
+      glDepthMask(true);  //turn on depth buffer updates
 
-      renderItemInHand(gl);
+      renderItemInHand();
 
-      gl.glUniform1f(Static.uniformSunLight, 1.0f);
+      glUniform1f(Static.uniformSunLight, 1.0f);
 
-      gl.glDepthFunc(GL.GL_ALWAYS);
+      glDepthFunc(GL_ALWAYS);
 
       //now render slots at bottom
       gui_position = BOTTOM;
-      setOrtho(gl);
-      gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, Static.identity.m);  //view matrix
-      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, Static.identity.m);  //model matrix
+      setOrtho();
+      glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, Static.identity.m);  //view matrix
+      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
 
-      t_widgets.bind(gl);
-      o_slots.bindBuffers(gl);
-      o_slots.render(gl);
-      o_active.bindBuffers(gl);
-      o_active.render(gl);
+      t_widgets.bind();
+      o_slots.bindBuffers();
+      o_slots.render();
+      o_active.bindBuffers();
+      o_active.render();
 
       //now render items in slots
       reset();
@@ -398,7 +394,7 @@ public class Game extends RenderScreen {
       for(int a=0;a<9;a++) {
         Item item = Static.client.player.items[a];
         if (item.id != -1) {
-          renderItem(gl,item,x,y);
+          renderItem(item,x,y);
         }
         x += 40;
       }
@@ -415,7 +411,7 @@ public class Game extends RenderScreen {
         }
       }
 
-      if (Settings.current.client_voip && Settings.current.ptt && Static.r_keys[KeyEvent.VK_CONTROL]) {
+      if (Settings.current.client_voip && Settings.current.ptt && Static.r_keys[SWTVK.VK_CONTROL]) {
         addText(512 - 4 * fontSize, 512, "Talk");
       }
 
@@ -430,8 +426,8 @@ public class Game extends RenderScreen {
         }
       }
 
-      renderText(gl);
-      renderBars(gl);
+      renderText();
+      renderBars();
 
       if (debug) {
         reset();
@@ -506,15 +502,15 @@ public class Game extends RenderScreen {
         }
         addText(dx,dy,dmsg);
         dy += fontSize;
-        renderText(gl);
+        renderText();
         gui_position = BOTTOM;
       }
 
       //render icons
-      setOrtho(gl);
-      t_icons.bind(gl);
-      o_cross.bindBuffers(gl);
-      o_cross.render(gl);
+      setOrtho();
+      t_icons.bind();
+      o_cross.bindBuffers();
+      o_cross.render();
       o_icons.reset();
       float health = Static.client.player.health;
       for(int a=0;a<10;a++) {
@@ -578,15 +574,15 @@ public class Game extends RenderScreen {
         food -= 2;
       }
 
-      o_icons.copyBuffers(gl);
-      o_icons.bindBuffers(gl);
-      o_icons.render(gl);
+      o_icons.copyBuffers();
+      o_icons.bindBuffers();
+      o_icons.render();
     }  //showControls
 
     gui_position = CENTER;
 
 //    pro.print();
-    if (!Static.debugDisableFog) gl.glUniform1i(Static.uniformEnableFog, 0);
+    if (!Static.debugDisableFog) glUniform1i(Static.uniformEnableFog, 0);
   }
 
   public void keyPressed(int vk) {
@@ -594,7 +590,7 @@ public class Game extends RenderScreen {
     if (!Static.inGame) return;
     ChatMenu chat;
     switch (vk) {
-      case 'E':
+      case SWTVK.VK_E:
         RenderScreen menu;
         if (Static.client.player.vehicle != null) {
           int idx = Static.client.player.vehicle.getMenu();
@@ -609,10 +605,10 @@ public class Game extends RenderScreen {
         Static.video.setScreen(menu);
         Static.inGame = false;
         break;
-      case KeyEvent.VK_F1:
+      case SWTVK.VK_F1:
         showControls = !showControls;
         break;
-      case KeyEvent.VK_F3:
+      case SWTVK.VK_F3:
         debug = !debug;
         break;
       case '/':
@@ -622,29 +618,29 @@ public class Game extends RenderScreen {
         Static.inGame = false;
         break;
       case 'T':
-      case KeyEvent.VK_ENTER:
+      case SWTVK.VK_ENTER:
         chat = (ChatMenu)Static.screens.screens[Client.CHAT];
         chat.setup("");
         Static.video.setScreen(chat);
         Static.inGame = false;
         break;
-      case KeyEvent.VK_ESCAPE:
+      case SWTVK.VK_ESCAPE:
         Static.video.setScreen(Static.screens.screens[Client.PAUSE]);
         Static.inGame = false;
         break;
-      case KeyEvent.VK_1:
-      case KeyEvent.VK_2:
-      case KeyEvent.VK_3:
-      case KeyEvent.VK_4:
-      case KeyEvent.VK_5:
-      case KeyEvent.VK_6:
-      case KeyEvent.VK_7:
-      case KeyEvent.VK_8:
-      case KeyEvent.VK_9:
-        int idx = vk - KeyEvent.VK_1;
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+      case '9':
+        int idx = vk - '1';
         Static.client.clientTransport.changeActiveSlot((byte)idx);
         break;
-      case KeyEvent.VK_F12:
+      case SWTVK.VK_F12:
         int cnt = 0;
         for(int a=0;a<Static.client.player.enderChest.items.length;a++) {
           cnt += Static.client.player.enderChest.items[a].count;
@@ -654,11 +650,11 @@ public class Game extends RenderScreen {
     }
   }
 
-  public void resize(GL gl, int width, int height) {
+  public void resize(int width, int height) {
     perspective = null;
     this.width = width;
     this.height = height;
-    super.resize(gl, width, height);
+    super.resize(width, height);
   }
 
   public void mousePressed(int x, int y, int button) {
@@ -673,6 +669,7 @@ public class Game extends RenderScreen {
   public int lastx = -1, lasty = -1;
 
   public void mouseMoved(int x, int y, int button) {
+//    Static.log("mouse pos:" + x + "," + y);
     if (lastx == -1) {
       lastx = x;
       lasty = y;
@@ -684,10 +681,11 @@ public class Game extends RenderScreen {
       lasty = y;
     }
     //keep mouse inside window
+    //NOTE:Mouse coords are scaled to 512x512
     int w4 = 512/4;
     int h4 = 512/4;
     if ((x < w4) || (x > w4*3) || (y < h4) || (y > h4*3)) {
-      Point los = Main.frame.getLocationOnScreen();
+      Point los = MainSWT.getLocationOnScreen();
       lastx = -1;
       robot.mouseMove(los.x + width/2, los.y + height/2);
     }
@@ -704,26 +702,26 @@ public class Game extends RenderScreen {
   private final XYZ baseHandPos = new XYZ(3, -3, -5.0f);
   private GLMatrix handMat = new GLMatrix();
 
-  private void renderItemInHand(GL gl) {
+  private void renderItemInHand() {
     Item item = Static.client.player.items[Static.client.activeSlot];
-    gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT);
 
-    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, perspective.m);  //perspective matrix
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, Static.identity.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, perspective.m);  //perspective matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
 
     float elight = Static.client.player.getLight(sunLight);
-    gl.glUniform1f(Static.uniformSunLight, elight);
+    glUniform1f(Static.uniformSunLight, elight);
     if (item.id == 0) {
-      renderHand(gl);
+      renderHand();
     } else {
-      renderItemInHand(gl, item, elight);
+      renderItemInHand(item, elight);
     }
   }
 
   private RenderDest o_items = new RenderDest(Chunk.buffersCount);
   private RenderData data = new RenderData();
 
-  private void renderItemInHand(GL gl, Item item, float light) {
+  private void renderItemInHand(Item item, float light) {
     o_items.resetAll();
     Texture texture = null;
     boolean isBlock = false;
@@ -783,21 +781,21 @@ public class Game extends RenderScreen {
     handMat.addTranslate(baseHandPos.x, baseHandPos.y, baseHandPos.z);
     handMat.addTranslate(Static.client.handPos.x, Static.client.handPos.y, Static.client.handPos.z);
 
-    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, handMat.m);  //view matrix
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, handMat.m);  //view matrix
 
     if (isBlockEntity) {
-      eb.bindTexture(gl);
-      eb.render(gl);
+      eb.bindTexture();
+      eb.render();
     } else {
-      texture.bind(gl);
+      texture.bind();
       RenderBuffers buf = o_items.getBuffers(buffersIdx);
-      buf.copyBuffers(gl);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      buf.copyBuffers();
+      buf.bindBuffers();
+      buf.render();
     }
   }
 
-  public void renderHand(GL gl) {
+  public void renderHand() {
     handMat.setIdentity();
     handMat.addTranslate(hand.org.x, hand.org.y, hand.org.z);
     handMat.addScale(2, 2, 2);
@@ -809,9 +807,9 @@ public class Game extends RenderScreen {
     handMat.addTranslate(-0.5f,-1.5f,0);
     handMat.addTranslate(baseHandPos.x, baseHandPos.y, baseHandPos.z);
     handMat.addTranslate(Static.client.handPos.x, Static.client.handPos.y, Static.client.handPos.z);
-    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, handMat.m);  //view matrix
-    Static.entities.entities[Entities.PLAYER].bindTexture(gl);
-    hand.bindBuffers(gl);
-    hand.render(gl);
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, handMat.m);  //view matrix
+    Static.entities.entities[Entities.PLAYER].bindTexture();
+    hand.bindBuffers();
+    hand.render();
   }
 }

@@ -111,26 +111,21 @@ public class VoIPServer implements SIPServerInterface, VoIPEventHandler {
 
   //SIPServerInterface
 
-  @Override
   public CallDetailsServer createCallDetailsServer() {
     return new VoIPCallDetails();
   }
 
-  @Override
   public String getPassword(String user) {
     return "12345";  //bad password
   }
 
-  @Override
   public String getTrunkRegister(String ip) {
     return null;
   }
 
-  @Override
   public void onRegister(String user, int expires, String ip, int port) {
   }
 
-  @Override
   public void onInvite(CallDetailsServer _cd, boolean src) {
     VoIPCallDetails cd = (VoIPCallDetails)_cd;
     if (!cd.dialed.equals("1234")) {
@@ -176,17 +171,14 @@ public class VoIPServer implements SIPServerInterface, VoIPEventHandler {
     addMember(cd);
   }
 
-  @Override
   public void onCancel(CallDetailsServer _cd, boolean src) {
     VoIPCallDetails cd = (VoIPCallDetails)_cd;
   }
 
-  @Override
   public void onError(CallDetailsServer _cd, int errCode, boolean src) {
     VoIPCallDetails cd = (VoIPCallDetails)_cd;
   }
 
-  @Override
   public void onBye(CallDetailsServer _cd, boolean src) {
     VoIPCallDetails cd = (VoIPCallDetails)_cd;
     if (!src) return;
@@ -198,34 +190,28 @@ public class VoIPServer implements SIPServerInterface, VoIPEventHandler {
     delMember(cd);
   }
 
-  @Override
   public void onSuccess(CallDetailsServer _cd, boolean src) {
     VoIPCallDetails cd = (VoIPCallDetails)_cd;
   }
 
-  @Override
   public void onRinging(CallDetailsServer _cd, boolean src) {
     VoIPCallDetails cd = (VoIPCallDetails)_cd;
   }
 
-  @Override
   public void onTrying(CallDetailsServer _cd, boolean src) {
     VoIPCallDetails cd = (VoIPCallDetails)_cd;
   }
 
-  @Override
   public void onFeature(CallDetailsServer _cd, String cmd, String data, boolean src) {
     VoIPCallDetails cd = (VoIPCallDetails)_cd;
   }
 
   //VoIPEventHandler interface
 
-  @Override
   public void event(VoIPCallDetails cd, int type, char digit, boolean interrupted) {
     Static.log("VoIP Event:" + type + "," + digit);
   }
 
-  @Override
   public void samples(VoIPCallDetails cd, short[] sam) {
     VoIPConference.Member member, myMember = cd.confmember;
 //    Static.log("samples:" + cd.user + ",idx=" + myMember.idx);

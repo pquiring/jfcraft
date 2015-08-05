@@ -6,6 +6,7 @@ package jfcraft.entity;
  */
 
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.data.*;
 import jfcraft.item.*;
@@ -57,12 +58,12 @@ public class Arrow extends EntityBase {
     textureName = "entity/arrow";
   }
 
-  public void initStatic(GL gl) {
-    texture = Textures.getTexture(gl, textureName, 0);
+  public void initStaticGL() {
+    texture = Textures.getTexture(textureName, 0);
   }
 
-  public void initInstance(GL gl) {
-    super.initInstance(gl);
+  public void initInstance() {
+    super.initInstance();
   }
 
   private static String parts[] = {"ARROW"};
@@ -92,30 +93,30 @@ public class Arrow extends EntityBase {
     }
   }
 
-  public void bindTexture(GL gl) {
-    texture.bind(gl);
+  public void bindTexture() {
+    texture.bind();
   }
 
-  public void copyBuffers(GL gl) {
-    dest.copyBuffers(gl);
+  public void copyBuffers() {
+    dest.copyBuffers();
   }
 
-  private void setMatrixModel(GL gl) {
+  private void setMatrixModel() {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     mat.addRotate(-ang.x, 1, 0, 0);
     mat.addTranslate(pos.x, pos.y, pos.z);
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
-  public void render(GL gl) {
-    setMatrixModel(gl);
+  public void render() {
+    setMatrixModel();
     for(int a=0;a<dest.count();a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      buf.bindBuffers(gl);
-      buf.render(gl);
+      buf.bindBuffers();
+      buf.render();
     }
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, Static.identity.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
   }
 
   public void tick() {

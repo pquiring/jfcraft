@@ -7,15 +7,16 @@ package jfcraft.client;
  * Created : May 8, 2014
  */
 
-import jfcraft.item.Item;
-import java.awt.Cursor;
-import java.awt.event.KeyEvent;
+import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.*;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.opengl.*;
 import jfcraft.data.*;
+import jfcraft.item.*;
 
 public class DropperMenu extends RenderScreen {
   private Texture t_menu;
@@ -28,35 +29,35 @@ public class DropperMenu extends RenderScreen {
   }
 
   public void setup() {
-    Main.frame.setCursor(Cursor.getDefaultCursor());
+    setCursor(true);
   }
 
-  public void render(GL gl, int width, int height) {
-    Static.game.render(gl, width, height);
+  public void render(int width, int height) {
+    Static.game.render(width, height);
     setMenuSize(gui_width, gui_height);
 
     if (t_menu == null) {
-      t_menu = Textures.getTexture(gl, "gui/container/dispenser", 0);
+      t_menu = Textures.getTexture( "gui/container/dispenser", 0);
     }
 
     if (o_menu == null) {
-      o_menu = createMenu(gl);
+      o_menu = createMenu();
     }
 
     ExtraContainer dropper = Static.client.container;
 
-    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, identity.m);  //view matrix
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, identity.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
-    super.renderShade(gl);
+    super.renderShade();
 
-    gl.glDepthFunc(GL.GL_ALWAYS);
+    glDepthFunc(GL_ALWAYS);
 
-    setOrtho(gl);
+    setOrtho();
 
-    t_menu.bind(gl);
-    o_menu.bindBuffers(gl);
-    o_menu.render(gl);
+    t_menu.bind();
+    o_menu.bindBuffers();
+    o_menu.render();
 
     reset();
 
@@ -69,7 +70,7 @@ public class DropperMenu extends RenderScreen {
       }
       Item item = Static.client.player.items[a];
       if (item.id != 0) {
-        renderItem(gl,item,x,y);
+        renderItem(item,x,y);
       }
       x += 36;
     }
@@ -79,7 +80,7 @@ public class DropperMenu extends RenderScreen {
     for(int a=0;a<9;a++) {
       Item item = Static.client.player.items[a];
       if (item.id != 0) {
-        renderItem(gl,item,x,y);
+        renderItem(item,x,y);
       }
       x += 36;
     }
@@ -95,7 +96,7 @@ public class DropperMenu extends RenderScreen {
         }
         Item item = dropper.items[a];
         if (item.id != 0) {
-          renderItem(gl,item,x,y);
+          renderItem(item,x,y);
         }
         x += 36;
       }
@@ -104,17 +105,17 @@ public class DropperMenu extends RenderScreen {
     //render item in hand
     Item item = Static.client.hand;
     if (item != null) {
-      renderItem(gl,item,mx,my);
+      renderItem(item,mx,my);
     }
 
-    renderText(gl);
-    renderBars(gl);
+    renderText();
+    renderBars();
 
     if (item != null) {
       reset();
-      renderItemName(gl, item, mx, my);
-      renderBars50(gl);
-      renderText(gl);
+      renderItemName( item, mx, my);
+      renderBars50();
+      renderText();
     } else {
       //TODO : render item name under mouse
     }
@@ -123,16 +124,16 @@ public class DropperMenu extends RenderScreen {
   public void keyPressed(int vk) {
     super.keyPressed(vk);
     switch (vk) {
-      case KeyEvent.VK_E:
-      case KeyEvent.VK_ESCAPE:
+      case SWTVK.VK_E:
+      case SWTVK.VK_ESCAPE:
         Static.client.clientTransport.leaveMenu();
         leaveMenu();
         break;
     }
   }
 
-  public void resize(GL gl, int width, int height) {
-    Static.game.resize(gl, width, height);
+  public void resize(int width, int height) {
+    Static.game.resize(width, height);
   }
 
   public void mousePressed(int x, int y, int button) {

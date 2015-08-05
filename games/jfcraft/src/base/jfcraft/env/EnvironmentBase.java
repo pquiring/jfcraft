@@ -10,6 +10,6 @@ import javaforce.gl.*;
 import jfcraft.client.*;
 
 public interface EnvironmentBase {
-  public void init(GL gl);
-  public void render(GL gl, int time, float sunLight, Client client);
+  public void init();
+  public void render(int time, float sunLight, Client client);
 }

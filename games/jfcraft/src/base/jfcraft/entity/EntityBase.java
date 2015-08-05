@@ -84,8 +84,8 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     }
   }
   public void initStatic() {}
-  public void initStatic(GL gl) {}
-  public void initInstance(GL gl) {
+  public void initStaticGL() {}
+  public void initInstance() {
     instanceInited = true;
     scale = 1.0f;
   }
@@ -1120,13 +1120,13 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   public void buildBuffers(RenderDest dest, RenderData data) {}
 
-  public void copyBuffers(GL gl) {}
+  public void copyBuffers() {}
 
-  public void bindTexture(GL gl) {}
+  public void bindTexture() {}
 
-  public void setMatrixModel(GL gl, int bodyPart, RenderBuffers buf) {};
+  public void setMatrixModel(int bodyPart, RenderBuffers buf) {};
 
-  public void render(GL gl) {}
+  public void render() {}
 
   /** Setup vehicle/occupant relationships after read() from file/network. */
   public void setupLinks(Chunk chunk, boolean file) {}
@@ -1144,7 +1144,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   private static final byte ver = 0;
 
-  @Override
   public boolean write(SerialBuffer buffer, boolean file) {
     buffer.writeByte(ver);
     buffer.writeInt(id);
@@ -1169,7 +1168,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return true;
   }
 
-  @Override
   public boolean read(SerialBuffer buffer, boolean file) {
     byte ver = buffer.readByte();
     id = buffer.readInt();

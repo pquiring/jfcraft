@@ -9,6 +9,7 @@ import java.util.*;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.data.*;
 import jfcraft.client.*;
@@ -72,29 +73,29 @@ public class EnvironmentEarth implements EnvironmentBase {
     return img;
   }
 
-  public void init(GL gl) {
+  public void init() {
     if (inited) return;
     RenderData data = new RenderData();
     sun = new Texture();
-    sun.load(gl, makeAlpha("environment/sun"));
+    sun.load(makeAlpha("environment/sun"));
     moon = new Texture();
-    moon.load(gl, makeAlpha("environment/moon_phases"));
-    rain = Textures.getTexture(gl, "environment/rain", 0);
-//    snow = Textures.getTexture(gl, "environment/snow");
+    moon.load(makeAlpha("environment/moon_phases"));
+    rain = Textures.getTexture("environment/rain", 0);
+//    snow = Textures.getTexture("environment/snow");
     stars = new Texture();
-    stars.load(gl, makeStars());
+    stars.load(makeStars());
     blueSky = new Texture();
-    blueSky.load(gl, makeBlueSky());
+    blueSky.load(makeBlueSky());
     blueWater = new Texture();
-    blueWater.load(gl, makeBlueWater());
+    blueWater.load(makeBlueWater());
     black = new Texture();
-    black.load(gl, makeBlack());
+    black.load(makeBlack());
     skybox = new RenderBuffers();
     skybox.addSkyBox(-1000, -1000, -1000, 1000, 1000, 1000);
-    skybox.copyBuffers(gl);
+    skybox.copyBuffers();
     sunface = new RenderBuffers();
     sunface.addFaceAB(-10, -50, -10, 10, -50, 10, 0, 0, 1, 1, data);
-    sunface.copyBuffers(gl);
+    sunface.copyBuffers();
     moonface = new RenderBuffers[8];
     int p = 0;
     for(int x=0;x<4;x++) {
@@ -104,69 +105,69 @@ public class EnvironmentEarth implements EnvironmentBase {
         float ty = y * 0.50f;
         //TODO : rotate coords by 90
         moonface[p].addFaceAB(-10, 50, 10, 10, 50, -10, tx, ty, tx + 0.25f, ty + 0.50f, data);
-        moonface[p].copyBuffers(gl);
+        moonface[p].copyBuffers();
         p++;
       }
     }
     horizon = new RenderBuffers();
     horizon.blkLight = 0.0f;
     horizon.addHorizonBox(-1000, -1000, -1000, 1000, 0, 1000);
-    horizon.copyBuffers(gl);
+    horizon.copyBuffers();
     inited = true;
   }
 
   private GLMatrix view = new GLMatrix();
 
-  public void render(GL gl, int time, float sunLight, Client client) {
+  public void render(int time, float sunLight, Client client) {
     float zAngle = time;
     zAngle /= (24000f / 360f);
 
     view.setIdentity();
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, view.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, view.m);  //model matrix
     view.addRotate(client.ang.x, 1, 0, 0);
     view.addRotate(client.ang.y, 0, 1, 0);
     view.addRotate(zAngle, 0, 0, 1);
-    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, view.m);  //view matrix
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
 
-    gl.glDepthMask(false);
-    gl.glDepthFunc(GL.GL_ALWAYS);
+    glDepthMask(false);
+    glDepthFunc(GL_ALWAYS);
 
-    gl.glUniform1f(Static.uniformAlphaFactor, 1.0f - sunLight);
-    stars.bind(gl);
-    skybox.bindBuffers(gl);
-    skybox.render(gl);
+    glUniform1f(Static.uniformAlphaFactor, 1.0f - sunLight);
+    stars.bind();
+    skybox.bindBuffers();
+    skybox.render();
 
-    gl.glUniform1f(Static.uniformAlphaFactor, sunLight);
-    blueSky.bind(gl);
-    skybox.render(gl);
+    glUniform1f(Static.uniformAlphaFactor, sunLight);
+    blueSky.bind();
+    skybox.render();
 
-    gl.glUniform1f(Static.uniformAlphaFactor, 1.0f);
+    glUniform1f(Static.uniformAlphaFactor, 1.0f);
 
     //render sun and moon
-    sun.bind(gl);
-    sunface.bindBuffers(gl);
-    sunface.render(gl);
+    sun.bind();
+    sunface.bindBuffers();
+    sunface.render();
 
-    moon.bind(gl);
-    moonface[0].bindBuffers(gl);
-    moonface[0].render(gl);
+    moon.bind();
+    moonface[0].bindBuffers();
+    moonface[0].render();
 
     //add horizon
     view.setIdentity();
     view.addRotate(client.ang.x, 1, 0, 0);
     view.addRotate(client.ang.y, 0, 1, 0);
     //no z rotation
-    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, view.m);  //view matrix
-    gl.glUniform1f(Static.uniformSunLight, sunLight);
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
+    glUniform1f(Static.uniformSunLight, sunLight);
     if (client.player.pos.y < 0) {
-      black.bind(gl);
+      black.bind();
     } else {
-      blueWater.bind(gl);
+      blueWater.bind();
     }
-    horizon.bindBuffers(gl);
-    horizon.render(gl);
+    horizon.bindBuffers();
+    horizon.render();
 
-    gl.glDepthMask(true);
-    gl.glDepthFunc(GL.GL_LEQUAL);
+    glDepthMask(true);
+    glDepthFunc(GL_LEQUAL);
   }
 }

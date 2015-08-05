@@ -8,9 +8,10 @@ package jfcraft.client;
  */
 
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.server.*;
-import jfcraft.opengl.*;
+import jfcraft.opengl .*;
 import jfcraft.data.Textures;
 import jfcraft.data.Static;
 
@@ -30,50 +31,50 @@ public class MessageMenu extends RenderScreen {
     this.scene = scene;
   }
 
-  public void init(GL gl) {
-    super.init(gl);
-    addButton(gl, "Okay", 20, 390, 226, new Runnable() {public void run() {
+  public void init() {
+    super.init();
+    addButton("Okay", 20, 390, 226, new Runnable() {public void run() {
       Static.video.setScreen(scene);
     }});
   }
 
-  public void render(GL gl, int width, int height) {
+  public void render(int width, int height) {
     setMenuSize(512, 512);
     reset();
 
     if (t_menu == null) {
-      t_menu = Textures.getTexture(gl, "jfcraft/background", 0);
+      t_menu = Textures.getTexture("jfcraft/background", 0);
     }
 
     if (o_menu == null) {
-      o_menu = createMenu(gl);
+      o_menu = createMenu();
     }
 
     //now render stuff
-    gl.glViewport(0, 0, width, height);
-    gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT);
+    glViewport(0, 0, width, height);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    setOrtho(gl);
+    setOrtho();
 
-    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, identity.m);  //view matrix
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, identity.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     int x1 = (512 - msg1.length() * fontSize) / 2;
     addText(x1, 50, msg1);
     int x2 = (512 - msg2.length() * fontSize) / 2;
     addText(x2, 100, msg2);
 
-    t_menu.bind(gl);
-    o_menu.bindBuffers(gl);
-    o_menu.render(gl);
+    t_menu.bind();
+    o_menu.bindBuffers();
+    o_menu.render();
 
-    renderButtons(gl);
-    renderText(gl);
+    renderButtons();
+    renderText();
   }
 
-  public void resize(GL gl, int width, int height) {
-    super.resize(gl, width, height);
+  public void resize(int width, int height) {
+    super.resize(width, height);
   }
 
   public void mousePressed(int x, int y, int button) {

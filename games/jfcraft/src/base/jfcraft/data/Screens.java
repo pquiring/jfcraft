@@ -43,11 +43,11 @@ public class Screens {
     registerScreen(new HorseMenu());
   }
 
-  public void init(GL gl) {
+  public void init() {
     for(int a=0;a<MAX_ID;a++) {
       RenderScreen screen = screens[a];
       if (screen == null) continue;
-      screen.init(gl);
+      screen.init();
     }
   }
 }

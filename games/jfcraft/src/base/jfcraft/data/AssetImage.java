@@ -7,6 +7,7 @@ package jfcraft.data;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 public class AssetImage extends Asset {
   public JFImage image;
@@ -21,10 +22,10 @@ public class AssetImage extends Asset {
 
   //block animation
   int curFrame;
-  public void nextFrame(GL gl) {
+  public void nextFrame() {
     curFrame++;
     if (curFrame == noFrames) curFrame = 0;
-    GL.glTexSubImage2D(GL.GL_TEXTURE_2D, 0, x, y, w, h, GL.GL_BGRA, GL.GL_UNSIGNED_BYTE, images[curFrame].getPixels());
+    glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_BGRA, GL_UNSIGNED_BYTE, images[curFrame].getPixels());
   }
 
   //item animation

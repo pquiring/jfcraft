@@ -130,18 +130,18 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     mat.setTranslate(cx * 16.0f, 0, cz * 16.0f);
   }
 
-  public void copyBuffers(GL gl) {
+  public void copyBuffers() {
 //    System.out.println("copyBuffers:" + cx + "," + cz);
     for(int a=0;a<buffersCount;a++) {
       if (!dest.exists(a)) continue;
-      dest.getBuffers(a).copyBuffers(gl);
+      dest.getBuffers(a).copyBuffers();
     }
     ready = true;
   }
 
-  public void render(RenderBuffers obj, GL gl) {
-    obj.bindBuffers(gl);
-    obj.render(gl);
+  public void render(RenderBuffers obj) {
+    obj.bindBuffers();
+    obj.render();
   }
 
   /** Determines if lighting if different around a block. */
@@ -1380,7 +1380,6 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
 
   private static final int magic = 0x12345678;
 
-  @Override
   public boolean write(SerialBuffer buffer, boolean file) {
     synchronized(lock) {
       buffer.writeByte(ver);
@@ -1522,7 +1521,6 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     return true;
   }
 
-  @Override
   public boolean read(SerialBuffer buffer, boolean file) {
     byte ver = buffer.readByte();
     dim = buffer.readInt();
@@ -1631,7 +1629,6 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     return true;
   }
 
-  @Override
   public SerialClass create(SerialBuffer buffer) {
     return new Chunk(Static.server.world);
   }

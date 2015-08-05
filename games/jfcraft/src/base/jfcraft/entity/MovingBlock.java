@@ -7,6 +7,7 @@ package jfcraft.entity;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.block.*;
 import jfcraft.data.*;
@@ -36,8 +37,8 @@ public class MovingBlock extends EntityBase {
     return "MOVINGBLOCK";
   }
 
-  public void initInstance(GL gl) {
-    super.initInstance(gl);
+  public void initInstance() {
+    super.initInstance();
     if (blockid == 0) return;
     obj = new RenderDest(2);  //DEST_NORMAL + DEST_ALPHA
     BlockBase block = Static.blocks.blocks[blockid];
@@ -47,19 +48,19 @@ public class MovingBlock extends EntityBase {
     data.bl[X] = 0.0f;
     data.crack = -1;
     block.buildBuffers(obj, data);
-    obj.getBuffers(block.buffersIdx).copyBuffers(gl);
+    obj.getBuffers(block.buffersIdx).copyBuffers();
     buffersIdx = block.buffersIdx;
     texture = block.getTexture(data).texture;
   }
-  public void bindTexture(GL gl) {
-    texture.bind(gl);
+  public void bindTexture() {
+    texture.bind();
   }
-  public void render(GL gl) {
+  public void render() {
     mat.setIdentity();
     mat.addTranslate(pos.x, pos.y, pos.z);
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, mat.m);
-    obj.getBuffers(buffersIdx).bindBuffers(gl);
-    obj.getBuffers(buffersIdx).render(gl);
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);
+    obj.getBuffers(buffersIdx).bindBuffers();
+    obj.getBuffers(buffersIdx).render();
   }
 
   public float getBuoyant() {

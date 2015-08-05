@@ -82,7 +82,6 @@ public class Item implements java.lang.Cloneable, SerialClass, SerialCreator {
 
   private static final byte ver = 0;
 
-  @Override
   public boolean write(SerialBuffer buffer, boolean file) {
     buffer.writeByte(ver);
     buffer.writeChar(id);
@@ -92,7 +91,6 @@ public class Item implements java.lang.Cloneable, SerialClass, SerialCreator {
     return true;
   }
 
-  @Override
   public boolean read(SerialBuffer buffer, boolean file) {
     byte ver = buffer.readByte();
     id = buffer.readChar();
@@ -102,7 +100,6 @@ public class Item implements java.lang.Cloneable, SerialClass, SerialCreator {
     return true;
   }
 
-  @Override
   public SerialClass create(SerialBuffer buffer) {
     return new Item();
   }

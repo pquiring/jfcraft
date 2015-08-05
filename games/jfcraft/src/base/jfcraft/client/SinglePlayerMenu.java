@@ -13,6 +13,7 @@ import java.util.*;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.server.*;
 import jfcraft.opengl.*;
@@ -28,59 +29,59 @@ public class SinglePlayerMenu extends RenderScreen {
     id = Client.SINGLE;
   }
 
-  public void init(GL gl) {
-    super.init(gl);
-    addButton(gl, "Play World", 20, 390, 226, new Runnable() {public void run() {
+  public void init() {
+    super.init();
+    addButton("Play World", 20, 390, 226, new Runnable() {public void run() {
       playWorld();
     }});
-    addButton(gl, "Create World", 266, 390, 226, new Runnable() {public void run() {
+    addButton("Create World", 266, 390, 226, new Runnable() {public void run() {
       Static.video.setScreen(Static.screens.screens[Client.CREATEWORLD]);
     }});
-    addButton(gl, "Rename", 20, 450, 103, new Runnable() {public void run() {
+    addButton("Rename", 20, 450, 103, new Runnable() {public void run() {
       //TODO
     }});
-    addButton(gl, "Delete", 143, 450, 103, new Runnable() {public void run() {
+    addButton("Delete", 143, 450, 103, new Runnable() {public void run() {
       deleteWorld();
     }});
-    addButton(gl, "ReCreate", 266, 450, 103, new Runnable() {public void run() {
+    addButton("ReCreate", 266, 450, 103, new Runnable() {public void run() {
       //TODO
     }});
-    addButton(gl, "Cancel", 389, 450, 103, new Runnable() {public void run() {
+    addButton("Cancel", 389, 450, 103, new Runnable() {public void run() {
       Static.video.setScreen(Static.screens.screens[Client.MAIN]);
     }});
     listWorlds();
-    sb = addScrollBar(gl, 452, 33, 10, 336, worlds.size() * 4 * fontSize);
+    sb = addScrollBar(452, 33, 10, 336, worlds.size() * 4 * fontSize);
   }
 
   public void setup() {
     selectedWorld = -1;
   }
 
-  public void render(GL gl, int width, int height) {
+  public void render(int width, int height) {
     setMenuSize(512, 512);
     reset();
 
     if (t_menu == null) {
-      t_menu = Textures.getTexture(gl, "jfcraft/singlemenu", 0);
+      t_menu = Textures.getTexture("jfcraft/singlemenu", 0);
     }
 
     if (o_menu == null) {
-      o_menu = createMenu(gl);
+      o_menu = createMenu();
     }
 
     //now render stuff
-    gl.glViewport(0, 0, width, height);
-    gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT);
+    glViewport(0, 0, width, height);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    setOrtho(gl);
+    setOrtho();
 
-    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, identity.m);  //view matrix
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, identity.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
-    t_menu.bind(gl);
-    o_menu.bindBuffers(gl);
-    o_menu.render(gl);
+    t_menu.bind();
+    o_menu.bindBuffers();
+    o_menu.render();
 
     //render worlds
     int pos = sb.getPosition() / (4 * fontSize);
@@ -100,14 +101,14 @@ public class SinglePlayerMenu extends RenderScreen {
       y += fontSize * 2;
     }
 
-    renderScrollBars(gl);
-    renderButtons(gl);
-    renderBars(gl);
-    renderText(gl);
+    renderScrollBars();
+    renderButtons();
+    renderBars();
+    renderText();
   }
 
-  public void resize(GL gl, int width, int height) {
-    super.resize(gl, width, height);
+  public void resize(int width, int height) {
+    super.resize(width, height);
   }
 
   public void mousePressed(int x, int y, int button) {

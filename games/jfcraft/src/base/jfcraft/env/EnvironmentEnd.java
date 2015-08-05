@@ -8,11 +8,12 @@ package jfcraft.env;
 import java.util.*;
 
 import javaforce.*;
-import javaforce.gl.*;
+import javaforce.gl .*;
+import static javaforce.gl .GL .*;
 
 import jfcraft.data.*;
 import jfcraft.client.*;
-import jfcraft.opengl.*;
+import jfcraft.opengl .*;
 
 public class EnvironmentEnd implements EnvironmentBase {
 
@@ -31,42 +32,42 @@ public class EnvironmentEnd implements EnvironmentBase {
     return img;
   }
 
-  public void init(GL gl) {
+  public void init() {
     if (starSky == null) {
       starSky = new Texture();
-      starSky.load(gl, makePurpleStaticSky());
+      starSky.load(makePurpleStaticSky());
     }
     if (skybox == null) {
       skybox = new RenderBuffers();
       skybox.addSkyBox(-1000, -1000, -1000, 1000, 1000, 1000);
-      skybox.copyBuffers(gl);
+      skybox.copyBuffers();
     }
   }
 
   private GLMatrix view = new GLMatrix();
 
-  public void render(GL gl, int time, float sunLight, Client client) {
+  public void render(int time, float sunLight, Client client) {
     float zAngle = time;
     zAngle /= (24000f / 360f);
 
     view.setIdentity();
-    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL.GL_FALSE, view.m);  //model matrix
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, view.m);  //model matrix
     view.addRotate(client.ang.x, 1, 0, 0);
     view.addRotate(client.ang.y, 0, 1, 0);
     view.addRotate(zAngle, 0, 0, 1);
-    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL.GL_FALSE, view.m);  //view matrix
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
 
-    gl.glDepthMask(false);
-    gl.glDepthFunc(GL.GL_ALWAYS);
+    glDepthMask(false);
+    glDepthFunc(GL_ALWAYS);
 
-    gl.glUniform1f(Static.uniformAlphaFactor, sunLight);
-    starSky.bind(gl);
-    skybox.bindBuffers(gl);
-    skybox.render(gl);
+    glUniform1f(Static.uniformAlphaFactor, sunLight);
+    starSky.bind();
+    skybox.bindBuffers();
+    skybox.render();
 
-    gl.glUniform1f(Static.uniformAlphaFactor, 1.0f);
+    glUniform1f(Static.uniformAlphaFactor, 1.0f);
 
-    gl.glDepthMask(true);
-    gl.glDepthFunc(GL.GL_LEQUAL);
+    glDepthMask(true);
+    glDepthFunc(GL_LEQUAL);
   }
 }

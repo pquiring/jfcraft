@@ -763,7 +763,6 @@ public class World implements SerialClass, SerialCreator {
   public static final int ver = 3;  //latest version supported
   //this version is also used in blueprints
 
-  @Override
   public boolean write(SerialBuffer buffer, boolean file) {
     buffer.writeInt(magic);
     buffer.writeInt(ver);
@@ -833,7 +832,6 @@ public class World implements SerialClass, SerialCreator {
     return true;
   }
 
-  @Override
   public boolean read(SerialBuffer buffer, boolean file) {
     int _magic = buffer.readInt();
     if (_magic != magic) {
@@ -966,7 +964,6 @@ public class World implements SerialClass, SerialCreator {
     return true;
   }
 
-  @Override
   public SerialClass create(SerialBuffer buffer) {
     return new World(true);
   }
