@@ -23,7 +23,7 @@ import javaforce.gl.GL;
 
 import jfcraft.opengl.*;
 
-public class MainLWJGL {
+public class Main {
   // We need to strongly reference callback instances.
 
   private GLFWErrorCallback errorCallback;
@@ -218,10 +218,10 @@ public class MainLWJGL {
   }
 
   public static void main(String[] args) {
-    new MainLWJGL().run();
+    new Main().run();
   }
 
-  public static MainLWJGL main;
+  public static Main main;
 
   private void _swap() {
     glfwSwapBuffers(window); // swap the color buffers

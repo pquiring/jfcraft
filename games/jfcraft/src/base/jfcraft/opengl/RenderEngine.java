@@ -193,7 +193,7 @@ public class RenderEngine {
         synchronized(screenLock) {
           if (nextFrame && processed) {
             screen.render((int)Static.width, (int)Static.height);
-            MainLWJGL.swap();
+            Main.swap();
             nextFrame = false;
             processed = false;
             synchronized(fpsLock) {
