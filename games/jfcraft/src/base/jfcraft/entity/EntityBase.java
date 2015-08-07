@@ -1142,6 +1142,14 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   public void convertIDs(char blockIDs[], char itemIDs[]) {}
 
+  /** Returns distance from another entity. */
+  public float distance(EntityBase other) {
+    float dx = pos.x - other.pos.x;
+    float dy = pos.y - other.pos.y;
+    float dz = pos.z - other.pos.z;
+    return (float)Math.sqrt(dx * dx + dy * dy + dz * dz);
+  }
+
   private static final byte ver = 0;
 
   public boolean write(SerialBuffer buffer, boolean file) {

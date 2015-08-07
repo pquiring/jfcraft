@@ -298,6 +298,7 @@ public class Game extends RenderScreen {
       for(int b=0;b<ne;b++) {
         EntityBase e = es[b];
         if (e.uid == Static.client.player.uid) continue;  //do not render self
+        if (e.distance(Static.client.player) > 64f) continue;
         if (!e.instanceInited) {
           e.initInstance();
         }
@@ -600,6 +601,9 @@ public class Game extends RenderScreen {
         break;
       case GLVK.VK_F3:
         debug = !debug;
+        break;
+      case GLVK.VK_F11:
+        Main.toggleFullscreen();
         break;
       case '/':
         chat = (ChatMenu)Static.screens.screens[Client.CHAT];

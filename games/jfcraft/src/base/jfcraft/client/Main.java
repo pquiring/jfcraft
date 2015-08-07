@@ -15,7 +15,6 @@ import jfcraft.data.Static;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import javaforce.gl.GL;
@@ -35,6 +34,13 @@ public class Main {
   private float mx, my;
   private int mb;
 
+  private boolean fullscreen;
+  private boolean recreate;
+  private boolean createOnce = true;
+
+  private static final int GL_TRUE = 1;
+  private static final int GL_FALSE = 0;
+
   // The window handle
   private long window;
 
@@ -42,15 +48,10 @@ public class Main {
     main = this;
     try {
       init();
+      create();
       loop();
       // Release window and window callbacks
-      glfwDestroyWindow(window);
-      keyCallback.release();
-      mousePosCallback.release();
-      mouseButtonCallback.release();
-      scrollCallback.release();
-      windowSizeCallback.release();
-      windowCloseCallback.release();
+      close();
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -69,29 +70,33 @@ public class Main {
     if (glfwInit() != GL11.GL_TRUE) {
       throw new IllegalStateException("Unable to initialize GLFW");
     }
+  }
 
+  private void create() {
     // Configure our window
     glfwDefaultWindowHints(); // optional, the current window hints are already the default
-    glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // the window will stay hidden after creation
+    glfwWindowHint(GLFW_VISIBLE, GL_TRUE); // the window will stay hidden after creation
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // the window will be resizable
 
     int width = 512;
     int height = 512;
 
     // Create the window
-    window = glfwCreateWindow(width, height, "jfCraft", NULL, NULL);
+    window = glfwCreateWindow(width, height, "jfCraft", fullscreen ?  glfwGetPrimaryMonitor() : NULL, NULL);
     if (window == NULL) {
       throw new RuntimeException("Failed to create the GLFW window");
     }
 
-    // Get the resolution of the primary monitor
-    ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    // Center our window
-    glfwSetWindowPos(
-      window,
-      (GLFWvidmode.width(vidmode) - width) / 2,
-      (GLFWvidmode.height(vidmode) - height) / 2
-    );
+    if (!fullscreen) {
+      // Get the resolution of the primary monitor
+      ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+      // Center our window
+      glfwSetWindowPos(
+        window,
+        (GLFWvidmode.width(vidmode) - width) / 2,
+        (GLFWvidmode.height(vidmode) - height) / 2
+      );
+    }
 
     // Make the OpenGL context current
     glfwMakeContextCurrent(window);
@@ -101,11 +106,15 @@ public class Main {
     // Make the window visible
     glfwShowWindow(window);
 
-    // Load GL functions via JavaForce
-    GL.glInit();
+    if (createOnce) {
+      // Load GL functions via JavaForce
+      GL.glInit();
 
-    // Init the game rendering engine
-    new RenderEngine(new Loading()).init();
+      // Init the game rendering engine
+      new RenderEngine(new Loading()).init();
+
+      createOnce = false;
+    }
 
     // Setup a key callback. It will be called every time a key is pressed, repeated or released.
     glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
@@ -176,6 +185,16 @@ public class Main {
     });
   }
 
+  private void close() {
+    glfwDestroyWindow(window);
+    keyCallback.release();
+    mousePosCallback.release();
+    mouseButtonCallback.release();
+    scrollCallback.release();
+    windowSizeCallback.release();
+    windowCloseCallback.release();
+  }
+
   private void loop() {
     // This line is critical for LWJGL's interoperation with GLFW's
     // OpenGL context, or any context that is managed externally.
@@ -188,9 +207,14 @@ public class Main {
     // the window or has pressed the ESCAPE key.
     while (glfwWindowShouldClose(window) == GL_FALSE) {
       Static.video.render();
-      // Poll for window events. The key callback above will only be
-      // invoked during this call.
+      // Poll for window events.
       glfwPollEvents();
+      if (recreate) {
+        recreate = false;
+        close();
+        create();
+//        Static.video.reload();  //TODO
+      }
     }
   }
 
@@ -218,5 +242,17 @@ public class Main {
 
   public static void setCursor(boolean state) {
     main._setCursor(state);
+  }
+
+  private void _fullscreen() {
+/*
+    fullscreen = !fullscreen;
+    recreate = true;
+*/
+    //TODO : need to reload all textures???
+  }
+
+  public static void toggleFullscreen() {
+    main._fullscreen();
   }
 }

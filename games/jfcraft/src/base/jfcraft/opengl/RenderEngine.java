@@ -26,7 +26,7 @@ public class RenderEngine {
   private final Object fpsLock = new Object();
   private int fpsCounter;
 
-  private final int FPS = 60;
+  private final int FPS = 120;
 
   private Object screenLock = new Object();
   private RenderScreen screen;
