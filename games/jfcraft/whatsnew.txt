@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+Aug ?, 2015 : v0.20 released!
+  - attempted to use SWT (GLCanvas) but their keyboard support is defunct (see swt branch)
+    - it doesn't generate key release events if multiple keys are pressed
+      - a known bug since v1.0 and still present in v4.5
+  - started using LWJGL/3.0 (GLFW)
+    - still using JavaForce native code to access OpenGL functions
+    - GLFW has a mouse locking feature which is better than using java.awt.Robot
+
 Aug 1, 2015 : v0.19 released!
   - fix major opengl resource leak (crashing on some systems)
   - climb ladders & vines
