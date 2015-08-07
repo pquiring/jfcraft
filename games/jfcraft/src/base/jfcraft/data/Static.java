@@ -154,8 +154,7 @@ public class Static {
   public static final float PIx2 = (float)Math.PI * 2f;
 
   public static int glver[]; //OpenGL Version : ie:3.3.0
-  public static boolean keys[] = new boolean[1024];  //left or standard keys
-  public static boolean r_keys[] = new boolean[1024];  //right keys
+  public static boolean keys[] = new boolean[1024];
   public static boolean button[] = new boolean[4];
   public static boolean buttonClick[] = new boolean[4];
 

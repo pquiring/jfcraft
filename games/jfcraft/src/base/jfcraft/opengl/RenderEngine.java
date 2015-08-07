@@ -192,9 +192,9 @@ public class RenderEngine {
         glDepthFunc(GL_LEQUAL);
         synchronized(screenLock) {
           if (nextFrame && processed) {
+            nextFrame = false;
             screen.render((int)Static.width, (int)Static.height);
             Main.swap();
-            nextFrame = false;
             processed = false;
             synchronized(fpsLock) {
               fpsCounter++;
@@ -252,22 +252,14 @@ public class RenderEngine {
   }
 
 //interface KeyListener
-  public void keyPressed(int vk, boolean right) {
+  public void keyPressed(int vk) {
     if (vk >= 1024) return;
-    if (right) {
-      Static.r_keys[vk] = true;
-    } else {
-      Static.keys[vk] = true;
-    }
+    Static.keys[vk] = true;
     screen.keyPressed(vk);
   }
-  public void keyReleased(int vk, boolean right) {
+  public void keyReleased(int vk) {
     if (vk >= 1024) return;
-    if (right) {
-      Static.r_keys[vk] = false;
-    } else {
-      Static.keys[vk] = false;
-    }
+    Static.keys[vk] = false;
     screen.keyReleased(vk);
   }
   public void keyTyped(char ch) {

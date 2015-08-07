@@ -401,7 +401,7 @@ public class Game extends RenderScreen {
         }
       }
 
-      if (Settings.current.client_voip && Settings.current.ptt && Static.r_keys[VK.VK_CONTROL]) {
+      if (Settings.current.client_voip && Settings.current.ptt && Static.keys[GLVK.VK_CONTROL_R]) {
         addText(512 - 4 * fontSize, 512, "Talk");
       }
 
@@ -580,7 +580,7 @@ public class Game extends RenderScreen {
     if (!Static.inGame) return;
     ChatMenu chat;
     switch (vk) {
-      case VK.VK_E:
+      case GLVK.VK_E:
         RenderScreen menu;
         if (Static.client.player.vehicle != null) {
           int idx = Static.client.player.vehicle.getMenu();
@@ -595,10 +595,10 @@ public class Game extends RenderScreen {
         Static.video.setScreen(menu);
         Static.inGame = false;
         break;
-      case VK.VK_F1:
+      case GLVK.VK_F1:
         showControls = !showControls;
         break;
-      case VK.VK_F3:
+      case GLVK.VK_F3:
         debug = !debug;
         break;
       case '/':
@@ -608,13 +608,13 @@ public class Game extends RenderScreen {
         Static.inGame = false;
         break;
       case 'T':
-      case VK.VK_ENTER:
+      case GLVK.VK_ENTER:
         chat = (ChatMenu)Static.screens.screens[Client.CHAT];
         chat.setup("");
         Static.video.setScreen(chat);
         Static.inGame = false;
         break;
-      case VK.VK_ESCAPE:
+      case GLVK.VK_ESCAPE:
         Static.video.setScreen(Static.screens.screens[Client.PAUSE]);
         Static.inGame = false;
         break;
@@ -630,7 +630,7 @@ public class Game extends RenderScreen {
         int idx = vk - '1';
         Static.client.clientTransport.changeActiveSlot((byte)idx);
         break;
-      case VK.VK_F12:
+      case GLVK.VK_F12:
         int cnt = 0;
         for(int a=0;a<Static.client.player.enderChest.items.length;a++) {
           cnt += Static.client.player.enderChest.items[a].count;

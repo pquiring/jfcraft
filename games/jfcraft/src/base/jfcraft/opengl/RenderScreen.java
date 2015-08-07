@@ -637,16 +637,16 @@ public abstract class RenderScreen {
     }
     public void keyPressed(int code) {
       switch (code) {
-        case VK.VK_UP: up(); break;
-        case VK.VK_DOWN: down(); break;
+        case GLVK.VK_UP: up(); break;
+        case GLVK.VK_DOWN: down(); break;
       }
       if (center) return;
       switch (code) {
-        case VK.VK_DELETE: delete(); break;
-        case VK.VK_LEFT: left(); break;
-        case VK.VK_RIGHT: right(); break;
-        case VK.VK_HOME: home(); break;
-        case VK.VK_END: end(); break;
+        case GLVK.VK_DELETE: delete(); break;
+        case GLVK.VK_LEFT: left(); break;
+        case GLVK.VK_RIGHT: right(); break;
+        case GLVK.VK_HOME: home(); break;
+        case GLVK.VK_END: end(); break;
       }
     }
     public void findCursor() {

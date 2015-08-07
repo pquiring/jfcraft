@@ -126,8 +126,8 @@ public class CraftingMenu extends RenderScreen {
   public void keyPressed(int vk) {
     super.keyPressed(vk);
     switch (vk) {
-      case VK.VK_E:
-      case VK.VK_ESCAPE:
+      case GLVK.VK_E:
+      case GLVK.VK_ESCAPE:
         Static.client.clientTransport.leaveMenu();
         leaveMenu();
         break;
