@@ -9,9 +9,6 @@ package jfcraft.client;
 
 import java.util.*;
 
-import org.eclipse.swt.*;
-import org.eclipse.swt.graphics.*;
-
 import javaforce.gl.*;
 import static javaforce.gl.GL.*;
 
@@ -67,7 +64,7 @@ public class ChatMenu extends RenderScreen {
   public void keyPressed(int vk) {
     super.keyPressed(vk);
     switch (vk) {
-      case SWTVK.VK_UP:
+      case VK.VK_UP:
         if (idx == 0) break;
         if (idx == history.size()) {
           current = chat.getText();
@@ -75,7 +72,7 @@ public class ChatMenu extends RenderScreen {
         idx--;
         chat.setText(history.get(idx));
         break;
-      case SWTVK.VK_DOWN:
+      case VK.VK_DOWN:
         if (idx == history.size()) break;
         idx++;
         if (idx == history.size()) {
@@ -84,10 +81,10 @@ public class ChatMenu extends RenderScreen {
           chat.setText(history.get(idx));
         }
         break;
-      case SWTVK.VK_ESCAPE:
+      case VK.VK_ESCAPE:
         leaveMenu();
         break;
-      case SWTVK.VK_ENTER:
+      case VK.VK_ENTER:
         String msg = chat.getText();
         if (msg.length() > 0) {
           Static.client.clientTransport.sendMsg(msg);

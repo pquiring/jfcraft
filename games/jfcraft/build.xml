@@ -21,8 +21,8 @@
         <attribute name="Codebase" value="jfcraft.sourceforge.net"/>
       </manifest>
     </jar>
-    <jar destfile="swt.jar">
-      <zipfileset src="../../jars/swt-win64.jar"/>
+    <jar destfile="lwjgl.jar">
+      <zipfileset src="../../jars/lwjgl.jar"/>
       <manifest>
         <attribute name="Trusted-Library" value="true"/>
         <attribute name="Permissions" value="all-permissions"/>
@@ -39,7 +39,7 @@
     <mkdir dir="${build}"/>
     <javac srcdir="${src}" destdir="${build}" target="1.6" source="1.6" debug="true" includeantruntime="false">
       <classpath path="javaforce.jar"/>
-      <classpath path="swt.jar"/>
+      <classpath path="lwjgl.jar"/>
     </javac>
   </target>
 

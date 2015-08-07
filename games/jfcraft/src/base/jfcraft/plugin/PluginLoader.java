@@ -35,6 +35,7 @@ public class PluginLoader {
       if (jars[a].equals("javaforce.jar")) continue;
       if (jars[a].equals("jfcraft.jar")) continue;
       if (jars[a].equals("swt.jar")) continue;
+      if (jars[a].equals("lwjgl.jar")) continue;
       try {
         ZipFile zf = new ZipFile(jars[a]);
         ZipEntry ze = zf.getEntry("plugin.properties");

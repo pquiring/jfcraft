@@ -9,26 +9,20 @@ package jfcraft.opengl;
 
 import java.util.*;
 
-import org.eclipse.swt.*;
-import org.eclipse.swt.graphics.*;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.opengl.*;
-import org.eclipse.swt.events.*;
-
 import javaforce.*;
 import javaforce.gl.*;
 import static javaforce.gl.GL.*;
 
+import jfcraft.client.*;
 import jfcraft.audio.*;
-import jfcraft.client.MainSWT;
 import jfcraft.data.*;
 import static jfcraft.opengl.RenderScreen.gui_height;
 import static jfcraft.opengl.RenderScreen.gui_width;
 import jfcraft.plugin.PluginLoader;
 
-public class RenderEngine implements MouseListener, KeyListener, MouseMoveListener, MouseWheelListener, FocusListener, ControlListener, ShellListener {
+public class RenderEngine {
   public static ArrayList<AssetImage> animatedTextures = new ArrayList<AssetImage>();
-  private java.util.Timer frTimer, fpsTimer, hsTimer;
+  private java.util.Timer frTimer, fpsTimer;
   private final Object fpsLock = new Object();
   private int fpsCounter;
 
@@ -38,8 +32,6 @@ public class RenderEngine implements MouseListener, KeyListener, MouseMoveListen
   private RenderScreen screen;
 
   public int fragShader, vertexShader, program;
-
-  private Widget focus;
 
   public RenderEngine(RenderScreen initScreen) {
     screen = initScreen;
@@ -68,17 +60,8 @@ public class RenderEngine implements MouseListener, KeyListener, MouseMoveListen
     glUseProgram(program);
   }
 
-  public void init(GLCanvas canvas, Shell shell) {
+  public void init() {
     Static.initClientThread("init (EDT)", true, false);  //actually EDT
-
-    shell.addShellListener(this);
-    shell.addControlListener(this);
-
-    canvas.addMouseListener(this);
-    canvas.addKeyListener(this);
-    canvas.addFocusListener(this);
-    canvas.addMouseMoveListener(this);
-    canvas.addMouseWheelListener(this);
 
     Static.log("JVM.version=" + System.getProperty("java.version"));
     Static.log("JVM.vendor=" + System.getProperty("java.vendor"));
@@ -102,8 +85,7 @@ public class RenderEngine implements MouseListener, KeyListener, MouseMoveListen
     glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, max);
     Static.log("max texture units=" + max[0]);
 
-    Point pt = canvas.getSize();
-    resize(pt.x, pt.y);
+    resize(512, 512);
 
     //setup opengl
     glFrontFace(GL_CCW);  //3DS uses GL_CCW
@@ -171,12 +153,6 @@ public class RenderEngine implements MouseListener, KeyListener, MouseMoveListen
         nextFrame();
       }
     }, delay, delay);
-    hsTimer = new java.util.Timer();
-    hsTimer.scheduleAtFixedRate(new TimerTask() {
-      public final void run() {
-        repaint();
-      }
-    }, 1, 1);
     fpsTimer = new java.util.Timer();
     fpsTimer.scheduleAtFixedRate(new TimerTask() {
       public void run() {
@@ -200,10 +176,6 @@ public class RenderEngine implements MouseListener, KeyListener, MouseMoveListen
     }
   }
 
-  private final void repaint() {
-    MainSWT.render();
-  }
-
   private boolean nextFrame;
   private boolean processed;
 
@@ -221,7 +193,7 @@ public class RenderEngine implements MouseListener, KeyListener, MouseMoveListen
         synchronized(screenLock) {
           if (nextFrame && processed) {
             screen.render((int)Static.width, (int)Static.height);
-            MainSWT.swap();
+            MainLWJGL.swap();
             nextFrame = false;
             processed = false;
             synchronized(fpsLock) {
@@ -280,25 +252,21 @@ public class RenderEngine implements MouseListener, KeyListener, MouseMoveListen
   }
 
 //interface KeyListener
-  public void keyPressed(KeyEvent e) {
-    Static.log("keyP:" + e.keyCode + "," + e.character + "," + e.keyLocation);
-    int vk = SWTVK.convert(e.keyCode);
+  public void keyPressed(int vk, boolean right) {
     if (vk >= 1024) return;
-    if (e.keyLocation == SWT.RIGHT) {
+    if (right) {
       Static.r_keys[vk] = true;
     } else {
       Static.keys[vk] = true;
     }
-    if (e.character != 0) {
-      screen.keyTyped(e.character);
+    if (false) {
+      screen.keyTyped((char)vk);
     }
     screen.keyPressed(vk);
   }
-  public void keyReleased(KeyEvent e) {
-    Static.log("keyR:" + e.keyCode + "," + e.character + "," + e.keyLocation);
-    int vk = SWTVK.convert(e.keyCode);
+  public void keyReleased(int vk, boolean right) {
     if (vk >= 1024) return;
-    if (e.keyLocation == SWT.RIGHT) {
+    if (right) {
       Static.r_keys[vk] = false;
     } else {
       Static.keys[vk] = false;
@@ -307,64 +275,38 @@ public class RenderEngine implements MouseListener, KeyListener, MouseMoveListen
   }
 
 //interface MouseListener
-  public void mouseDoubleClick(MouseEvent e) {}
-  public void mouseDown(MouseEvent e) {
+  public void mouseDown(float fx,float fy,int button) {
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
-    int x = (int)((((float)e.x) - offsetX) / Static.scale);
-    int y = (int)((((float)e.y) - offsetY) / Static.scale);
-    screen.mousePressed(x, y, e.button);
+    int x = (int)((fx - offsetX) / Static.scale);
+    int y = (int)((fy - offsetY) / Static.scale);
+    screen.mousePressed(x, y, button);
   }
-  public void mouseUp(MouseEvent e) {
+  public void mouseUp(float fx,float fy,int button) {
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
-    int x = (int)((((float)e.x) - offsetX) / Static.scale);
-    int y = (int)((((float)e.y) - offsetY) / Static.scale);
-    screen.mouseReleased(x, y, e.button);
+    int x = (int)((fx - offsetX) / Static.scale);
+    int y = (int)((fy - offsetY) / Static.scale);
+    screen.mouseReleased(x, y, button);
   }
 
-//interface FocusListener
-  public void focusGained(FocusEvent e) {
-    focus = e.widget;
-  }
-
-  public void focusLost(FocusEvent e) {
-    focus = null;
-  }
-
-  public void mouseMove(MouseEvent e) {
+  public void mouseMove(float fx, float fy, int button) {
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
-    int x = (int)((((float)e.x) - offsetX) / Static.scale);
-    int y = (int)((((float)e.y) - offsetY) / Static.scale);
-    screen.mouseMoved(x, y, e.button);
+    int x = (int)((fx - offsetX) / Static.scale);
+    int y = (int)((fy - offsetY) / Static.scale);
+    screen.mouseMoved(x, y, button);
   }
 
-  public void mouseScrolled(MouseEvent e) {
-    screen.mouseWheel(e.count);
+  public void mouseScrolled(int cnt) {
+    screen.mouseWheel(cnt);
   }
 
-//interface ControlListener
-  public void controlMoved(ControlEvent e) {
+  public void windowResized(int x,int y) {
   }
 
-  public void controlResized(ControlEvent e) {
-    MainSWT.layout();
-    Point pt = MainSWT.getCanvasSize();
-    resize(pt.x, pt.y);
-  }
-
-//interface ShellListener
-  public void shellActivated(ShellEvent e) {}
-
-  public void shellClosed(ShellEvent e) {
+  public void windowClosed() {
     //TODO : shutdown gracefully
     System.exit(0);
   }
-
-  public void shellDeactivated(ShellEvent e) {}
-
-  public void shellDeiconified(ShellEvent e) {}
-
-  public void shellIconified(ShellEvent e) {}
 }

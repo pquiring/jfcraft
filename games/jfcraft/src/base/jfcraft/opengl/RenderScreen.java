@@ -867,6 +867,6 @@ public abstract class RenderScreen {
   }
 
   public void setCursor(boolean state) {
-    MainSWT.setCursor(state);
+    MainLWJGL.setCursor(state);
   }
 }

@@ -7,9 +7,6 @@ package jfcraft.client;
  * Created : May 8, 2014
  */
 
-import org.eclipse.swt.*;
-import org.eclipse.swt.graphics.*;
-
 import javaforce.gl.*;
 import static javaforce.gl.GL.*;
 
@@ -152,8 +149,8 @@ public class FurnaceMenu extends RenderScreen {
   public void keyPressed(int vk) {
     super.keyPressed(vk);
     switch (vk) {
-      case SWTVK.VK_E:
-      case SWTVK.VK_ESCAPE:
+      case VK.VK_E:
+      case VK.VK_ESCAPE:
         Static.client.clientTransport.leaveMenu();
         leaveMenu();
         break;

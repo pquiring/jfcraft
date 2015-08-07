@@ -90,7 +90,7 @@ auxiliary.show.customizer.message=<message>
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/3">
             <compilation-unit>
                 <package-root>src/base</package-root>
-                <classpath mode="compile">javaforce.jar</classpath>
+                <classpath mode="compile">javaforce.jar;lwjgl.jar</classpath>
                 <source-level>1.6</source-level>
             </compilation-unit>
             <compilation-unit>

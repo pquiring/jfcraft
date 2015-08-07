@@ -10,9 +10,6 @@ package jfcraft.client;
 import java.util.*;
 import java.awt.Robot;
 
-import org.eclipse.swt.*;
-import org.eclipse.swt.graphics.*;
-
 import javaforce.*;
 import javaforce.gl.*;
 import static javaforce.gl.GL.*;
@@ -411,7 +408,7 @@ public class Game extends RenderScreen {
         }
       }
 
-      if (Settings.current.client_voip && Settings.current.ptt && Static.r_keys[SWTVK.VK_CONTROL]) {
+      if (Settings.current.client_voip && Settings.current.ptt && Static.r_keys[VK.VK_CONTROL]) {
         addText(512 - 4 * fontSize, 512, "Talk");
       }
 
@@ -590,7 +587,7 @@ public class Game extends RenderScreen {
     if (!Static.inGame) return;
     ChatMenu chat;
     switch (vk) {
-      case SWTVK.VK_E:
+      case VK.VK_E:
         RenderScreen menu;
         if (Static.client.player.vehicle != null) {
           int idx = Static.client.player.vehicle.getMenu();
@@ -605,10 +602,10 @@ public class Game extends RenderScreen {
         Static.video.setScreen(menu);
         Static.inGame = false;
         break;
-      case SWTVK.VK_F1:
+      case VK.VK_F1:
         showControls = !showControls;
         break;
-      case SWTVK.VK_F3:
+      case VK.VK_F3:
         debug = !debug;
         break;
       case '/':
@@ -618,13 +615,13 @@ public class Game extends RenderScreen {
         Static.inGame = false;
         break;
       case 'T':
-      case SWTVK.VK_ENTER:
+      case VK.VK_ENTER:
         chat = (ChatMenu)Static.screens.screens[Client.CHAT];
         chat.setup("");
         Static.video.setScreen(chat);
         Static.inGame = false;
         break;
-      case SWTVK.VK_ESCAPE:
+      case VK.VK_ESCAPE:
         Static.video.setScreen(Static.screens.screens[Client.PAUSE]);
         Static.inGame = false;
         break;
@@ -640,7 +637,7 @@ public class Game extends RenderScreen {
         int idx = vk - '1';
         Static.client.clientTransport.changeActiveSlot((byte)idx);
         break;
-      case SWTVK.VK_F12:
+      case VK.VK_F12:
         int cnt = 0;
         for(int a=0;a<Static.client.player.enderChest.items.length;a++) {
           cnt += Static.client.player.enderChest.items[a].count;
@@ -685,9 +682,9 @@ public class Game extends RenderScreen {
     int w4 = 512/4;
     int h4 = 512/4;
     if ((x < w4) || (x > w4*3) || (y < h4) || (y > h4*3)) {
-      Point los = MainSWT.getLocationOnScreen();
+      int los[] = MainLWJGL.getPosOnScreen();
       lastx = -1;
-      robot.mouseMove(los.x + width/2, los.y + height/2);
+      robot.mouseMove(los[0] + width/2, los[1] + height/2);
     }
   }
 
