@@ -10,6 +10,7 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
 import java.nio.ByteBuffer;
+import javaforce.JF;
 import jfcraft.data.Static;
 
 import static org.lwjgl.glfw.Callbacks.*;
@@ -27,7 +28,9 @@ public class Main {
   private GLFWKeyCallback keyCallback;
   private GLFWCursorPosCallback mousePosCallback;
   private GLFWMouseButtonCallback mouseButtonCallback;
+  private GLFWScrollCallback scrollCallback;
   private GLFWWindowSizeCallback windowSizeCallback;
+  private GLFWWindowCloseCallback windowCloseCallback;
 
   private float mx, my;
   private int mb;
@@ -36,7 +39,7 @@ public class Main {
   private long window;
 
   public void run() {
-    this.main = this;
+    main = this;
     try {
       init();
       loop();
@@ -45,7 +48,9 @@ public class Main {
       keyCallback.release();
       mousePosCallback.release();
       mouseButtonCallback.release();
+      scrollCallback.release();
       windowSizeCallback.release();
+      windowCloseCallback.release();
     } finally {
       // Terminate GLFW and release the GLFWerrorfun
       glfwTerminate();
@@ -186,7 +191,11 @@ public class Main {
     glfwSetCallback(window, mouseButtonCallback = new GLFWMouseButtonCallback() {
       public void invoke(long window, int button, int action, int mods) {
 //        Static.log("mouseBut:" + button + "," + action + "," + mods);
-        button++;
+        switch (button) {
+          case 0: button = 1; break;
+          case 1: button = 3; break;
+          default: return;
+        }
         if (action == 1) {
           mb = button;
           Static.video.mouseDown(mx, my, button);
@@ -209,6 +218,24 @@ public class Main {
     glfwSetCallback(window, windowSizeCallback = new GLFWWindowSizeCallback() {
       public void invoke(long window, int x, int y) {
         Static.video.resize(x, y);
+      }
+    });
+
+    glfwSetCallback(window, windowCloseCallback = new GLFWWindowCloseCallback() {
+      public void invoke(long window) {
+        Static.video.windowClosed();
+      }
+    });
+
+    glfwSetCallback(window, scrollCallback = new GLFWScrollCallback() {
+      public void invoke(long window, double x, double y) {
+        if (JF.isMac()) {
+          //for Mac users
+          Static.video.mouseScrolled((int)y);
+        } else {
+          //for everyone else
+          Static.video.mouseScrolled((int)-y);
+        }
       }
     });
   }
