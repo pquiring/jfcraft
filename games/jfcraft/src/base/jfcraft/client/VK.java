@@ -15,6 +15,11 @@ public class VK {
   public static final int VK_ALT = 5;
   public static final int VK_SHIFT = 6;
 
+  public static final int VK_HOME = 7;
+  public static final int VK_DELETE = 8;
+  public static final int VK_END = 9;
+  public static final int VK_BACKSPACE = 8;
+
   public static final int VK_ESCAPE = 27;
   public static final int VK_ENTER = 13;
   public static final int VK_SPACE = 32;

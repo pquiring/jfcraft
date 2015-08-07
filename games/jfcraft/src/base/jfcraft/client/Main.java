@@ -5,8 +5,6 @@ package jfcraft.client;
  * @author pquiring
  */
 
-import java.nio.*;
-
 import org.lwjgl.Sys;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -25,11 +23,11 @@ import jfcraft.opengl.*;
 
 public class Main {
   // We need to strongly reference callback instances.
-
   private GLFWErrorCallback errorCallback;
   private GLFWKeyCallback keyCallback;
   private GLFWCursorPosCallback mousePosCallback;
   private GLFWMouseButtonCallback mouseButtonCallback;
+  private GLFWWindowSizeCallback windowSizeCallback;
 
   private float mx, my;
   private int mb;
@@ -47,6 +45,7 @@ public class Main {
       keyCallback.release();
       mousePosCallback.release();
       mouseButtonCallback.release();
+      windowSizeCallback.release();
     } finally {
       // Terminate GLFW and release the GLFWerrorfun
       glfwTerminate();
@@ -77,6 +76,29 @@ public class Main {
     if (window == NULL) {
       throw new RuntimeException("Failed to create the GLFW window");
     }
+
+    // Get the resolution of the primary monitor
+    ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    // Center our window
+    glfwSetWindowPos(
+      window,
+      (GLFWvidmode.width(vidmode) - WIDTH) / 2,
+      (GLFWvidmode.height(vidmode) - HEIGHT) / 2
+    );
+
+    // Make the OpenGL context current
+    glfwMakeContextCurrent(window);
+    // Enable v-sync
+//    glfwSwapInterval(1);
+
+    // Make the window visible
+    glfwShowWindow(window);
+
+    // Load GL functions via JavaForce
+    GL.glInit();
+
+    // Init the game rendering engine
+    new RenderEngine(new Loading()).init();
 
     // Setup a key callback. It will be called every time a key is pressed, repeated or released.
     glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
@@ -118,35 +140,44 @@ public class Main {
         }
         if (press) {
           switch (key) {
-            case 341: Static.video.keyPressed(VK.VK_CONTROL, false);
-            case 345: Static.video.keyPressed(VK.VK_CONTROL, true);
-            case 340: Static.video.keyPressed(VK.VK_SHIFT, false);
-            case 344: Static.video.keyPressed(VK.VK_SHIFT, true);
-            case 342: Static.video.keyPressed(VK.VK_ALT, false);
-            case 346: Static.video.keyPressed(VK.VK_ALT, true);
-            case 256: Static.video.keyPressed(VK.VK_ESCAPE, false);
-            case 265: Static.video.keyPressed(VK.VK_UP, false);
-            case 264: Static.video.keyPressed(VK.VK_DOWN, false);
-            case 263: Static.video.keyPressed(VK.VK_LEFT, false);
-            case 262: Static.video.keyPressed(VK.VK_RIGHT, false);
-            case 32: Static.video.keyPressed(VK.VK_SPACE, false);
-//            case 259: Static.video.keyPressed(VK.VK_BACK, false);
+            case 341: Static.video.keyPressed(VK.VK_CONTROL, false); break;
+            case 345: Static.video.keyPressed(VK.VK_CONTROL, true); break;
+            case 340: Static.video.keyPressed(VK.VK_SHIFT, false); break;
+            case 344: Static.video.keyPressed(VK.VK_SHIFT, true); break;
+            case 342: Static.video.keyPressed(VK.VK_ALT, false); break;
+            case 346: Static.video.keyPressed(VK.VK_ALT, true); break;
+            case 256: Static.video.keyPressed(VK.VK_ESCAPE, false); break;
+            case 265: Static.video.keyPressed(VK.VK_UP, false); break;
+            case 264: Static.video.keyPressed(VK.VK_DOWN, false); break;
+            case 263: Static.video.keyPressed(VK.VK_LEFT, false); break;
+            case 262: Static.video.keyPressed(VK.VK_RIGHT, false); break;
+            case 32: Static.video.keyPressed(VK.VK_SPACE, false); break;
+            case 259:
+              Static.video.keyPressed(VK.VK_BACKSPACE, false);
+              Static.video.keyTyped((char)8);
+              break;
+            case 261: Static.video.keyPressed(VK.VK_DELETE, false); break;
+            case 268: Static.video.keyPressed(VK.VK_HOME, false); break;
+            case 269: Static.video.keyPressed(VK.VK_END, false); break;
           }
         } else {
           switch (key) {
-            case 341: Static.video.keyReleased(VK.VK_CONTROL, false);
-            case 345: Static.video.keyReleased(VK.VK_CONTROL, true);
-            case 340: Static.video.keyReleased(VK.VK_SHIFT, false);
-            case 344: Static.video.keyReleased(VK.VK_SHIFT, true);
-            case 342: Static.video.keyReleased(VK.VK_ALT, false);
-            case 346: Static.video.keyReleased(VK.VK_ALT, true);
-            case 256: Static.video.keyReleased(VK.VK_ESCAPE, false);
-            case 265: Static.video.keyReleased(VK.VK_UP, false);
-            case 264: Static.video.keyReleased(VK.VK_DOWN, false);
-            case 263: Static.video.keyReleased(VK.VK_LEFT, false);
-            case 262: Static.video.keyReleased(VK.VK_RIGHT, false);
-            case 32: Static.video.keyReleased(VK.VK_SPACE, false);
-//            case 259: Static.video.keyReleased(VK.VK_BACK, false);
+            case 341: Static.video.keyReleased(VK.VK_CONTROL, false); break;
+            case 345: Static.video.keyReleased(VK.VK_CONTROL, true); break;
+            case 340: Static.video.keyReleased(VK.VK_SHIFT, false); break;
+            case 344: Static.video.keyReleased(VK.VK_SHIFT, true); break;
+            case 342: Static.video.keyReleased(VK.VK_ALT, false); break;
+            case 346: Static.video.keyReleased(VK.VK_ALT, true); break;
+            case 256: Static.video.keyReleased(VK.VK_ESCAPE, false); break;
+            case 265: Static.video.keyReleased(VK.VK_UP, false); break;
+            case 264: Static.video.keyReleased(VK.VK_DOWN, false); break;
+            case 263: Static.video.keyReleased(VK.VK_LEFT, false); break;
+            case 262: Static.video.keyReleased(VK.VK_RIGHT, false); break;
+            case 32: Static.video.keyReleased(VK.VK_SPACE, false); break;
+            case 259: Static.video.keyReleased(VK.VK_BACKSPACE, false); break;
+            case 261: Static.video.keyReleased(VK.VK_DELETE, false); break;
+            case 268: Static.video.keyReleased(VK.VK_HOME, false); break;
+            case 269: Static.video.keyReleased(VK.VK_END, false); break;
           }
         }
       }
@@ -175,28 +206,11 @@ public class Main {
       }
     });
 
-    // Get the resolution of the primary monitor
-    ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    // Center our window
-    glfwSetWindowPos(
-      window,
-      (GLFWvidmode.width(vidmode) - WIDTH) / 2,
-      (GLFWvidmode.height(vidmode) - HEIGHT) / 2
-    );
-
-    // Make the OpenGL context current
-    glfwMakeContextCurrent(window);
-    // Enable v-sync
-//    glfwSwapInterval(1);
-
-    // Make the window visible
-    glfwShowWindow(window);
-
-    // Load GL functions via JavaForce
-    GL.glInit();
-
-    // Init the game rendering engine
-    new RenderEngine(new Loading()).init();
+    glfwSetCallback(window, windowSizeCallback = new GLFWWindowSizeCallback() {
+      public void invoke(long window, int x, int y) {
+        Static.video.resize(x, y);
+      }
+    });
   }
 
   private void loop() {

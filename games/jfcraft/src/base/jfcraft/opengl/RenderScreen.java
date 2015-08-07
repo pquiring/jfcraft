@@ -7,8 +7,6 @@ package jfcraft.opengl;
  * Created : Mar 22, 2014
  */
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.*;
 
 import javaforce.*;
@@ -639,16 +637,16 @@ public abstract class RenderScreen {
     }
     public void keyPressed(int code) {
       switch (code) {
-        case KeyEvent.VK_UP: up(); break;
-        case KeyEvent.VK_DOWN: down(); break;
+        case VK.VK_UP: up(); break;
+        case VK.VK_DOWN: down(); break;
       }
       if (center) return;
       switch (code) {
-        case KeyEvent.VK_DELETE: delete(); break;
-        case KeyEvent.VK_LEFT: left(); break;
-        case KeyEvent.VK_RIGHT: right(); break;
-        case KeyEvent.VK_HOME: home(); break;
-        case KeyEvent.VK_END: end(); break;
+        case VK.VK_DELETE: delete(); break;
+        case VK.VK_LEFT: left(); break;
+        case VK.VK_RIGHT: right(); break;
+        case VK.VK_HOME: home(); break;
+        case VK.VK_END: end(); break;
       }
     }
     public void findCursor() {
