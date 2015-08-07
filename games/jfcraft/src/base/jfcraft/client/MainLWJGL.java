@@ -4,6 +4,9 @@ package jfcraft.client;
  *
  * @author pquiring
  */
+
+import java.nio.*;
+
 import org.lwjgl.Sys;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -29,7 +32,7 @@ public class MainLWJGL {
   private GLFWMouseButtonCallback mouseButtonCallback;
 
   private float mx, my;
-  private int buttons;
+  private int mb;
 
   // The window handle
   private long window;
@@ -78,25 +81,97 @@ public class MainLWJGL {
     // Setup a key callback. It will be called every time a key is pressed, repeated or released.
     glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
       public void invoke(long window, int key, int scancode, int action, int mods) {
-        Static.log("     key:" + key + "," + scancode + "," + action + "," + mods);
-        Static.video.keyPressed(key, false);
+//        Static.log("     key:" + key + "," + scancode + "," + action + "," + mods);
+        //convert to VK
+        boolean press = action > 0;
+        if (press && key > 13 && key < 128) {
+          Static.video.keyTyped((char)key);
+        }
+        if (key >= 65 && key <= 90) {
+          //A-Z
+          key -= 65;
+          key += VK.VK_A;
+          if (press) {
+            Static.video.keyPressed(key, false);
+          } else {
+            Static.video.keyReleased(key, false);
+          }
+          return;
+        }
+        if (key >= 48 && key <= 57) {
+          if (press) {
+            Static.video.keyPressed(key, false);
+          } else {
+            Static.video.keyReleased(key, false);
+          }
+          return;
+        }
+        if (key >= 290 && key <= 301) {
+          key -= 290;
+          key += VK.VK_F1;
+          if (press) {
+            Static.video.keyPressed(key, false);
+          } else {
+            Static.video.keyReleased(key, false);
+          }
+          return;
+        }
+        if (press) {
+          switch (key) {
+            case 341: Static.video.keyPressed(VK.VK_CONTROL, false);
+            case 345: Static.video.keyPressed(VK.VK_CONTROL, true);
+            case 340: Static.video.keyPressed(VK.VK_SHIFT, false);
+            case 344: Static.video.keyPressed(VK.VK_SHIFT, true);
+            case 342: Static.video.keyPressed(VK.VK_ALT, false);
+            case 346: Static.video.keyPressed(VK.VK_ALT, true);
+            case 256: Static.video.keyPressed(VK.VK_ESCAPE, false);
+            case 265: Static.video.keyPressed(VK.VK_UP, false);
+            case 264: Static.video.keyPressed(VK.VK_DOWN, false);
+            case 263: Static.video.keyPressed(VK.VK_LEFT, false);
+            case 262: Static.video.keyPressed(VK.VK_RIGHT, false);
+            case 32: Static.video.keyPressed(VK.VK_SPACE, false);
+//            case 259: Static.video.keyPressed(VK.VK_BACK, false);
+          }
+        } else {
+          switch (key) {
+            case 341: Static.video.keyReleased(VK.VK_CONTROL, false);
+            case 345: Static.video.keyReleased(VK.VK_CONTROL, true);
+            case 340: Static.video.keyReleased(VK.VK_SHIFT, false);
+            case 344: Static.video.keyReleased(VK.VK_SHIFT, true);
+            case 342: Static.video.keyReleased(VK.VK_ALT, false);
+            case 346: Static.video.keyReleased(VK.VK_ALT, true);
+            case 256: Static.video.keyReleased(VK.VK_ESCAPE, false);
+            case 265: Static.video.keyReleased(VK.VK_UP, false);
+            case 264: Static.video.keyReleased(VK.VK_DOWN, false);
+            case 263: Static.video.keyReleased(VK.VK_LEFT, false);
+            case 262: Static.video.keyReleased(VK.VK_RIGHT, false);
+            case 32: Static.video.keyReleased(VK.VK_SPACE, false);
+//            case 259: Static.video.keyReleased(VK.VK_BACK, false);
+          }
+        }
       }
     });
 
     glfwSetCallback(window, mouseButtonCallback = new GLFWMouseButtonCallback() {
       public void invoke(long window, int button, int action, int mods) {
-        Static.log("mouseBut:" + button + "," + action + "," + mods);
-        buttons = button;
-        Static.video.mouseDown(mx, my, buttons);
+//        Static.log("mouseBut:" + button + "," + action + "," + mods);
+        button++;
+        if (action == 1) {
+          mb = button;
+          Static.video.mouseDown(mx, my, button);
+        } else {
+          mb = 0;
+          Static.video.mouseUp(mx, my, button);
+        }
       }
     });
 
     glfwSetCallback(window, mousePosCallback = new GLFWCursorPosCallback() {
       public void invoke(long window, double x, double y) {
-        Static.log("mousePos:" + x + "," + y);
+//        Static.log("mousePos:" + x + "," + y);
         mx = (float) x;
         my = (float) y;
-        Static.video.mouseMove(mx, my, buttons);
+        Static.video.mouseMove(mx, my, mb);
       }
     });
 
@@ -112,13 +187,15 @@ public class MainLWJGL {
     // Make the OpenGL context current
     glfwMakeContextCurrent(window);
     // Enable v-sync
-    glfwSwapInterval(1);
+//    glfwSwapInterval(1);
 
     // Make the window visible
     glfwShowWindow(window);
 
+    // Load GL functions via JavaForce
     GL.glInit();
 
+    // Init the game rendering engine
     new RenderEngine(new Loading()).init();
   }
 
@@ -129,9 +206,6 @@ public class MainLWJGL {
     // creates the ContextCapabilities instance and makes the OpenGL
     // bindings available for use.
     GLContext.createFromCurrent();
-
-    // Set the clear color
-    glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 
     // Run the rendering loop until the user has attempted to close
     // the window or has pressed the ESCAPE key.
@@ -158,16 +232,14 @@ public class MainLWJGL {
   }
 
   private void _setCursor(boolean state) {
-    //TODO
+    if (state) {
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    } else {
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
   }
 
   public static void setCursor(boolean state) {
     main._setCursor(state);
-  }
-
-  public static int[] pos = new int[2];
-
-  public static int[] getPosOnScreen() {
-    return pos;
   }
 }

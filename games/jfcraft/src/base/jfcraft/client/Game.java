@@ -8,7 +8,6 @@ package jfcraft.client;
  */
 
 import java.util.*;
-import java.awt.Robot;
 
 import javaforce.*;
 import javaforce.gl.*;
@@ -27,7 +26,6 @@ public class Game extends RenderScreen {
   private float fov = 70.0f;
   private float zNear = 0.1f;  //do NOT use zero!
   private float zFar = 10000.0f;
-  private Robot robot;  //to keep mouse in window
   private int width, height;
   private static RenderBuffers o_slots, o_active, o_icons, o_cross, o_box;
   private World world;
@@ -40,11 +38,6 @@ public class Game extends RenderScreen {
 
   public Game() {
     id = Client.GAME;
-    try {
-      robot = new Robot();
-    } catch (Exception e) {
-      Static.log(e);
-    }
   }
 
   public void setup() {
@@ -676,15 +669,6 @@ public class Game extends RenderScreen {
       Static.client.look(dx, dy);
       lastx = x;
       lasty = y;
-    }
-    //keep mouse inside window
-    //NOTE:Mouse coords are scaled to 512x512
-    int w4 = 512/4;
-    int h4 = 512/4;
-    if ((x < w4) || (x > w4*3) || (y < h4) || (y > h4*3)) {
-      int los[] = MainLWJGL.getPosOnScreen();
-      lastx = -1;
-      robot.mouseMove(los[0] + width/2, los[1] + height/2);
     }
   }
 

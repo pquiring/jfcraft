@@ -259,9 +259,6 @@ public class RenderEngine {
     } else {
       Static.keys[vk] = true;
     }
-    if (false) {
-      screen.keyTyped((char)vk);
-    }
     screen.keyPressed(vk);
   }
   public void keyReleased(int vk, boolean right) {
@@ -272,6 +269,9 @@ public class RenderEngine {
       Static.keys[vk] = false;
     }
     screen.keyReleased(vk);
+  }
+  public void keyTyped(char ch) {
+    screen.keyTyped(ch);
   }
 
 //interface MouseListener
