@@ -12,12 +12,13 @@ import java.util.*;
 import javaforce.*;
 import javaforce.gl.*;
 import static javaforce.gl.GL.*;
-import jfcraft.client.Client;
 
+import jfcraft.client.*;
 import jfcraft.audio.*;
 import jfcraft.data.*;
 import jfcraft.item.*;
 import jfcraft.opengl.*;
+import static jfcraft.data.Types.*;
 
 public class Sheep extends CreatureBase {
   private float walkAngle;  //angle of legs/arms as walking
@@ -255,9 +256,9 @@ public class Sheep extends CreatureBase {
   public boolean useTool(Client client, Coords c) {
     Static.log("Sheep:useTool");
     synchronized(client.lock) {
-      char toolid = client.player.items[client.activeSlot].id;
+      char toolid = client.player.items[client.player.activeSlot].id;
       ItemBase tool = Static.items.items[toolid];
-      if (tool.isTool && tool.tool == Items.TOOL_SHEARS) {
+      if (tool.isTool && tool.tool == TOOL_SHEARS) {
         if (hasFur()) {
           setFur(false);
           Static.server.broadcastEntityFlags(this);

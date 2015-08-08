@@ -171,7 +171,8 @@ public class PacketPos extends Packet {
           //break block
           if (client.s1.block.id == 0) return;
           synchronized(client.s1.chunk.lock) {
-            float dmg = client.s1.block.dmg();
+            Static.log("activeSlot=" + client.player.activeSlot);
+            float dmg = client.s1.block.dmg(client.player.items[client.player.activeSlot]);
             if (client.crack.x != client.s1.gx || client.crack.y != client.s1.gy || client.crack.z != client.s1.gz || client.crack_cx != client.s1.cx || client.crack_cz != client.s1.cz) {
               if (client.crack.dmg > 0.0f) {
                 server.broadcastDelExtra(client.player.dim, client.crack_cx * 16 + client.crack.x, client.crack.y, client.crack_cz * 16 + client.crack.z, Extras.CRACK);
@@ -200,7 +201,7 @@ public class PacketPos extends Packet {
           //attack();
           client.action[0] = Client.ACTION_ATTACK;
           client.player.exhaustion += 0.3f;
-          ((CreatureBase)client.s1.entity).takeDmg(client.player.calcDmg(client.player.items[client.activeSlot]), client.player);
+          ((CreatureBase)client.s1.entity).takeDmg(client.player.calcDmg(client.player.items[client.player.activeSlot]), client.player);
         }
       }
     }
@@ -217,7 +218,7 @@ public class PacketPos extends Packet {
           client.action[1] = Client.ACTION_USE_ENTITY;
           client.s1.entity.useEntity(client, sneak);
         } else if (client.action[1] == Client.ACTION_PLACE || client.action[1] == Client.ACTION_IDLE || client.action[1] == Client.ACTION_USE_TOOL) {
-          Item item = client.player.items[client.activeSlot];
+          Item item = client.player.items[client.player.activeSlot];
           ItemBase itembase = Static.items.items[item.id];
           if (itembase.isTool || itembase.isWeapon || itembase.isFood) {
             //useTool();
@@ -272,7 +273,7 @@ public class PacketPos extends Packet {
                   if (item.count == 0) {
                     item.clear();
                   }
-                  client.serverTransport.setInvItem((client.activeSlot), item);
+                  client.serverTransport.setInvItem((byte)client.player.activeSlot, item);
                   return;
                 }
               }
@@ -296,7 +297,7 @@ public class PacketPos extends Packet {
                   if (item.count == 0) {
                     item.clear();
                   }
-                  client.serverTransport.setInvItem((client.activeSlot), item);
+                  client.serverTransport.setInvItem((byte)client.player.activeSlot, item);
                 }
               }
             }
@@ -304,7 +305,7 @@ public class PacketPos extends Packet {
         }
       } else {
         //use item in the air
-        ItemBase itembase3 = Static.items.items[client.player.items[client.activeSlot].id];
+        ItemBase itembase3 = Static.items.items[client.player.items[client.player.activeSlot].id];
         if (itembase3.isTool || itembase3.isWeapon || itembase3.isFood) {
           client.action[1] = Client.ACTION_USE_TOOL;
           itembase3.useItem(client);
@@ -316,7 +317,7 @@ public class PacketPos extends Packet {
       }
       client.action[0] = Client.ACTION_IDLE;
       client.action[1] = Client.ACTION_IDLE;
-      ItemBase item = Static.items.items[client.player.items[client.activeSlot].id];
+      ItemBase item = Static.items.items[client.player.items[client.player.activeSlot].id];
       item.releaseItem(client);
     }
   }

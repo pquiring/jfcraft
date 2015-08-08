@@ -156,7 +156,7 @@ public class Game extends RenderScreen {
       return;
     }
 
-    recreateMenu(o_active, 75 + Static.client.activeSlot * 40,470, 1,45, 46,46);
+    recreateMenu(o_active, 75 + Static.client.player.activeSlot * 40,470, 1,45, 46,46);
 
     int cx = Static.floor(Static.client.player.pos.x / 16.0f);
     int cz = Static.floor(Static.client.player.pos.z / 16.0f);
@@ -468,7 +468,7 @@ public class Game extends RenderScreen {
       }
 
       if (Static.client.itemTextTime > 0) {
-        Item item = Static.client.player.items[Static.client.activeSlot];
+        Item item = Static.client.player.items[Static.client.player.activeSlot];
         if (item.id != 0) {
           ItemBase itembase = Static.items.items[item.id];
           if (item != null) {
@@ -744,7 +744,7 @@ public class Game extends RenderScreen {
   }
 
   public void mouseWheel(int delta) {
-    int activeSlot = Static.client.activeSlot + delta;
+    int activeSlot = Static.client.player.activeSlot + delta;
     while (activeSlot < 0) activeSlot += 9;
     while (activeSlot > 8) activeSlot -= 9;
     Static.client.clientTransport.changeActiveSlot((byte)activeSlot);
@@ -755,7 +755,7 @@ public class Game extends RenderScreen {
   private GLMatrix handMat = new GLMatrix();
 
   private void renderItemInHand() {
-    Item item = Static.client.player.items[Static.client.activeSlot];
+    Item item = Static.client.player.items[Static.client.player.activeSlot];
     glClear(GL_DEPTH_BUFFER_BIT);
 
     glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, perspective.m);  //perspective matrix

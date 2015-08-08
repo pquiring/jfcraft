@@ -13,6 +13,7 @@ import jfcraft.data.*;
 import jfcraft.item.Item;
 import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
+import static jfcraft.data.Types.*;
 
 public class BlockFire extends BlockBase {
   private static GLModel model;
@@ -65,7 +66,7 @@ public class BlockFire extends BlockBase {
         case W: dx = -1; break;
       }
       //destroy block in direction (if isWooden)
-      if (chunk.getBlock(gx + dx, gy + dy, gz + dz).isWooden) {
+      if (chunk.getBlock(gx + dx, gy + dy, gz + dz).material == MAT_WOOD) {
         int xbits = Chunk.makeBits(X, 0);
         chunk.setBlock(gx + dx, gy + dy, gz + dz, id, xbits);
         Static.server.broadcastSetBlock(chunk.dim, x + dx, y, z + dz, id, xbits);

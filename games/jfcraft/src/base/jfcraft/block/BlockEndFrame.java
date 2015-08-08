@@ -41,7 +41,7 @@ public class BlockEndFrame extends BlockBase {
   }
   public boolean useTool(Client client, Coords c) {
     Static.log("useTool on End Frame");
-    Item item = client.player.items[client.activeSlot];
+    Item item = client.player.items[client.player.activeSlot];
     if (item.id != Items.ENDER_EYE) return super.useTool(client, c);
     Static.log("useTool on End Frame:" + (int)item.id);
     int bits = c.chunk.getBits(c.gx, c.gy, c.gz);
@@ -57,7 +57,7 @@ public class BlockEndFrame extends BlockBase {
     if (item.count == 0) {
       item.clear();
     }
-    client.serverTransport.setInvItem(client.activeSlot, item);
+    client.serverTransport.setInvItem((byte)client.player.activeSlot, item);
     //create portal if all 12 are done
     int cnt = 0;
     for(int dx = -5;dx<=5;dx++) {

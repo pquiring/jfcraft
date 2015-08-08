@@ -9,6 +9,7 @@ package jfcraft.recipe;
 
 import jfcraft.item.*;
 import jfcraft.data.*;
+import static jfcraft.data.Types.*;
 
 public class RecipeBoneMeal extends Recipe {
   public RecipeBoneMeal() {
@@ -17,6 +18,6 @@ public class RecipeBoneMeal extends Recipe {
 
   public Item make(Item items[]) {
     if (items[0].id != Items.BONE) return null;
-    return new Item(Items.COLOR, (byte)Items.VAR_BONEMEAL, 4);
+    return new Item(Items.COLOR, (byte)VAR_BONEMEAL, 4);
   }
 }

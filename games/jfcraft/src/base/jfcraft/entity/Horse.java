@@ -572,7 +572,7 @@ public class Horse extends VehicleBase {
 
   public void useEntity(Client client, boolean sneak) {
     synchronized(this) {
-      Item item = client.player.items[client.activeSlot];
+      Item item = client.player.items[client.player.activeSlot];
       if (item.id != 0) {
         if (item.id == Blocks.CHEST) {
           //add chest to mule/donkey
@@ -588,7 +588,7 @@ public class Horse extends VehicleBase {
             setHaveChest(true);
             item.count--;
             if (item.count == 0) item.clear();
-            client.serverTransport.setInvItem(client.activeSlot, item);
+            client.serverTransport.setInvItem((byte)client.player.activeSlot, item);
           }
           Static.server.broadcastEntityFlags(this);
         }

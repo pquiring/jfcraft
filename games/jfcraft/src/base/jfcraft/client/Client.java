@@ -90,7 +90,6 @@ public class Client {
 
   public byte menu = GAME;  //current menu
 
-  public byte activeSlot;
   public Chunk chunk;
   public ExtraContainer container;
   public ExtraSign sign;
@@ -350,7 +349,7 @@ public class Client {
       e[a].ctick();
     }
     //do hand item animation
-    Item item = player.items[activeSlot];
+    Item item = player.items[player.activeSlot];
     ItemBase itembase = Static.items.items[item.id];
     if (Static.inGame)
       itembase.animateItem(handAngle, handPos, b1, b2, selection != null, up | dn | lt | rt);

@@ -12,6 +12,7 @@ import javaforce.*;
 import jfcraft.client.*;
 import jfcraft.data.*;
 import jfcraft.item.*;
+import static jfcraft.data.Types.*;
 
 public class BlockDirt extends BlockOpaque {
   //var are for dirt only
@@ -29,9 +30,9 @@ public class BlockDirt extends BlockOpaque {
     if (var == VAR_FARM_WET) return super.useTool(client, c);
     if (var == VAR_PODZOL) return super.useTool(client, c);
     synchronized(client.lock) {
-      char toolid = client.player.items[client.activeSlot].id;
+      char toolid = client.player.items[client.player.activeSlot].id;
       ItemBase item = Static.items.items[toolid];
-      if (item.isTool && item.tool == Items.TOOL_HOE) {
+      if (item.isTool && item.tool == TOOL_HOE) {
         //change to farm soil
         char newid = id;
         if (id == Blocks.GRASS) newid = Blocks.DIRT;  //change grass to dirt

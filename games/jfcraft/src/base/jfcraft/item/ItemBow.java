@@ -8,6 +8,7 @@ package jfcraft.item;
 import jfcraft.client.*;
 import jfcraft.data.*;
 import jfcraft.entity.*;
+import static jfcraft.data.Types.*;
 
 public class ItemBow extends ItemBase {
   private static final int maxPower = 2 * 20;  //2 secs
@@ -15,7 +16,7 @@ public class ItemBow extends ItemBase {
     super(name, names, texture);
     useRelease = true;
     isWeapon = true;
-    weapon = Items.WEAPON_BOW;
+    weapon = WEAPON_BOW;
   }
   public void useItem(Client client) {
     if (client.bowPower < maxPower) {
@@ -33,7 +34,7 @@ public class ItemBow extends ItemBase {
   private static Vectors v = new Vectors();
   //uses static v so MUST be sync'ed
   private synchronized void shootArrow(Client client) {
-    Item bow = client.player.items[client.activeSlot];
+    Item bow = client.player.items[client.player.activeSlot];
     if (bow.id != Items.BOW) return;  //???
     if (!client.player.creative) {
       boolean ok = false;

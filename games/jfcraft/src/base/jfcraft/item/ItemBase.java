@@ -16,6 +16,7 @@ import jfcraft.client.*;
 import jfcraft.block.*;
 import jfcraft.data.*;
 import jfcraft.item.*;
+import static jfcraft.data.Types.*;
 
 public class ItemBase {
   public char id;
@@ -24,7 +25,7 @@ public class ItemBase {
   public String seedPlantedName;
   public char seedPlantedID;
   public int maxStack = 64;
-  public boolean isDamaged, isTool, isArmor, isFood, isVar, isDir, isDirXZ, isDirFace, isWeapon, isWooden;
+  public boolean isDamaged, isTool, isArmor, isFood, isVar, isDir, isDirXZ, isDirFace, isWeapon;
   public boolean isFuel, canBake, isSeeds, isGreen;
   public boolean canPlace, canPlaceInWater;
   public boolean cantGive;  //do not give with /give command
@@ -37,6 +38,7 @@ public class ItemBase {
   public SubTexture textures[];
   public float attackDmg = 1;
   public boolean useRelease;  //activate on release (bow)
+  public int material;
 
   //armor info
   public Texture armorTextures[];
@@ -76,7 +78,7 @@ public class ItemBase {
   }
   public ItemBase setUseable() {
     isTool = true;
-    tool = Items.TOOL_OTHER;
+    tool = TOOL_OTHER;
     return this;
   }
   public ItemBase setWeapon(int type) {
@@ -84,9 +86,9 @@ public class ItemBase {
     isWeapon = true;
     weapon = type;
     maxStack = 1;
-    if (type == Items.WEAPON_SWORD)
+    if (type == WEAPON_SWORD)
       setAniStyle(ANI_STYLE_ATTACK, ANI_STYLE_DEFEND);
-    else if (type == Items.WEAPON_BOW)
+    else if (type == WEAPON_BOW)
       setAniStyle(ANI_STYLE_ATTACK, ANI_STYLE_BOW);
     return this;
   }
@@ -109,8 +111,8 @@ public class ItemBase {
     isVar = true;
     return this;
   }
-  public ItemBase setWood() {
-    isWooden = true;
+  public ItemBase setMaterial(int type) {
+    material = type;
     return this;
   }
   public ItemBase setFuel(int heat) {
@@ -219,12 +221,12 @@ public class ItemBase {
       if (client.foodCounter == 2 * 20) {
         client.foodCounter = 0;
         //eat it!
-        Item item = client.player.items[client.activeSlot];
+        Item item = client.player.items[client.player.activeSlot];
         item.count--;
         if (item.count == 0) {
           item.clear();
         }
-        client.serverTransport.setInvItem(client.activeSlot, item);
+        client.serverTransport.setInvItem((byte)client.player.activeSlot, item);
         client.player.saturation += saturation;
         client.player.hunger += hunger;
         if (client.player.hunger > 20) {
@@ -464,5 +466,9 @@ public class ItemBase {
 
   public int getArmorPart(int layer, int partidx) {
     return armorParts[layer][partidx];
+  }
+
+  public String toString() {
+    return "Item:" + name;
   }
 }

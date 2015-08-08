@@ -27,8 +27,8 @@ public class PacketSetActiveSlot extends Packet {
   //process on client side
   public void process(Client client) {
     byte idx = b1;
-    client.activeSlot = idx;
-    Item item = client.player.items[client.activeSlot];
+    client.player.activeSlot = idx;
+    Item item = client.player.items[client.player.activeSlot];
     ItemBase itembase = Static.items.items[item.id];
     itembase.animateReset();
     client.itemTextTime = 5 * 20;
@@ -41,8 +41,8 @@ public class PacketSetActiveSlot extends Packet {
       Static.log("invalid slot index");
       return;
     }
-    client.activeSlot = idx;
-    client.serverTransport.setActiveSlot(client.activeSlot);
+    client.player.activeSlot = idx;
+    client.serverTransport.setActiveSlot((byte)client.player.activeSlot);
   }
 
   @Override

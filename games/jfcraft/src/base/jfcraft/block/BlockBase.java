@@ -17,6 +17,7 @@ import jfcraft.item.*;
 import jfcraft.data.*;
 import jfcraft.entity.*;
 import jfcraft.opengl.*;
+import static jfcraft.data.Types.*;
 
 import static jfcraft.data.Direction.*;
 
@@ -87,6 +88,9 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public boolean renderAsEntity;
   public int entityID;
   public int varMask = 0xf;
+  public float hardness = 0f;
+  public int preferedTool = TOOL_NONE;
+  public int cls = 0;  //item class : ROCK I,II,III,IV, etc.
 
   private ArrayList<Box> boxes_entity = new ArrayList<Box>();
   private ArrayList<Box> boxes_selection = new ArrayList<Box>();
@@ -397,9 +401,9 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public void useBlock(Client client, Coords c) {}
   public boolean useTool(Client client, Coords c) {
 //    Static.log("useTool:" + (int)id);
-    Item item = client.player.items[client.activeSlot];
+    Item item = client.player.items[client.player.activeSlot];
     if (item.id == Items.FLINT_STEEL) {
-      if (isWooden) {
+      if (material == MAT_WOOD) {
         //set it on fire
         Coords f = c.clone();
         if (f.chunk.getBlock(f.gx, f.gy, f.gz).isSolid) {
@@ -431,8 +435,8 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     super.setFuel(heat);
     return this;
   }
-  public BlockBase setWood() {
-    super.setWood();
+  public BlockBase setMaterial(int type) {
+    super.setMaterial(type);
     return this;
   }
   public BlockBase setVar() {
@@ -520,11 +524,51 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     return false;
   }
 
+  public BlockBase setHardness(float hardness, int preferedTool, int cls) {
+    this.hardness = hardness;
+    this.preferedTool = preferedTool;
+    this.cls = cls;
+    return this;
+  }
+
   /** Returns amount of dmg done.
-   * TODO : include tool used.
+   * see http://minecraft.gamepedia.com/Breaking
    */
-  public float dmg() {
-    return 10.0f;
+  public float dmg(Item item) {
+    ItemBase tool = Static.items.items[item.id];
+//    Static.log("tool=" + tool);
+
+    if (hardness == -1f) return 0f;  //can not destroy (bedrock, etc.)
+
+    float time = hardness * 1.5f;
+
+    boolean slow = false;
+    switch (cls) {
+      case CLS_WOOD: if (tool.material < MAT_WOOD) slow = true; break;
+      case CLS_STONE: if (tool.material < MAT_STONE) slow = true; break;
+      case CLS_IRON: if (tool.material < MAT_IRON) slow = true; break;
+      case CLS_DIAMOND: if (tool.material < MAT_DIAMOND) slow = true; break;
+    }
+    if (slow) time *= 3.33;
+
+    if (tool.tool == preferedTool) {
+//      Static.log("preferred:" + preferedTool + ",tool=" + tool.tool + ",mat=" + tool.material);
+      switch (tool.material) {
+        case MAT_WOOD: time /= 2f; break;
+        case MAT_STONE: time /= 4f; break;
+        case MAT_IRON: time /= 6f; break;
+        case MAT_DIAMOND: time /= 8f; break;
+        case MAT_GOLD: time /= 12f; break;
+      }
+    }
+
+    float ticks = time * 20.0f;
+
+    float dmg = 100.0f / ticks;
+
+//    Static.log("dmg:" + dmg + ",hardness=" + hardness);
+
+    return dmg;
   }
 
   public void teleport(EntityBase e, Coords c) {}

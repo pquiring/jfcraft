@@ -20,7 +20,7 @@ public class PacketDrop extends Packet {
 
   //process on server side
   public void process(Server server, Client client) {
-    Item item = client.player.items[client.activeSlot];
+    Item item = client.player.items[client.player.activeSlot];
     if (item.count == 0) return;
     Item drop = (Item)item.clone();
     drop.count = 1;
@@ -29,7 +29,7 @@ public class PacketDrop extends Packet {
     if (item.count == 0) {
       item.clear();
     }
-    client.serverTransport.setInvItem(client.activeSlot, item);
+    client.serverTransport.setInvItem((byte)client.player.activeSlot, item);
   }
 
   @Override
