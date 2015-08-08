@@ -332,14 +332,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
       return -3;
     }
 
-    if (!hit && onGround && !nowOnGround && maxFall != -1) {
-      for(float a=0;a<=maxFall;a+=Static._1_16) {
-        if (onGround(dx,dy - a,dz, (char)0)) return 0;
-      }
-      return -4;
-    }
-
-    if (!nowOnGround && avoid != AVOID_NONE && !inWater && !inLava) {
+    if (!hit && onGround && !nowOnGround && avoid != AVOID_NONE && !inWater && !inLava) {
       checkBlocks(dx,dy - 0.5f,dz);
       if ((avoid & AVOID_WATER) == AVOID_WATER && inWater) {
         inWater = false;
@@ -349,6 +342,13 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
         inLava = false;
         return -5;
       }
+    }
+
+    if (!hit && onGround && !nowOnGround && maxFall != -1) {
+      for(float a=0;a<=maxFall;a+=Static._1_16) {
+        if (onGround(dx,dy - a,dz, (char)0)) return 0;
+      }
+      return -4;
     }
 
     if (!onGround) {
