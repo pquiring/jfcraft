@@ -206,6 +206,10 @@ public class WorldItem extends EntityBase {
     Static.server.broadcastEntitySpawn(e);
   }
 
+  public float getBuoyant() {
+    return 0;  //items should not float
+  }
+
   private static final byte ver = 0;
 
   @Override
