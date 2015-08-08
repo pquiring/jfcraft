@@ -18,10 +18,10 @@ public class BlockOpaqueVarPerf extends BlockOpaque {
     isVar = true;
     isPerf = true;
   }
-  public void addFace(RenderBuffers obj, RenderData data) {
+  public SubTexture getTexture(RenderData data) {
     if (Settings.current.isFancy)
-      addFace(obj, data, textures[data.dir[data.side]]);
+      return textures[data.dir[data.side]];
     else
-      addFace(obj, data, textures2[data.dir[data.side]]);
+      return textures2[data.dir[data.side]];
   }
 }

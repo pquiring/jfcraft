@@ -666,6 +666,12 @@ public class Game extends RenderScreen {
       case GLVK.VK_F11:
         Main.toggleFullscreen();
         break;
+      case GLVK.VK_F10:
+        //toggle fancy/fast graphics
+        Settings.current.isFancy = !Settings.current.isFancy;
+        Static.blocks.initPerf();
+        Static.client.rebuildAll();
+        break;
       case '/':
         chat = (ChatMenu)Static.screens.screens[Client.CHAT];
         chat.setup("/");

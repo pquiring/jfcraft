@@ -658,4 +658,11 @@ public class Client {
     if (player == null) return -1;
     return player.uid;
   }
+
+  public void rebuildAll() {
+    Chunk chunks[] = world.chunks.getChunks();
+    for(int a=0;a<chunks.length;a++) {
+      chunkBuilder.add(chunks[a]);
+    }
+  }
 }
