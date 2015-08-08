@@ -33,6 +33,14 @@ public class Game extends RenderScreen {
   private Runtime rt = Runtime.getRuntime();
   private boolean showControls = true;
   private static RenderBuffers hand;
+  private GLFrustum frustum = new GLFrustum();
+  private GLVector4 p4 = new GLVector4();  //position
+  private GLVector4 l4 = new GLVector4();  //center (looking at)
+  private GLVector4 u4 = new GLVector4();  //up
+  private GLVector3 p3 = new GLVector3();  //position
+  private GLVector3 l3 = new GLVector3();  //center (looking at)
+  private GLVector3 u3 = new GLVector3();  //up
+  private GLVector3 pts[];  //chunk points
 
   public static boolean advanceAnimation;
 
@@ -52,6 +60,15 @@ public class Game extends RenderScreen {
     if (o_box == null) {
       o_box = new RenderBuffers();
       o_box.type = GL_LINES;
+    }
+    if (pts == null) {
+      pts = new GLVector3[8];
+      for(int a=0;a<8;a++) {
+        pts[a] = new GLVector3();
+        if (a > 3) {
+          pts[a].v[1] = 256f;
+        }
+      }
     }
     lastx = -1;
   }
@@ -173,6 +190,7 @@ public class Game extends RenderScreen {
       perspective.setIdentity();
       float ratio = ((float)width) / ((float)height);
       perspective.perspective(fov, ratio, zNear, zFar);
+      frustum.setPerspecive(fov, ratio, zNear, zFar);
     }
     glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, perspective.m);  //perspective matrix
 
@@ -186,11 +204,28 @@ public class Game extends RenderScreen {
       view.addRotate(Static.client.ang.x, 1, 0, 0);
       view.addRotate(Static.client.ang.y, 0, 1, 0);
     }
-    view.addTranslate2(-Static.client.player.pos.x, -Static.client.player.pos.y -Static.client.player.eyeHeight, -Static.client.player.pos.z);
+    float camx = -Static.client.player.pos.x;
+    float camy = -Static.client.player.pos.y -Static.client.player.eyeHeight;
+    float camz = -Static.client.player.pos.z;
+    view.addTranslate2(camx, camy, camz);
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
+
+    //setup frustum culling
+    p3.set(-camx, -camy, -camz);
+    l3.set(0, 0, -1f);
+    view.mult(l3);
+    l3.add(p3);
+    u3.set(0, 1f, 0);
+    view.mult(u3);
+    u3.add(p3);
+    frustum.setPosition(p3, l3, u3);
+    if (debug) {
+//      frustum.print();
+    }
 
     Static.blocks.stitched.bind();
     int cnt = 0;
+    int fcnt = 0;
     RenderBuffers obj;
     String dmsg = "";
 
@@ -205,6 +240,32 @@ public class Game extends RenderScreen {
       if (Static.abs(chunk.cx - cx) > Settings.current.loadRange) continue;
       if (Static.abs(chunk.cz - cz) > Settings.current.loadRange) continue;
       if (!chunk.ready) continue;
+      //frustum culling
+      float px1 = chunk.cx * 16f;
+      float pz1 = chunk.cz * 16f;
+      float px2 = px1 + 16f;
+      float pz2 = pz1 + 16f;
+      pts[0].v[0] = px1;
+      pts[0].v[2] = pz1;
+      pts[1].v[0] = px2;
+      pts[1].v[2] = pz1;
+      pts[2].v[0] = px2;
+      pts[2].v[2] = pz2;
+      pts[3].v[0] = px1;
+      pts[3].v[2] = pz2;
+
+      pts[4].v[0] = px1;
+      pts[4].v[2] = pz1;
+      pts[5].v[0] = px2;
+      pts[5].v[2] = pz1;
+      pts[6].v[0] = px2;
+      pts[6].v[2] = pz2;
+      pts[7].v[0] = px1;
+      pts[7].v[2] = pz2;
+      if (frustum.boxInside(pts) == GLFrustum.OUTSIDE) {
+        fcnt++;
+        continue;
+      }
       chunk.inRange = true;
       obj = chunk.dest.getBuffers(Chunk.DEST_NORMAL);
       if (obj.isBufferEmpty()) continue;
@@ -436,7 +497,7 @@ public class Game extends RenderScreen {
         dy += fontSize;
         addText(dx,dy,"Chunk:" + cx + "," + cz + " Block:" + gx + "," + gy + "," + gz);
         dy += fontSize;
-        addText(dx,dy,"Chunks:" + chunks.length + " Rendered:" + cnt);
+        addText(dx,dy,"Chunks:" + chunks.length + " Rendered:" + cnt + " Frustum:" + fcnt);
         dy += fontSize;
         long free = rt.freeMemory() / (1024 * 1024);
         long total = rt.totalMemory() / (1024 * 1024);

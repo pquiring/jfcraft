@@ -26,8 +26,6 @@ public class RenderEngine {
   private final Object fpsLock = new Object();
   private int fpsCounter;
 
-  private final int FPS = 120;
-
   private Object screenLock = new Object();
   private RenderScreen screen;
 
@@ -147,7 +145,7 @@ public class RenderEngine {
 
     //setup timers
     frTimer = new java.util.Timer();
-    int delay = 1000 / FPS;
+    int delay = 1000 / Settings.current.FPS;
     frTimer.scheduleAtFixedRate(new TimerTask() {
       public final void run() {
         nextFrame();
@@ -192,7 +190,7 @@ public class RenderEngine {
         glDepthFunc(GL_LEQUAL);
         synchronized(screenLock) {
           if (nextFrame && processed) {
-            nextFrame = false;
+            if (!Settings.current.maxFPS) nextFrame = false;
             screen.render((int)Static.width, (int)Static.height);
             Main.swap();
             processed = false;

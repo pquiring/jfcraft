@@ -29,6 +29,8 @@ public class Settings {
   public boolean ptt = true;  //push to talk (else phone mode)
   public String mic = "<default>";
   public String spk = "<default>";
+  public boolean maxFPS = true;
+  public int FPS = 60;
 
   public static void load() {
     try {
@@ -39,8 +41,10 @@ public class Settings {
       fis.close();
     } catch (FileNotFoundException e) {
       Static.log("No settings found, using defaults.");
+      current.setDefault();
     } catch (Exception e) {
       Static.log(e);
+      current.setDefault();
     }
   }
   public static void save() {
@@ -55,5 +59,24 @@ public class Settings {
     } catch (Exception e) {
       Static.log(e);
     }
+  }
+  public void setDefault() {
+    player = "Player";  //player name
+    pass = "";  //password (not used yet)
+    loadRange = 6;  //# chunks client loads (radius)
+    isFancy = true;  //use fancy graphics (else solid)
+    tcpPort = 25565 + 1;
+    doSteps = true;  //enable steps land (smooth) (experimental)
+    doViewBobbing = true;  //view bobbing
+    pvp = true;
+    dropItemsOnDeath = true;
+    //VoIP stuff
+    server_voip = true;
+    client_voip = true;
+    ptt = true;  //push to talk (else phone mode)
+    mic = "<default>";
+    spk = "<default>";
+    maxFPS = false;
+    FPS = 60;
   }
 }
