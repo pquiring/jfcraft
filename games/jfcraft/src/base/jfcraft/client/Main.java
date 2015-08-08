@@ -12,6 +12,7 @@ import org.lwjgl.system.libffi.*;
 
 import java.nio.ByteBuffer;
 import javaforce.JF;
+import javaforce.gl.GLVK;
 import jfcraft.data.Static;
 
 import static org.lwjgl.glfw.Callbacks.*;
@@ -28,6 +29,7 @@ public class Main {
 
   private class Window {
     public GLFWKeyCallback keyCallback;
+    public GLFWCharCallback charCallback;
     public GLFWCursorPosCallback mousePosCallback;
     public GLFWMouseButtonCallback mouseButtonCallback;
     public GLFWScrollCallback scrollCallback;
@@ -139,17 +141,21 @@ public class Main {
     // Setup a key callback. It will be called every time a key is pressed, repeated or released.
     glfwSetKeyCallback(win.handle, win.keyCallback = new GLFWKeyCallback() {
       public void invoke(long window, int key, int scancode, int action, int mods) {
-        Static.log("key:" + key + "," + scancode + "," + action + "," + mods);
-        //convert to VK
-        boolean press = action > 0;
-        if (press && key >= 32 && key <= 128) {
-          Static.video.keyTyped((char)key);
-        }
-        if (press) {
+        //mods : 1 = SHIFT 2 = CTRL 4 = ALT (bits)
+//        Static.log("key:" + key + "," + scancode + "," + action + "," + mods);
+        if (action > 0) {
           Static.video.keyPressed(key);
         } else {
           Static.video.keyReleased(key);
         }
+      }
+    });
+
+    glfwSetCharCallback(win.handle, win.charCallback = new GLFWCharCallback() {
+      public void invoke(long window, int key) {
+        //mods : 1 = SHIFT 2 = CTRL 4 = ALT (bits)
+//        Static.log("type:" + key);
+        Static.video.keyTyped((char)key);
       }
     });
 

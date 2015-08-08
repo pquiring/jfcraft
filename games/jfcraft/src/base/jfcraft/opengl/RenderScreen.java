@@ -624,16 +624,10 @@ public abstract class RenderScreen {
     }
     public void keyTyped(char ch) {
 //      Static.log("key=" + (int)ch);
-      if (ch == 8) {
-        backspace();
-      } else if (ch == 127) {
-        //delete();  //done in keyPressed()
-      } else {
-        if (ch <= 13) return;
-        if (txt.length() == max) return;
-        txt.insert(cpos, ch);
-        cpos++;
-      }
+      if (ch <= 32) return;
+      if (txt.length() == max) return;
+      txt.insert(cpos, ch);
+      cpos++;
     }
     public void keyPressed(int code) {
       switch (code) {
@@ -642,6 +636,7 @@ public abstract class RenderScreen {
       }
       if (center) return;
       switch (code) {
+        case GLVK.VK_BACKSPACE: backspace(); break;
         case GLVK.VK_DELETE: delete(); break;
         case GLVK.VK_LEFT: left(); break;
         case GLVK.VK_RIGHT: right(); break;
