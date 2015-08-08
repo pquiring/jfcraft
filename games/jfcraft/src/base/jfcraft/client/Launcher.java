@@ -227,11 +227,12 @@ public class Launcher extends javax.swing.JFrame {
       else
         cmd.add(System.getProperty("java.home") + "/bin/java");
       cmd.add("-Xmx" + memory.getSelectedItem());
-      String cp;
-      if (JF.isWindows() || JF.isMac())
-        cp = "javaforce.jar" + File.pathSeparator + "jfcraft.jar";
-      else
-        cp = "javaforce.jar" + File.pathSeparator + "jfcraft.jar";
+      String cp = "";
+      cp += getJar("javaforce.jar");
+      cp += File.pathSeparator;
+      cp += getJar("lwjgl.jar");
+      cp += File.pathSeparator;
+      cp += getJar("jfcraft.jar");
       int rows = pluginsModel.getRowCount();
       for(int row=0;row<rows;row++) {
         if ((Boolean)pluginsModel.getValueAt(row,0)) {
@@ -305,6 +306,11 @@ public class Launcher extends javax.swing.JFrame {
     }
   }
 
+  public String getJar(String name) {
+    String full = "/usr/share/java/" + name;
+    if (new File(full).exists()) return full;
+    return name;
+  }
 
 /*
   //ActiveX WebBrowser - not portable though...
