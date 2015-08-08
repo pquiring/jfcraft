@@ -624,7 +624,7 @@ public abstract class RenderScreen {
     }
     public void keyTyped(char ch) {
 //      Static.log("key=" + (int)ch);
-      if (ch <= 32) return;
+      if (ch < 32) return;
       if (txt.length() == max) return;
       txt.insert(cpos, ch);
       cpos++;
