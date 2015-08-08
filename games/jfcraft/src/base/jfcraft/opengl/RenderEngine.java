@@ -299,4 +299,8 @@ public class RenderEngine {
     //TODO : shutdown gracefully
     System.exit(0);
   }
+
+  public void reload() {
+    //TODO : reload all OpenGL textures/buffers/etc.
+  }
 }
