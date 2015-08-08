@@ -91,7 +91,7 @@ public class ChatMenu extends RenderScreen {
           history.add(msg);
         }
         Static.video.setScreen(Static.game);
-        setCursor(true);
+        setCursor(false);
         Static.inGame = true;
         break;
     }
