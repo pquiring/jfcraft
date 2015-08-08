@@ -179,6 +179,7 @@ public class Pig extends CreatureBase {
     super.tick();
     //do AI
     boolean moved;
+    boolean wasmoving = mode != MODE_IDLE;
     //random walking
     if (Static.debugRotate) {
       //test rotate in a spot
@@ -192,7 +193,7 @@ public class Pig extends CreatureBase {
       randomWalking();
       moved = moveEntity();
     }
-    if (moved) Static.server.broadcastEntityMove(this, false);
+    if (moved || wasmoving) Static.server.broadcastEntityMove(this, false);
   }
 
   private static Random r = new Random();

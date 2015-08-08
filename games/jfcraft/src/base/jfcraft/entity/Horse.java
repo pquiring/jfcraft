@@ -446,6 +446,7 @@ public class Horse extends VehicleBase {
   public void tick() {
     super.tick();
     boolean moved;
+    boolean wasmoving = mode != MODE_IDLE;
     //do AI
     updateFlags(0,0,0);
     //random walking
@@ -495,7 +496,7 @@ public class Horse extends VehicleBase {
         }
       }
     }
-    if (moved) {
+    if (moved || wasmoving) {
       Static.server.broadcastEntityMove(this, false);
     }
     if (occupant != null) {

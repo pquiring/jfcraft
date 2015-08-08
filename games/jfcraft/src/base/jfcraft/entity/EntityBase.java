@@ -524,11 +524,12 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public static final int AVOID_WATER = 2;
   public static final int AVOID_LAVA_WATER = 3;
 
-  /** Attempt to walk in x/z (may move up steps)
+  /** Move entity.
+   *
    * @param sneak : sneak mode (do not fall off block)
    * @param stick : stick into blocks (arrows)
    * @param usePath : use path
-   * @param maxFall : max dist to call
+   * @param maxFall : max dist to fall
    * @param avoid : avoid certain blocks (water, lava, etc.)
    *
    * @return entity moved?

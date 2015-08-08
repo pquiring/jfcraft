@@ -194,6 +194,7 @@ public class Skeleton extends HumaniodBase {
       }
     }
     boolean moved;
+    boolean wasmoving = mode != MODE_IDLE;
     if (Static.debugRotate) {
       //test rotate in a spot
       ang.y += 1.0f;
@@ -210,7 +211,7 @@ public class Skeleton extends HumaniodBase {
       }
       moved = moveEntity();
     }
-    if (target != null || moved) Static.server.broadcastEntityMove(this, false);
+    if (target != null || moved || wasmoving) Static.server.broadcastEntityMove(this, false);
     super.tick();
   }
 
