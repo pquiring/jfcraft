@@ -171,7 +171,6 @@ public class PacketPos extends Packet {
           //break block
           if (client.s1.block.id == 0) return;
           synchronized(client.s1.chunk.lock) {
-            Static.log("activeSlot=" + client.player.activeSlot);
             float dmg = client.s1.block.dmg(client.player.items[client.player.activeSlot]);
             if (client.crack.x != client.s1.gx || client.crack.y != client.s1.gy || client.crack.z != client.s1.gz || client.crack_cx != client.s1.cx || client.crack_cz != client.s1.cz) {
               if (client.crack.dmg > 0.0f) {

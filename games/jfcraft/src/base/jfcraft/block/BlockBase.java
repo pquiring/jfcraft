@@ -352,6 +352,12 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public void destroy(Client client, Coords c, boolean doDrop) {
     int bits = c.chunk.getBits(c.gx,c.gy,c.gz);
     Item items[] = null;
+    if (client != null && cls != CLS_NONE) {
+      ItemBase tool = Static.items.items[client.player.items[client.player.activeSlot].id];
+      if (tool.material < cls) {
+        doDrop = false;
+      }
+    }
     if (doDrop) {
       items = drop(c, isVar ? Chunk.getVar(bits) : 0);
     }
@@ -536,7 +542,6 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
    */
   public float dmg(Item item) {
     ItemBase tool = Static.items.items[item.id];
-//    Static.log("tool=" + tool);
 
     if (hardness == -1f) return 0f;  //can not destroy (bedrock, etc.)
 
@@ -552,7 +557,6 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     if (slow) time *= 3.33;
 
     if (tool.tool == preferedTool) {
-//      Static.log("preferred:" + preferedTool + ",tool=" + tool.tool + ",mat=" + tool.material);
       switch (tool.material) {
         case MAT_WOOD: time /= 2f; break;
         case MAT_STONE: time /= 4f; break;
@@ -565,8 +569,6 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     float ticks = time * 20.0f;
 
     float dmg = 100.0f / ticks;
-
-//    Static.log("dmg:" + dmg + ",hardness=" + hardness);
 
     return dmg;
   }
