@@ -9,6 +9,7 @@ Aug ?, 2015 : v0.20 released!
     - still using JavaForce native code to access OpenGL functions
     - GLFW has a mouse locking feature which is better than using java.awt.Robot
     - GLFW can not set the window icon (feature is implemented in git, not released yet)
+  - added block hardness
 
 Aug 1, 2015 : v0.19 released!
   - fix major opengl resource leak (crashing on some systems)

@@ -19,7 +19,7 @@ public class RecipeCookie extends Recipe {
   public Item make(Item items[]) {
     if (items[0].id != Items.WHEAT_ITEM) return null;
     if (items[1].id != Items.COLOR) return null;
-    if (items[1].var != VAR_COCOA) return null;
+    if (items[1].var != Items.VAR_COCOA) return null;
     if (items[2].id != Items.WHEAT_ITEM) return null;
     return new Item(Items.BREAD);
   }

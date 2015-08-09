@@ -213,6 +213,24 @@ public class Items {
   public static char CHAIN;
   public static char HOPPER_ITEM;
 
+  //color (dye) VARs of "COLOR" item (see http://minecraft.gamepedia.com/Dye)
+  public final static byte VAR_INK = 0;  //black (ink sack)
+  public final static byte VAR_RED = 1;  //red (flower)
+  public final static byte VAR_GREEN = 2;  //green (cactus)
+  public final static byte VAR_COCOA = 3;  //brown (cocoa beans "as is")
+  public final static byte VAR_LAPIS = 4;  //blue (lapis "as is")
+  public final static byte VAR_PURPLE = 5;  //purple (blue + red)
+  public final static byte VAR_CYAN = 6;  //cyan (blue + green)
+  public final static byte VAR_LIGHT_GRAY = 7;  //light gray (flowers or mix black+2white or gray+1white)
+  public final static byte VAR_GRAY = 8;  //gray (black + white)
+  public final static byte VAR_PINK = 9;  //pink (flowers or red + white)
+  public final static byte VAR_LIME = 10;  //lime (green + white)
+  public final static byte VAR_YELLOW = 11;  //yellow (flower)
+  public final static byte VAR_LIGHT_BLUE = 12;  //light blue (flower or blue + white)
+  public final static byte VAR_MAGENTA = 13;  //magenta (flower or purple + pink or blue + white + 2red or pink + red + blue)
+  public final static byte VAR_ORANGE = 14;  //orange (flower or red + yellow)
+  public final static byte VAR_BONEMEAL = 15;  //white
+
   public Texture stitched;
   public int texturesCount;
   public ArrayList<Texture> textures = new ArrayList<Texture>();  //other textures

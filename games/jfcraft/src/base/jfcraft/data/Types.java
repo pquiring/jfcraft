@@ -39,9 +39,6 @@ public class Types {
   public final static int CLS_WOOD = 1;
   public final static int CLS_STONE = 2;
   public final static int CLS_IRON = 3;
-  public final static int CLS_DIAMOND = 4;
-
-  //color vars
-  public final static byte VAR_COCOA = 3;
-  public final static byte VAR_BONEMEAL = 15;
+  public final static int CLS_GOLD = 4;  //not used in MC
+  public final static int CLS_DIAMOND = 5;
 }
