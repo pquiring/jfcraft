@@ -260,7 +260,7 @@ public class Blocks {
     registerBlock(new BlockOpaqueVar("PLANKS"
       , new String[] {"Oak Wood Planks", "Spruce Wood Planks", "Birch Wood Planks", "Jungle Wood Planks", "Acacia Wood Planks", "Dark Oak Wood Planks"}
       , new String[] {"planks_oak", "planks_spruce", "planks_birch", "planks_jungle", "planks_acacia", "planks_big_oak"})
-      .setFuel(15).setMaterial(MAT_WOOD)
+      .setFuel(15).setMaterial(MAT_WOOD).setHardness(2.0f, TOOL_AXE, CLS_NONE)
     );
     registerBlock(new BlockXVar("SAPLING"
       , new String[] {"Oak Wood Sapling", "Spruce Wood Sapling", "Birch Wood Sapling", "Jungle Wood Sapling", "Acacia Wood Sapling", "Dark Oak Wood Sapling"}
@@ -273,9 +273,9 @@ public class Blocks {
     registerBlock(new BlockFalling("SAND", new String[] {"Sand", "Red Sand"}, new String[] {"sand", "red_sand"})
       .setBake("GLASSBLOCK").setVar().setHardness(0.5f, TOOL_SHOVEL, CLS_NONE)
     );
-    registerBlock(new BlockFalling("GRAVEL", new String[] {"Gravel"}, new String[] {"gravel"}));
+    registerBlock(new BlockFalling("GRAVEL", new String[] {"Gravel"}, new String[] {"gravel"}).setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
     registerBlock(new BlockOpaque("GOLDORE", new String[] {"Gold Ore"}, new String[] {"gold_ore"}).setBake("GOLD_INGOT").setHardness(3f, TOOL_PICKAXE, CLS_IRON));
-    registerBlock(new BlockOpaque("IRONORE", new String[] {"Iron Ore"}, new String[] {"iron_ore"}).setBake("IRON_INGOT"));
+    registerBlock(new BlockOpaque("IRONORE", new String[] {"Iron Ore"}, new String[] {"iron_ore"}).setBake("IRON_INGOT").setHardness(3f, TOOL_PICKAXE, CLS_STONE));
     registerBlock(new BlockOpaque("COALORE", new String[] {"Coal Ore"}, new String[] {"coal_ore"}).setDrop("COAL").setHardness(3f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaqueVar("WOOD"
       , new String[] {"Oak Wood", "Spruce Wood", "Birch Wood", "Jungle Wood", "Acacia Wood", "Dark Oak Wood"}
@@ -389,7 +389,7 @@ public class Blocks {
     );
     registerBlock(new BlockFurnace("FURNACE_ACTIVE", new String[] {"Furnace"}
       , new String[] {"furnace_top", "furnace_front_on", "furnace_side", "cobblestone"})
-      .setLight((byte)13)
+      .setLight((byte)13).setHardness(3.5f, TOOL_PICKAXE, CLS_NONE)
     );
     registerBlock(new BlockLadder("LADDER", new String[] {"Ladder"}, new String[] {"ladder"}).setHardness(0.4f, TOOL_AXE, CLS_NONE));
     registerBlock(new BlockRail("RAIL", new String[] {"Rail"}, new String[] {"rail_normal", "rail_normal_turned"}).setHardness(0.7f, TOOL_PICKAXE, CLS_NONE));
