@@ -299,10 +299,10 @@ public class Client {
         run = Static.keys[GLVK.VK_CONTROL_L];
         fup = Static.keys[GLVK.VK_R];
         fdn = Static.keys[GLVK.VK_F];
-        if (Static.button[1] || Static.buttonClick[1]) b1 = true;
-        Static.buttonClick[1] = false;
-        if (Static.button[3] || Static.buttonClick[3]) b2 = true;
-        Static.buttonClick[3] = false;
+        if (Static.button[GLWindow.MOUSE_BUTTON_LEFT] || Static.buttonClick[GLWindow.MOUSE_BUTTON_LEFT]) b1 = true;
+        Static.buttonClick[GLWindow.MOUSE_BUTTON_LEFT] = false;
+        if (Static.button[GLWindow.MOUSE_BUTTON_RIGHT] || Static.buttonClick[GLWindow.MOUSE_BUTTON_RIGHT]) b2 = true;
+        Static.buttonClick[GLWindow.MOUSE_BUTTON_RIGHT] = false;
 
         synchronized(ang) {
           player.ang.copy(ang);

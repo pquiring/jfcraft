@@ -123,13 +123,11 @@ public class Main implements GLWindow.KeyEvents, GLWindow.MouseEvents, GLWindow.
 
   @Override
   public void keyPressed(int vk) {
-    Static.log("key dn:" + vk);
     Static.video.keyPressed(vk);
   }
 
   @Override
   public void keyReleased(int vk) {
-    Static.log("key up:" + vk);
     Static.video.keyReleased(vk);
   }
 
@@ -141,15 +139,15 @@ public class Main implements GLWindow.KeyEvents, GLWindow.MouseEvents, GLWindow.
   }
 
   @Override
-  public void mouseDown(int buttons) {
-    mb = buttons;
-    Static.video.mouseUp(mx,my,mb);
+  public void mouseDown(int button) {
+    Static.video.mouseDown(mx,my,button);
+    mb = button;
   }
 
   @Override
-  public void mouseUp(int buttons) {
-    mb = buttons;
-    Static.video.mouseDown(mx,my,mb);
+  public void mouseUp(int button) {
+    Static.video.mouseUp(mx,my,button);
+    mb = 0;
   }
 
   @Override
