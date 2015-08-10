@@ -103,6 +103,7 @@ public class Recipes {
     registerRecipe(new RecipeSolarPanel());
     registerRecipe(new RecipeRedstoneComparator());
     registerRecipe(new RecipeRedstoneRepeater());
+    registerRecipe(new RecipeDyes());
   }
 
   public Item make3x3(Item items[]) {

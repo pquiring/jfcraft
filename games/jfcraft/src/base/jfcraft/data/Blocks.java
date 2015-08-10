@@ -239,6 +239,19 @@ public class Blocks {
   public static final byte VAR_BLACK = 15;
   //...
 
+  //flower vars
+  public static final byte VAR_DANDELION = 0;
+  public static final byte VAR_ALLIUM = 0;
+  public static final byte VAR_BLUE_ORCHID = 0;
+  public static final byte VAR_HOUSTONIA = 0;
+  public static final byte VAR_OXEYE_DAISY = 0;
+  public static final byte VAR_PAEONIA = 0;
+  public static final byte VAR_ROSE = 0;
+  public static final byte VAR_TULIP_ORANGE = 0;
+  public static final byte VAR_TULIP_PINK = 0;
+  public static final byte VAR_TULIP_RED = 0;
+  public static final byte VAR_TULIP_WHITE = 0;
+
   public void registerDefault() {
     registerBlock(new BlockAir("AIR"));
     registerBlock(new BlockOpaque("STONE", new String[] {"Stone"}, new String[] {"stone"})
@@ -348,11 +361,12 @@ public class Blocks {
       }
     ).setVar().setHardness(0.8f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockXVar("FLOWER"
-      , new String[] {"Flower",           "Flower",        "Flower",             "Flower",           "Flower",             "Flower",         "Flower",      "Flower",              "Flower",            "Flower",           "Flower"}
+      , new String[] {"Dandelion",        "Allium",        "Blue Orchid",        "Houstonia",        "Oxeye Daisy",        "Paeonia",        "Rose",        "Orange Tulip",        "Pink Tulip",        "Red Tulip",        "White Tulip"}
       , new String[] {"flower_dandelion", "flower_allium", "flower_blue_orchid", "flower_houstonia", "flower_oxeye_daisy", "flower_paeonia", "flower_rose", "flower_tulip_orange", "flower_tulip_pink", "flower_tulip_red", "flower_tulip_white"})
       .resetBoxes(BlockHitTest.Type.SELECTION).addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION)
       .setSupported().setPlant().setShowAsItem()
     );
+
     registerBlock(new BlockX("MUSHROOM_BROWN", new String[] {"Brown Mushroom"}, new String[] {"mushroom_brown"}).setShowAsItem().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION));
     registerBlock(new BlockX("MUSHROOM_RED", new String[] {"Red Mushroom"}, new String[] {"mushroom_red"}).setShowAsItem().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION));
     registerBlock(new BlockOpaque("GOLD_BLOCK", new String[] {"Gold Block"}, new String[] {"gold_block"}).setHardness(3f, TOOL_PICKAXE, CLS_IRON));
