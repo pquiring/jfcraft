@@ -33,3 +33,4 @@ banners
 horse leads
 spawn eggs
 implement more commands
+dye recipes

@@ -5,47 +5,19 @@ package jfcraft.client;
  * @author pquiring
  */
 
-import org.lwjgl.Sys;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.libffi.*;
-
-import java.nio.ByteBuffer;
 import javaforce.JF;
 import javaforce.gl.GLVK;
 import jfcraft.data.Static;
 
-import static org.lwjgl.glfw.Callbacks.*;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.system.MemoryUtil.*;
-
-import javaforce.gl.GL;
+import javaforce.gl.*;
 
 import jfcraft.opengl.*;
 
-public class Main {
+public class Main implements GLWindow.KeyEvents, GLWindow.MouseEvents, GLWindow.WindowEvents {
   // We need to strongly reference callback instances.
-  private GLFWErrorCallback errorCallback;
-
-  private class Window {
-    public GLFWKeyCallback keyCallback;
-    public GLFWCharCallback charCallback;
-    public GLFWCursorPosCallback mousePosCallback;
-    public GLFWMouseButtonCallback mouseButtonCallback;
-    public GLFWScrollCallback scrollCallback;
-    public GLFWWindowSizeCallback windowSizeCallback;
-    public GLFWWindowCloseCallback windowCloseCallback;
-    private long handle;
-    public void close() {
-      glfwDestroyWindow(handle);
-      keyCallback.release();
-      mousePosCallback.release();
-      mouseButtonCallback.release();
-      scrollCallback.release();
-      windowSizeCallback.release();
-      windowCloseCallback.release();
-    }
-  }
+  private GLWindow window;
+  private GLWindow fullscreen;
+  private GLWindow current;
 
   private float mx, my;
   private int mb;
@@ -53,193 +25,59 @@ public class Main {
   private boolean fullscreenMode;
   private boolean toggleFullscreenMode;
 
-  private static final int GL_TRUE = 1;
-  private static final int GL_FALSE = 0;
-
-  // The window handle
-  private Window window = new Window();
-  private Window fullscreen = new Window();
-  private Window current;
-
   public void run() {
     main = this;
     try {
       init();
-      createWindow(window, NULL, NULL);
       initGame();
       loop();
-      // Release window and window callbacks
-      window.close();
-      fullscreen.close();
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
       // Terminate GLFW and release the GLFWerrorfun
-      glfwTerminate();
-      errorCallback.release();
     }
   }
 
   private void init() {
-    // Setup an error callback. The default implementation
-    // will print the error message in System.err.
-    glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
-
-    // Initialize GLFW. Most GLFW functions will not work before doing this.
-    if (glfwInit() != GL11.GL_TRUE) {
-      throw new IllegalStateException("Unable to initialize GLFW");
-    }
+    GLWindow.init();
+    window = createWindow(GLWindow.STYLE_VISIBLE | GLWindow.STYLE_RESIZABLE | GLWindow.STYLE_TITLEBAR,512,512,null);
+    current = window;
+    GL.glInit();  //load gl api
   }
 
-  private void createWindow(Window win, long device, long shared) {
-    // Configure our window
-    glfwDefaultWindowHints(); // optional, the current window hints are already the default
-    glfwWindowHint(GLFW_VISIBLE, GL_TRUE); // the window will stay hidden after creation
-    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // the window will be resizable
-
-    int width = 512;
-    int height = 512;
-
-    // Create the window
-    win.handle = glfwCreateWindow(width, height, "jfCraft", device, shared);
-    if (win.handle == NULL) {
-      throw new RuntimeException("Failed to create the GLFW window");
-    }
-
-    if (device == NULL) {
-      // Get the resolution of the primary monitor
-      ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-      // Center our window
-      glfwSetWindowPos(
-        win.handle,
-        (GLFWvidmode.width(vidmode) - width) / 2,
-        (GLFWvidmode.height(vidmode) - height) / 2
-      );
-    }
-
-    // Make the OpenGL context current
-    glfwMakeContextCurrent(win.handle);
-    // Enable v-sync
-//    glfwSwapInterval(1);  //Settings???
-
-    // Make the window visible
-    glfwShowWindow(win.handle);
-
-    createCallbacks(win);
-    current = win;
+  private GLWindow createWindow(int style, int x,int y,GLWindow shared) {
+    GLWindow win = new GLWindow();
+    win.create(style, "jfCraft", x, y, shared);
+    win.setKeyListener(this);
+    win.setMouseListener(this);
+    win.setWindowListener(this);
+    return win;
   }
 
   private void initGame() {
-    // Load GL functions via JavaForce
-    GL.glInit();
-
-    // Init the game rendering engine
     new RenderEngine(new Loading()).init();
   }
 
-  private void createCallbacks(Window win) {
-    // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-    glfwSetKeyCallback(win.handle, win.keyCallback = new GLFWKeyCallback() {
-      public void invoke(long window, int key, int scancode, int action, int mods) {
-        //mods : 1 = SHIFT 2 = CTRL 4 = ALT (bits)
-//        Static.log("key:" + key + "," + scancode + "," + action + "," + mods);
-        if (action > 0) {
-          Static.video.keyPressed(key);
-        } else {
-          Static.video.keyReleased(key);
-        }
-      }
-    });
-
-    glfwSetCharCallback(win.handle, win.charCallback = new GLFWCharCallback() {
-      public void invoke(long window, int key) {
-        //mods : 1 = SHIFT 2 = CTRL 4 = ALT (bits)
-//        Static.log("type:" + key);
-        Static.video.keyTyped((char)key);
-      }
-    });
-
-    glfwSetCallback(win.handle, win.mouseButtonCallback = new GLFWMouseButtonCallback() {
-      public void invoke(long window, int button, int action, int mods) {
-//        Static.log("mouseBut:" + button + "," + action + "," + mods);
-        switch (button) {
-          case 0: button = 1; break;
-          case 1: button = 3; break;
-          default: return;
-        }
-        if (action == 1) {
-          mb = button;
-          Static.video.mouseDown(mx, my, button);
-        } else {
-          mb = 0;
-          Static.video.mouseUp(mx, my, button);
-        }
-      }
-    });
-
-    glfwSetCallback(win.handle, win.mousePosCallback = new GLFWCursorPosCallback() {
-      public void invoke(long window, double x, double y) {
-//        Static.log("mousePos:" + x + "," + y);
-        mx = (float) x;
-        my = (float) y;
-        Static.video.mouseMove(mx, my, mb);
-      }
-    });
-
-    glfwSetCallback(win.handle, win.windowSizeCallback = new GLFWWindowSizeCallback() {
-      public void invoke(long window, int x, int y) {
-        Static.video.resize(x, y);
-      }
-    });
-
-    glfwSetCallback(win.handle, win.windowCloseCallback = new GLFWWindowCloseCallback() {
-      public void invoke(long window) {
-        Static.video.windowClosed();
-      }
-    });
-
-    glfwSetCallback(win.handle, win.scrollCallback = new GLFWScrollCallback() {
-      public void invoke(long window, double x, double y) {
-        if (JF.isMac()) {
-          //for Mac users
-          Static.video.mouseScrolled((int)y);
-        } else {
-          //for everyone else
-          Static.video.mouseScrolled((int)-y);
-        }
-      }
-    });
-  }
-
   private void loop() {
-    // This line is critical for LWJGL's interoperation with GLFW's
-    // OpenGL context, or any context that is managed externally.
-    // LWJGL detects the context that is current in the current thread,
-    // creates the ContextCapabilities instance and makes the OpenGL
-    // bindings available for use.
-//    GLContext.createFromCurrent();  //I don't use LWJGL for OpenGL API
-
-    // Run the rendering loop until the user has attempted to close
-    // the window or has pressed the ESCAPE key.
-    while (glfwWindowShouldClose(current.handle) == GL_FALSE) {
+    while (true) {
       Static.video.render();
       // Poll for window events.
-      glfwPollEvents();
+      GLWindow.pollEvents();
       if (toggleFullscreenMode) {
         toggleFullscreenMode = false;
         if (fullscreenMode) {
           current = window;
-          glfwHideWindow(fullscreen.handle);
-          glfwShowWindow(window.handle);
-          glfwMakeContextCurrent(window.handle);
+          fullscreen.hide();
+          window.show();
+          window.setCurrent();
         } else {
           current = fullscreen;
-          glfwHideWindow(window.handle);
-          if (fullscreen.handle == NULL) {
-            createWindow(fullscreen, glfwGetPrimaryMonitor(), window.handle);
+          window.hide();
+          if (fullscreen == null) {
+            fullscreen = createWindow(0,1,1,window);
           }
-          glfwShowWindow(fullscreen.handle);
-          glfwMakeContextCurrent(fullscreen.handle);
+          fullscreen.show();
+          fullscreen.setCurrent();
         }
 //        GLContext.createFromCurrent();  //I don't use LWJGL for OpenGL API
         fullscreenMode = !fullscreenMode;
@@ -255,7 +93,7 @@ public class Main {
   public static Main main;
 
   private void _swap() {
-    glfwSwapBuffers(current.handle); // swap the color buffers
+    current.swap();
   }
 
   public static void swap() {
@@ -264,9 +102,9 @@ public class Main {
 
   private void _setCursor(boolean state) {
     if (state) {
-      glfwSetInputMode(current.handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+      current.showCursor();
     } else {
-      glfwSetInputMode(current.handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+      current.lockCursor();
     }
   }
 
@@ -276,5 +114,56 @@ public class Main {
 
   public static void toggleFullscreen() {
 //    main.toggleFullscreenMode = true;  //Not supported yet
+  }
+
+  @Override
+  public void keyTyped(char c) {
+    Static.video.keyTyped(c);
+  }
+
+  @Override
+  public void keyPressed(int vk) {
+    Static.log("key dn:" + vk);
+    Static.video.keyPressed(vk);
+  }
+
+  @Override
+  public void keyReleased(int vk) {
+    Static.log("key up:" + vk);
+    Static.video.keyReleased(vk);
+  }
+
+  @Override
+  public void mouseMove(int x, int y) {
+    mx = x;
+    my = y;
+    Static.video.mouseMove(mx,my,mb);
+  }
+
+  @Override
+  public void mouseDown(int buttons) {
+    mb = buttons;
+    Static.video.mouseUp(mx,my,mb);
+  }
+
+  @Override
+  public void mouseUp(int buttons) {
+    mb = buttons;
+    Static.video.mouseDown(mx,my,mb);
+  }
+
+  @Override
+  public void mouseScroll(int x, int y) {
+    Static.video.mouseScrolled(y);
+  }
+
+  @Override
+  public void windowResize(int x, int y) {
+    Static.video.resize(x,y);
+  }
+
+  @Override
+  public void windowClosing() {
+    System.exit(0);
   }
 }
