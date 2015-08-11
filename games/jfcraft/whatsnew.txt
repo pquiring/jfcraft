@@ -10,6 +10,7 @@ Aug ?, 2015 : v0.20 released!
     - GLFW can not set the window icon (feature is implemented in git, not released yet)
     - LWJGL uses libffi which in my experience is PAINfully slow
   - finally switched to GLFW (now part of JavaForce)
+    - GLFW doesn't support icons yet but I added some JNI to overcome that (Windows only)
   - added block hardness
 
 Aug 1, 2015 : v0.19 released!
