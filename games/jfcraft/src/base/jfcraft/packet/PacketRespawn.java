@@ -36,10 +36,10 @@ public class PacketRespawn extends Packet {
       client.player.hunger = 20;
       client.player.saturation = 20;
       client.player.exhaustion = 0;
-      LoadingChunks menu = (LoadingChunks)Static.screens.screens[Client.LOADINGCHUNKS];
-      menu.setup(client);
-      Static.video.setScreen(menu);
     }
+    LoadingChunks menu = (LoadingChunks)Static.screens.screens[Client.LOADINGCHUNKS];
+    menu.setup(client);
+    Static.video.setScreen(menu);  //WARNING : sync on screenLock (must not lock on renderLock)
   }
 
   @Override

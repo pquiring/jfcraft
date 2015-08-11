@@ -33,4 +33,6 @@ banners
 horse leads
 spawn eggs
 implement more commands
-dye recipes
+double block plants
+dye recipes (a few remaining : requires double block plants)
+item grouping

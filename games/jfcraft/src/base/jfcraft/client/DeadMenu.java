@@ -47,7 +47,7 @@ public class DeadMenu extends RenderScreen {
     reset();
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
-    super.renderShade();
+    renderShade();
     setOrtho();
     renderButtons();
     renderText();
@@ -62,7 +62,7 @@ public class DeadMenu extends RenderScreen {
   }
 
   public void mouseReleased(int x, int y, int button) {
-    Static.game.mouseReleased(x, y, button);
+    super.mouseReleased(x, y, button);
   }
 
   public void mouseMoved(int x, int y, int button) {
