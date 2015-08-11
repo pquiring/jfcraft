@@ -22,6 +22,7 @@ The server includes a VoIP comm system similar to TeamSpeak.
 Hold in the right CTRL key to talk (PTT).
 
 Commands:
+---------
 /give me item [count]
   - Gives you an item
 /tp x y z
@@ -41,6 +42,23 @@ Commands:
   - exports area to a blueprint
 /import x1 y1 z1 filename [mx | my] [r90 | r180 | r270]
   - import a blueprint
+
+Compiling:
+----------
+jfCraft is built on top of Javaforce, so check it out first:
+  git clone https://github.com/pquiring/javaforce.git
+Then checkout jfCraft within it:
+  git clone https://github.com/pquiring/jfcraft.git javaforce/games/jfcraft
+Build JavaForce library, it's native modules and stubs.
+  cd javaforce
+  ant
+  cd javaforce/natives
+  ant
+  cd javaforce/stubs
+  ant
+Then build jfCraft.
+  cd javaforce/games/jfcraft
+  ant
 
 This is alpha software so please do not open bug requests.
 
