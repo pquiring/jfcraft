@@ -12,7 +12,6 @@ See todo.txt for a full list.
 
 I've done other clones of MC using web based interfaces but they all failed.
 This time I wrote it in Java like the original and making much better progress.
-I'm using my JavaForce library to use OpenGL instead of using LWJGL.
 
 The controls are like the original.  Plus a few extras for testing:
  c = toggle flying mode
