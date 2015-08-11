@@ -41,6 +41,7 @@ public class Main implements GLWindow.KeyEvents, GLWindow.MouseEvents, GLWindow.
   private void init() {
     GLWindow.init();
     window = createWindow(GLWindow.STYLE_VISIBLE | GLWindow.STYLE_RESIZABLE | GLWindow.STYLE_TITLEBAR,512,512,null);
+    window.setIcon("jfcraft.ico", 32, 32);
     current = window;
     GL.glInit();  //load gl api
   }
