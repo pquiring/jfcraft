@@ -412,14 +412,17 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
       if (material == MAT_WOOD) {
         //set it on fire
         Coords f = c.clone();
-        if (f.chunk.getBlock(f.gx, f.gy, f.gz).isSolid) {
+        boolean onSide = false;
+        if (!f.chunk.isEmpty(f.gx, f.gy, f.gz)) {
+          f.otherSide();
           f.adjacentBlock();
-          if (f.chunk.getBlock(f.gx, f.gy, f.gz).isSolid) return true;  //can not place fire here
+          if (!f.chunk.isEmpty(f.gx, f.gy, f.gz)) return true;  //can not place fire here
+          f.otherSide();
+          onSide = true;
         }
         //place fire @ f
         int dir = X;
-        if (f.chunk.isEmpty(f.gx, f.gy-1, f.gz)) {
-          c.otherSide();
+        if (onSide || f.chunk.isEmpty(f.gx, f.gy-1, f.gz)) {
           dir = c.dir;
         }
         f.chunk.setBlock(f.gx, f.gy, f.gz, Blocks.FIRE, Chunk.makeBits(dir, 0));

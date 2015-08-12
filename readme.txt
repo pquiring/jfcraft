@@ -44,7 +44,7 @@ Commands:
 
 Compiling:
 ----------
-jfCraft is built on top of Javaforce, so check it out first:
+jfCraft is built on top of JavaForce, so check it out first:
   git clone https://github.com/pquiring/javaforce.git
 Then checkout jfCraft within it:
   git clone https://github.com/pquiring/jfcraft.git javaforce/games/jfcraft

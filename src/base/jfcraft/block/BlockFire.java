@@ -24,6 +24,7 @@ public class BlockFire extends BlockBase {
     isComplex = true;
     isSolid = false;
     canSelect = false;
+    canReplace = true;
     dropBlock = "AIR";
     model = Assets.getModel("fire").model;
     resetBoxes(Type.BOTH);
@@ -58,19 +59,18 @@ public class BlockFire extends BlockBase {
     int z = chunk.cz * 16 + gz;
     //TODO : spread fire to adj blocks (50% chance ???)
     int dx=0,dy=0,dz=0;
-    if (dir != X) {
-      switch (dir) {
-        case N: dz = -1; break;
-        case E: dx = 1; break;
-        case S: dz = 1; break;
-        case W: dx = -1; break;
-      }
-      //destroy block in direction (if isWooden)
-      if (chunk.getBlock(gx + dx, gy + dy, gz + dz).material == MAT_WOOD) {
-        int xbits = Chunk.makeBits(X, 0);
-        chunk.setBlock(gx + dx, gy + dy, gz + dz, id, xbits);
-        Static.server.broadcastSetBlock(chunk.dim, x + dx, y, z + dz, id, xbits);
-      }
+    switch (dir) {
+      case N: dz = -1; break;
+      case E: dx = 1; break;
+      case S: dz = 1; break;
+      case W: dx = -1; break;
+      case X: dy = -1; break;
+    }
+    //destroy block in direction (if isWooden)
+    if (chunk.getBlock(gx + dx, gy + dy, gz + dz).material == MAT_WOOD) {
+      int xbits = Chunk.makeBits(X, 0);
+      chunk.setBlock(gx + dx, gy + dy, gz + dz, id, xbits);
+      Static.server.broadcastSetBlock(chunk.dim, x + dx, y, z + dz, id, xbits);
     }
     //put fire out
     chunk.setBlock(gx, gy, gz, Blocks.AIR, 0);
