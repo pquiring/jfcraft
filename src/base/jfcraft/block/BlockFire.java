@@ -7,10 +7,11 @@ package jfcraft.block;
  * Created : Mar 25, 2014
  */
 
+import java.util.*;
+
 import javaforce.gl.*;
 
 import jfcraft.data.*;
-import jfcraft.item.Item;
 import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 import static jfcraft.data.Types.*;
@@ -23,6 +24,7 @@ public class BlockFire extends BlockBase {
     isAlpha = false;
     isComplex = true;
     isSolid = false;
+    isBlocks2 = true;
     canSelect = false;
     canReplace = true;
     dropBlock = "AIR";
@@ -31,10 +33,10 @@ public class BlockFire extends BlockBase {
   }
   public void buildBuffers(RenderDest dest, RenderData data) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    switch (data.dir[X]) {
-      case A:
-      case B:  //not used I think
-      case X:
+    switch (data.dir2[X]) {
+      case A:  //not used
+        Static.log("BlockFire:dir==A???");
+      case B:
         buildBuffers(model.getObject("FIRE"), buf, data, textures[0]);
         return;
       case N:
@@ -51,29 +53,61 @@ public class BlockFire extends BlockBase {
         return;
     }
   }
+  private Random r = new Random();
   public void rtick(Chunk chunk, int gx,int gy,int gz) {
-    int bits = chunk.getBits(gx, gy, gz);
+    int bits = chunk.getBits2(gx, gy, gz);
     int dir = Chunk.getDir(bits);
     int x = chunk.cx * 16 + gx;
     int y = gy;
     int z = chunk.cz * 16 + gz;
-    //TODO : spread fire to adj blocks (50% chance ???)
-    int dx=0,dy=0,dz=0;
+    //spread fire to other dirs (75% chance)
+    if (dir == B && r.nextInt(100) < 75) {
+      int dx=0, dy=0, dz=0;
+      int sdir = r.nextInt(6);
+      switch (sdir) {
+        case A: dy = 1; break;
+        case B: dy = -1; break;
+        case N: dz = -1; break;
+        case E: dx = 1; break;
+        case S: dz = 1; break;
+        case W: dx = -1; break;
+      }
+      if (chunk.getBlock(gx + dx, gy + dy, gz + dz).material == MAT_WOOD) {
+        int xbits = Chunk.makeBits(B, 0);
+        chunk.clearBlock(gx + dx, gy + dy, gz + dz);
+        Static.server.broadcastClearBlock(chunk.dim, x + dx, y + dy, z + dz);
+        chunk.setBlock(gx + dx, gy + dy, gz + dz, id, xbits);  //blocks2
+        Static.server.broadcastSetBlock(chunk.dim, x + dx, y + dy, z + dz, id, xbits);  //blocks2
+      }
+    }
+    int dx=0, dy=0, dz=0;
     switch (dir) {
       case N: dz = -1; break;
       case E: dx = 1; break;
       case S: dz = 1; break;
       case W: dx = -1; break;
-      case X: dy = -1; break;
+      case B: dy = -1; break;
     }
-    //destroy block in direction (if isWooden)
+    if (dir == B) {
+      //check this block too
+      if (chunk.getBlock(gx, gy, gz).material == MAT_WOOD) {
+        int xbits = Chunk.makeBits(B, 0);
+        chunk.clearBlock(gx, gy, gz);
+        Static.server.broadcastClearBlock(chunk.dim, x, y, z);
+        chunk.setBlock(gx, gy, gz, id, xbits);  //blocks2
+        Static.server.broadcastSetBlock(chunk.dim, x, y, z, id, xbits);  //blocks2
+      }
+    }
+    //set block in direction to fire (if material == wood)
     if (chunk.getBlock(gx + dx, gy + dy, gz + dz).material == MAT_WOOD) {
-      int xbits = Chunk.makeBits(X, 0);
-      chunk.setBlock(gx + dx, gy + dy, gz + dz, id, xbits);
-      Static.server.broadcastSetBlock(chunk.dim, x + dx, y, z + dz, id, xbits);
+      int xbits = Chunk.makeBits(B, 0);
+      chunk.clearBlock(gx + dx, gy + dy, gz + dz);
+      Static.server.broadcastClearBlock(chunk.dim, x + dx, y + dy, z + dz);
+      chunk.setBlock(gx + dx, gy + dy, gz + dz, id, xbits);  //blocks2
+      Static.server.broadcastSetBlock(chunk.dim, x + dx, y + dy, z + dz, id, xbits);  //blocks2
     }
-    //put fire out
-    chunk.setBlock(gx, gy, gz, Blocks.AIR, 0);
-    Static.server.broadcastSetBlock(chunk.dim, x, y, z, Blocks.AIR, 0);
+    //put this fire out
+    chunk.clearBlock2(gx, gy, gz);
+    Static.server.broadcastClearBlock2(chunk.dim, x, y, z);
   }
 }

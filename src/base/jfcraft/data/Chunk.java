@@ -1048,15 +1048,16 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
           }
         }
       }
-      //do 48 random ticks (suppose to be 3 per 16x16x16 area)
-      //does : plants grow or die, fire burns out, ice melts, leaves decay, farmland becomes hydrated, and so on
+      //do 48 random ticks (3 per 16x16x16 area)
       if (Static.debugDisableRandomTicks) return;
       int x,y,z;
+      int p = 0;
       for(int a=0;a<48;a++) {
+        if (a > 0 && a % 3 == 0) p += 16;
         x = r.nextInt(16);
-        y = r.nextInt(256);
+        y = r.nextInt(16) + p;
         z = r.nextInt(16);
-        //TODO : can snow_cover be placed here???
+        //TODO : can snow_cover be replaced here???
         id = getID(x,y,z);
         if (id != 0) {
           block = Static.blocks.blocks[id];

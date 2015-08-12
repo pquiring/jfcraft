@@ -322,12 +322,12 @@ public class Blocks {
     registerBlock(new BlockXVar("TALLGRASS"
       , new String[] {"Tall Grass", "Fern"}
       , new String[] {"tallgrass", "fern"})
-      .setGreenAllSides().setDrop("SEEDS").setSupported().setDropVar(false).addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION)
+      .setGreenAllSides().setDrop("SEEDS").setSupported().setDropVar(false).addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
     );
     registerBlock(new BlockX("DEADBUSH"
       , new String[] {"Dead Bush"}
       , new String[] {"deadbush"}).
-      setSupported().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION)
+      setSupported().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
     );
     registerBlock(new BlockPiston("PISTON", new String[] {"Piston"}, new String[] {"piston_bottom", "piston_side", "piston_inner", "piston_side", "piston_top_normal", "piston_side", "piston_top_normal"}).setHardness(0.5f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockOpaque("WOOL",

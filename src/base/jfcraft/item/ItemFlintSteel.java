@@ -20,17 +20,17 @@ public class ItemFlintSteel extends ItemBase {
     //set it on fire
     Coords f = c.clone();
     boolean onSide = false;
-    if (!f.chunk.isEmpty(f.gx, f.gy, f.gz)) {
+    if (f.chunk.getBlock(f.gx, f.gy, f.gz).isSolid) {
       f.otherSide();
       f.adjacentBlock();
-      if (!f.chunk.isEmpty(f.gx, f.gy, f.gz)) return;  //can not place fire here
+      if (f.chunk.getBlock(f.gx, f.gy, f.gz).isSolid) return;  //can not place fire here
       f.otherSide();
       onSide = true;
     }
     //place fire @ f
-    int dir = X;
+    int dir = B;
     if (onSide || f.chunk.isEmpty(f.gx, f.gy-1, f.gz)) {
-      dir = c.dir;
+      dir = f.dir;
     }
     f.chunk.setBlock(f.gx, f.gy, f.gz, Blocks.FIRE, Chunk.makeBits(dir, 0));
     Static.server.broadcastSetBlock(f.chunk.dim, f.x, f.y, f.z, Blocks.FIRE, Chunk.makeBits(dir, 0));

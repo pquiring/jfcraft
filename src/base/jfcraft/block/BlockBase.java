@@ -406,8 +406,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public void checkPowered(Coords c) {}
   public void useBlock(Client client, Coords c) {}
   public boolean useTool(Client client, Coords c) {
-//    Static.log("useTool:" + (int)id);
-    return false;  //can not use item on this block
+    return false;
   }
   public int getPowerLevel(Coords c, Coords from) {return 0;}
   public Item bake() {
