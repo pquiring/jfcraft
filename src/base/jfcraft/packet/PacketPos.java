@@ -232,7 +232,7 @@ public class PacketPos extends Packet {
                 used = false;
               }
               if (!used) {
-                itembase.useItem(client);
+                itembase.useItem(client, client.s1);
               }
             }
           } else {
@@ -307,7 +307,7 @@ public class PacketPos extends Packet {
         ItemBase itembase3 = Static.items.items[client.player.items[client.player.activeSlot].id];
         if (itembase3.isTool || itembase3.isWeapon || itembase3.isFood) {
           client.action[1] = Client.ACTION_USE_TOOL;
-          itembase3.useItem(client);
+          itembase3.useItem(client, null);
         }
       }
     } else {

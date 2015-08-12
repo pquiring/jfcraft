@@ -15,6 +15,7 @@ import jfcraft.opengl.*;
 import jfcraft.client.*;
 import jfcraft.block.*;
 import jfcraft.data.*;
+import static jfcraft.data.Direction.*;
 import jfcraft.item.*;
 import static jfcraft.data.Types.*;
 
@@ -215,7 +216,7 @@ public class ItemBase {
     Static.log("BIBase.equals() not allowed");
     return false;
   }
-  public void useItem(Client client) {
+  public void useItem(Client client, Coords c) {
     if (isFood) {
       client.foodCounter++;
       if (client.foodCounter == 2 * 20) {

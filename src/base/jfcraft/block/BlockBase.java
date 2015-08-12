@@ -407,28 +407,6 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public void useBlock(Client client, Coords c) {}
   public boolean useTool(Client client, Coords c) {
 //    Static.log("useTool:" + (int)id);
-    Item item = client.player.items[client.player.activeSlot];
-    if (item.id == Items.FLINT_STEEL) {
-      if (material == MAT_WOOD) {
-        //set it on fire
-        Coords f = c.clone();
-        boolean onSide = false;
-        if (!f.chunk.isEmpty(f.gx, f.gy, f.gz)) {
-          f.otherSide();
-          f.adjacentBlock();
-          if (!f.chunk.isEmpty(f.gx, f.gy, f.gz)) return true;  //can not place fire here
-          f.otherSide();
-          onSide = true;
-        }
-        //place fire @ f
-        int dir = X;
-        if (onSide || f.chunk.isEmpty(f.gx, f.gy-1, f.gz)) {
-          dir = c.dir;
-        }
-        f.chunk.setBlock(f.gx, f.gy, f.gz, Blocks.FIRE, Chunk.makeBits(dir, 0));
-        Static.server.broadcastSetBlock(f.chunk.dim, f.x, f.y, f.z, Blocks.FIRE, Chunk.makeBits(dir, 0));
-      }
-    }
     return false;  //can not use item on this block
   }
   public int getPowerLevel(Coords c, Coords from) {return 0;}

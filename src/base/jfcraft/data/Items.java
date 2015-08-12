@@ -240,7 +240,7 @@ public class Items {
     registerItem(new ItemBase("IRON_SHOVEL", new String[]{"Iron Shovel"}, new String[]{"iron_shovel"}).setTool(TOOL_SHOVEL).setMaterial(MAT_IRON).setDmg(4));
     registerItem(new ItemBase("IRON_PICKAXE", new String[]{"Iron Pickaxe"}, new String[]{"iron_pickaxe"}).setTool(TOOL_PICKAXE).setMaterial(MAT_IRON).setDmg(5));
     registerItem(new ItemBase("IRON_AXE", new String[]{"Iron Axe"}, new String[]{"iron_axe"}).setTool(TOOL_AXE).setMaterial(MAT_IRON).setDmg(6));
-    registerItem(new ItemBase("FLINT_STEEL", new String[]{"Flint and Steel"}, new String[]{"flint_and_steel"}).setTool(TOOL_FLINT_STEEL));
+    registerItem(new ItemFlintSteel("FLINT_STEEL", new String[]{"Flint and Steel"}, new String[]{"flint_and_steel"}).setTool(TOOL_FLINT_STEEL));
     registerItem(new ItemBase("APPLE", new String[]{"Apple"}, new String[]{"apple"}).setFood(4f, 24.f));
     registerItem(new ItemBow("BOW", new String[]{"Bow"}, new String[]{"bow_standby"}).setWeapon(WEAPON_BOW).setMaterial(MAT_WOOD));
     registerItem(new ItemBase("ARROW", new String[]{"Arrow"}, new String[]{"arrow"}).setMaterial(MAT_WOOD));

@@ -67,14 +67,14 @@ public class BlockEndFrame extends BlockBase {
             cnt++;
           } else {
             Static.log("no eye@" + (c.gx + dx) + "," + c.gy + "," + (c.gz + dz));
-            return super.useTool(client, c);  //no eye of ender in this one
+            return true;  //no eye of ender in this one
           }
         }
       }
     }
     if (cnt != 12) {
       Static.log("eye count=" + cnt);
-      return super.useTool(client, c);
+      return true;
     }
     //create ender portal
     int fx = 0, fz = 0;
@@ -116,6 +116,6 @@ public class BlockEndFrame extends BlockBase {
     c.chunk.addEntity(ep);
     Static.server.world.addEntity(ep);
     Static.server.broadcastEntitySpawn(ep);
-    return super.useTool(client, c);
+    return true;
   }
 }

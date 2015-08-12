@@ -18,7 +18,7 @@ public class ItemBow extends ItemBase {
     isWeapon = true;
     weapon = WEAPON_BOW;
   }
-  public void useItem(Client client) {
+  public void useItem(Client client, Coords c) {
     if (client.bowPower < maxPower) {
       client.bowPower++;
     }
