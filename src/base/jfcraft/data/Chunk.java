@@ -1069,13 +1069,13 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
           block.rtick(this, x,y,z);
         }
       }
-      EntityBase es[] = this.getEntities();
-      for(int a=0;a<es.length;a++) {
-        EntityBase e = es[a];
-        if (e.offline) continue;
-        synchronized(e.lock) {
-          e.tick();
-        }
+    }
+    EntityBase es[] = this.getEntities();
+    for(int a=0;a<es.length;a++) {
+      EntityBase e = es[a];
+      if (e.offline) continue;
+      synchronized(e.lock) {
+        e.tick();
       }
     }
   }
