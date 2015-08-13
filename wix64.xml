@@ -35,7 +35,7 @@
         <File Id="jfcraft_server.exe" Source="jfcraft-server.exe"/>
         <File Id="title.png" Source="title.png"/>
         <File Id="jfnative64.dll" Source="jfnative64.dll"/>
-        <File Id="lwjgl.dll" Source="lwjgl.dll"/>
+        <File Id="jfcraft.ico" Source="jfcraft.ico"/>
       </Component>
     </DirectoryRef>
 
