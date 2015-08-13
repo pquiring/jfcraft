@@ -882,16 +882,6 @@ public class Server {
       if (!list[a].canRender()) continue;
       list[a].doTicks();
     }
-    //do entity ticks
-    EntityBase things[] = world.getEntities();
-    nThings = things.length;
-    for(int a=0;a<things.length;a++) {
-      EntityBase e = things[a];
-      if (e.offline) continue;
-      synchronized(things[a].lock) {
-        e.tick();
-      }
-    }
     //check if bedtime
     synchronized(clientsLock) {
       int cnt = clients.size();
