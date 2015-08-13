@@ -21,7 +21,6 @@ random ticks : replace snow
 support ogg audio files (JCraft:JOrbis/0.0.17) or MP3 (ffmpeg)
 XP
 suffication (in blocks)
-fire ???
 trip line
 beacon ?
 minecart w/ chest, crafting, etc.
@@ -35,5 +34,4 @@ spawn eggs
 implement more commands
 double block plants
 dye recipes (a few remaining : requires double block plants)
-item grouping
 fence/gate 1.5 blocks high
