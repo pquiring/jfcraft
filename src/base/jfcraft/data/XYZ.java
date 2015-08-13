@@ -18,6 +18,9 @@ public class XYZ {
     this.y = in.y;
     this.z = in.z;
   }
+  public boolean isZero() {
+    return x == 0 && y == 0 && z == 0;
+  }
   public String toString() {
     return "{" + x + "," + y + "," + z + "}";
   }

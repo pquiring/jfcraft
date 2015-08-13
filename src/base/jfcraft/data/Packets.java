@@ -106,6 +106,7 @@ public class Packets implements SerialCreator {
     registerPacket(new PacketSetSign(), "SETSIGN");
     registerPacket(new PacketUseVehicleInventory(), "USEVEHICLEINVENTORY");
     registerPacket(new PacketEntityArmor(), "ENTITY_ARMOR");
+    registerPacket(new PacketWorldItemSetCount(), "WORLDITEM_SET_COUNT");
   }
 
   public static byte RIDING;
@@ -180,6 +181,7 @@ public class Packets implements SerialCreator {
   public static byte WORLD_REPLY;
   public static byte INVEXCHANGE;
   public static byte SETCRAFT;
+  public static byte WORLDITEM_SET_COUNT;
 
   public SerialClass create(SerialBuffer buffer) {
     byte cmd = buffer.peekByte();

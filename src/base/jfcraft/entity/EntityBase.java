@@ -951,6 +951,27 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return world.chunks.getChunk(dim, cx, cz);
   }
 
+  /** Returns quadrant that entity is in within chunk (NE,SE,SW,NW) */
+  public int getQuad() {
+    int gx = Static.floor(pos.x % 16.0f);
+    if (pos.x < 0 && gx != 0) gx = 16 + gx;
+    int gz = Static.floor(pos.z % 16.0f);
+    if (pos.z < 0 && gz != 0) gz = 16 + gz;
+    if (gx < 8) {
+      if (gz < 8) {
+        return NW;
+      } else {
+        return SW;
+      }
+    } else {
+      if (gz < 8) {
+        return NE;
+      } else {
+        return SE;
+      }
+    }
+  }
+
   public BlockBase getBlock(float dx, float dy, float dz) {
     Chunk chunk = getChunk();
 

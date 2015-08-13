@@ -23,6 +23,7 @@ public class WorldItem extends EntityBase {
   public int buffersIdx;
   public Texture texture;
   public EntityBase entity;
+  private boolean isItem;
 
   public WorldItem() {
     id = Entities.WORLDITEM;
@@ -56,6 +57,7 @@ public class WorldItem extends EntityBase {
     if (item == null) return;
     obj = new RenderDest(2);  //DEST_...
     if (Static.isBlock(item.id)) {
+      isItem = false;
       BlockBase block = Static.blocks.blocks[item.id];
       if (block.renderAsEntity) {
         entity = Static.entities.entities[block.entityID];
@@ -79,6 +81,7 @@ public class WorldItem extends EntityBase {
         texture = block.textures[0].texture;
       }
     } else {
+      isItem = true;
       buffersIdx = 0;
       ItemBase baseitem = Static.items.items[item.id];
       baseitem.addFaceWorldItem(obj.getBuffers(0), item.var, baseitem.isGreen);
@@ -102,22 +105,96 @@ public class WorldItem extends EntityBase {
       entity.ang.y = ang.y;
       entity.setScale(0.25f);
       entity.render();
+      if (item.count > 1) {
+        entity.pos.y += 0.25f;
+        entity.pos.z += 0.25f;
+        entity.render();
+      }
     } else {
       mat.setIdentity();
-      mat.addRotate(ang.y, 0, 1, 0);
       mat.addTranslate(pos.x, pos.y, pos.z);
+      mat.addRotate2(ang.y, 0, 1, 0);
       float scale = 0.25f;
       mat.addScale(scale, scale, scale);
       glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);
       RenderBuffers buf = obj.getBuffers(buffersIdx);
       buf.bindBuffers();
       buf.render();
+      if (item.count > 1) {
+        mat.setIdentity();
+        mat.addTranslate2(pos.x, pos.y, pos.z);
+        mat.addRotate2(ang.y, 0, 1, 0);
+        if (isItem)
+          mat.addTranslate2(0, 0, 0.05f);
+        else
+          mat.addTranslate2(0.05f, 0.05f, 0.05f);
+        mat.addScale(scale, scale, scale);
+        glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);
+        buf.render();
+      }
+    }
+  }
+  private int maxStack;
+  /** Merge near by similar items with this one. */
+  private void merge(Chunk chunk) {
+    EntityBase e[] = chunk.getEntities();
+    for(int a=0;a<e.length;a++) {
+      EntityBase entity = e[a];
+      if (entity.id != id) continue;  //not a WorldItem entity
+      if (entity.uid == uid) continue;  //same
+      WorldItem other = (WorldItem)entity;
+      if (other.item.id != item.id) continue;  //different item id
+      if (other.item.var != item.var) continue;  //different item var
+      if (!other.vel.isZero()) continue;  //still moving
+      if ((other.item.count + item.count) > maxStack) continue;  //can not stack
+      //close proximity?
+      float dx = Math.abs(pos.x - other.pos.x);
+      float dy = Math.abs(pos.y - other.pos.y);
+      float dz = Math.abs(pos.z - other.pos.z);
+      if (dx + dy + dz > 1.25f) continue;  //too far away
+      //meld other with this
+      item.count += other.item.count;
+      other.item.count = 0;
+      other.despawn();
+      Static.server.broadcastWorldItemSetCount(this);
     }
   }
   public void tick() {
+    if (item.count == 0) return;  //merged by other worlditem
     ctick();
     if (move(false, false, false, -1, AVOID_NONE)) {
       Static.server.broadcastEntityMove(this, false);
+    } else {
+      //check if can merge with nearby items
+      ItemBase itembase = Static.items.items[item.id];
+      if (!itembase.isDamaged) {
+        maxStack = itembase.maxStack;
+        Chunk chunk = getChunk();
+        merge(chunk);
+        int quad = getQuad();
+        switch (quad) {
+          case NE:
+            merge(chunk.N);
+            merge(chunk.N.E);
+            merge(chunk.E);
+            break;
+          case NW:
+            merge(chunk.N);
+            merge(chunk.N.W);
+            merge(chunk.W);
+            break;
+          case SE:
+            merge(chunk.S);
+            merge(chunk.S.E);
+            merge(chunk.E);
+            break;
+          case SW:
+            merge(chunk.S);
+            merge(chunk.S.W);
+            merge(chunk.W);
+            break;
+        }
+      }
     }
     if (age > 3 * 20) {
       //check if player is overlapping me
