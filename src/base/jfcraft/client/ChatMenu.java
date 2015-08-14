@@ -30,7 +30,7 @@ public class ChatMenu extends RenderScreen {
 
   public void init() {
     super.init();
-    chat = addTextField("", 5, 512 - fontSize * 6, 512-10, true, 127, false, 1);
+    chat = addTextField("", 5, 512 - fontSize * 6, 512-10, Static.black4, 127, false, 1);
   }
 
   public void setup() {
@@ -50,13 +50,10 @@ public class ChatMenu extends RenderScreen {
       initTxt = null;
     }
     Static.game.render(width, height);
-    setMenuSize(512, 512);
-    reset();
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
     setOrtho();
     renderFields();
-    renderText();
 
     Static.client.chatTime = 5 * 20;
   }

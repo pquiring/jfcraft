@@ -20,10 +20,11 @@ public class CraftingMenu extends RenderScreen {
   private Texture t_menu;
   private RenderBuffers o_menu;
   private int mx, my;
-  private final int gui_width = 350, gui_height = 330;  //size of menu
 
   public CraftingMenu() {
     id = Client.CRAFTTABLE;
+    gui_width = 350;
+    gui_height = 330;
   }
 
   public void setup() {
@@ -32,7 +33,6 @@ public class CraftingMenu extends RenderScreen {
 
   public void render(int width, int height) {
     Static.game.render(width, height);
-    setMenuSize(gui_width, gui_height);
 
     if (t_menu == null) {
       t_menu = Textures.getTexture("gui/container/crafting_table", 0);
@@ -45,17 +45,16 @@ public class CraftingMenu extends RenderScreen {
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
-    super.renderShade();
+    renderShade();
 
     glDepthFunc(GL_ALWAYS);
 
     setOrtho();
+    setViewportMenu();
 
     t_menu.bind();
     o_menu.bindBuffers();
     o_menu.render();
-
-    reset();
 
     //render inventory blocks
     int x = 16, y = (int)(gui_height - 131);
@@ -110,14 +109,8 @@ public class CraftingMenu extends RenderScreen {
       renderItem(item,mx,my);
     }
 
-    renderText();
-    renderBars();
-
     if (item != null) {
-      reset();
       renderItemName(item, mx, my);
-      renderBars50();
-      renderText();
     } else {
       //TODO : render item name under mouse
     }

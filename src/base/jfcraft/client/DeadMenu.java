@@ -22,7 +22,6 @@ public class DeadMenu extends RenderScreen {
 
   public void setup() {
     setCursor(true);
-    super.setMenuSize(512, 512);
     Static.inGame = false;
   }
 
@@ -43,14 +42,11 @@ public class DeadMenu extends RenderScreen {
 
   public void render(int width, int height) {
     Static.game.render(width, height);
-    setMenuSize(512, 512);
-    reset();
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
     renderShade();
     setOrtho();
     renderButtons();
-    renderText();
   }
 
   public void resize(int width, int height) {

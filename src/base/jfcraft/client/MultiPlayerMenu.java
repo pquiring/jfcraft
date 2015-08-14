@@ -30,7 +30,7 @@ public class MultiPlayerMenu extends RenderScreen {
 
   public void init() {
     super.init();
-    serverAddress = addTextField(host, 5, 32, 512-10, true, 64, false, 1);
+    serverAddress = addTextField(host, 5, 32, 512-10, Static.black4, 64, false, 1);
     addButton("Start", 20, 390, 226, new Runnable() {public void run() {
       joinWorld();
     }});
@@ -41,9 +41,6 @@ public class MultiPlayerMenu extends RenderScreen {
   }
 
   public void render(int width, int height) {
-    setMenuSize(512, 512);
-    reset();
-
     if (t_menu == null) {
       t_menu = Textures.getTexture( "jfcraft/multimenu", 0);
     }
@@ -58,6 +55,7 @@ public class MultiPlayerMenu extends RenderScreen {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     setOrtho();
+    setViewportMenu();
 
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
@@ -68,7 +66,6 @@ public class MultiPlayerMenu extends RenderScreen {
 
     renderButtons();
     renderFields();
-    renderText();
   }
 
   public void resize(int width, int height) {

@@ -33,9 +33,6 @@ public class WaitMenu extends RenderScreen {
   }
 
   public void render(int width, int height) {
-    setMenuSize(512, 512);
-    reset();
-
     if (Static.server == null) {
       Static.video.setScreen(Static.screens.screens[Client.MAIN]);
       return;
@@ -60,16 +57,15 @@ public class WaitMenu extends RenderScreen {
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     int x1 = (512 - msg1.length() * fontSize) / 2;
-    addText(x1, 50, msg1);
+    renderText(x1, 50, msg1);
     int x2 = (512 - msg2.length() * fontSize) / 2;
-    addText(x2, 100, msg2);
+    renderText(x2, 100, msg2);
 
     t_menu.bind();
     o_menu.bindBuffers();
     o_menu.render();
 
     renderButtons();
-    renderText();
   }
 
   public void resize(int width, int height) {

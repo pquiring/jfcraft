@@ -38,6 +38,7 @@ public class Screens {
     registerScreen(new PauseMenu());
     registerScreen(new SinglePlayerMenu());
     registerScreen(new WaitMenu());
+    registerScreen(new BedMenu());
     registerScreen(new DropperMenu());
     registerScreen(new SignMenu());
     registerScreen(new HorseMenu());

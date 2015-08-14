@@ -30,7 +30,7 @@ public class CreateWorldMenu extends RenderScreen {
 
   public void init() {
     super.init();
-    world_name = addTextField("New World", 5, 32, 512-10, true, 64, false, 1);
+    world_name = addTextField("New World", 5, 32, 512-10, Static.black4, 64, false, 1);
     addButton("Start", 20, 390, 226, new Runnable() {public void run() {
       createWorld();
     }});
@@ -45,8 +45,6 @@ public class CreateWorldMenu extends RenderScreen {
       world_name.setText(initTxt);
       initTxt = null;
     }
-    setMenuSize(512, 512);
-    reset();
 
     if (t_menu == null) {
       t_menu = Textures.getTexture("jfcraft/createmenu", 0);
@@ -62,6 +60,7 @@ public class CreateWorldMenu extends RenderScreen {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     setOrtho();
+    setViewportMenu();
 
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
@@ -72,7 +71,6 @@ public class CreateWorldMenu extends RenderScreen {
 
     renderButtons();
     renderFields();
-    renderText();
   }
 
   public void resize(int width, int height) {

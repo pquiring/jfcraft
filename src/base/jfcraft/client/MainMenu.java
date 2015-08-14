@@ -47,7 +47,6 @@ public class MainMenu extends RenderScreen {
   }
 
   public void render(int width, int height) {
-    setMenuSize(512, 512);
 
     if (t_menu == null) {
       t_menu = Textures.getTexture("jfcraft/mainmenu", 0);
@@ -57,8 +56,6 @@ public class MainMenu extends RenderScreen {
       o_menu = createMenu();
     }
 
-    reset();
-
     //now render stuff
     glViewport(0, 0, width, height);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -67,6 +64,7 @@ public class MainMenu extends RenderScreen {
     glDepthFunc(GL_ALWAYS);
 
     setOrtho();
+    setViewportMenu();
 
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
@@ -76,7 +74,6 @@ public class MainMenu extends RenderScreen {
     o_menu.render();
 
     renderButtons();
-    renderText();
 
 //    Item item = new Item(Blocks.GRASS);
 //    renderItem(item, 50, 50);

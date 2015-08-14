@@ -16,9 +16,6 @@ import static javaforce.gl.GL.*;
 import jfcraft.client.*;
 import jfcraft.audio.*;
 import jfcraft.data.*;
-import static jfcraft.opengl.RenderScreen.gui_height;
-import static jfcraft.opengl.RenderScreen.gui_width;
-import jfcraft.plugin.PluginLoader;
 
 public class RenderEngine {
   public static ArrayList<AssetImage> animatedTextures = new ArrayList<AssetImage>();
@@ -118,12 +115,14 @@ public class RenderEngine {
     Static.uniformSunLight = glGetUniformLocation(program, "uSunLightNow");
     Static.uniformAlphaFactor = glGetUniformLocation(program, "uAlphaFactor");
     Static.uniformEnableTextures = glGetUniformLocation(program, "uUseTextures");
-    Static.uniformEnableFog = glGetUniformLocation(program, "uUseFog");
     Static.uniformEnableHorsePattern = glGetUniformLocation(program, "uUseHorsePattern");
     Static.uniformEnableHorseArmor = glGetUniformLocation(program, "uUseHorseArmor");
+    Static.uniformEnableFog = glGetUniformLocation(program, "uUseFog");
     Static.uniformFogColor = glGetUniformLocation(program, "uFogColor");
     Static.uniformFogNear = glGetUniformLocation(program, "uFogNear");
     Static.uniformFogFar = glGetUniformLocation(program, "uFogFar");
+    Static.uniformEnableTint = glGetUniformLocation(program, "uUseTint");
+    Static.uniformTintColor = glGetUniformLocation(program, "uTintColor");
     Static.uniformTexture = glGetUniformLocation(program, "uTexture");
     Static.uniformCrack = glGetUniformLocation(program, "uCrack");
     Static.uniformHorsePattern = glGetUniformLocation(program, "uHorsePattern");
@@ -137,11 +136,13 @@ public class RenderEngine {
     glUniform1f(Static.uniformFogFar, Settings.current.loadRange * 16f + 16f);
     glUniform1i(Static.uniformEnableHorsePattern, 0);
     glUniform1i(Static.uniformEnableHorseArmor, 0);
-    glUniform4fv(Static.uniformFogColor, 1, new float[] {0.2f, 0.2f, 0.6f, 1.0f});  //sky blue
+    glUniform4fv(Static.uniformFogColor, 1, Static.skyblue4);
     glUniform1i(Static.uniformTexture, 0);
     glUniform1i(Static.uniformCrack, 1);
     glUniform1i(Static.uniformHorsePattern, 2);
     glUniform1i(Static.uniformHorseArmor, 3);
+    glUniform1i(Static.uniformEnableTint, 0);
+    glUniform4fv(Static.uniformFogColor, 1, Static.white4);
 
     //setup timers
     frTimer = new java.util.Timer();
@@ -219,20 +220,22 @@ public class RenderEngine {
     Static.width = width;
     Static.height = height;
 
-    if (false) {
-      //integer scaling
-      int scalex = (int)(Static.width / 512);
-      int scaley = (int)(Static.height / 512);
-      if (scalex > scaley) Static.scale = scaley;
-      if (scaley > scalex) Static.scale = scalex;
-      if (Static.scale < 1) Static.scale = 1;
+    int min;
+
+    if (width > height) {
+      min = height;
     } else {
-      //float scaling
-      if (width > height) {
-        Static.scale = ((float)height) / 512.0f;
-      } else {
-        Static.scale = ((float)width) / 512.0f;
-      }
+      min = width;
+    }
+
+    if (min < 512) {
+      Static.scale = 0.5f;  //ouch
+    } else if (min < 768) {
+      Static.scale = 1.0f;
+    } else if (min < 1024) {
+      Static.scale = 1.5f;
+    } else {
+      Static.scale = 2.0f;
     }
 
     if (screen != null) {
@@ -266,23 +269,23 @@ public class RenderEngine {
 
 //interface MouseListener
   public void mouseDown(float fx,float fy,int button) {
-    float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
-    float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
+    float offsetX = (Static.width - (screen.gui_width * Static.scale)) / 2.0f;
+    float offsetY = (Static.height - (screen.gui_height * Static.scale)) / 2.0f;
     int x = (int)((fx - offsetX) / Static.scale);
     int y = (int)((fy - offsetY) / Static.scale);
     screen.mousePressed(x, y, button);
   }
   public void mouseUp(float fx,float fy,int button) {
-    float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
-    float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
+    float offsetX = (Static.width - (screen.gui_width * Static.scale)) / 2.0f;
+    float offsetY = (Static.height - (screen.gui_height * Static.scale)) / 2.0f;
     int x = (int)((fx - offsetX) / Static.scale);
     int y = (int)((fy - offsetY) / Static.scale);
     screen.mouseReleased(x, y, button);
   }
 
   public void mouseMove(float fx, float fy, int button) {
-    float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
-    float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
+    float offsetX = (Static.width - (screen.gui_width * Static.scale)) / 2.0f;
+    float offsetY = (Static.height - (screen.gui_height * Static.scale)) / 2.0f;
     int x = (int)((fx - offsetX) / Static.scale);
     int y = (int)((fy - offsetY) / Static.scale);
     screen.mouseMoved(x, y, button);

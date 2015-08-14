@@ -58,9 +58,6 @@ public class SinglePlayerMenu extends RenderScreen {
   }
 
   public void render(int width, int height) {
-    setMenuSize(512, 512);
-    reset();
-
     if (t_menu == null) {
       t_menu = Textures.getTexture("jfcraft/singlemenu", 0);
     }
@@ -75,6 +72,7 @@ public class SinglePlayerMenu extends RenderScreen {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     setOrtho();
+    setViewportMenu();
 
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
@@ -91,20 +89,18 @@ public class SinglePlayerMenu extends RenderScreen {
       WorldInfo wi = worlds.get(a);
       if (selectedWorld == a) {
         //show highlight under this world
-        addBar(x,y - fontSize,512-100,fontSize*4,Static.blue);
+        renderBar(x,y + fontSize * 3,512-100,fontSize*4,Static.blue4);
       }
-      addText(x, y, wi.name);
+      renderText(x, y, wi.name);
       y += fontSize;
-      addText(x, y, wi.shortFolder + wi.date);
+      renderText(x, y, wi.shortFolder + wi.date);
       y += fontSize;
-      addText(x, y, wi.extra);
+      renderText(x, y, wi.extra);
       y += fontSize * 2;
     }
 
     renderScrollBars();
     renderButtons();
-    renderBars();
-    renderText();
   }
 
   public void resize(int width, int height) {

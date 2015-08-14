@@ -129,6 +129,8 @@ public class Static {
   public static int uniformFogColor;
   public static int uniformFogNear;
   public static int uniformFogFar;
+  public static int uniformEnableTint;
+  public static int uniformTintColor;
   public static int uniformTexture;
   public static int uniformCrack;
   public static int uniformHorsePattern;
@@ -142,6 +144,16 @@ public class Static {
   public static final float green[] = new float[] {0,1,0};
   public static final float blue[] = new float[] {0,0,1};
   public static final float yellow[] = new float[] {0.07f,0.20f,0.33f};
+
+  //colors : R G B A
+  public static final float white4[] = new float[] {1,1,1,1};
+  public static final float black4[] = new float[] {0,0,0,1};
+  public static final float grey4[] = new float[] {0.12f,0.12f,0.12f,1};
+  public static final float red4[] = new float[] {1,0,0,1};
+  public static final float green4[] = new float[] {0,1,0,1};
+  public static final float blue4[] = new float[] {0,0,1,1};
+  public static final float yellow4[] = new float[] {0.07f,0.20f,0.33f,1};
+  public static final float skyblue4[] = new float[] {0.2f,0.2f,0.6f,1};
 
   public static final float _1_8 = 1.0f/8.0f;
   public static final float _1_16 = 1.0f/16.0f;

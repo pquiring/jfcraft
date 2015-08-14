@@ -19,11 +19,12 @@ public class ChestMenu extends RenderScreen {
   private Texture t_menu;
   private RenderBuffers o_menu, o_menu2;
   private int mx, my;
-  private int gui_width = 352, gui_height = 330;  //size of menu
   private int cnt;
 
   public ChestMenu() {
     id = Client.CHEST;
+    gui_width = 352;
+    gui_height = 330;
   }
 
   public void setup() {
@@ -46,7 +47,6 @@ public class ChestMenu extends RenderScreen {
 
   public void render(int width, int height) {
     Static.game.render(width, height);
-    setMenuSize(gui_width, gui_height);
     ExtraContainer chest = Static.client.container;
     if (chest == null) return;
 
@@ -66,11 +66,12 @@ public class ChestMenu extends RenderScreen {
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
-    super.renderShade();
+    renderShade();
 
     glDepthFunc(GL_ALWAYS);
 
     setOrtho();
+    setViewportMenu();
 
     t_menu.bind();
     o_menu.bindBuffers();
@@ -79,8 +80,6 @@ public class ChestMenu extends RenderScreen {
       o_menu2.bindBuffers();
       o_menu2.render();
     }
-
-    reset();
 
     //render inventory blocks
     int x = 16, y = (int)(gui_height - 131);
@@ -129,14 +128,8 @@ public class ChestMenu extends RenderScreen {
       renderItem(item,mx,my);
     }
 
-    renderText();
-    renderBars();
-
     if (item != null) {
-      reset();
       renderItemName(item, mx, my);
-      renderBars50();
-      renderText();
     } else {
       //TODO : render item name under mouse
     }

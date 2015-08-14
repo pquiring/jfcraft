@@ -28,6 +28,8 @@ public class FragmentShader {
 "uniform vec4 uFogColor;\n" +
 "uniform float uFogNear;\n" +
 "uniform float uFogFar;\n" +
+"uniform bool uUseTint;\n" +
+"uniform vec4 uTintColor;\n" +
 "uniform bool uUseHorsePattern;\n" +
 "uniform bool uUseHorseArmor;\n" +
 "\n" +    //there is usually at least 16 texture units available
@@ -77,6 +79,9 @@ public class FragmentShader {
 "    fogFactor = clamp((vLength - uFogNear) / (uFogFar - uFogNear), 0.0, 1.0);\n" +    //simple linear fog
 "    textureColor = mix(textureColor, uFogColor, fogFactor);\n" +
 "  }\n" +
+"  if (uUseTint) {\n" +
+"    textureColor = mix(textureColor, uTintColor, 1.0f);" +
+"  }" +
 "  gl_FragColor = textureColor;\n" +
 "}\n";
 }

@@ -21,8 +21,8 @@ import jfcraft.entity.*;
 import static jfcraft.data.Direction.*;
 
 public abstract class RenderScreen {
-  public static float gui_height = 512;
-  public static float gui_width = 512;
+  public float gui_height = 512;
+  public float gui_width = 512;
 
   public static Texture t_widgets;
   public static Texture t_icons;
@@ -30,8 +30,6 @@ public abstract class RenderScreen {
   public static Texture t_white;  //single white pixel
   public static Texture t_white50;  //single white pixel (50% alpha)
   private static Timer cursorTimer;
-
-  private static RenderBuffers o_text;
 
   // top/left=0,0 : bottom/right=1,1
   public static GLMatrix orthoItem = new GLMatrix();
@@ -45,8 +43,7 @@ public abstract class RenderScreen {
   private static boolean showCursor;
 
   private static RenderDest o_items;
-  private static RenderBuffers o_bars = new RenderBuffers();
-  private static RenderBuffers o_bars50 = new RenderBuffers();
+  private static RenderBuffers o_box = new RenderBuffers();
   private static RenderData data = new RenderData();
 
   private static RenderBuffers o_chars[];
@@ -83,7 +80,18 @@ public abstract class RenderScreen {
         buf.addDefault();
       }
       buf.addPoly(new int[] {i+3,i+2,i+1,i+0});
+      buf.copyBuffers();
     }
+    o_box = new RenderBuffers();
+    o_box.addVertex(new float[] {0,0,0}, new float[] {0, 0});
+    o_box.addVertex(new float[] {1,0,0}, new float[] {1, 0});
+    o_box.addVertex(new float[] {1,1,0}, new float[] {1, 1});
+    o_box.addVertex(new float[] {0,1,0}, new float[] {0, 1});
+    for(int b=0;b<4;b++) {
+      o_box.addDefault();
+    }
+    o_box.addPoly(new int[] {3,2,1,0});
+    o_box.copyBuffers();
   }
 
   private int getFieldIndex() {
@@ -154,9 +162,6 @@ public abstract class RenderScreen {
     if (t_text == null) {
       t_text = Textures.getTexture("font/ascii", 0);
     }
-    if (o_text == null) {
-      o_text = new RenderBuffers();
-    }
     if (t_white == null) {
       JFImage pixel = new JFImage(1,1);
       pixel.putPixel(0, 0, 0xffffff);  //white pixel
@@ -190,11 +195,19 @@ public abstract class RenderScreen {
   public static final int TOP = 0;
   public static final int CENTER = 1;
   public static final int BOTTOM = 2;
-  public static int gui_position = CENTER;  //TOP CENTER BOTTOM
+  public int gui_position = CENTER;  //TOP CENTER BOTTOM
 
   /** Sets a standard 0,0-1,1 ortho matrix for gui_width/gui_height. */
   public void setOrtho() {
     glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, orthoItem.m);  //perspective matrix
+  }
+
+  public void setViewportFull() {
+    glViewport(0, 0, (int)Static.width, (int)Static.height);
+  }
+
+  /** Sets viewport for a menu screen. */
+  public void setViewportMenu() {
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
     float vpy = 0;
@@ -206,10 +219,23 @@ public abstract class RenderScreen {
     glViewport((int)offsetX, (int)vpy, (int)(gui_width * Static.scale), (int)(gui_height * Static.scale));
   }
 
+  /** Sets a viewport for a single char. */
+  public void setViewportChar(int x, int y, int fontSize) {
+    float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
+    float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
+    y += fontSize;
+    float vpy = 0;
+    switch (gui_position) {
+      case TOP: vpy = (int)(Static.height - gui_height) - y; break;
+      case CENTER: vpy = (int)(offsetY + (gui_height - y) * Static.scale); break;
+      case BOTTOM: vpy = (int)((gui_height - y) * Static.scale); break;
+    }
+    glViewport((int)(offsetX + ((float)x) * Static.scale), (int)vpy
+      , (int)(fontSize * Static.scale), (int)(fontSize * Static.scale));
+  }
+
   /** Sets a standard 0,0-1,1 ortho matrix for item/text. */
-  public void setOrthoItem(int x, int y) {
-    //left right bottom top near far
-    glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoItem.m);  //perspective matrix
+  public void setViewportItem(int x, int y) {
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
     float vpy = 0;
@@ -218,13 +244,25 @@ public abstract class RenderScreen {
       case CENTER: vpy = (int)(offsetY + (gui_height - y) * Static.scale); break;
       case BOTTOM: vpy = (int)((gui_height - y) * Static.scale); break;
     }
-    glViewport((int)(offsetX + ((float)x) * Static.scale), (int)vpy, (int)(36 * Static.scale), (int)(36 * Static.scale));
+    glViewport((int)(offsetX + ((float)x) * Static.scale), (int)vpy
+      , (int)(36 * Static.scale), (int)(36 * Static.scale));
+  }
+
+  /** Sets a viewport for a box. */
+  public void setViewportBox(int x, int y, int w, int h) {
+    float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
+    float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
+    glViewport((int)(offsetX + ((float)x) * Static.scale), (int)(offsetY + (gui_height - y) * Static.scale)
+      , (int)(w * Static.scale), (int)(h * Static.scale));
   }
 
   /** Sets a standard 0,0-1,1 ortho matrix for block. */
-  public void setOrthoBlock(int x, int y) {
+  public void setOrthoBlock() {
     //left right bottom top near far
     glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoBlock.m);  //perspective matrix
+  }
+
+  public void setViewportBlock(int x,int y) {
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
     float vpy = 0;
@@ -234,6 +272,28 @@ public abstract class RenderScreen {
       case BOTTOM: vpy = ((gui_height - y) * Static.scale); break;
     }
     glViewport((int)(offsetX + ((float)x) * Static.scale), (int)vpy, (int)(36 * Static.scale), (int)(36 * Static.scale));
+  }
+
+  /** Sets an ortho matrix to display player in inventory menu */
+  public void setOrthoPlayer() {
+    glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, orthoPlayer.m);  //perspective matrix
+  }
+
+  public void setViewportPlayer() {
+    float x = 52;
+    float y = 155;
+    float w = 104;
+    float h = 140;
+    //left right bottom top near far
+    float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
+    float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
+    float vpy = 0;
+    switch (gui_position) {
+      case TOP: vpy = (int)(Static.height - gui_height) - y; break;
+      case CENTER: vpy = (int)(offsetY + (gui_height - y) * Static.scale); break;
+      case BOTTOM: vpy = (int)((gui_height - y) * Static.scale); break;
+    }
+    glViewport((int)(offsetX + x * Static.scale), (int)vpy, (int)(w * Static.scale), (int)(h * Static.scale));
   }
 
   /** Creates a 0,0-1,1 menu object. */
@@ -363,117 +423,104 @@ public abstract class RenderScreen {
     o_menu.copyBuffers();
   }
 
-  /** Resets text and bars. */
-  public void reset() {
-    o_text.reset();
-    o_bars.reset();
-    o_bars50.reset();
-  }
-
   public void clear() {
     buttons.clear();
     fields.clear();
     scrolls.clear();
   }
 
-  private void addChar(int x,int y, char ch, float clr[], int scale) {
-    float fx1 = x / gui_width;
-    float fy1 = y / gui_height;
-    x += fontSize * scale;
-    y += fontSize * scale;
-    float fx2 = x / gui_width;
-    float fy2 = y / gui_height;
-    float tx1 = (ch % 16) / 16.0f;
-    float ty1 = Static.floor(ch / 16) / 16.0f;
-    float tx2 = tx1 + Static._1_16;
-    float ty2 = ty1 + Static._1_16;
-    int i = o_text.getVertexCount();
-    o_text.addVertex(new float[] {fx1,fy1,0}, new float[] {tx1, ty1});
-    o_text.addVertex(new float[] {fx2,fy1,0}, new float[] {tx2, ty1});
-    o_text.addVertex(new float[] {fx2,fy2,0}, new float[] {tx2, ty2});
-    o_text.addVertex(new float[] {fx1,fy2,0}, new float[] {tx1, ty2});
-    for(int a=0;a<4;a++) {
-      o_text.addDefault(clr);
-    }
-    o_text.addPoly(new int[] {i+3,i+2,i+1,i+0});
+  private void renderChar(int x,int y, char ch, float clr[], int scale) {
+    setViewportChar(x,y,fontSize * scale);
+    RenderBuffers buf = o_chars[ch];
+    buf.bindBuffers();
+    buf.render();
   }
 
-  public void addText(int x,int y,String text, float clr[]) {
-    if (text == null) {
-      //if you try to display an invalid world, text will be null
-      Static.log("addText(null)");
-      return;
-    }
+  public void renderText(int x,int y,String text, float clr[]) {
+    setOrtho();
+    t_text.bind();
     char ca[] = text.toCharArray();
     y -= fontSize;
+    if (clr != null) {
+      float clr4[];
+      if (clr.length == 4) {
+        clr4 = clr;
+      } else {
+        clr4 = new float[] {clr[0], clr[1], clr[2], 1.0f};
+      }
+      glUniform1i(Static.uniformEnableTint, 1);
+      glUniform4fv(Static.uniformTintColor, 1, clr4);
+    }
     for(int a=0;a<ca.length;a++) {
-      addChar(x, y, ca[a], clr, 1);
+      renderChar(x, y, ca[a], clr, 1);
       x += fontSize;
+    }
+    if (clr != null) {
+      glUniform1i(Static.uniformEnableTint, 0);
     }
   }
 
-  public void addText(int x,int y,String text) {
-    addText(x,y,text,Static.white);
+  public void renderText(int x,int y,String text) {
+    renderText(x,y,text,null);
   }
 
   /** Adds an items damage bar. */
-  public void addBar(int x,int y, float dmg) {
+  public void renderDmg(int x,int y, float dmg) {
     //render bar (36x2)
     int length = (int)(36.0f * dmg);
-    float clr[] = Static.red;
+    float clr[] = Static.red4;
     if (dmg > 0.6f) {
-      clr = Static.green;
+      clr = Static.green4;
     } else if (dmg > 0.3f) {
-      clr = Static.yellow;
+      clr = Static.yellow4;
     }
-    o_bars.addFace2D(x / 512.0f, y / 512.0f, (x + 36) / 512.0f, (y + 2) / 512.0f
-      , 0, 0, 1, 1, Static.grey);
-    o_bars.addFace2D(x / 512.0f, y / 512.0f, (x + length) / 512.0f, (y + 2) / 512.0f
-      , 0, 0, 1, 1, clr);
+    t_white.bind();
+    o_box.bindBuffers();
+    glUniform1i(Static.uniformEnableTint, 1);
+    setOrtho();
+    setViewportBox(x,y,36,2);
+    glUniform4fv(Static.uniformTintColor, 1, Static.grey4);
+    o_box.render();
+    setViewportBox(x,y,length,2);
+    glUniform4fv(Static.uniformTintColor, 1, clr);
+    o_box.render();
+    glUniform1i(Static.uniformEnableTint, 0);
   }
 
   /** Adds a simple bar (rectangle). */
-  public void addBar(int x1,int y1,int width,int height, float clr[]) {
-    int x2 = x1 + width;
-    int y2 = y1 + height;
-    o_bars.addFace2D(x1 / 512.0f, y1 / 512.0f, x2 / 512.0f, y2 / 512.0f
-      , 0, 0, 1, 1, clr);
+  public void renderBar(int x,int y,int width,int height, float clr[]) {
+    t_white.bind();
+    glUniform1i(Static.uniformEnableTint, 1);
+    setOrtho();
+    setViewportBox(x,y,width,height);
+    float clr4[];
+    if (clr.length == 4) {
+      clr4 = clr;
+    } else {
+      clr4 = new float[] {clr[0], clr[1], clr[2], 1.0f};
+    }
+    glUniform4fv(Static.uniformTintColor, 1, clr4);
+    o_box.bindBuffers();
+    o_box.render();
+    glUniform1i(Static.uniformEnableTint, 0);
   }
 
   /** Adds a simple bar (rectangle) 50% transparent. */
-  public void addBar50(int x1,int y1,int width,int height, float clr[]) {
-    int x2 = x1 + width;
-    int y2 = y1 + height;
-    o_bars50.addFace2D(x1 / gui_width, y1 / gui_height, x2 / gui_width, y2 / gui_height
-      , 0, 0, 1, 1, clr);
-  }
-
-  public void renderText() {
+  public void renderBar50(int x,int y,int width,int height, float clr[]) {
+    t_white50.bind();
+    glUniform1i(Static.uniformEnableTint, 1);
     setOrtho();
-    t_text.bind();
-    o_text.copyBuffers();
-    o_text.bindBuffers();
-    o_text.render();
-  }
-
-  public void renderBars() {
-    if (!o_bars.isArrayEmpty()) {
-      setOrtho();
-      t_white.bind();
-      o_bars.copyBuffers();
-      o_bars.bindBuffers();
-      o_bars.render();
+    setViewportBox(x,y,width,height);
+    float clr4[];
+    if (clr.length == 4) {
+      clr4 = clr;
+    } else {
+      clr4 = new float[] {clr[0], clr[1], clr[2], 1.0f};
     }
-  }
-
-  public void renderBars50() {
-    if (!o_bars50.isArrayEmpty()) {
-      setOrtho();
-      t_white50.bind();
-      o_bars50.copyBuffers();
-      o_bars50.bindBuffers();
-      o_bars50.render();
-    }
+    glUniform4fv(Static.uniformTintColor, 1, clr4);
+    o_box.bindBuffers();
+    o_box.render();
+    glUniform1i(Static.uniformEnableTint, 0);
   }
 
   public void renderItem(Item item, int x, int y) {
@@ -483,7 +530,7 @@ public abstract class RenderScreen {
     }
     o_items.resetAll();
     if (item.count > 1) {
-      addText(x,y,"" + item.count);
+      renderText(x,y,"" + item.count);
     }
     Texture texture;
     int buffersIdx;
@@ -491,7 +538,8 @@ public abstract class RenderScreen {
       BlockBase block = Static.blocks.blocks[item.id];
       texture = Static.blocks.stitched;
       if (block.renderAsEntity) {
-        setOrthoBlock(x, y);
+        setOrthoBlock();
+        setViewportBlock(x, y);
         EntityBase eb = Static.entities.entities[block.entityID];
         eb.pos.x = 0.5f;
         eb.pos.y = 0.5f;
@@ -505,11 +553,13 @@ public abstract class RenderScreen {
         glDepthFunc(GL.GL_ALWAYS);
         return;
       } else if (block.renderAsItem) {
-        setOrthoItem(x, y);
+        setOrtho();
+        setViewportItem(x, y);
         block.addFaceInvItem(o_items.getBuffers(0), item.var, block.isGreen);
         buffersIdx = 0;
       } else {
-        setOrthoBlock(x, y);
+        setOrthoBlock();
+        setViewportBlock(x, y);
         data.x = 0;
         data.y = 0;
         data.z = 0;
@@ -526,14 +576,15 @@ public abstract class RenderScreen {
         buffersIdx = block.buffersIdx;
       }
     } else {
-      setOrthoItem(x, y);
+      setOrtho();
+      setViewportItem(x, y);
       ItemBase itembase = Static.items.items[item.id];
       texture = Static.items.stitched;
       buffersIdx = 0;
       itembase.addFaceInvItem(o_items.getBuffers(0), item.var, false);
       if (itembase.isDamaged) {
         if (item.dmg != 1.0f) {
-          addBar(x,y-2,item.dmg);
+          renderDmg(x,y-2,item.dmg);
         }
       }
     }
@@ -549,11 +600,10 @@ public abstract class RenderScreen {
     String txt = itembase.getName(item.var);
     x += fontSize;
     y += fontSize;
-    addText(x,y,txt);
     int w = txt.length() * fontSize;
     int h = fontSize;
-    y -= fontSize;
-    addBar50(x-2,y-2,w+4,h+4,Static.blue);
+    renderBar50(x-2,y-2,w+4,h+4,Static.blue4);
+    renderText(x,y,txt);
   }
 
   public void enterMenu(byte idx) {
@@ -568,18 +618,13 @@ public abstract class RenderScreen {
     Static.inGame = true;
   }
 
-  /** Sets the size of the menu on screen (effects mouse coords, etc.). */
-  public void setMenuSize(int width, int height) {
-    gui_width = width;
-    gui_height = height;
-  }
-
   private static RenderBuffers o_shade = null;
 
   /** Render a shade over whole screen.
    * Assumes view/model matrix are set to identity.
    */
   public void renderShade() {
+    setViewportFull();
     renderShade(0,0,(int)Static.width,(int)Static.height);
   }
 
@@ -630,9 +675,7 @@ public abstract class RenderScreen {
     int x1,y1,x2,y2;
     int width;
     int max;
-    JFImage i_back;
-    RenderBuffers o_back;
-    Texture t_back;
+    float back[];
     boolean center;
     int scale;
     public String getText() {
@@ -762,18 +805,22 @@ public abstract class RenderScreen {
 
   public void renderButtons() {
     setOrtho();
+    setViewportMenu();
     t_widgets.bind();
     for(int a=0;a<buttons.size();a++) {
       Button button = buttons.get(a);
-      addText(button.tx, button.ty, button.txt, button.clr);
       button.left.bindBuffers();
       button.left.render();
       button.right.bindBuffers();
       button.right.render();
     }
+    for(int a=0;a<buttons.size();a++) {
+      Button button = buttons.get(a);
+      renderText(button.tx, button.ty, button.txt, button.clr);
+    }
   }
 
-  public TextField addTextField(String txt, int x1, int y1, int width, boolean back, int max, boolean center, int scale) {
+  public TextField addTextField(String txt, int x1, int y1, int width, float back[], int max, boolean center, int scale) {
     TextField field = new TextField();
     field.x1 = x1;
     field.y1 = y1;
@@ -788,16 +835,7 @@ public abstract class RenderScreen {
     field.chars = width / fontSize;
     field.cpos = txt.length();
     field.findCursor();
-    if (back) {
-      field.i_back = new JFImage(width, 15);
-      field.i_back.fill(0, 0, width, 15, 0);
-//      field.i_back.box(0, 0, width-1, 14, 0xffffff);
-      field.t_back = new Texture();
-      field.t_back.load(field.i_back);
-      field.o_back = new RenderBuffers();
-      field.o_back.addFace2D(x1 / 512.0f, y1 / 512.0f, 0, 0, width / 512.0f, 15 / 512.0f, Static.white);
-      field.o_back.copyBuffers();
-    }
+    field.back = back;
     fields.add(field);
     return field;
   }
@@ -806,10 +844,8 @@ public abstract class RenderScreen {
     setOrtho();
     for(int a=0;a<fields.size();a++) {
       TextField field = fields.get(a);
-      if (field.t_back != null) {
-        field.t_back.bind();
-        field.o_back.bindBuffers();
-        field.o_back.render();
+      if (field.back != null) {
+        renderBar(field.x1, field.y1 + fontSize + 4, field.width, fontSize + 4, field.back);
       }
       int x = field.x1;
       int y = field.y1;
@@ -819,16 +855,17 @@ public abstract class RenderScreen {
         x += (field.width - sl * fontSize * field.scale) / 2;
         x1 = x;
       }
+      t_text.bind();
       for(int p=field.dpos;p<field.txt.length();p++) {
-        addChar(x,y,field.txt.charAt(p),Static.white, field.scale);
+        renderChar(x,y,field.txt.charAt(p),Static.white4, field.scale);
         x += fontSize * field.scale;
       }
       if (showCursor && focus == field) {
         if (field.center) {
-          addChar(x, y,'<', Static.white, field.scale);
-          addChar(x1 - fontSize * field.scale, y,'>', Static.white, field.scale);
+          renderChar(x, y,'<', Static.white, field.scale);
+          renderChar(x1 - fontSize * field.scale, y,'>', Static.white, field.scale);
         } else {
-          addChar(field.x1 + ((field.cpos - field.dpos) * fontSize), y,(char)219, Static.white, field.scale);
+          renderChar(field.x1 + ((field.cpos - field.dpos) * fontSize), y,(char)219, Static.white, field.scale);
         }
       }
     }

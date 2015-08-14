@@ -34,7 +34,7 @@ public class SignMenu extends RenderScreen {
       leaveMenu();
     }});
     for(int a=0;a<4;a++) {
-      addTextField("", 52, 40 + a * fontSize * 2, 408, false, 15, true, 2);
+      addTextField("", 52, 40 + a * fontSize * 2, 408, null, 15, true, 2);
     }
     t_board = Textures.getTexture("blocks/planks_oak", 0);
     b_board = createMenu(76, 40, 0, 0, 360, fontSize * 2 * 4);
@@ -51,8 +51,6 @@ public class SignMenu extends RenderScreen {
 
   public void render(int width, int height) {
     Static.game.render(width, height);
-    setMenuSize(512, 512);
-    reset();
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, Static.identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
     renderShade();
@@ -62,7 +60,6 @@ public class SignMenu extends RenderScreen {
     b_board.render();
     renderButtons();
     renderFields();
-    renderText();
   }
 
   public void resize(int width, int height) {

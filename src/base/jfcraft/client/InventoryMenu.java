@@ -21,11 +21,12 @@ public class InventoryMenu extends RenderScreen {
   private Texture t_menu;
   private RenderBuffers o_menu;
   private int mx, my;
-  private final int gui_width = 350, gui_height = 330;  //size of menu
   private Player player;
 
   public InventoryMenu() {
     id = Client.INVENTORY;
+    gui_width = 350;
+    gui_height = 330;
   }
 
   public void setup() {
@@ -38,7 +39,6 @@ public class InventoryMenu extends RenderScreen {
 
   public void render(int width, int height) {
     Static.game.render(width, height);
-    setMenuSize(gui_width, gui_height);
 
     if (t_menu == null) {
       t_menu = Textures.getTexture("gui/container/inventory", 0);
@@ -56,12 +56,14 @@ public class InventoryMenu extends RenderScreen {
     glDepthFunc(GL_ALWAYS);
 
     setOrtho();
+    setViewportMenu();
 
     t_menu.bind();
     o_menu.bindBuffers();
     o_menu.render();
 
     setOrthoPlayer();
+    setViewportPlayer();
     glDepthFunc(GL_LEQUAL);
     glClear(GL_DEPTH_BUFFER_BIT);
     player.bindTexture();
@@ -87,8 +89,6 @@ public class InventoryMenu extends RenderScreen {
 
     glDepthFunc(GL_ALWAYS);
     setOrtho();
-
-    reset();
 
     //render inventory blocks
     int x = 16, y = (int)(gui_height - 131);
@@ -155,14 +155,8 @@ public class InventoryMenu extends RenderScreen {
       renderItem(item,mx,my);
     }
 
-    renderText();
-    renderBars();
-
     if (item != null) {
-      reset();
       renderItemName(item, mx, my);
-      renderBars50();
-      renderText();
     } else {
       //TODO : render item name under mouse
     }
@@ -245,24 +239,5 @@ public class InventoryMenu extends RenderScreen {
   }
 
   public void mouseWheel(int delta) {
-  }
-
-  /** Sets an ortho matrix to display player in inventory menu */
-  public void setOrthoPlayer() {
-    glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, orthoPlayer.m);  //perspective matrix
-    float x = 52;
-    float y = 155;
-    float w = 104;
-    float h = 140;
-    //left right bottom top near far
-    float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
-    float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
-    float vpy = 0;
-    switch (gui_position) {
-      case TOP: vpy = (int)(Static.height - gui_height) - y; break;
-      case CENTER: vpy = (int)(offsetY + (gui_height - y) * Static.scale); break;
-      case BOTTOM: vpy = (int)((gui_height - y) * Static.scale); break;
-    }
-    glViewport((int)(offsetX + x * Static.scale), (int)vpy, (int)(w * Static.scale), (int)(h * Static.scale));
   }
 }

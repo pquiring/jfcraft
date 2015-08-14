@@ -130,7 +130,6 @@ public class Game extends RenderScreen {
 
   public void render() {
     pro.start();
-    setMenuSize(512, 512);
 
     gui_position = CENTER;
 
@@ -429,6 +428,7 @@ public class Game extends RenderScreen {
       //now render slots at bottom
       gui_position = BOTTOM;
       setOrtho();
+      setViewportMenu();
       glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, Static.identity.m);  //view matrix
       glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
 
@@ -439,7 +439,6 @@ public class Game extends RenderScreen {
       o_active.render();
 
       //now render items in slots
-      reset();
 
       int x = 75;
       int y = 512 - 2;
@@ -457,14 +456,14 @@ public class Game extends RenderScreen {
         int dy = 512 - fontSize * 7;
         synchronized(Static.client.chat) {
           for(int a=Static.client.chat.size()-1;a>=0;a--) {
-            addText(dx, dy, Static.client.chat.get(a));
+            renderText(dx, dy, Static.client.chat.get(a));
             dy -= fontSize;
           }
         }
       }
 
       if (Settings.current.client_voip && Settings.current.ptt && Static.keys[GLVK.VK_CONTROL_R]) {
-        addText(512 - 4 * fontSize, 512, "Talk");
+        renderText(512 - 4 * fontSize, 512, "Talk");
       }
 
       if (Static.client.itemTextTime > 0) {
@@ -473,17 +472,13 @@ public class Game extends RenderScreen {
           ItemBase itembase = Static.items.items[item.id];
           if (item != null) {
             String txt = itembase.getName(item.var);
-            addText(256 - (txt.length() * fontSize / 2), 419, txt);
+            renderText(256 - (txt.length() * fontSize / 2), 419, txt);
           }
         }
       }
 
-      renderText();
-      renderBars();
-
       if (debug) {
-        reset();
-        gui_position = TOP;
+        gui_position = CENTER;  //should be TOP
         int gx = Static.floor(Static.client.player.pos.x % 16.0f);
         if (Static.client.player.pos.x < 0 && gx != 0) gx = 16 + gx;
         int gy = Static.floor(Static.client.player.pos.y);
@@ -491,46 +486,46 @@ public class Game extends RenderScreen {
         if (Static.client.player.pos.z < 0 && gz != 0) gz = 16 + gz;
         int dx = 0;
         int dy = fontSize;
-        addText(dx,dy,"Pos:" + Static.client.player.pos.x + "," + Static.client.player.pos.y + "," + Static.client.player.pos.z);
+        renderText(dx,dy,"Pos:" + Static.client.player.pos.x + "," + Static.client.player.pos.y + "," + Static.client.player.pos.z);
         dy += fontSize;
-        addText(dx,dy,"Ang:" + Static.client.player.ang.x + "," + Static.client.player.ang.y + "," + Static.client.player.ang.z);
+        renderText(dx,dy,"Ang:" + Static.client.player.ang.x + "," + Static.client.player.ang.y + "," + Static.client.player.ang.z);
         dy += fontSize;
-        addText(dx,dy,"Chunk:" + cx + "," + cz + " Block:" + gx + "," + gy + "," + gz);
+        renderText(dx,dy,"Chunk:" + cx + "," + cz + " Block:" + gx + "," + gy + "," + gz);
         dy += fontSize;
-        addText(dx,dy,"Chunks:" + chunks.length + " Rendered:" + cnt + " Frustum:" + fcnt);
+        renderText(dx,dy,"Chunks:" + chunks.length + " Rendered:" + cnt + " Frustum:" + fcnt);
         dy += fontSize;
         long free = rt.freeMemory() / (1024 * 1024);
         long total = rt.totalMemory() / (1024 * 1024);
-        addText(dx,dy,"Memory:Free=" + free + "MB of " + total + "MB");
+        renderText(dx,dy,"Memory:Free=" + free + "MB of " + total + "MB");
         dy += fontSize;
-        addText(dx,dy,"FPS=" + Static.fps);
+        renderText(dx,dy,"FPS=" + Static.fps);
         dy += fontSize;
         Chunk chunk = Static.client.player.getChunk();
         if (chunk != null) {
           int gp = (gz << 4) + gx;
-          addText(dx,dy,"Biome:" + Chunk.getBiomeName(chunk.biome[gp]));
+          renderText(dx,dy,"Biome:" + Chunk.getBiomeName(chunk.biome[gp]));
           dy += fontSize;
-          addText(dx,dy," Elev:" + chunk.elev[gp]);
+          renderText(dx,dy," Elev:" + chunk.elev[gp]);
           dy += fontSize;
-          addText(dx,dy," Temp:" + chunk.temp[gp]);
+          renderText(dx,dy," Temp:" + chunk.temp[gp]);
           dy += fontSize;
-          addText(dx,dy," Rain:" + chunk.rain[gp]);
+          renderText(dx,dy," Rain:" + chunk.rain[gp]);
           dy += fontSize;
         }
 
         if (Static.client.clientTransport instanceof LocalClientTransport) {
-          addText(dx,dy,"Queue:S=" + Static.client.clientTransport.getServerQueueSize() + ",C=" + Static.client.clientTransport.getClientQueueSize());
+          renderText(dx,dy,"Queue:S=" + Static.client.clientTransport.getServerQueueSize() + ",C=" + Static.client.clientTransport.getClientQueueSize());
           dy += fontSize;
         }
-        addText(dx,dy,"Tick:" + Static.tick);
+        renderText(dx,dy,"Tick:" + Static.tick);
         dy += fontSize;
-        addText(dx,dy,"Time:" + world.time);
+        renderText(dx,dy,"Time:" + world.time);
         dy += fontSize;
         Static.client.player.findBlock(-1, BlockHitTest.Type.SELECTION, Static.client.player.vehicle, c);
         if (c.block != null && c.chunk != null) {
-          addText(dx,dy,"Hit:" + c);
+          renderText(dx,dy,"Hit:" + c);
           dy += fontSize;
-          addText(dx,dy,"B1:" + (int)c.block.id + "," + c.block.getName(c.var)
+          renderText(dx,dy,"B1:" + (int)c.block.id + "," + c.block.getName(c.var)
             + ":bits=" + Integer.toString(c.bits, 16)
             + ":bl=" + world.getBlockLight(c.chunk.dim, c.x, c.y, c.z)
             + ":sl=" + world.getSunLight(c.chunk.dim, c.x, c.y, c.z)
@@ -542,24 +537,24 @@ public class Game extends RenderScreen {
 //            int dir2 = Chunk.getDir(bits2);
             int var2 = Chunk.getDir(bits2);
             BlockBase base2 = Static.blocks.blocks[id2];
-            addText(dx,dy,"B2:" + (int)id2 + "," + base2.getName(var2)
+            renderText(dx,dy,"B2:" + (int)id2 + "," + base2.getName(var2)
               + ":bits=" + Integer.toString(bits2, 16));
             dy += fontSize;
           }
         } else if (c.entity != null) {
-          addText(dx,dy,"Hit:" + c);
+          renderText(dx,dy,"Hit:" + c);
           dy += fontSize;
-          addText(dx,dy,"Entity:" + c.entity.id + "," + c.entity.getName());
+          renderText(dx,dy,"Entity:" + c.entity.id + "," + c.entity.getName());
           dy += fontSize;
         }
-        addText(dx,dy,dmsg);
+        renderText(dx,dy,dmsg);
         dy += fontSize;
-        renderText();
         gui_position = BOTTOM;
       }
 
       //render icons
       setOrtho();
+      setViewportMenu();
       t_icons.bind();
       o_cross.bindBuffers();
       o_cross.render();
