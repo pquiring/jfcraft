@@ -33,8 +33,11 @@ public abstract class RenderScreen {
 
   private static RenderBuffers o_text;
 
+  // top/left=0,0 : bottom/right=1,1
   public static GLMatrix orthoItem = new GLMatrix();
+  // show block at 3/4 view
   public static GLMatrix orthoBlock = new GLMatrix();
+  // show two blocks
   public static GLMatrix orthoPlayer = new GLMatrix();
 
   public static int fontSize = 12;
@@ -45,6 +48,8 @@ public abstract class RenderScreen {
   private static RenderBuffers o_bars = new RenderBuffers();
   private static RenderBuffers o_bars50 = new RenderBuffers();
   private static RenderData data = new RenderData();
+
+  private static RenderBuffers o_chars[];
 
   public static GLMatrix identity = new GLMatrix();
 
@@ -61,6 +66,24 @@ public abstract class RenderScreen {
     orthoBlock.addRotate(35, 1,0,0);
     orthoBlock.addRotate(45, 0,1,0);
     orthoPlayer.ortho(-1, 1, 0, 2, -1, 1);
+    o_chars = new RenderBuffers[256];
+    for(int a=0;a<o_chars.length;a++) {
+      o_chars[a] = new RenderBuffers();
+      RenderBuffers buf = o_chars[a];
+      float tx1 = (a % 16) / 16.0f;
+      float ty1 = Static.floor(a / 16) / 16.0f;
+      float tx2 = tx1 + Static._1_16;
+      float ty2 = ty1 + Static._1_16;
+      int i = buf.getVertexCount();
+      buf.addVertex(new float[] {0,0,0}, new float[] {tx1, ty1});
+      buf.addVertex(new float[] {1,0,0}, new float[] {tx2, ty1});
+      buf.addVertex(new float[] {1,1,0}, new float[] {tx2, ty2});
+      buf.addVertex(new float[] {0,1,0}, new float[] {tx1, ty2});
+      for(int b=0;b<4;b++) {
+        buf.addDefault();
+      }
+      buf.addPoly(new int[] {i+3,i+2,i+1,i+0});
+    }
   }
 
   private int getFieldIndex() {
@@ -171,7 +194,6 @@ public abstract class RenderScreen {
 
   /** Sets a standard 0,0-1,1 ortho matrix for gui_width/gui_height. */
   public void setOrtho() {
-    //left right bottom top near far
     glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, orthoItem.m);  //perspective matrix
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
