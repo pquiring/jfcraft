@@ -556,15 +556,17 @@ public class Game extends RenderScreen {
         }
         renderText(dx,dy,dmsg);
         dy += fontSize;
-        gui_position = BOTTOM;
       }
 
       //render icons
+      gui_position = CENTER;
       setOrtho();
       setViewportMenu();
       t_icons.bind();
       o_cross.bindBuffers();
       o_cross.render();
+      gui_position = BOTTOM;
+      setViewportMenu();
       o_icons.reset();
       float health = Static.client.player.health;
       for(int a=0;a<10;a++) {
