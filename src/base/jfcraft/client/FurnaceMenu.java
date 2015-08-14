@@ -66,6 +66,12 @@ public class FurnaceMenu extends RenderScreen {
     slots[p].x = 225;
     slots[p].y = 109;
     p++;
+
+    //item in hand
+    slots[p] = new Slot();
+    slots[p].x = mx;
+    slots[p].y = my;
+    slots[p].renderName = true;
   }
 
   public void setup() {

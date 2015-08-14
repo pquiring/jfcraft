@@ -68,6 +68,10 @@ public class InventoryMenu extends RenderScreen {
     x = 175;
     y = 50 + 36;
     for(int a=0;a<4;a++) {
+      if (a > 0 && a % 2 == 0) {
+        x = 175;
+        y += 36;
+      }
       slots[p] = new Slot();
       slots[p].x = x;
       slots[p].y = y;

@@ -52,8 +52,6 @@ public class CraftingMenu extends RenderScreen {
       x += 36;
     }
 
-    Item item;
-
     //crafting slots(9)
     x = 59;
     y = 32 + 36;
@@ -121,7 +119,7 @@ public class CraftingMenu extends RenderScreen {
     }
 
     //crafting slots(9)
-    for(int a=0;a<4;a++) {
+    for(int a=0;a<9;a++) {
       slots[p++].item = Static.client.craft[a];
     }
 
