@@ -20,11 +20,60 @@ public class ChestMenu extends RenderScreen {
   private RenderBuffers o_menu, o_menu2;
   private int mx, my;
   private int cnt;
+  private Slot slots[];
 
   public ChestMenu() {
     id = Client.CHEST;
     gui_width = 352;
     gui_height = 330;
+    slots = new Slot[4*9 + 3*9 + 1];  //slots(4*9), chest(3*9), hand(1)
+    //inventory blocks
+    int p = 0;
+    int x = 16, y = (int)(gui_height - 131);
+    for(int a=9;a<4*9;a++) {
+      if (a > 9 && a % 9 == 0) {
+        x = 16;
+        y += 36;
+      }
+      slots[p] = new Slot();
+      slots[p].x = x;
+      slots[p].y = y;
+      p++;
+      x += 36;
+    }
+    //active slots
+    x = 16;
+    y = (int)(gui_height - 11);
+    for(int a=0;a<9;a++) {
+      slots[p] = new Slot();
+      slots[p].x = x;
+      slots[p].y = y;
+      p++;
+      x += 36;
+    }
+
+    Item item;
+
+    //chest items
+    x = 16;
+    y = 36 + 36;
+    for(int a=0;a<cnt;a++) {
+      if (a > 0 && a % 9 == 0) {
+        x = 16;
+        y += 36;
+      }
+      slots[p] = new Slot();
+      slots[p].x = x;
+      slots[p].y = y;
+      p++;
+      x += 36;
+    }
+
+    //item in hand
+    slots[p] = new Slot();
+    slots[p].x = mx;
+    slots[p].y = my;
+    slots[p].renderName = true;
   }
 
   public void setup() {
@@ -81,58 +130,26 @@ public class ChestMenu extends RenderScreen {
       o_menu2.render();
     }
 
-    //render inventory blocks
-    int x = 16, y = (int)(gui_height - 131);
+    int p = 0;
+    //inventory slots
     for(int a=9;a<4*9;a++) {
-      if (a > 9 && a % 9 == 0) {
-        x = 16;
-        y += 36;
-      }
-      Item item = Static.client.player.items[a];
-      if (item.id != 0) {
-        renderItem(item,x,y);
-      }
-      x += 36;
+      slots[p++].item = Static.client.player.items[a];
     }
-    //render active slots
-    x = 16;
-    y = (int)(gui_height - 11);
     for(int a=0;a<9;a++) {
-      Item item = Static.client.player.items[a];
-      if (item.id != 0) {
-        renderItem(item,x,y);
-      }
-      x += 36;
+      slots[p++].item = Static.client.player.items[a];
     }
 
-    Item item;
-
-    //render chest items
-    x = 16;
-    y = 36 + 36;
-    for(int a=0;a<cnt;a++) {
-      if (a > 0 && a % 9 == 0) {
-        x = 16;
-        y += 36;
-      }
-      item = chest.items[a];
-      if (item != null && item.id != 0) {
-        renderItem(item,x,y);
-      }
-      x += 36;
+    //chest slots
+    for(int a=0;a<3*9;a++) {
+      slots[p++].item = chest.items[a];
     }
 
-    //render item in hand
-    item = Static.client.hand;
-    if (item != null) {
-      renderItem(item,mx,my);
-    }
+    //item in hand
+    slots[p].item = Static.client.hand;
+    slots[p].x = mx;
+    slots[p].y = my;
 
-    if (item != null) {
-      renderItemName(item, mx, my);
-    } else {
-      //TODO : render item name under mouse
-    }
+    renderItems(slots);
   }
 
   public void keyPressed(int vk) {

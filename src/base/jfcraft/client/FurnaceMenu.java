@@ -19,11 +19,53 @@ public class FurnaceMenu extends RenderScreen {
   private Texture t_menu;
   private static RenderBuffers o_menu, o_flame, o_arrow;
   private int mx, my;
+  private Slot slots[];
 
   public FurnaceMenu() {
     id = Client.FURNACE;
     gui_width = 350;
     gui_height = 330;
+    slots = new Slot[4*9 + 1 + 1 + 1 + 1];  //slots(4*9), fuel(1), input(1), output(1), hand(1)
+    //inventory blocks
+    int p = 0;
+    int x = 16, y = (int)(gui_height - 131);
+    for(int a=9;a<4*9;a++) {
+      if (a > 9 && a % 9 == 0) {
+        x = 16;
+        y += 36;
+      }
+      slots[p] = new Slot();
+      slots[p].x = x;
+      slots[p].y = y;
+      p++;
+      x += 36;
+    }
+    //active slots
+    x = 16;
+    y = (int)(gui_height - 11);
+    for(int a=0;a<9;a++) {
+      slots[p] = new Slot();
+      slots[p].x = x;
+      slots[p].y = y;
+      p++;
+      x += 36;
+    }
+
+    //furnace slots
+    slots[p] = new Slot();
+    slots[p].x = 111;
+    slots[p].y = 67;
+    p++;
+
+    slots[p] = new Slot();
+    slots[p].x = 111;
+    slots[p].y = 139;
+    p++;
+
+    slots[p] = new Slot();
+    slots[p].x = 225;
+    slots[p].y = 109;
+    p++;
   }
 
   public void setup() {
@@ -78,7 +120,7 @@ public class FurnaceMenu extends RenderScreen {
     o_menu.bindBuffers();
     o_menu.render();
 
-    //render flames and arrow
+    //flames and arrow
     t_menu.bind();
     if (flame_height > 0) {
       o_flame.bindBuffers();
@@ -89,54 +131,32 @@ public class FurnaceMenu extends RenderScreen {
       o_arrow.render();
     }
 
-    //render inventory blocks
-    int x = 16, y = (int)(gui_height - 131);
+    //inventory slots
+    int p = 0;
     for(int a=9;a<4*9;a++) {
-      if (a > 9 && a % 9 == 0) {
-        x = 16;
-        y += 36;
-      }
-      Item item = Static.client.player.items[a];
-      if (item.id != 0) {
-        renderItem(item,x,y);
-      }
-      x += 36;
+      slots[p++].item = Static.client.player.items[a];
     }
-    //render active slots
-    x = 16;
-    y = (int)(gui_height - 11);
     for(int a=0;a<9;a++) {
-      Item item = Static.client.player.items[a];
-      if (item.id != 0) {
-        renderItem(item,x,y);
-      }
-      x += 36;
+      slots[p++].item = Static.client.player.items[a];
     }
 
-    //render furnace slots
+    //furnace slots
     if (furnace != null) {
-      if (furnace.items[ExtraFurnace.INPUT].id != 0) {
-        renderItem(furnace.items[ExtraFurnace.INPUT],111,67);
-      }
-      if (furnace.items[ExtraFurnace.FUEL].id != 0) {
-        renderItem(furnace.items[ExtraFurnace.FUEL],111,139);
-      }
-      if (furnace.items[ExtraFurnace.OUTPUT].id != 0) {
-        renderItem(furnace.items[ExtraFurnace.OUTPUT],225,109);
-      }
-    }
-
-    //render item in hand
-    Item item = Static.client.hand;
-    if (item != null) {
-      renderItem(item,mx,my);
-    }
-
-    if (item != null) {
-      renderItemName(item, mx, my);
+      slots[p++].item = furnace.items[ExtraFurnace.INPUT];
+      slots[p++].item = furnace.items[ExtraFurnace.FUEL];
+      slots[p++].item = furnace.items[ExtraFurnace.OUTPUT];
     } else {
-      //TODO : render item name under mouse
+      slots[p++].item = null;
+      slots[p++].item = null;
+      slots[p++].item = null;
     }
+
+    //item in hand
+    slots[p].item = Static.client.hand;
+    slots[p].x = mx;
+    slots[p].y = my;
+
+    renderItems(slots);
   }
 
   public void keyPressed(int vk) {

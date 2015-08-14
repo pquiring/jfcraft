@@ -19,11 +19,58 @@ public class DropperMenu extends RenderScreen {
   private Texture t_menu;
   private static RenderBuffers o_menu;
   private int mx, my;
+  private Slot slots[];
 
   public DropperMenu() {
     id = Client.DROPPER;
     gui_width = 352;
     gui_height = 332;
+    slots = new Slot[4*9 + 4 + 4 + 1 + 1];  //slots(4*9), armor(4), craft input(4), craft output(1), hand(1)
+    //inventory blocks
+    int p = 0;
+    int x = 16, y = (int)(gui_height - 131);
+    for(int a=9;a<4*9;a++) {
+      if (a > 9 && a % 9 == 0) {
+        x = 16;
+        y += 36;
+      }
+      slots[p] = new Slot();
+      slots[p].x = x;
+      slots[p].y = y;
+      p++;
+      x += 36;
+    }
+    //active slots
+    x = 16;
+    y = (int)(gui_height - 11);
+    for(int a=0;a<9;a++) {
+      slots[p] = new Slot();
+      slots[p].x = x;
+      slots[p].y = y;
+      p++;
+      x += 36;
+    }
+
+    //dropper slots
+    x = 122;
+    y = 32 + 36;
+    for(int a=0;a<3*3;a++) {
+        if (a > 0 && a % 3 == 0) {
+          x = 122;
+          y += 36;
+        }
+      slots[p] = new Slot();
+      slots[p].x = x;
+      slots[p].y = y;
+      p++;
+      x += 36;
+    }
+
+    //item in hand
+    slots[p] = new Slot();
+    slots[p].x = mx;
+    slots[p].y = my;
+    slots[p].renderName = true;
   }
 
   public void setup() {
@@ -57,58 +104,28 @@ public class DropperMenu extends RenderScreen {
     o_menu.bindBuffers();
     o_menu.render();
 
-    //render inventory blocks
-    int x = 16, y = (int)(gui_height - 131);
+    //inventory slots
+    int p = 0;
     for(int a=9;a<4*9;a++) {
-      if (a > 9 && a % 9 == 0) {
-        x = 16;
-        y += 36;
-      }
-      Item item = Static.client.player.items[a];
-      if (item.id != 0) {
-        renderItem(item,x,y);
-      }
-      x += 36;
+      slots[p++].item = Static.client.player.items[a];
     }
-    //render active slots
-    x = 16;
-    y = (int)(gui_height - 11);
     for(int a=0;a<9;a++) {
-      Item item = Static.client.player.items[a];
-      if (item.id != 0) {
-        renderItem(item,x,y);
-      }
-      x += 36;
+      slots[p++].item = Static.client.player.items[a];
     }
 
-    //render dropper slots
+    //dropper
     if (dropper != null) {
-      x = 122;
-      y = 32 + 36;
-      for(int a=0;a<3*3;a++) {
-        if (a > 0 && a % 3 == 0) {
-          x = 122;
-          y += 36;
-        }
-        Item item = dropper.items[a];
-        if (item.id != 0) {
-          renderItem(item,x,y);
-        }
-        x += 36;
+      for(int a=0;a<dropper.items.length;a++) {
+        slots[p++].item = dropper.items[a];
       }
     }
 
-    //render item in hand
-    Item item = Static.client.hand;
-    if (item != null) {
-      renderItem(item,mx,my);
-    }
+    //item in hand
+    slots[p].item = Static.client.hand;
+    slots[p].x = mx;
+    slots[p].y = my;
 
-    if (item != null) {
-      renderItemName( item, mx, my);
-    } else {
-      //TODO : render item name under mouse
-    }
+    renderItems(slots);
   }
 
   public void keyPressed(int vk) {

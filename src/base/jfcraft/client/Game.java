@@ -41,11 +41,23 @@ public class Game extends RenderScreen {
   private GLVector3 l3 = new GLVector3();  //center (looking at)
   private GLVector3 u3 = new GLVector3();  //up
   private GLVector3 pts[];  //chunk points
+  private Slot slots[];
 
   public static boolean advanceAnimation;
 
   public Game() {
     id = Client.GAME;
+    slots = new Slot[9];  //active slots
+    int p = 0;
+    int x = 75;
+    int y = 512 - 2;
+    for(int a=0;a<9;a++) {
+      slots[p] = new Slot();
+      slots[p].x = x;
+      slots[p].y = y;
+      p++;
+      x += 40;
+    }
   }
 
   public void setup() {
@@ -440,15 +452,10 @@ public class Game extends RenderScreen {
 
       //now render items in slots
 
-      int x = 75;
-      int y = 512 - 2;
       for(int a=0;a<9;a++) {
-        Item item = Static.client.player.items[a];
-        if (item.id != -1) {
-          renderItem(item,x,y);
-        }
-        x += 40;
+        slots[a].item = Static.client.player.items[a];
       }
+      renderItems(slots);
 
       if (Static.client.chatTime > 0) {
         //render chat

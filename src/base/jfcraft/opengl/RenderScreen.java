@@ -474,10 +474,7 @@ public abstract class RenderScreen {
     } else if (dmg > 0.3f) {
       clr = Static.yellow4;
     }
-    t_white.bind();
-    o_box.bindBuffers();
     glUniform1i(Static.uniformEnableTint, 1);
-    setOrtho();
     setViewportBox(x,y,36,2);
     glUniform4fv(Static.uniformTintColor, 1, Static.grey4);
     o_box.render();
@@ -523,22 +520,16 @@ public abstract class RenderScreen {
     glUniform1i(Static.uniformEnableTint, 0);
   }
 
-  public void renderItem(Item item, int x, int y) {
+  private void renderItem(Item item, int x, int y) {
     if (item.id == 0) return;
     if (o_items == null) {
       o_items = new RenderDest(Chunk.buffersCount);
     }
     o_items.resetAll();
-    if (item.count > 1) {
-      renderText(x,y,"" + item.count);
-    }
-    Texture texture;
     int buffersIdx;
     if (Static.isBlock(item.id)) {
       BlockBase block = Static.blocks.blocks[item.id];
-      texture = Static.blocks.stitched;
       if (block.renderAsEntity) {
-        setOrthoBlock();
         setViewportBlock(x, y);
         EntityBase eb = Static.entities.entities[block.entityID];
         eb.pos.x = 0.5f;
@@ -553,12 +544,10 @@ public abstract class RenderScreen {
         glDepthFunc(GL.GL_ALWAYS);
         return;
       } else if (block.renderAsItem) {
-        setOrtho();
         setViewportItem(x, y);
         block.addFaceInvItem(o_items.getBuffers(0), item.var, block.isGreen);
         buffersIdx = 0;
       } else {
-        setOrthoBlock();
         setViewportBlock(x, y);
         data.x = 0;
         data.y = 0;
@@ -576,26 +565,18 @@ public abstract class RenderScreen {
         buffersIdx = block.buffersIdx;
       }
     } else {
-      setOrtho();
       setViewportItem(x, y);
       ItemBase itembase = Static.items.items[item.id];
-      texture = Static.items.stitched;
       buffersIdx = 0;
       itembase.addFaceInvItem(o_items.getBuffers(0), item.var, false);
-      if (itembase.isDamaged) {
-        if (item.dmg != 1.0f) {
-          renderDmg(x,y-2,item.dmg);
-        }
-      }
     }
-    texture.bind();
     RenderBuffers obj = o_items.getBuffers(buffersIdx);
     obj.copyBuffers();
     obj.bindBuffers();
     obj.render();
   }
 
-  public void renderItemName(Item item, int x,int y) {
+  private void renderItemName(Item item, int x,int y) {
     ItemBase itembase = Static.items.items[item.id];
     String txt = itembase.getName(item.var);
     x += fontSize;
@@ -604,6 +585,85 @@ public abstract class RenderScreen {
     int h = fontSize;
     renderBar50(x-2,y-2,w+4,h+4,Static.blue4);
     renderText(x,y,txt);
+  }
+
+  private Item block_item = new Item();
+
+  public void renderItems(Slot slots[]) {
+    Item item;
+    ItemBase itembase;
+    BlockBase blockbase;
+    //render items
+    setOrtho();
+    Static.items.stitched.bind();
+    for(int a=0;a<slots.length;a++) {
+      item = slots[a].item;
+      if (item == null || item.id == 0) continue;
+      if (Static.isItem(item.id)) {
+        renderItem(item, slots[a].x, slots[a].y);
+      }
+    }
+    //render blocks (rendered as items)
+    Static.blocks.stitched.bind();
+    for(int a=0;a<slots.length;a++) {
+      item = slots[a].item;
+      if (item == null || item.id == 0) continue;
+      if (Static.isBlock(item.id)) {
+        blockbase = Static.blocks.blocks[item.id];
+        if (blockbase.renderAsItem) {
+          renderItem(item, slots[a].x, slots[a].y);
+        }
+      }
+    }
+    //render normal blocks
+    setOrthoBlock();
+    for(int a=0;a<slots.length;a++) {
+      item = slots[a].item;
+      if (item == null || item.id == 0) continue;
+      if (Static.isBlock(item.id)) {
+        blockbase = Static.blocks.blocks[item.id];
+        if (blockbase.renderAsEntity) continue;
+        renderItem(item, slots[a].x, slots[a].y);
+      }
+    }
+    //render blocks as entities (chest, etc.)
+    for(int a=0;a<slots.length;a++) {
+      item = slots[a].item;
+      if (item == null || item.id == 0) continue;
+      if (Static.isBlock(item.id)) {
+        blockbase = Static.blocks.blocks[item.id];
+        if (blockbase.renderAsEntity) {
+          renderItem(item, slots[a].x, slots[a].y);
+        }
+      }
+    }
+    //render dmg bars
+    setOrtho();
+    t_white.bind();
+    o_box.bindBuffers();
+    for(int a=0;a<slots.length;a++) {
+      item = slots[a].item;
+      if (item == null || item.id == 0) continue;
+      if (Static.isBlock(item.id)) continue;
+      itembase = Static.items.items[item.id];
+      if (itembase.isDamaged) {
+        if (item.dmg != 1.0f) {
+          renderDmg(slots[a].x,slots[a].y-2,item.dmg);
+        }
+      }
+    }
+    //render text
+    t_text.bind();
+    for(int a=0;a<slots.length;a++) {
+      item = slots[a].item;
+      if (item == null || item.id == 0) continue;
+      if (item.count > 1) {
+        renderText(slots[a].x, slots[a].y, Integer.toString(item.count));
+      }
+      if (slots[a].renderName) {
+        renderItemName(item, slots[a].x, slots[a].y);
+      }
+    }
   }
 
   public void enterMenu(byte idx) {

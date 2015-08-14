@@ -20,11 +20,66 @@ public class CraftingMenu extends RenderScreen {
   private Texture t_menu;
   private RenderBuffers o_menu;
   private int mx, my;
+  private Slot slots[];
 
   public CraftingMenu() {
     id = Client.CRAFTTABLE;
     gui_width = 350;
     gui_height = 330;
+    slots = new Slot[4*9 + 9 + 1 + 1];  //slots(4*9), craft input(9), craft output(1), hand(1)
+    //inventory blocks
+    int p = 0;
+    int x = 16, y = (int)(gui_height - 131);
+    for(int a=9;a<4*9;a++) {
+      if (a > 9 && a % 9 == 0) {
+        x = 16;
+        y += 36;
+      }
+      slots[p] = new Slot();
+      slots[p].x = x;
+      slots[p].y = y;
+      p++;
+      x += 36;
+    }
+    //active slots
+    x = 16;
+    y = (int)(gui_height - 11);
+    for(int a=0;a<9;a++) {
+      slots[p] = new Slot();
+      slots[p].x = x;
+      slots[p].y = y;
+      p++;
+      x += 36;
+    }
+
+    Item item;
+
+    //crafting slots(9)
+    x = 59;
+    y = 32 + 36;
+    for(int a=0;a<9;a++) {
+      if (a > 0 && a % 3 == 0) {
+        x = 59;
+        y += 36;
+      }
+      slots[p] = new Slot();
+      slots[p].x = x;
+      slots[p].y = y;
+      p++;
+      x += 36;
+    }
+
+    //crafted item
+    slots[p] = new Slot();
+    slots[p].x = 239;
+    slots[p].y = 60 + 36;
+    p++;
+
+    //item in hand
+    slots[p] = new Slot();
+    slots[p].x = mx;
+    slots[p].y = my;
+    slots[p].renderName = true;
   }
 
   public void setup() {
@@ -56,64 +111,29 @@ public class CraftingMenu extends RenderScreen {
     o_menu.bindBuffers();
     o_menu.render();
 
-    //render inventory blocks
-    int x = 16, y = (int)(gui_height - 131);
+    //inventory slots
+    int p = 0;
     for(int a=9;a<4*9;a++) {
-      if (a > 9 && a % 9 == 0) {
-        x = 16;
-        y += 36;
-      }
-      Item item = Static.client.player.items[a];
-      if (item.id != 0) {
-        renderItem(item,x,y);
-      }
-      x += 36;
+      slots[p++].item = Static.client.player.items[a];
     }
-    //render active slots
-    x = 16;
-    y = (int)(gui_height - 11);
     for(int a=0;a<9;a++) {
-      Item item = Static.client.player.items[a];
-      if (item.id != 0) {
-        renderItem(item,x,y);
-      }
-      x += 36;
+      slots[p++].item = Static.client.player.items[a];
     }
 
-    Item item;
-
-    //render crafting slots(9)
-    x = 59;
-    y = 32 + 36;
-    for(int a=0;a<9;a++) {
-      if (a > 0 && a % 3 == 0) {
-        x = 59;
-        y += 36;
-      }
-      item = Static.client.craft[a];
-      if (item.id != 0) {
-        renderItem(item,x,y);
-      }
-      x += 36;
+    //crafting slots(9)
+    for(int a=0;a<4;a++) {
+      slots[p++].item = Static.client.craft[a];
     }
 
-    //render crafted item
-    item = Static.client.crafted;
-    if (item != null) {
-      renderItem(item,239,60 + 36);
-    }
+    //crafted slot
+    slots[p++].item = Static.client.crafted;
 
-    //render item in hand
-    item = Static.client.hand;
-    if (item != null) {
-      renderItem(item,mx,my);
-    }
+    //item in hand
+    slots[p].item = Static.client.hand;
+    slots[p].x = mx;
+    slots[p].y = my;
 
-    if (item != null) {
-      renderItemName(item, mx, my);
-    } else {
-      //TODO : render item name under mouse
-    }
+    renderItems(slots);
   }
 
   public void keyPressed(int vk) {
