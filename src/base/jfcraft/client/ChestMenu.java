@@ -52,12 +52,10 @@ public class ChestMenu extends RenderScreen {
       x += 36;
     }
 
-    Item item;
-
     //chest items
     x = 16;
     y = 36 + 36;
-    for(int a=0;a<cnt;a++) {
+    for(int a=0;a<3*9;a++) {
       if (a > 0 && a % 9 == 0) {
         x = 16;
         y += 36;
@@ -140,8 +138,14 @@ public class ChestMenu extends RenderScreen {
     }
 
     //chest slots
-    for(int a=0;a<3*9;a++) {
-      slots[p++].item = chest.items[a];
+    if (chest != null) {
+      for(int a=0;a<3*9;a++) {
+        slots[p++].item = chest.items[a];
+      }
+    } else {
+      for(int a=0;a<3*9;a++) {
+        slots[p++].item = null;
+      }
     }
 
     //item in hand

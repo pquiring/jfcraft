@@ -62,18 +62,19 @@ public class ConfirmMenu extends RenderScreen {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     setOrtho();
+    setViewportMenu();
 
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
+
+    t_menu.bind();
+    o_menu.bindBuffers();
+    o_menu.render();
 
     int x1 = (512 - msg1.length() * fontSize) / 2;
     renderText(x1, 50, msg1);
     int x2 = (512 - msg2.length() * fontSize) / 2;
     renderText(x2, 100, msg2);
-
-    t_menu.bind();
-    o_menu.bindBuffers();
-    o_menu.render();
 
     renderButtons();
   }
