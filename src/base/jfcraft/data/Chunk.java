@@ -1031,45 +1031,48 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     BlockBase block;
     synchronized(lock) {
       int cnt = ticks.size();
-      if (cnt == 0) return;
-      Tick list[] = ticks.toArray(new Tick[cnt]);
-      for(int a=0;a<cnt;a++) {
-        Tick tick = list[a];
-        if (!tick.isBlocks2)
-          id = getID(tick.x,tick.y,tick.z);
-        else
-          id = getID2(tick.x,tick.y,tick.z);
-        if (id != 0) {
-          try {
-            block = Static.blocks.blocks[id];
-            block.tick(this, tick);
-          } catch (Exception e) {
-            Static.log(e);
+      if (cnt > 0) {
+        Tick list[] = ticks.toArray(new Tick[cnt]);
+        for(int a=0;a<cnt;a++) {
+          Tick tick = list[a];
+          if (!tick.isBlocks2)
+            id = getID(tick.x,tick.y,tick.z);
+          else
+            id = getID2(tick.x,tick.y,tick.z);
+          if (id != 0) {
+            try {
+              block = Static.blocks.blocks[id];
+              block.tick(this, tick);
+            } catch (Exception e) {
+              Static.log(e);
+            }
           }
         }
       }
       //do 48 random ticks (3 per 16x16x16 area)
-      if (Static.debugDisableRandomTicks) return;
-      int x,y,z;
-      int p = 0;
-      for(int a=0;a<48;a++) {
-        if (a > 0 && a % 3 == 0) p += 16;
-        x = r.nextInt(16);
-        y = r.nextInt(16) + p;
-        z = r.nextInt(16);
-        //TODO : can snow_cover be replaced here???
-        id = getID(x,y,z);
-        if (id != 0) {
-          block = Static.blocks.blocks[id];
-          block.rtick(this, x,y,z);
-        }
-        id = getID2(x,y,z);
-        if (id != 0) {
-          block = Static.blocks.blocks[id];
-          block.rtick(this, x,y,z);
+      if (!Static.debugDisableRandomTicks) {
+        int x,y,z;
+        int p = 0;
+        for(int a=0;a<48;a++) {
+          if (a > 0 && a % 3 == 0) p += 16;
+          x = r.nextInt(16);
+          y = r.nextInt(16) + p;
+          z = r.nextInt(16);
+          //TODO : can snow_cover be replaced here???
+          id = getID(x,y,z);
+          if (id != 0) {
+            block = Static.blocks.blocks[id];
+            block.rtick(this, x,y,z);
+          }
+          id = getID2(x,y,z);
+          if (id != 0) {
+            block = Static.blocks.blocks[id];
+            block.rtick(this, x,y,z);
+          }
         }
       }
     }
+    //do entity ticks
     EntityBase es[] = this.getEntities();
     for(int a=0;a<es.length;a++) {
       EntityBase e = es[a];
