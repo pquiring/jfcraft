@@ -61,24 +61,21 @@ public class DimEnd extends DimBase {
 
   private Random r = new Random();
 
-  public void spawnMonsters(Chunk list[]) {
-    for(int a=0;a<list.length;a++) {
-      if (!list[a].canRender()) continue;
-      if (list[a].dim != Dims.EARTH) continue;
-      int idx = r.nextInt(mobs.length);
-      EntityBase eb = mobs[idx];
-      if (r.nextFloat() * 100.0f > eb.getSpawnRate()) {
-        continue;
-      }
-      EntityBase e = eb.spawn(list[a]);
-      if (e == null) {
-        continue;
-      }
-      e.uid = Static.server.world.generateUID();
-      Static.log("spawn " + e.getName() + " @dim= " + list[a].dim + ":x=" + e.pos.x + ",z=" + e.pos.z + ":uid=" + e.uid);
-      list[a].addEntity(e);
-      Static.server.world.addEntity(e);
-      Static.server.broadcastEntitySpawn(e);
+  public void spawnMonsters(Chunk chunk) {
+    if (chunk.dim != Dims.END) return;
+    int idx = r.nextInt(mobs.length);
+    EntityBase eb = mobs[idx];
+    if (r.nextFloat() * 100.0f > eb.getSpawnRate()) {
+      return;
     }
+    EntityBase e = eb.spawn(chunk);
+    if (e == null) {
+      return;
+    }
+    e.uid = Static.server.world.generateUID();
+    Static.log("spawn " + e.getName() + " @dim= " + chunk.dim + ":x=" + e.pos.x + ",z=" + e.pos.z + ":uid=" + e.uid);
+    chunk.addEntity(e);
+    Static.server.world.addEntity(e);
+    Static.server.broadcastEntitySpawn(e);
   }
 }

@@ -875,12 +875,22 @@ public class Server {
   private void doTick() {
     world.time++;
     if (world.time == 24000) world.time = 0; //midnight
+    //do spawning
+    boolean doSpawn = Static.spawn && world.time % 2000 == 0;
     //do chunk ticks
     Chunk list[] = world.chunks.getChunks();
     nChunks = list.length;
     for(int a=0;a<list.length;a++) {
-      if (!list[a].canRender()) continue;
-      list[a].doTicks();
+      Chunk chunk = list[a];
+      if (!chunk.canRender()) continue;
+      chunk.doTicks();
+      //spawn entities every 2 hours
+      if (doSpawn) {
+        DimBase db = Static.dims.dims[chunk.dim];
+        if (db == null) continue;
+        if (!world.chunks.dim_inited[db.id]) continue;
+        db.spawnMonsters(chunk);
+      }
     }
     //check if bedtime
     synchronized(clientsLock) {
@@ -920,15 +930,6 @@ public class Server {
           //broadcast midnight to keep clients in sync
           broadcastTime();
         }
-      }
-    }
-    if (Static.spawn && world.time % 2000 == 0) {
-      //spawn entities every 2 hours
-      for(int a=0;a<2;a++) {
-        DimBase db = Static.dims.dims[a];
-        if (db == null) continue;
-        if (!world.chunks.dim_inited[db.id]) continue;
-        db.spawnMonsters(list);
       }
     }
   }

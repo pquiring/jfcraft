@@ -30,5 +30,5 @@ public abstract class DimBase {
   public abstract LightingBase getLightingServer();
   public abstract LightingBase getLightingClient();
   public abstract EnvironmentBase getEnvironment();
-  public abstract void spawnMonsters(Chunk list[]);
+  public abstract void spawnMonsters(Chunk chunk);
 }
