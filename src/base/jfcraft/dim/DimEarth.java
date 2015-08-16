@@ -62,6 +62,7 @@ public class DimEarth extends DimBase {
   private Random r = new Random();
 
   public void spawnMonsters(Chunk chunk) {
+    if (chunk.dim != Dims.EARTH) return;
     int idx = r.nextInt(mobs.length);
     EntityBase eb = mobs[idx];
     if (r.nextFloat() * 100.0f > eb.getSpawnRate()) {
