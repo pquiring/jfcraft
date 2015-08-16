@@ -34,6 +34,7 @@ public class BlockDoor extends BlockBase {
     model_upper = Assets.getModel("door_upper").model;
     model_lower = Assets.getModel("door_lower").model;
     varMask = 0x7;  //remove VAR_UPPER
+    cantGive = true;  //give item instead
   }
 
   public static final int VAR_UPPER = 0x8;  //placed in var

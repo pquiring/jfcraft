@@ -40,6 +40,7 @@ public class ItemBase {
   public float attackDmg = 1;
   public boolean useRelease;  //activate on release (bow)
   public int material;
+  public RenderDest bufs[];  //inventory (vars)
 
   //armor info
   public Texture armorTextures[];

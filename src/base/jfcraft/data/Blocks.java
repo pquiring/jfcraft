@@ -17,6 +17,7 @@ import jfcraft.item.*;
 import jfcraft.data.*;
 import jfcraft.opengl.*;
 import static jfcraft.data.Types.*;
+import static jfcraft.data.Direction.*;
 
 public class Blocks {
   private static final int MAX_ID = 65536;
@@ -845,6 +846,45 @@ public class Blocks {
       block.isOpaque = !Settings.current.isFancy;
       block.isComplex = Settings.current.isFancy;
       block.isSolid = !Settings.current.isFancy;
+    }
+  }
+
+  public void initBuffers() {
+    RenderData data = new RenderData();
+    data.chunk = new Chunk(null);
+    for(int a=0;a<MAX_ID;a++) {
+      if (regBlocks[a] == null) continue;
+      BlockBase block = regBlocks[a];
+      if (block.cantGive) continue;
+      if (block.renderAsEntity) continue;
+      int vars = 1;
+      if (block.isVar) {
+        vars = block.names.length;
+      }
+      block.bufs = new RenderDest[vars];
+      for(int b=0;b<vars;b++) {
+        block.bufs[b] = new RenderDest(Chunk.buffersCount);
+        if (block.renderAsItem) {
+          block.addFaceInvItem(block.bufs[b].getBuffers(0), b, block.isGreen);
+          block.bufs[b].preferedIdx = 0;
+        } else {
+          data.x = 0;
+          data.y = 0;
+          data.z = 0;
+          data.sl[X] = 1.0f;
+          data.bl[X] = 1.0f;
+          data.crack = -1;
+          data.dir[X] = block.getPreferredDir();
+          if (block.isVar) {
+            data.var[X] = b;
+          } else {
+            data.var[X] = 0;
+          }
+          block.buildBuffers(block.bufs[b], data);
+          block.bufs[b].preferedIdx = block.buffersIdx;
+        }
+        block.bufs[b].getBuffers(block.bufs[b].preferedIdx).copyBuffers();
+      }
     }
   }
 }

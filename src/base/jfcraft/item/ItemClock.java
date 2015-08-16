@@ -21,7 +21,8 @@ public class ItemClock extends ItemBase {
     float tx1, ty1, tx2, ty2;
     if (!isVar) var = 0;
     //calc angle and add to ty1/ty2
-    float time = Static.client.world.time;  //24000 ticks / day
+    float time = 0;
+    if (Static.client != null) time = Static.client.world.time;  //24000 ticks / day
     //the clock is based on 6am
     time += 12000;
     if (time < 0) time += 24000;

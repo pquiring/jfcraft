@@ -17,7 +17,6 @@ import jfcraft.opengl.*;
 public class Loading extends RenderScreen {
   private Texture t_back;
   private RenderBuffers o_back;
-  private int cnt;
 
   public Loading() {
     id = Client.LOADING;
@@ -49,11 +48,10 @@ public class Loading extends RenderScreen {
     o_back.bindBuffers();
     o_back.render();
 
-    if (done && cnt > 10) {
+    if (done) {
       loadGL();
       Static.video.setScreen(Static.screens.screens[Client.MAIN]);
     }
-    cnt++;
   }
 
   public void resize(int width, int height) {
@@ -82,7 +80,13 @@ public class Loading extends RenderScreen {
   private void loadGL() {
     try {
       Static.blocks.initTexture();
+      if (Static.enablePrebuildItems) {
+        Static.blocks.initBuffers();
+      }
       Static.items.initTexture();
+      if (Static.enablePrebuildItems) {
+        Static.items.initBuffers();
+      }
       Static.entities.initStatic();
       Static.entities.initStaticGL();
       RenderScreen.initStatic();

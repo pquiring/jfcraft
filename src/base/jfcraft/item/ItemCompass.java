@@ -21,7 +21,8 @@ public class ItemCompass extends ItemBase {
     float tx1, ty1, tx2, ty2;
     if (!isVar) var = 0;
     //calc angle and add to ty1/ty2
-    float yAngle = Static.client.player.ang.y;
+    float yAngle = 0;
+    if (Static.client != null) yAngle = Static.client.player.ang.y;
     yAngle += 180f;
     if (yAngle < 0) yAngle += 360.0f;
     if (yAngle > 360) yAngle -= 360.0f;

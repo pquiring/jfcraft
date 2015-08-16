@@ -10,6 +10,8 @@ import javaforce.gl.*;
 public class RenderDest {
   private RenderBuffers buffers[];
 
+  public int preferedIdx;
+
   public RenderDest(int cnt) {
     buffers = new RenderBuffers[cnt];
   }

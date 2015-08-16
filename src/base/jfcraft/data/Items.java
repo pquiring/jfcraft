@@ -17,6 +17,7 @@ import jfcraft.item.*;
 import jfcraft.entity.*;
 import jfcraft.opengl.*;
 import static jfcraft.data.Types.*;
+import static jfcraft.data.Direction.*;
 
 public class Items {
   public static final int MAX_ID = 65536;
@@ -606,6 +607,24 @@ public class Items {
       Texture t = textures.get(a);
       AssetImage ai = others.get(a);
       t.load(ai.image);
+    }
+  }
+
+  public void initBuffers() {
+    for(int a=0;a<MAX_ID;a++) {
+      if (regItems[a] == null) continue;
+      ItemBase item = regItems[a];
+      if (item.cantGive) continue;
+      int vars = 1;
+      if (item.isVar) {
+        vars = item.names.length;
+      }
+      item.bufs = new RenderDest[vars];
+      for(int b=0;b<vars;b++) {
+        item.bufs[b] = new RenderDest(Chunk.buffersCount);
+        item.addFaceInvItem(item.bufs[b].getBuffers(0), b, false);
+        item.bufs[b].getBuffers(0).copyBuffers();
+      }
     }
   }
 }

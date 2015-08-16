@@ -520,7 +520,61 @@ public abstract class RenderScreen {
     glUniform1i(Static.uniformEnableTint, 0);
   }
 
+  // this method is slightly FASTER but ItemCompass and ItemClock need to update their image another way
+  private void renderItemFast(Item item, int x, int y) {
+    if (item.id == 0) return;
+    if (Static.isBlock(item.id)) {
+      BlockBase block = Static.blocks.blocks[item.id];
+      if (block.renderAsEntity) {
+        setViewportBlock(x, y);
+        EntityBase eb = Static.entities.entities[block.entityID];
+        eb.pos.x = 0.5f;
+        eb.pos.y = 0.5f;
+        eb.pos.z = 0.5f;
+        eb.ang.y = -90;
+        eb.setScale(1.0f);
+        eb.bindTexture();
+        glClear(GL.GL_DEPTH_BUFFER_BIT);
+        glDepthFunc(GL.GL_LEQUAL);
+        eb.render();
+        glDepthFunc(GL.GL_ALWAYS);
+      } else if (block.renderAsItem) {
+        setViewportItem(x, y);
+        RenderBuffers buf = block.bufs[item.var].getBuffers(0);
+        buf.bindBuffers();
+        buf.render();
+      } else {
+        setViewportBlock(x, y);
+        int var = 0;
+        if (block.isVar) var = item.var;
+        RenderBuffers buf = block.bufs[var].getBuffers(block.bufs[var].preferedIdx);
+        buf.bindBuffers();
+        buf.render();
+      }
+    } else {
+      setViewportItem(x, y);
+      ItemBase itembase = Static.items.items[item.id];
+      int var = 0;
+      if (itembase.isVar) var = item.var;
+      if (itembase.bufs == null) {
+        Static.log("error:no buffers for item:" + itembase);
+        return;
+      }
+      RenderBuffers buf = itembase.bufs[var].getBuffers(0);
+      buf.bindBuffers();
+      buf.render();
+    }
+  }
+
   private void renderItem(Item item, int x, int y) {
+    if (Static.enablePrebuildItems) {
+      renderItemFast(item, x, y);
+    } else {
+      renderItemSlow(item, x, y);
+    }
+  }
+
+  private void renderItemSlow(Item item, int x, int y) {
     if (item.id == 0) return;
     if (o_items == null) {
       o_items = new RenderDest(Chunk.buffersCount);
