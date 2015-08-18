@@ -25,7 +25,6 @@ public class Launcher extends javax.swing.JFrame {
   public Launcher() {
     initComponents();
     Settings.load();
-    Static.log("clouds=" + Settings.current.clouds);
     player.setText(Settings.current.player);
     setTitle("jfCraft/" + Static.version);
     JF.centerWindow(this);
@@ -298,12 +297,12 @@ public class Launcher extends javax.swing.JFrame {
   public void checkVersion() {
     try {
       BufferedReader reader = new BufferedReader(new InputStreamReader(
-        new URL("http://jfcraft.sourceforge.net/version.php").openStream()));
+        new URL("http://pquiring.github.io/jfcraft/version.html").openStream()));
       String line = reader.readLine();
       if (line.equals(Static.version)) {Static.log("version is up-to-date"); return;}
       Static.log("newer version is available : " + line);
       JOptionPane.showMessageDialog(this,
-        "A newer version of jfCraft is available! (v" + line + ")\r\nPlease goto http://jfcraft.sourceforge.net to download it",
+        "A newer version of jfCraft is available! (v" + line + ")\r\nPlease goto http://pquiring.github.io/jfcraft to download it",
         "Info",
         JOptionPane.INFORMATION_MESSAGE);
     } catch (Exception e) {
