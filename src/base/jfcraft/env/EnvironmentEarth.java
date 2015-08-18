@@ -84,7 +84,6 @@ public class EnvironmentEarth implements EnvironmentBase {
 
   public void init() {
     if (inited) return;
-    Static.log("EARTH ENV INIT");
     RenderData data = new RenderData();
     sun = new Texture();
     sun.load(makeAlpha("environment/sun"));
@@ -323,8 +322,6 @@ public class EnvironmentEarth implements EnvironmentBase {
     Arrays.sort(clouds, 0, cc);
     t_clouds.bind();
     o_clouds.bindBuffers();
-//    Static.log("render clouds:" + cc + ":" + cloudOffset);
-    Cloud first = clouds[0], last = clouds[cc-1];
     for(int a=0;a<cc;a++) {
       Cloud cloud = clouds[a];
       mat.setTranslate(cloud.pos.x, cloud.pos.y, cloud.pos.z);

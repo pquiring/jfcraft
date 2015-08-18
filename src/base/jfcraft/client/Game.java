@@ -200,7 +200,7 @@ public class Game extends RenderScreen {
     glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, perspective.m);  //perspective matrix
 
     camera.x = Static.client.player.pos.x;
-    camera.y = Static.client.player.pos.y -Static.client.player.eyeHeight;
+    camera.y = Static.client.player.pos.y + Static.client.player.eyeHeight;
     camera.z = Static.client.player.pos.z;
 
     glUniform1f(Static.uniformSunLight, 1.0f);
