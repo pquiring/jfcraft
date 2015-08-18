@@ -82,7 +82,7 @@
   </target>
 
   <target name="release-bin" depends="jar,depjars" description="create release zip file">
-    <zip destfile="jfcraft-${version}.zip">
+    <zip destfile="jfcraft-bin-${version}.zip">
       <fileset dir="..">
         <include name="jfcraft/*.jar"/>
         <include name="jfcraft/*.txt"/>
@@ -97,38 +97,7 @@
       </fileset>
       <fileset dir="../.." includes="license.txt"/>
     </zip>
-    <move file="jfcraft-${version}.zip" todir="${home}/release"/>
-  </target>
-
-  <target name="release-src" depends="" description="create release zip file">
-    <zip destfile="jfcraft-src-${version}.zip">
-      <fileset dir="../../..">
-        <include name="jf/license.txt"/>
-        <include name="jf/base.*"/>
-        <include name="jf/games/jfcraft/src/**/*"/>
-        <include name="jf/games/jfcraft/jfassets/**/*"/>
-        <include name="jf/games/jfcraft/deb/*"/>
-        <include name="jf/games/jfcraft/*.desktop"/>
-        <include name="jf/games/jfcraft/*.lst"/>
-        <include name="jf/games/jfcraft/*.zip"/>
-        <include name="jf/games/jfcraft/*.c"/>
-        <include name="jf/games/jfcraft/*.txt"/>
-        <include name="jf/games/jfcraft/*.xml"/>
-        <include name="jf/games/jfcraft/*.png"/>
-        <exclude name="jf/games/jfcraft/*stitched*.png"/>
-        <include name="jf/games/jfcraft/*.ico"/>
-        <include name="jf/games/jfcraft/*.rc"/>
-        <include name="jf/games/jfcraft/run*.*"/>
-        <include name="jf/games/jfcraft/nbproject/*.xml"/>
-        <include name="jf/games/jfcraft/blender/*.blend"/>
-        <include name="jf/games/jfcraft/blender/*.bat"/>
-        <include name="jf/games/jfcraft/blender/*.txt"/>
-        <include name="jf/jars/javaforce.jar"/>
-        <include name="jf/stubs/*"/>
-        <include name="jf/native/*"/>
-      </fileset>
-    </zip>
-    <move file="jfcraft-src-${version}.zip" todir="${home}/release"/>
+    <move file="jfcraft-bin-${version}.zip" todir="${home}/release"/>
   </target>
 
   <target name="clean" description="deletes compiled files">
