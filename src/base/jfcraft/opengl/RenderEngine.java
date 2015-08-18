@@ -145,13 +145,17 @@ public class RenderEngine {
     glUniform4fv(Static.uniformFogColor, 1, Static.white4);
 
     //setup timers
-    frTimer = new java.util.Timer();
-    int delay = 1000 / Settings.current.FPS;
-    frTimer.scheduleAtFixedRate(new TimerTask() {
-      public final void run() {
-        nextFrame();
-      }
-    }, delay, delay);
+    if (Settings.current.FPS != -1) {
+      frTimer = new java.util.Timer();
+      int delay = 1000 / Settings.current.FPS;
+      frTimer.scheduleAtFixedRate(new TimerTask() {
+        public final void run() {
+          nextFrame();
+        }
+      }, delay, delay);
+    } else {
+      nextFrame = true;
+    }
     fpsTimer = new java.util.Timer();
     fpsTimer.scheduleAtFixedRate(new TimerTask() {
       public void run() {
@@ -191,7 +195,7 @@ public class RenderEngine {
         glDepthFunc(GL_LEQUAL);
         synchronized(screenLock) {
           if (nextFrame && processed) {
-            if (Settings.current.FPS == -1) nextFrame = false;
+            if (Settings.current.FPS != -1) nextFrame = false;
             screen.render((int)Static.width, (int)Static.height);
             Main.swap();
             processed = false;

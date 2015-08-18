@@ -19,7 +19,7 @@ public class BlockOpaqueVarPerf extends BlockOpaque {
     isPerf = true;
   }
   public SubTexture getTexture(RenderData data) {
-    if (Settings.current.isFancy)
+    if (Settings.current.fancy)
       return textures[data.dir[data.side]];
     else
       return textures2[data.dir[data.side]];

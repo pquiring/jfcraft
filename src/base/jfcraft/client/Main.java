@@ -6,8 +6,7 @@ package jfcraft.client;
  */
 
 import javaforce.JF;
-import javaforce.gl.GLVK;
-import jfcraft.data.Static;
+import jfcraft.data.*;
 
 import javaforce.gl.*;
 
@@ -28,6 +27,7 @@ public class Main implements GLWindow.KeyEvents, GLWindow.MouseEvents, GLWindow.
   public void run() {
     main = this;
     try {
+      Settings.load();
       init();
       initGame();
       loop();

@@ -17,7 +17,7 @@ public class Settings {
   public String player = "Player";  //player name
   public String pass = "";  //password (not used yet)
   public int loadRange = 6;  //# chunks client loads (radius)
-  public boolean isFancy = true;  //use fancy graphics (else solid)
+  public boolean fancy = true;  //use fancy graphics (else solid)
   public int tcpPort = 25565 + 1;
   public boolean doSteps = true;  //enable steps land (smooth) (experimental)
   public boolean doViewBobbing = true;  //view bobbing
@@ -64,7 +64,7 @@ public class Settings {
     player = "Player";  //player name
     pass = "";  //password (not used yet)
     loadRange = 6;  //# chunks client loads (radius)
-    isFancy = true;  //use fancy graphics (else solid)
+    fancy = true;  //use fancy graphics (else solid)
     tcpPort = 25565 + 1;
     doSteps = true;  //enable steps land (smooth) (experimental)
     doViewBobbing = true;  //view bobbing

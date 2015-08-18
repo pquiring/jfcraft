@@ -50,6 +50,11 @@ public class EditOptions extends javax.swing.JDialog {
     cancel = new javax.swing.JButton();
     jPanel3 = new javax.swing.JPanel();
     dropItemsOnDeath = new javax.swing.JCheckBox();
+    clouds = new javax.swing.JCheckBox();
+    jLabel2 = new javax.swing.JLabel();
+    fpsSlider = new javax.swing.JSlider();
+    fpsLabel = new javax.swing.JLabel();
+    fancy = new javax.swing.JCheckBox();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     setTitle("Options");
@@ -170,20 +175,67 @@ public class EditOptions extends javax.swing.JDialog {
     dropItemsOnDeath.setSelected(true);
     dropItemsOnDeath.setText("Drop Items on Death");
 
+    clouds.setSelected(true);
+    clouds.setText("Clouds");
+
+    jLabel2.setText("FPS");
+
+    fpsSlider.setMajorTickSpacing(1);
+    fpsSlider.setMaximum(260);
+    fpsSlider.setMinimum(10);
+    fpsSlider.setMinorTickSpacing(10);
+    fpsSlider.setSnapToTicks(true);
+    fpsSlider.setValue(60);
+    fpsSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+      public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        fpsSliderStateChanged(evt);
+      }
+    });
+
+    fpsLabel.setText("50");
+
+    fancy.setSelected(true);
+    fancy.setText("Fancy Graphics");
+
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
     jPanel3Layout.setHorizontalGroup(
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel3Layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(dropItemsOnDeath)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(jPanel3Layout.createSequentialGroup()
+            .addComponent(jLabel2)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(fpsSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(fpsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+          .addGroup(jPanel3Layout.createSequentialGroup()
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(dropItemsOnDeath)
+              .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(clouds)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fancy)))
+            .addGap(0, 0, Short.MAX_VALUE)))
+        .addContainerGap())
     );
     jPanel3Layout.setVerticalGroup(
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel3Layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(dropItemsOnDeath)
+        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+          .addComponent(fpsLabel)
+          .addGroup(jPanel3Layout.createSequentialGroup()
+            .addComponent(dropItemsOnDeath)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(clouds)
+              .addComponent(fancy))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+              .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+              .addComponent(fpsSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
@@ -232,12 +284,21 @@ public class EditOptions extends javax.swing.JDialog {
     dispose();
   }//GEN-LAST:event_okActionPerformed
 
+  private void fpsSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_fpsSliderStateChanged
+    updateFPS();
+  }//GEN-LAST:event_fpsSliderStateChanged
+
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.ButtonGroup audio_system;
   private javax.swing.JButton cancel;
   private javax.swing.JCheckBox client_voip;
+  private javax.swing.JCheckBox clouds;
   private javax.swing.JCheckBox dropItemsOnDeath;
+  private javax.swing.JCheckBox fancy;
+  private javax.swing.JLabel fpsLabel;
+  private javax.swing.JSlider fpsSlider;
   private javax.swing.JLabel jLabel1;
+  private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JLabel jLabel4;
   private javax.swing.JPanel jPanel1;
@@ -261,6 +322,13 @@ public class EditOptions extends javax.swing.JDialog {
     dropItemsOnDeath.setSelected(Settings.current.dropItemsOnDeath);
     client_voip.setSelected(Settings.current.client_voip);
     ptt.setSelected(Settings.current.ptt);
+    fancy.setSelected(Settings.current.fancy);
+    clouds.setSelected(Settings.current.clouds);
+    if (Settings.current.FPS == -1)
+      fpsSlider.setValue(260);
+    else
+      fpsSlider.setValue(Settings.current.FPS);
+    updateFPS();
     ready = true;
   }
 
@@ -272,6 +340,11 @@ public class EditOptions extends javax.swing.JDialog {
     Settings.current.ptt = ptt.isSelected();
     Settings.current.mic = (String)mic.getSelectedItem();
     Settings.current.spk = (String)spk.getSelectedItem();
+    Settings.current.fancy = fancy.isSelected();
+    Settings.current.clouds = clouds.isSelected();
+    int fps = fpsSlider.getValue();
+    if (fps == 260) fps = -1;
+    Settings.current.FPS = fps;
   }
 
   private void listDevices() {
@@ -307,5 +380,13 @@ public class EditOptions extends javax.swing.JDialog {
       }
     }
     spk.setSelectedIndex(idx);
+  }
+
+  private void updateFPS() {
+    int fps = fpsSlider.getValue();
+    if (fps == 260)
+      fpsLabel.setText("MAX");
+    else
+      fpsLabel.setText(Integer.toString(fps));
   }
 }

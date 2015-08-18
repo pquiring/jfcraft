@@ -843,9 +843,9 @@ public class Blocks {
       if (regBlocks[a] == null) continue;
       BlockBase block = regBlocks[a];
       if (!block.isPerf) continue;
-      block.isOpaque = !Settings.current.isFancy;
-      block.isComplex = Settings.current.isFancy;
-      block.isSolid = !Settings.current.isFancy;
+      block.isOpaque = !Settings.current.fancy;
+      block.isComplex = Settings.current.fancy;
+      block.isSolid = !Settings.current.fancy;
     }
   }
 

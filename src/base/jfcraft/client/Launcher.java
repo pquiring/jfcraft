@@ -25,6 +25,7 @@ public class Launcher extends javax.swing.JFrame {
   public Launcher() {
     initComponents();
     Settings.load();
+    Static.log("clouds=" + Settings.current.clouds);
     player.setText(Settings.current.player);
     setTitle("jfCraft/" + Static.version);
     JF.centerWindow(this);
