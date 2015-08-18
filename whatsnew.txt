@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-Aug ?, 2015 : v0.20 released!
+Aug 18, 2015 : v0.20 released!
   - attempted to use SWT (GLCanvas) but their keyboard support is not designed for gaming
     - it doesn't generate key release events if multiple keys are pressed
       - a known bug since v1.0 and still present in v4.5
@@ -12,7 +12,7 @@ Aug ?, 2015 : v0.20 released!
   - finally switched to GLFW (now part of JavaForce)
     - GLFW doesn't support icons yet but I added some JNI to overcome that (Windows only)
   - added block hardness
-  - added clouds
+  - added clouds (see http://gamedev.stackexchange.com/questions/105753/how-does-minecraft-render-its-clouds)
   - lots of improvements and bug fixes
 
 Aug 1, 2015 : v0.19 released!

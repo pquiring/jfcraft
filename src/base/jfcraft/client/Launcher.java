@@ -264,6 +264,10 @@ public class Launcher extends javax.swing.JFrame {
    * @param args the command line arguments
    */
   public static void main(String args[]) {
+    if (JF.isMac()) {
+      JF.showError("Error", "Sorry, Mac is not supported yet");
+      return;
+    }
     /* Create and display the form */
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
