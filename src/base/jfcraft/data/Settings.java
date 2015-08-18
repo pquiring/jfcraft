@@ -29,8 +29,8 @@ public class Settings {
   public boolean ptt = true;  //push to talk (else phone mode)
   public String mic = "<default>";
   public String spk = "<default>";
-  public boolean maxFPS = true;
-  public int FPS = 60;
+  public int FPS = 60;  //-1 = max fps
+  public boolean clouds = true;
 
   public static void load() {
     try {
@@ -76,7 +76,7 @@ public class Settings {
     ptt = true;  //push to talk (else phone mode)
     mic = "<default>";
     spk = "<default>";
-    maxFPS = false;
     FPS = 60;
+    clouds = true;
   }
 }

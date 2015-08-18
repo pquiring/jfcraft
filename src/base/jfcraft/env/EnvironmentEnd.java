@@ -46,7 +46,7 @@ public class EnvironmentEnd implements EnvironmentBase {
 
   private GLMatrix view = new GLMatrix();
 
-  public void render(int time, float sunLight, Client client) {
+  public void preRender(int time, float sunLight, Client client, XYZ camera, Chunk[] chunks) {
     float zAngle = time;
     zAngle /= (24000f / 360f);
 
@@ -70,4 +70,9 @@ public class EnvironmentEnd implements EnvironmentBase {
     glDepthMask(true);
     glDepthFunc(GL_LEQUAL);
   }
+
+  public void postRender(int time, float sunLight, Client client, XYZ camera, Chunk[] chunks) {
+  }
+
+  public void tick() {}
 }

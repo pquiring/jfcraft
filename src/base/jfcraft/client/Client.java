@@ -355,6 +355,8 @@ public class Client {
       itembase.animateItem(handAngle, handPos, b1, b2, selection != null, up | dn | lt | rt);
     else
       itembase.animateItem(handAngle, handPos, false, false, false, false);
+    //tick environment
+    Static.dims.dims[player.dim].getEnvironment().tick();
   }
 
   private void doChunks() {

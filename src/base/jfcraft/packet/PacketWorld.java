@@ -29,6 +29,7 @@ public class PacketWorld extends Packet {
     client.world.chunks = new Chunks(world);
     if (!client.clientTransport.isLocal()) {
       client.world.assignIDs();
+      Static.dims.init();
     }
     if (client.world.genSpawnAreaDone) {
       client.spawnAreaDonePercent = 100;

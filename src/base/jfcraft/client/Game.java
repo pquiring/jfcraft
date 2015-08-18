@@ -42,6 +42,7 @@ public class Game extends RenderScreen {
   private GLVector3 u3 = new GLVector3();  //up
   private GLVector3 pts[];  //chunk points
   private Slot slots[];
+  private XYZ camera = new XYZ();
 
   public static boolean advanceAnimation;
 
@@ -114,8 +115,6 @@ public class Game extends RenderScreen {
     }
   }
 
-  private boolean dim_env_inited[] = new boolean[Dims.MAX_ID];
-
   private Coords c = new Coords();
 
   private float v3[] = new float[3];
@@ -146,11 +145,6 @@ public class Game extends RenderScreen {
     gui_position = CENTER;
 
     int dim = Static.client.player.dim;
-    if (!dim_env_inited[dim]) {
-      Static.log("Environment init:" + dim);
-      Static.dims.dims[dim].getEnvironment().init();
-      dim_env_inited[dim] = true;
-    }
 
     if (Static.inGame && Static.client.player.health == 0) {
       Static.video.setScreen(Static.screens.screens[Client.DEAD]);
@@ -205,9 +199,13 @@ public class Game extends RenderScreen {
     }
     glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, perspective.m);  //perspective matrix
 
+    camera.x = Static.client.player.pos.x;
+    camera.y = Static.client.player.pos.y -Static.client.player.eyeHeight;
+    camera.z = Static.client.player.pos.z;
+
     glUniform1f(Static.uniformSunLight, 1.0f);
     if (!Static.debugDisableFog) glUniform1i(Static.uniformEnableFog, 0);
-    Static.dims.dims[dim].getEnvironment().render(world.time, sunLight, Static.client);
+    Static.dims.dims[dim].getEnvironment().preRender(world.time, sunLight, Static.client, camera, chunks);
     if (!Static.debugDisableFog) glUniform1i(Static.uniformEnableFog, 1);
 
     view.setIdentity();
@@ -215,14 +213,11 @@ public class Game extends RenderScreen {
       view.addRotate(Static.client.ang.x, 1, 0, 0);
       view.addRotate(Static.client.ang.y, 0, 1, 0);
     }
-    float camx = -Static.client.player.pos.x;
-    float camy = -Static.client.player.pos.y -Static.client.player.eyeHeight;
-    float camz = -Static.client.player.pos.z;
-    view.addTranslate2(camx, camy, camz);
+    view.addTranslate2(-camera.x, -camera.y, -camera.z);
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
 
     //setup frustum culling
-    p3.set(-camx, -camy, -camz);
+    p3.set(camera.x, camera.y, camera.z);
     l3.set(0, 0, -1f);
     view.mult(l3);
     l3.add(p3);
@@ -394,7 +389,7 @@ public class Game extends RenderScreen {
 
     pro.next();
 
-    //render text
+    //render text (signs)
     t_text.bind();
     for(int a=0;a<chunks.length;a++) {
       Chunk chunk = chunks[a];
@@ -428,9 +423,12 @@ public class Game extends RenderScreen {
     //TODO : render particles, etc.
     pro.next();
 
-    if (showControls) {
-      glDepthMask(true);  //turn on depth buffer updates
+    glDepthMask(true);  //turn on depth buffer updates
 
+    //render environment post stage
+    Static.dims.dims[dim].getEnvironment().postRender(world.time, sunLight, Static.client, camera, chunks);
+
+    if (showControls) {
       renderItemInHand();
 
       glUniform1f(Static.uniformSunLight, 1.0f);
@@ -556,6 +554,10 @@ public class Game extends RenderScreen {
         }
         renderText(dx,dy,dmsg);
         dy += fontSize;
+        if (Static.debugMsg != null) {
+          renderText(dx,dy,Static.debugMsg);
+          dy += fontSize;
+        }
       }
 
       //render icons

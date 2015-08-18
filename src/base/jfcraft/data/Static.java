@@ -53,6 +53,8 @@ public class Static {
   public static boolean debugPurgeEntities = false;
   public static boolean debugDisableFog = true;
 
+  public static String debugMsg;
+
   public static boolean doSteps = false;
 
   public static ServerInterface iface;

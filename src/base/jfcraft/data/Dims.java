@@ -37,6 +37,24 @@ public class Dims {
     registerDimension(new DimNether());
   }
 
+  public void init() {
+    for(int a=0;a<MAX_ID;a++) {
+      DimBase db = dims[a];
+      if (db != null) {
+        db.init();
+      }
+    }
+  }
+
+  public void initEnvironments() {
+    for(int a=0;a<MAX_ID;a++) {
+      DimBase db = dims[a];
+      if (db != null) {
+        db.getEnvironment().init();
+      }
+    }
+  }
+
   public void resetAll() {
     int p = 0;
     while (dims[p] != null) {

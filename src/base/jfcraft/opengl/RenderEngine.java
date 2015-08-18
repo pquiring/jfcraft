@@ -191,7 +191,7 @@ public class RenderEngine {
         glDepthFunc(GL_LEQUAL);
         synchronized(screenLock) {
           if (nextFrame && processed) {
-            if (!Settings.current.maxFPS) nextFrame = false;
+            if (Settings.current.FPS == -1) nextFrame = false;
             screen.render((int)Static.width, (int)Static.height);
             Main.swap();
             processed = false;

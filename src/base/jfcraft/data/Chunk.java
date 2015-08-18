@@ -50,6 +50,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   public ArrayList<Tick> ticks = new ArrayList<Tick>();  //server-side only
   public ArrayList<ExtraBase> extras = new ArrayList<ExtraBase>();
 
+  public Object envData;  //environment data
+
   //end of serializable data
 
   public static final int BLOCK_LIGHT_MASK = 0xf0;

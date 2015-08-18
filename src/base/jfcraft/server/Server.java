@@ -56,6 +56,7 @@ public class Server {
     world.type = "default";
     world.seed = 0;  //new Random().nextLong();  //use a real seed later
     world.assignIDs();
+    Static.dims.init();
     folderName = world.createFolderName(worldName);
     new File(folderName).mkdirs();
     if (new File(folderName + "/world.dat").exists()) {
@@ -88,6 +89,7 @@ public class Server {
     world.init();
     world.chunks = new Chunks(world);
     world.assignIDs();
+    Static.dims.init();
     startWorld();
     return true;
   }
@@ -888,7 +890,6 @@ public class Server {
       if (doSpawn) {
         DimBase db = Static.dims.dims[chunk.dim];
         if (db == null) continue;
-        if (!world.chunks.dim_inited[db.id]) continue;
         db.spawnMonsters(chunk);
       }
     }

@@ -39,16 +39,10 @@ public class Chunks {
     return chunk;
   }
 
-  public boolean dim_inited[] = new boolean[Dims.MAX_ID];
-
   //server side only : gets loaded chunk, or loads from disk, or generates it
   public synchronized Chunk getChunk2(int dim, int cx, int cz, boolean doPhase2, boolean doPhase3, boolean doLights) {
     Chunk chunk = getChunk(dim,cx,cz);
 //    Static.log("getChunk2:" + cx + "," + cz + ":" + getAdj + ":" + cache.size());
-    if (!dim_inited[dim]) {
-      Static.dims.dims[dim].init();
-      dim_inited[dim] = true;
-    }
     if (chunk == null) {
       //load from disk
       chunk = loadChunk(dim, cx, cz);

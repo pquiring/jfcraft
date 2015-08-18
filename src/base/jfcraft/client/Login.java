@@ -33,6 +33,7 @@ public class Login extends RenderScreen {
     client.player = null;
     reqWorld = false;
     reqPlayer = false;
+    Static.dims.initEnvironments();
   }
 
   public void render(int width, int height) {

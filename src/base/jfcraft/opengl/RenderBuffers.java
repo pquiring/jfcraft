@@ -305,6 +305,21 @@ public class RenderBuffers implements Cloneable {
     addFaceAB(fx1,fy1,fz1, fx2,fy1,fz2, 0,0,1,1, data);  //B
   }
 
+  /** Adds a normal box.
+   * Each face is outward.
+   * Texture coords are 0,0-1,1 for each face.
+   * @param fx/fy/fz = coords of cube
+   */
+  public void addBox(float fx1, float fy1, float fz1, float fx2, float fy2, float fz2) {
+    RenderData data = new RenderData();
+    addFace  (fx2,fy1,fz2, fx1,fy2,fz2, 0,0,1,1, data);  //N
+    addFace  (fx1,fy1,fz1, fx2,fy2,fz1, 0,0,1,1, data);  //S
+    addFace  (fx2,fy1,fz1, fx2,fy2,fz2, 0,0,1,1, data);  //W
+    addFace  (fx1,fy1,fz2, fx1,fy2,fz1, 0,0,1,1, data);  //E
+    addFaceAB(fx1,fy1,fz2, fx2,fy1,fz1, 0,0,1,1, data);  //A
+    addFaceAB(fx1,fy2,fz1, fx2,fy2,fz2, 0,0,1,1, data);  //B
+  }
+
   /** Adds a face for a block. */
   public void addFace(RenderData data, SubTexture st) {
     Face f = new Face();
