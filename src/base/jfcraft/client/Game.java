@@ -42,7 +42,6 @@ public class Game extends RenderScreen {
   private GLVector3 u3 = new GLVector3();  //up
   private GLVector3 pts[];  //chunk points
   private Slot slots[];
-  private XYZ camera = new XYZ();
 
   public static boolean advanceAnimation;
 
@@ -199,25 +198,29 @@ public class Game extends RenderScreen {
     }
     glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, perspective.m);  //perspective matrix
 
-    camera.x = Static.client.player.pos.x;
-    camera.y = Static.client.player.pos.y + Static.client.player.eyeHeight;
-    camera.z = Static.client.player.pos.z;
+    Static.camera_pos.x = Static.client.player.pos.x;
+    Static.camera_pos.y = Static.client.player.pos.y + Static.client.player.eyeHeight;
+    Static.camera_pos.z = Static.client.player.pos.z;
 
     glUniform1f(Static.uniformSunLight, 1.0f);
     if (!Static.debugDisableFog) glUniform1i(Static.uniformEnableFog, 0);
-    Static.dims.dims[dim].getEnvironment().preRender(world.time, sunLight, Static.client, camera, chunks);
+    Static.dims.dims[dim].getEnvironment().preRender(world.time, sunLight, Static.client, Static.camera_pos, chunks);
     if (!Static.debugDisableFog) glUniform1i(Static.uniformEnableFog, 1);
 
     view.setIdentity();
     synchronized(Static.client.ang) {
-      view.addRotate(Static.client.ang.x, 1, 0, 0);
-      view.addRotate(Static.client.ang.y, 0, 1, 0);
+      float x = Static.client.ang.x;
+      float y = Static.client.ang.y;
+      Static.camera_ang.x = x;
+      Static.camera_ang.y = y;
+      view.addRotate(x, 1, 0, 0);
+      view.addRotate(y, 0, 1, 0);
     }
-    view.addTranslate2(-camera.x, -camera.y, -camera.z);
+    view.addTranslate2(-Static.camera_pos.x, -Static.camera_pos.y, -Static.camera_pos.z);
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
 
     //setup frustum culling
-    p3.set(camera.x, camera.y, camera.z);
+    p3.set(Static.camera_pos.x, Static.camera_pos.y, Static.camera_pos.z);
     l3.set(0, 0, -1f);
     view.mult(l3);
     l3.add(p3);
@@ -365,7 +368,7 @@ public class Game extends RenderScreen {
       for(int b=0;b<ne;b++) {
         EntityBase e = es[b];
         if (e.uid == Static.client.player.uid) continue;  //do not render self
-        if (e.distance(Static.client.player) > 64f) continue;
+        if (e.distance(Static.client.player) > e.getMaxDistance()) continue;
         if (!e.instanceInited) {
           e.initInstance();
         }
@@ -426,7 +429,7 @@ public class Game extends RenderScreen {
     glDepthMask(true);  //turn on depth buffer updates
 
     //render environment post stage
-    Static.dims.dims[dim].getEnvironment().postRender(world.time, sunLight, Static.client, camera, chunks);
+    Static.dims.dims[dim].getEnvironment().postRender(world.time, sunLight, Static.client, Static.camera_pos, chunks);
 
     if (showControls) {
       renderItemInHand();

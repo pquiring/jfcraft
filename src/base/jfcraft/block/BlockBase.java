@@ -857,4 +857,8 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     }
     return bits;
   }
+
+  public SubTexture getDestroyTexture() {
+    return textures[0];
+  }
 }

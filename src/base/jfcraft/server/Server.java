@@ -415,7 +415,7 @@ public class Server {
     int gy = Static.floor(y);
     int gz = Static.floor(z % 16.0f);
     if (z < 0 && gz != 0) gz = 16 + gz;
-    Packet update = new PacketClearBlock(Packets.CLEARBLOCK, cx,cz,gx,gy,gz);
+    Packet update = new PacketClearBlock(Packets.CLEARBLOCK, cx,cz,gx,gy,gz, true);
     synchronized(clientsLock) {
       int cnt = clients.size();
       for(int a=0;a<cnt;a++) {

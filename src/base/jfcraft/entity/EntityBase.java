@@ -82,12 +82,12 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
       dirty = true;
       needCopyBuffers = true;
     }
+    scale = 1.0f;
   }
   public void initStatic() {}
   public void initStaticGL() {}
   public void initInstance() {
     instanceInited = true;
-    scale = 1.0f;
   }
   public void setScale(float scale) {
     this.scale = scale;
@@ -1220,5 +1220,9 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
       uid = buffer.readInt();
     }
     return true;
+  }
+
+  public float getMaxDistance() {
+    return 64f;
   }
 }

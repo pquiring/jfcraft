@@ -344,9 +344,14 @@ public class Client {
     //send tick to server
     clientTransport.tick(player, up, dn, lt, rt, jump, sneak, run, b1, b2, fup, fdn);
     //tick entities
-    EntityBase e[] = world.getEntities();
-    for(int a=0;a<e.length;a++) {
-      e[a].ctick();
+    Chunk chunks[] = world.chunks.getChunks();
+    for(int c=0;c<chunks.length;c++) {
+      Chunk chunk = chunks[c];
+      if (chunk.isBorder()) continue;
+      EntityBase e[] = chunk.getEntities();
+      for(int a=0;a<e.length;a++) {
+        e[a].ctick();
+      }
     }
     //do hand item animation
     Item item = player.items[player.activeSlot];

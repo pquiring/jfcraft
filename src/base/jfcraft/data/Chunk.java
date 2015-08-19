@@ -338,16 +338,21 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     }
   }
 
-  public void clearBlock(int x,int y,int z) {
-    if (x > 15) {E.clearBlock(x-16, y, z); return;}
-    if (x < 0) {W.clearBlock(x+16, y, z); return;}
-    if (y > 255) return;
-    if (y < 0) return;
-    if (z > 15) {S.clearBlock(x, y, z-16); return;}
-    if (z < 0) {N.clearBlock(x, y, z+16); return;}
+  /**
+   * Clears a block.
+   *
+   * @return old block id
+   */
+  public char clearBlock(int x,int y,int z) {
+    if (x > 15) {return E.clearBlock(x-16, y, z);}
+    if (x < 0) {return W.clearBlock(x+16, y, z);}
+    if (y > 255) return 0;
+    if (y < 0) return 0;
+    if (z > 15) {return S.clearBlock(x, y, z-16);}
+    if (z < 0) {return N.clearBlock(x, y, z+16);}
     int p = z * 16 + x;
     char b[] = blocks[y];
-    if (b == null) return;
+    if (b == null) return 0;
     char oldid;
     synchronized(lock) {
       oldid = b[p];
@@ -361,7 +366,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         blocks[y] = null;
         bits[y] = null;
       }
-      if (needLights) return;
+
+      if (needLights) return oldid;
       needRelight = true;
       dirty = true;
       int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
@@ -370,19 +376,20 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       } else {
         Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
       }
+      return oldid;
     }
   }
 
-  public void clearBlock2(int x,int y,int z) {
-    if (x > 15) {E.clearBlock2(x-16, y, z); return;}
-    if (x < 0) {W.clearBlock2(x+16, y, z); return;}
-    if (y > 255) return;
-    if (y < 0) return;
-    if (z > 15) {S.clearBlock2(x, y, z-16); return;}
-    if (z < 0) {N.clearBlock2(x, y, z+16); return;}
+  public char clearBlock2(int x,int y,int z) {
+    if (x > 15) {return E.clearBlock2(x-16, y, z);}
+    if (x < 0) {return W.clearBlock2(x+16, y, z);}
+    if (y > 255) return 0;
+    if (y < 0) return 0;
+    if (z > 15) {return S.clearBlock2(x, y, z-16);}
+    if (z < 0) {return N.clearBlock2(x, y, z+16);}
     int p = z * 16 + x;
     char b[] = blocks2[y];
-    if (b == null) return;
+    if (b == null) return 0;
     char oldid;
     synchronized(lock) {
       oldid = b[p];
@@ -398,16 +405,16 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         bits2[y] = null;
       }
 
+      if (needLights) return oldid;
       needRelight = true;
       dirty = true;
-      if (!needLights) {
-        int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
-        if (world.isClient) {
-          Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
-        } else {
-          Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
-        }
+      int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
+      if (world.isClient) {
+        Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
+      } else {
+        Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
       }
+      return oldid;
     }
   }
 
