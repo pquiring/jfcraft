@@ -1182,6 +1182,13 @@ public class Server {
         client.addItem(item, true);
       }
     }
+    else if (p[0].equals("/diamonds")) {
+      doCommand(client, "/give @p diamond_sword");
+      doCommand(client, "/give @p diamond_pickaxe");
+      doCommand(client, "/give @p diamond_axe");
+      doCommand(client, "/give @p diamond_shovel");
+      doCommand(client, "/give @p diamond_hoe");
+    }
     else if (p[0].equals("/delete")) {
       // /delete all entities in player's chunk (for debugging)
       Chunk chunk = client.player.getChunk();
