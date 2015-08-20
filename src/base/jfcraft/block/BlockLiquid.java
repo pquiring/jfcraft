@@ -421,4 +421,8 @@ wxe
     canRenew = state;
     return this;
   }
+
+  public SubTexture getDestroyTexture() {
+    return null;
+  }
 }

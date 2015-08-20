@@ -1,12 +1,12 @@
 List of TODOs to make JFCraft as feature full as the real thing:
 
 use items : shears (grass, leaves), flint and steel, ender pearl, etc.
-weather : rain, snow, clouds
+weather : rain, snow, storms
 more farming (melon seeds, pumpkin seeds)
 fishing
 enchanting (requires XP)
 generate cave rooms, springs, lakes, rivers, items, stuff, etc.
-fix world generating algorithms
+improve world generating algorithms
 mobs (spider, ghast, blaze, endermite(silverfish), magma cube, witch, guardian)
 create complex AI logic for each mob (currently they are all passive but attack if attacked and all animals run if attacked)
 chars (villagers)
@@ -15,7 +15,7 @@ misc (iron golem, snow golem)
 bosses (wither, dragon)
 brewing (potions)
 more sounds and music (jfMusic)
-particles (client side only entity)
+more particles
 double chest
 random ticks : replace snow
 support ogg audio files (JCraft:JOrbis/0.0.17) or MP3 (ffmpeg)
