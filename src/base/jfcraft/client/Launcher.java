@@ -316,24 +316,10 @@ public class Launcher extends javax.swing.JFrame {
     return name;
   }
 
-/*
-  //ActiveX WebBrowser - not portable though...
-  private WinWebBrowser browser;
-  public void paint(java.awt.Graphics g) {
-    if (JF.isWindows()) {
-      if (browser == null) {
-        browser = new WinWebBrowser();
-        browser.create(Guid.CLSID_WebBrowser, news, "http://jfcraft.sf.net/news.php");
-      }
-    }
-
-  }
-*/
-
   public void initWeb() {
     try {
       html.setContentType("text/html");
-      html.setPage(new URL("http://jfcraft.sf.net/news.php"));
+      html.setPage(new URL("http://pquiring.github.io/jfcraft/news.html"));
     } catch (Exception e) {
       e.printStackTrace();
     }
