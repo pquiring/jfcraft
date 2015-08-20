@@ -17,6 +17,7 @@ import jfcraft.audio.*;
 import jfcraft.client.*;
 import jfcraft.data.*;
 import jfcraft.item.*;
+import jfcraft.move.*;
 import jfcraft.opengl.*;
 
 public class Horse extends VehicleBase {
@@ -27,7 +28,10 @@ public class Horse extends VehicleBase {
   public int type;
   public int pattern;
   public int tameCounter;  //not saved to disk
+  public static final int tameCounterMax = 20 * 15;
   public ExtraHorse inventory;
+
+  public int hearts;
 
   public static final int FLAG_TAMED = 1;
   public static final int FLAG_SADDLE = 2;
@@ -135,6 +139,7 @@ public class Horse extends VehicleBase {
       sneakSpeed = 1.3f;
       swimSpeed = (walkSpeed / 2.0f);
     }
+    setMove(new MoveHorse());
   }
 
   public void initStatic() {
@@ -415,12 +420,16 @@ public class Horse extends VehicleBase {
     }
   }
 
+  private float nextFloat() {
+    return r.nextFloat() * 3f - 1.5f;
+  }
+
   public void ctick() {
     float delta = 0;
     switch (mode) {
       case MODE_IDLE:
         walkAngle = 0.0f;
-        return;
+        break;
       case MODE_RUN:
         delta = walkAngleDelta * 2f;
         break;
@@ -432,90 +441,27 @@ public class Horse extends VehicleBase {
         delta = walkAngleDelta / 2f;
         break;
     }
-    walkAngle += delta;
-    if ((walkAngle < -45.0) || (walkAngle > 45.0)) {
-      walkAngleDelta *= -1;
+    if (mode != MODE_IDLE) {
+      walkAngle += delta;
+      if ((walkAngle < -45.0) || (walkAngle > 45.0)) {
+        walkAngleDelta *= -1;
+      }
+    }
+    if (hearts > 0) {
+      hearts--;
+      Chunk chunk = getChunk();
+      Particle p = new Particle(pos.x + nextFloat(), pos.y, pos.z + nextFloat(), Particle.t_heart, true);
+      p.init(chunk.world);
+      p.maxAge = r.nextInt(20) + 20 * 2;
+      p.scale = r.nextFloat() / 20f + 0.3f;
+      p.setMove(new MoveFloat(0,0.1f,0));
+      chunk.addEntity(p);
     }
   }
 
   public int getMenu() {
     if (!isTamed()) return Client.INVENTORY;
     return Client.HORSE;
-  }
-
-  public void tick() {
-    super.tick();
-    boolean moved;
-    boolean wasmoving = mode != MODE_IDLE;
-    //do AI
-    updateFlags(0,0,0);
-    //random walking
-    if (Static.debugRotate) {
-      //test rotate in a spot
-      ang.y += 1.0f;
-      if (ang.y > 180f) { ang.y = -180f; }
-      ang.x += 1.0f;
-      if (ang.x > 360.0f) { ang.x = 0.0f; }
-      mode = MODE_WALK;
-      moved = true;
-    } else {
-      if (occupant != null && isTamed() && haveSaddle()) {
-        mode = MODE_IDLE;
-        if (up || dn) {
-          if (run && up)
-            mode = MODE_RUN;
-          else
-            mode = MODE_WALK;
-        } else {
-          mode = MODE_IDLE;
-        }
-        if (onGround && jump) {
-          jump();
-        }
-        ang.y = occupant.ang.y;
-        if (dn) ang.y += 180f;
-        moved = moveEntity();
-        if (dn) ang.y -= 180f;
-      } else {
-        randomWalking();
-        moved = moveEntity();
-        if (occupant != null && !isTamed()) {
-          tameCounter++;
-          if (tameCounter == 20 * 15) {
-            Static.server.broadcastMsg("Horse Tamed");  //TODO : use heart particles
-            setTamed(true);
-            Static.server.broadcastEntityFlags(this);
-          } else {
-            if (r.nextInt(64) == 0) {
-              //dismount occupant
-              occupant.vehicle = null;
-              Static.server.broadcastRiding(this, occupant, false);
-              occupant = null;
-            }
-          }
-        }
-      }
-    }
-    if (moved || wasmoving) {
-      Static.server.broadcastEntityMove(this, false);
-    }
-    if (occupant != null) {
-      Chunk chunk1 = occupant.getChunk();
-      occupant.pos.x = pos.x;
-      occupant.pos.y = pos.y - occupant.legLength + 1.5f;
-      occupant.pos.z = pos.z;
-      Static.server.broadcastEntityMove(occupant, true);
-      Chunk chunk2 = occupant.getChunk();
-      if (chunk2 != chunk1) {
-        chunk1.delEntity(occupant);
-        chunk2.addEntity(occupant);
-      }
-    }
-    if (occupant != null && sneak) {
-      occupant.vehicle = null;
-      Static.server.broadcastRiding(this, occupant, false);
-      occupant = null;
-    }
   }
 
   private static Random r = new Random();
@@ -715,6 +661,14 @@ public class Horse extends VehicleBase {
       }
       inventory.items[a].id = id;
     }
+  }
+
+  public void setFlags(int newFlags) {
+    if (((newFlags & FLAG_TAMED) != 0) && ((flags & FLAG_TAMED) == 0)) {
+      //just tamed : show heart particles
+      hearts = 3 * 20;
+    }
+    super.setFlags(newFlags);
   }
 
   private static final byte ver = 0;

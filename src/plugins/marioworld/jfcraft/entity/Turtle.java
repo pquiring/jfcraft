@@ -15,9 +15,10 @@ import static javaforce.gl.GL.*;
 
 import jfcraft.audio.*;
 import jfcraft.data.*;
-import jfcraft.dim.DimMarioWorld;
-import jfcraft.item.Item;
+import jfcraft.dim.*;
+import jfcraft.item.*;
 import jfcraft.opengl.*;
+import jfcraft.move.*;
 
 public class Turtle extends CreatureBase {
   private float walkAngle;  //angle of legs/arms as walking
@@ -77,6 +78,7 @@ public class Turtle extends CreatureBase {
       attackDmg = 1.0f;
       maxAge = 20 * 60 * 15;  //15 mins
     }
+    setMove(new MoveHostile());
   }
 
   public void initStatic() {
@@ -186,35 +188,6 @@ public class Turtle extends CreatureBase {
       buf.bindBuffers();
       buf.render();
     }
-  }
-
-  public void tick() {
-    if (target == null) {
-      //getTarget();  //test!
-    } else {
-      if (target.health == 0 || target.offline) {
-        target = null;
-      }
-    }
-    boolean wasMoving = mode != MODE_IDLE;
-    if (Static.debugRotate) {
-      //test rotate in a spot
-      ang.y += 1.0f;
-      if (ang.y > 180f) { ang.y = -180f; }
-      ang.x += 1.0f;
-      if (ang.x > 45.0f) { ang.x = -45.0f; }
-      mode = MODE_WALK;
-    } else {
-      if (target != null) {
-        moveToTarget();
-      } else {
-        randomWalking();
-      }
-      //turtles are always moving
-      moveEntity();
-    }
-    if (target != null || mode != MODE_IDLE || wasMoving) Static.server.broadcastEntityMove(this, false);
-    super.tick();
   }
 
   public EntityBase spawn(Chunk chunk) {

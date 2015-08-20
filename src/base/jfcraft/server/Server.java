@@ -1381,10 +1381,28 @@ public class Server {
       EntityBase e = base.spawn(chunk);
       if (e == null) return;  //could not spawn ???
       e.uid = Static.server.world.generateUID();
-//      e.debug = true;
+      chunk.addEntity(e);
       Static.server.world.addEntity(e);
       Static.server.broadcastEntitySpawn(e);
       Static.log("spawn " + e.getName() + " @=" + e.pos.x + "," + e.pos.y + "," + e.pos.z + ":uid=" + e.uid);
+    }
+    else if (p[0].equals("/tame")) {
+      EntityBase entity = client.player.vehicle;
+      if (entity == null) {
+        Static.log("Not on a horse (1)");
+        return;
+      }
+      if (!(entity instanceof Horse)) {
+        Static.log("Not on a horse (2)");
+        return;
+      }
+      Horse horse = (Horse)entity;
+      if (horse.isTamed()) {
+        Static.log("Already tamed");
+        return;
+      }
+      horse.tameCounter = Horse.tameCounterMax;
+      Static.log("Horse is now tamed");
     }
     else if (p[0].equals("/export")) {
       // /export x1 y1 z1 x2 y2 z2 filename

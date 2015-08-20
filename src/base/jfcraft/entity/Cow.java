@@ -15,7 +15,8 @@ import static javaforce.gl.GL.*;
 
 import jfcraft.audio.*;
 import jfcraft.data.*;
-import jfcraft.item.Item;
+import jfcraft.move.*;
+import jfcraft.item.*;
 import jfcraft.opengl.*;
 
 public class Cow extends CreatureBase {
@@ -60,6 +61,7 @@ public class Cow extends CreatureBase {
       sneakSpeed = 1.3f;
       swimSpeed = (walkSpeed / 2.0f);
     }
+    setMove(new MoveCreature());
   }
 
   public void initStatic() {
@@ -170,27 +172,6 @@ public class Cow extends CreatureBase {
       buf.bindBuffers();
       buf.render();
     }
-  }
-
-  public void tick() {
-    super.tick();
-    //do AI
-    boolean moved;
-    boolean wasmoving = mode != MODE_IDLE;
-    //random walking
-    if (Static.debugRotate) {
-      //test rotate in a spot
-      ang.y += 1.0f;
-      if (ang.y > 180f) { ang.y = -180f; }
-      ang.x += 1.0f;
-      if (ang.x > 45.0f) { ang.x = -45.0f; }
-      mode = MODE_WALK;
-      moved = true;
-    } else {
-      randomWalking();
-      moved = moveEntity();
-    }
-    if (moved || wasmoving) Static.server.broadcastEntityMove(this, false);
   }
 
   private static Random r = new Random();

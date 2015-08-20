@@ -97,7 +97,7 @@ public class BlockChest extends BlockBase {
     drops[chest.items.length] = new Item(Blocks.CHEST);
     return drops;
   }
-  public SubTexture getDestroyTexture() {
+  public SubTexture getDestroyTexture(int var) {
     return Static.blocks.blocks[Blocks.PLANKS].textures[0];
   }
 }

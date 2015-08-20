@@ -118,6 +118,8 @@ public class Entities implements SerialCreator {
         Static.log(e);
       }
     }
+    //particle is a client side only entity and is not registered
+    new Particle().initStaticGL();
   }
 
   /** Returns a list of mobs that spawn in dimension. */

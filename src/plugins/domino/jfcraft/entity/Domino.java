@@ -14,6 +14,7 @@ import jfcraft.block.*;
 import jfcraft.entity.*;
 import jfcraft.item.*;
 import jfcraft.opengl.*;
+import jfcraft.move.*;
 import static jfcraft.data.Direction.X;
 
 public class Domino extends BlockEntity {
@@ -167,6 +168,7 @@ public class Domino extends BlockEntity {
       }
     }
   }
+
   public boolean canSelect() {
     return false;
   }

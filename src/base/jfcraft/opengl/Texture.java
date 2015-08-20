@@ -161,6 +161,8 @@ public class Texture {
     st.y1 = y1;
     st.x2 = x2;
     st.y2 = y2;
+    st.width = st.x2 - st.x1;
+    st.height = st.y2 - st.y1;
     return st;
   }
 

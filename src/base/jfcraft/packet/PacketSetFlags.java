@@ -31,10 +31,10 @@ public class PacketSetFlags extends Packet {
     EntityBase e;
     e = client.world.getEntity(uid);
     if (e == null) {
-      Static.log("C:Error:SHEEPSHEARED:Entity not found:" + uid);
+      Static.log("Error:PacketSetFlags:Entity not found:" + uid);
       return;
     }
-    e.flags = i2;
+    e.setFlags(i2);
   }
 
   @Override

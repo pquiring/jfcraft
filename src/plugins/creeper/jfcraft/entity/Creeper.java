@@ -13,8 +13,9 @@ import javaforce.gl.*;
 import static javaforce.gl.GL.*;
 
 import jfcraft.data.*;
-import jfcraft.item.Item;
+import jfcraft.item.*;
 import jfcraft.opengl.*;
+import jfcraft.move.*;
 
 public class Creeper extends CreatureBase {
   private float walkAngle;  //angle of legs/arms as walking
@@ -71,6 +72,7 @@ public class Creeper extends CreatureBase {
       attackDmg = 1.0f;
       maxAge = 20 * 60 * 15;  //15 mins
     }
+    setMove(new MoveHostile());
   }
 
   public void initStatic() {
@@ -180,39 +182,6 @@ public class Creeper extends CreatureBase {
 
   public boolean walking;
   public int walkLength;
-
-  public void tick() {
-    if (target == null) {
-      //getTarget();  //test!
-    } else {
-      if (target.health == 0 || target.offline) {
-        target = null;
-      }
-    }
-    boolean wasMoving = mode != MODE_IDLE;
-    if (Static.debugRotate) {
-      //test rotate in a spot
-      ang.y += 1.0f;
-      if (ang.y > 180f) { ang.y = -180f; }
-      ang.x += 1.0f;
-      if (ang.x > 45.0f) { ang.x = -45.0f; }
-      mode = MODE_WALK;
-    } else {
-      if (target != null) {
-        moveToTarget();
-      } else {
-        randomWalking();
-      }
-      if (mode != MODE_IDLE) {
-        moveEntity();
-      } else {
-        vel.x = 0;
-        vel.z = 0;
-      }
-    }
-    if (target != null || mode != MODE_IDLE || wasMoving) Static.server.broadcastEntityMove(this, false);
-    super.tick();
-  }
 
   private static Random r = new Random();
   public EntityBase spawn(Chunk chunk) {

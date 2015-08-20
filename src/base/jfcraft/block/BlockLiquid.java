@@ -422,7 +422,7 @@ wxe
     return this;
   }
 
-  public SubTexture getDestroyTexture() {
+  public SubTexture getDestroyTexture(int var) {
     return null;
   }
 }

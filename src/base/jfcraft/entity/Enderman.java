@@ -15,8 +15,9 @@ import static javaforce.gl.GL.*;
 
 import jfcraft.audio.*;
 import jfcraft.data.*;
-import jfcraft.item.Item;
+import jfcraft.item.*;
 import jfcraft.opengl.*;
+import jfcraft.move.*;
 
 public class Enderman extends HumaniodBase {
   private float walkAngle;  //angle of legs/arms as walking
@@ -68,6 +69,7 @@ public class Enderman extends HumaniodBase {
       attackDmg = 1.0f;
       maxAge = 20 * 60 * 15;  //15 mins
     }
+    setMove(new MoveHostile());
   }
 
   public void initStatic() {
@@ -184,36 +186,6 @@ public class Enderman extends HumaniodBase {
       buf.bindBuffers();
       buf.render();
     }
-  }
-
-  public void tick() {
-    if (target == null) {
-      //getTarget();  //test!
-    } else {
-      if (target.health == 0 || target.offline) {
-        target = null;
-      }
-    }
-    boolean moved;
-    boolean wasmoving = mode != MODE_IDLE;
-    if (Static.debugRotate) {
-      //test rotate in a spot
-      ang.y += 1.0f;
-      if (ang.y > 180f) { ang.y = -180f; }
-      ang.x += 1.0f;
-      if (ang.x > 45.0f) { ang.x = -45.0f; }
-      mode = MODE_WALK;
-      moved = true;
-    } else {
-      if (target != null) {
-        moveToTarget();
-      } else {
-        randomWalking();
-      }
-      moved = moveEntity();
-    }
-    if (target != null || moved || wasmoving) Static.server.broadcastEntityMove(this, false);
-    super.tick();
   }
 
   public EntityBase spawn(Chunk chunk) {

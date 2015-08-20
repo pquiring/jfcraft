@@ -16,6 +16,7 @@ import javaforce.gl.*;
 
 import jfcraft.block.*;
 import jfcraft.client.*;
+import jfcraft.move.*;
 import jfcraft.data.*;
 import jfcraft.item.*;
 import jfcraft.opengl.*;
@@ -65,6 +66,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public boolean isStatic;  //one static instance for all instances
   public boolean dirty, needCopyBuffers;
   public int path[];
+  public MoveBase move;
 
   public float angX;  //default position
 
@@ -84,6 +86,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     }
     scale = 1.0f;
   }
+
   public void initStatic() {}
   public void initStaticGL() {}
   public void initInstance() {
@@ -91,6 +94,9 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   }
   public void setScale(float scale) {
     this.scale = scale;
+  }
+  public void setMove(MoveBase move) {
+    this.move = move;
   }
 
   public abstract String getName();
@@ -1060,6 +1066,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     if (this instanceof CreatureBase) {
       tickBlocks(0,0,0);
     }
+    if (move != null) move.move(this);
   }
   /** Client side tick. */
   public void ctick() {}
@@ -1224,5 +1231,9 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   public float getMaxDistance() {
     return 64f;
+  }
+
+  public void setFlags(int newFlags) {
+    flags = newFlags;
   }
 }

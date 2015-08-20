@@ -12,6 +12,7 @@ import jfcraft.data.*;
 import jfcraft.client.*;
 import jfcraft.item.*;
 import jfcraft.opengl.*;
+import jfcraft.move.*;
 
 public class Boat extends VehicleBase {
   //render assets
@@ -50,6 +51,7 @@ public class Boat extends VehicleBase {
     depth = 1.0f;
     depth2 = depth/2f;
     dest = new RenderDest(parts.length);
+    setMove(new MoveBoat());
   }
 
   public void initStatic() {
@@ -126,59 +128,6 @@ public class Boat extends VehicleBase {
       buf.render();
     }
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
-  }
-
-  public void tick() {
-    super.tick();
-    updateFlags(0,0,0);
-    if (occupant != null) {
-      float speed = 0;
-      if (onWater) {
-        if (run)
-          speed = fastWaterSpeed;
-        else
-          speed = waterSpeed;
-      }
-      else {
-        speed = landSpeed;
-      }
-      if (up || dn) {
-        occupant.calcVectors(speed / 20.0f, move_vectors);
-        float xv = 0, zv = 0;
-        if (up) {
-          xv += move_vectors.forward.v[0];
-          zv += move_vectors.forward.v[2];
-        }
-        if (dn) {
-          xv += -move_vectors.forward.v[0];
-          zv += -move_vectors.forward.v[2];
-        }
-        if (xv != 0) setXVel(xv);
-        if (zv != 0) setZVel(zv);
-        ang.y = occupant.ang.y;
-      }
-    }
-    boolean moved = move(false, true, false, -1, AVOID_NONE);
-    if (moved) {
-      Static.server.broadcastEntityMove(this, false);
-    }
-    if (occupant != null) {
-      Chunk chunk1 = occupant.getChunk();
-      occupant.pos.x = pos.x;
-      occupant.pos.y = pos.y - occupant.legLength;
-      occupant.pos.z = pos.z;
-      Static.server.broadcastEntityMove(occupant, true);
-      Chunk chunk2 = occupant.getChunk();
-      if (chunk2 != chunk1) {
-        chunk1.delEntity(occupant);
-        chunk2.addEntity(occupant);
-      }
-      if (sneak) {
-        occupant.vehicle = null;
-        Static.server.broadcastRiding(this, occupant, false);
-        occupant = null;
-      }
-    }
   }
 
   public boolean canUse() {

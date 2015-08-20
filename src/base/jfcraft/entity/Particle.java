@@ -21,17 +21,26 @@ public class Particle extends EntityBase {
   private static GLVector3 up = new GLVector3();
   private static Random r = new Random();
 
+  public static Texture t_particles;
+  public static SubTexture t_heart;
+
   public SubTexture subtexture;
   public RenderDest dest;
   public boolean isGreen;
+  public boolean full;  //full texture (else random partial)
 
-  public Particle(float x, float y, float z, SubTexture texture) {
+  public Particle() {
+    uid = -1;
+  }
+
+  public Particle(float x, float y, float z, SubTexture texture, boolean full) {
     super();
     pos.x = x;
     pos.y = y;
     pos.z = z;
     subtexture = texture;
     uid = -1;
+    this.full = full;
   }
 
   public void init(World world) {
@@ -47,21 +56,33 @@ public class Particle extends EntityBase {
     dest = new RenderDest(1);
   }
 
+  public void initStaticGL() {
+    t_particles = Textures.getTexture("particle/particles", 0);
+    t_heart = t_particles.getSubTexture(0f / 256f, 80f / 256f, 16f / 256f, 96f / 256f);
+  }
+
   public void buildBuffers(RenderDest dest, RenderData data) {
     RenderBuffers buf = dest.getBuffers(0);
     float u1,v1,u2,v2;
-    u1 = r.nextFloat();
-    v1 = r.nextFloat();
-    u2 = u1 + r.nextFloat();
-    if (u2 > 1) u2 = 1.0f;
-    v2 = v1 + r.nextFloat();
-    if (v2 > 1) v2 = 1.0f;
-    u1 = subtexture.x1 + subtexture.width * u1;
-    v1 = subtexture.y1 + subtexture.height * v1;
-    u2 = subtexture.x1 + subtexture.width * u2;
-    v2 = subtexture.y1 + subtexture.height * v2;
+    if (full) {
+      u1 = subtexture.x1;
+      v1 = subtexture.y1;
+      u2 = subtexture.x2;
+      v2 = subtexture.y2;
+    } else {
+      u1 = r.nextFloat();
+      v1 = r.nextFloat();
+      u2 = u1 + r.nextFloat();
+      if (u2 > 1) u2 = 1.0f;
+      v2 = v1 + r.nextFloat();
+      if (v2 > 1) v2 = 1.0f;
+      u1 = subtexture.x1 + subtexture.width * u1;
+      v1 = subtexture.y1 + subtexture.height * v1;
+      u2 = subtexture.x1 + subtexture.width * u2;
+      v2 = subtexture.y1 + subtexture.height * v2;
+    }
     data.isGreen = isGreen;
-    buf.addFace(-0.5f, -0.5f, 0,   0.5f, 0.5f, 0,   u1, v1, u2, v2, data);  //N
+    buf.addFace(0.5f, 0.5f, 0,   -0.5f, -0.5f, 0,   u1, v1, u2, v2, data);
     needCopyBuffers = true;
   }
 
@@ -106,7 +127,7 @@ public class Particle extends EntityBase {
       chunk.delEntity(this);
       return;
     }
-    move(false, false, false, -1, AVOID_NONE);
+    move.move(this);
   }
 
   private static float nextFloat5() {

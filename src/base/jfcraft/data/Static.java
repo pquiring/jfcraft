@@ -53,7 +53,7 @@ public class Static {
   public static boolean debugCaves = false;
   public static boolean debugBug = false;
   public static boolean debugDisableRandomTicks = false;
-  public static boolean debugPurgeEntities = false;
+  public static boolean debugPurgeEntities = true;
   public static boolean debugDisableFog = true;
 
   public static String debugMsg;

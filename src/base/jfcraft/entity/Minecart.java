@@ -13,6 +13,7 @@ import jfcraft.data.*;
 import jfcraft.client.*;
 import jfcraft.item.*;
 import jfcraft.opengl.*;
+import jfcraft.move.*;
 import static jfcraft.data.Direction.*;
 
 public class Minecart extends VehicleBase {
@@ -27,8 +28,8 @@ public class Minecart extends VehicleBase {
   public static Texture texture;
   private static String textureName;
 
-  private static final float pushSpeed = 3.0f;
-  private static final float maxSpeed = 10.0f;
+  public static final float pushSpeed = 3.0f;
+  public static final float maxSpeed = 10.0f;
 
   public RenderDest dest;
 
@@ -56,6 +57,7 @@ public class Minecart extends VehicleBase {
     depth = 1.0f;
     depth2 = depth/2f;
     dest = new RenderDest(parts.length);
+    setMove(new MoveMinecart());
   }
 
   public void initStatic() {
@@ -203,59 +205,7 @@ public class Minecart extends VehicleBase {
     pos.y = (float)Math.floor(pos.y);
   }
 
-  private boolean onRail;
-
-  public void tick() {
-    super.tick();
-    boolean moved = false;
-    boolean wasOnRail = onRail;
-    updateFlags(0,0,0);
-    switch (moveOnRails(getChunk())) {
-      case 1:
-        moved = true;
-        //no break
-      case 0:
-        if (occupant != null) {
-          if (up) {
-            if (speed < pushSpeed / 2f) {
-              speed = pushSpeed;
-              occupant.getDir(coords);
-              dir = coords.dir_xz;
-            }
-          } else if (dn) {
-            if (speed < pushSpeed) {
-              speed = pushSpeed;
-              occupant.getDir(coords);
-              dir = Direction.opposite(coords.dir_xz);
-            }
-          }
-        }
-        break;
-      case -1:
-        moved = move(false, false, false, -1, AVOID_NONE);
-        break;
-    }
-    if (moved || (wasOnRail != onRail)) {
-      Static.server.broadcastEntityMove(this, false);
-    }
-    if (occupant != null) {
-      Chunk chunk1 = occupant.getChunk();
-      occupant.pos.x = pos.x;
-      occupant.pos.y = pos.y - occupant.legLength + 0.3f;
-      occupant.pos.z = pos.z;
-      Static.server.broadcastEntityMove(occupant, true);
-      Chunk chunk2 = occupant.getChunk();
-      if (chunk2 != chunk1) {
-        chunk1.delEntity(occupant);
-        chunk2.addEntity(occupant);
-      }
-      if (sneak) {
-        occupant.vehicle = null;
-        Static.server.broadcastRiding(this, occupant, false);
-        occupant = null;
-      }
-    }
-  }
+  public boolean onRail;
 
   private boolean isN() {return dir == N || dir == NE || dir == NW;}
   private boolean isE() {return dir == E || dir == NE || dir == SE;}
@@ -271,7 +221,7 @@ public class Minecart extends VehicleBase {
    *        -1 = off rail
    *        -2 = error
    */
-  private int moveOnRails(Chunk chunk1) {
+  public int moveOnRails(Chunk chunk1) {
     int gx = Static.floor(pos.x % 16.0f);
     if (pos.x < 0 && gx != 0) gx = 16 + gx;
     int gy = Static.floor(pos.y);
@@ -646,8 +596,6 @@ public class Minecart extends VehicleBase {
       Static.server.broadcastRiding(this, occupant, true);
     }
   }
-
-  private static Coords coords = new Coords();
 
   public boolean canSelect() {
     return true;

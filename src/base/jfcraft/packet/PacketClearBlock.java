@@ -11,6 +11,7 @@ import jfcraft.client.Client;
 import jfcraft.block.*;
 import jfcraft.opengl.*;
 import jfcraft.entity.*;
+import jfcraft.move.*;
 import jfcraft.data.*;
 
 public class PacketClearBlock extends Packet {
@@ -45,6 +46,8 @@ public class PacketClearBlock extends Packet {
     int gz = i5;
     Chunk chunk = client.world.chunks.getChunk(client.player.dim, cx,cz);
     if (chunk == null) return;
+    int bits = chunk.getBits(gx, gy, gz);
+    int var = Chunk.getVar(bits);
     char oldid = chunk.clearBlock(gx, gy, gz);
     chunk.delCrack(gx, gy, gz);
     if (particles) {
@@ -53,15 +56,16 @@ public class PacketClearBlock extends Packet {
       float y = gy;
       float z = cz * 16f + gz;
       BlockBase block = Static.blocks.blocks[oldid];
-      SubTexture st = block.getDestroyTexture();
+      SubTexture st = block.getDestroyTexture(var);
       if (st != null) {
         for(int a=0;a<10;a++) {
-          Particle p = new Particle(x + r.nextFloat(), y + r.nextFloat(), z + r.nextFloat(), st);
+          Particle p = new Particle(x + r.nextFloat(), y + r.nextFloat(), z + r.nextFloat(), st, false);
           p.init(chunk.world);
           p.createVelocity();
           p.maxAge = r.nextInt(20) + 20;
           p.scale = r.nextFloat() / 20f + 0.1f;
           p.isGreen = block.isGreen;
+          p.setMove(new MoveGravity());
           chunk.addEntity(p);
         }
       }
