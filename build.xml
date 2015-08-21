@@ -85,6 +85,7 @@
     <zip destfile="jfcraft-bin-${version}.zip">
       <fileset dir="..">
         <include name="jfcraft/*.jar"/>
+        <include name="jfcraft/*.ico"/>
         <include name="jfcraft/*.txt"/>
         <include name="jfcraft/*.zip"/>
         <include name="jfcraft/jfcraft.png"/>
