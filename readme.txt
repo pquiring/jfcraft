@@ -60,4 +60,4 @@ This is alpha software so please do not open bug requests.
 Thanks.
 
 By : Peter Quiring (pquiring@gmail.com)
-Web : http://pquiring.github.com/jfcraft
+Web : http://pquiring.github.io/jfcraft
