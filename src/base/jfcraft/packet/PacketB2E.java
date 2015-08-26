@@ -44,6 +44,7 @@ public class PacketB2E extends Packet {
       }
       chunk.clearBlock(gx, gy, gz);
       MovingBlock mb = new MovingBlock();
+      mb.init(Static.client.world);
       mb.dim = client.player.dim;
       mb.uid = uid;
       mb.pos.x = x;

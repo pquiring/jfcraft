@@ -362,30 +362,34 @@ public class Game extends RenderScreen {
     for(int a=0;a<chunks.length;a++) {
       Chunk chunk = chunks[a];
       if (!chunk.inRange) continue;
-      EntityBase es[] = chunk.getEntities();
-      int ne = es.length;
+      EntityBase entities[] = chunk.getEntities();
+      int numEntities = entities.length;
       data.reset();
-      for(int b=0;b<ne;b++) {
-        EntityBase e = es[b];
-        if (e.uid == Static.client.player.uid) continue;  //do not render self
-        if (e.distance(Static.client.player) > e.getMaxDistance()) continue;
-        if (!e.instanceInited) {
-          e.initInstance();
+      for(int b=0;b<numEntities;b++) {
+        EntityBase entity = entities[b];
+        if (entity.uid == Static.client.player.uid) continue;  //do not render self
+        if (entity.distance(Static.client.player) > entity.getMaxDistance()) continue;
+        if (!entity.instanceInited) {
+          entity.initInstance();
         }
-        if (!e.isStatic) {
-          if (e.dirty) {
-            e.buildBuffers(e.getDest(), data);
-            e.dirty = false;
+        if (!entity.isStatic) {
+          if (entity.dirty) {
+            entity.buildBuffers(entity.getDest(), data);
+            entity.dirty = false;
           }
-          if (e.needCopyBuffers) {
-            e.copyBuffers();
-            e.needCopyBuffers = false;
+          if (entity.needCopyBuffers) {
+            entity.copyBuffers();
+            entity.needCopyBuffers = false;
           }
         }
-        float elight = e.getLight(sunLight);
-        glUniform1f(Static.uniformSunLight, elight);
-        e.bindTexture();
-        e.render();
+        try {
+          float elight = entity.getLight(sunLight);
+          glUniform1f(Static.uniformSunLight, elight);
+          entity.bindTexture();
+          entity.render();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
       }
     }
     glUniform1f(Static.uniformSunLight, sunLight);
