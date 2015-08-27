@@ -52,8 +52,8 @@ public class EnvironmentEnd implements EnvironmentBase {
 
     view.setIdentity();
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, view.m);  //model matrix
-    view.addRotate(client.ang.x, 1, 0, 0);
-    view.addRotate(client.ang.y, 0, 1, 0);
+    view.addRotate(Static.camera_ang.x, 1, 0, 0);
+    view.addRotate(Static.camera_ang.y, 0, 1, 0);
     view.addRotate(zAngle, 0, 0, 1);
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
 
