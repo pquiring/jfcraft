@@ -41,7 +41,10 @@ public class Game extends RenderScreen {
   private GLVector3 l3 = new GLVector3();  //center (looking at)
   private GLVector3 u3 = new GLVector3();  //up
   private GLVector3 pts[];  //chunk points
+  private GLVector3 forward = new GLVector3();
   private Slot slots[];
+  private enum Views {normal, behind, infront};
+  private Views camview = Views.normal;
 
   public static boolean advanceAnimation;
 
@@ -108,9 +111,11 @@ public class Game extends RenderScreen {
 
   public void render(int width, int height) {
     synchronized(Static.renderLock) {
+    synchronized(Static.clientMoveLock) {
       this.width = width;
       this.height = height;
       render();
+    }
     }
   }
 
@@ -201,22 +206,45 @@ public class Game extends RenderScreen {
     Static.camera_pos.x = Static.client.player.pos.x;
     Static.camera_pos.y = Static.client.player.pos.y + Static.client.player.eyeHeight;
     Static.camera_pos.z = Static.client.player.pos.z;
+    float ax, ay;
+    synchronized(Static.client.ang) {
+      ax = Static.client.ang.x;
+      ay = Static.client.ang.y;
+    }
+    Static.camera_ang.x = ax;
+    Static.camera_ang.y = ay;
+    //rotate camera
+    switch (camview) {
+      case normal: break;
+      case behind: break;
+      case infront:
+        Static.camera_ang.x *= -1f;
+        Static.camera_ang.y += 180f;
+        break;
+    }
+
+    view.setIdentity();
+    view.addRotate(Static.camera_ang.x, 1, 0, 0);
+    view.addRotate(Static.camera_ang.y, 0, 1, 0);
+
+    //move camera
+    switch (camview) {
+      case normal: break;
+      case behind:
+        moveCamera(-4.0f);
+        break;
+      case infront:
+        moveCamera(-4.0f);
+        break;
+    }
+
+    view.addTranslate2(-Static.camera_pos.x, -Static.camera_pos.y, -Static.camera_pos.z);
 
     glUniform1f(Static.uniformSunLight, 1.0f);
     if (!Static.debugDisableFog) glUniform1i(Static.uniformEnableFog, 0);
     Static.dims.dims[dim].getEnvironment().preRender(world.time, sunLight, Static.client, Static.camera_pos, chunks);
     if (!Static.debugDisableFog) glUniform1i(Static.uniformEnableFog, 1);
 
-    view.setIdentity();
-    synchronized(Static.client.ang) {
-      float x = Static.client.ang.x;
-      float y = Static.client.ang.y;
-      Static.camera_ang.x = x;
-      Static.camera_ang.y = y;
-      view.addRotate(x, 1, 0, 0);
-      view.addRotate(y, 0, 1, 0);
-    }
-    view.addTranslate2(-Static.camera_pos.x, -Static.camera_pos.y, -Static.camera_pos.z);
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
 
     //setup frustum culling
@@ -367,30 +395,14 @@ public class Game extends RenderScreen {
       data.reset();
       for(int b=0;b<numEntities;b++) {
         EntityBase entity = entities[b];
-        if (entity.uid == Static.client.player.uid) continue;  //do not render self
+//        if (entity.uid == Static.client.player.uid && camview == Views.normal) continue;  //do not render self
         if (entity.distance(Static.client.player) > entity.getMaxDistance()) continue;
-        if (!entity.instanceInited) {
-          entity.initInstance();
-        }
-        if (!entity.isStatic) {
-          if (entity.dirty) {
-            entity.buildBuffers(entity.getDest(), data);
-            entity.dirty = false;
-          }
-          if (entity.needCopyBuffers) {
-            entity.copyBuffers();
-            entity.needCopyBuffers = false;
-          }
-        }
-        try {
-          float elight = entity.getLight(sunLight);
-          glUniform1f(Static.uniformSunLight, elight);
-          entity.bindTexture();
-          entity.render();
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
+        renderEntity(entity);
       }
+    }
+    if (camview != Views.normal) {
+      EntityBase entity = Static.client.player;
+      renderEntity(entity);
     }
     glUniform1f(Static.uniformSunLight, sunLight);
 
@@ -679,6 +691,13 @@ public class Game extends RenderScreen {
       case GLVK.VK_F11:
         Main.toggleFullscreen();
         break;
+      case GLVK.VK_F5:
+        switch (camview) {
+          case normal: camview = Views.behind; break;
+          case behind: camview = Views.infront; break;
+          case infront: camview = Views.normal; break;
+        }
+        break;
       case GLVK.VK_F10:
         //toggle fancy/fast graphics
         Settings.current.fancy = !Settings.current.fancy;
@@ -876,5 +895,57 @@ public class Game extends RenderScreen {
     Static.entities.entities[Entities.PLAYER].bindTexture();
     hand.bindBuffers();
     hand.render();
+  }
+
+  public void renderEntity(EntityBase entity) {
+    if (!entity.instanceInited) {
+      entity.initInstance();
+    }
+    if (!entity.isStatic) {
+      if (entity.dirty) {
+        entity.buildBuffers(entity.getDest(), data);
+        entity.dirty = false;
+      }
+      if (entity.needCopyBuffers) {
+        entity.copyBuffers();
+        entity.needCopyBuffers = false;
+      }
+    }
+    try {
+      float elight = entity.getLight(sunLight);
+      glUniform1f(Static.uniformSunLight, elight);
+      entity.bindTexture();
+      entity.render();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void moveCamera(float dist) {
+    //NOTE : view = camera matrix rotated
+    //     : forward = camera forward vector
+    World world = Static.client.world;
+    int dim = Static.client.player.dim;
+    float step = 0.1f;
+    if (dist < 0) {
+      dist *= -1f;
+      forward.set(0, 0, 1);
+    } else {
+      forward.set(0, 0, -1);
+    }
+    view.mult(forward);
+    forward.scale(0.1f);
+    while (dist >= 0.1f) {
+      Static.camera_pos.x += forward.v[0];
+      Static.camera_pos.y += forward.v[1];
+      Static.camera_pos.z += forward.v[2];
+      if (!world.isEmpty(dim, Static.camera_pos.x, Static.camera_pos.y, Static.camera_pos.z)) {
+        Static.camera_pos.x -= forward.v[0];
+        Static.camera_pos.y -= forward.v[1];
+        Static.camera_pos.z -= forward.v[2];
+        break;
+      }
+      dist -= step;
+    }
   }
 }
