@@ -7,6 +7,7 @@ package jfcraft.move;
  * @author pquiring
  */
 
+import jfcraft.data.*;
 import jfcraft.entity.*;
 
 public class MoveFloat implements MoveBase {
@@ -17,8 +18,14 @@ public class MoveFloat implements MoveBase {
     dz = z;
   }
   public void move(EntityBase entity) {
+    Chunk chunk1 = entity.getChunk();
     entity.pos.x += dx;
     entity.pos.y += dy;
     entity.pos.z += dz;
+    Chunk chunk2 = entity.getChunk();
+    if (chunk1 != chunk2) {
+      chunk1.delEntity(entity);
+      chunk2.addEntity(entity);
+    }
   }
 }
