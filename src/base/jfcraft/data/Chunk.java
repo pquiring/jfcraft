@@ -30,7 +30,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   //blocks2 is for WATER, LAVA, SNOW, etc. (extra plane)
 
   public long seed;
-  public boolean readOnly;
+//  public boolean readOnly;
   public boolean needPhase2, needPhase3;
   public boolean needLights;  //generator phases
   //flags
@@ -38,6 +38,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   public boolean needRelight;
   public boolean ready;
   public boolean inRange, isAllEmpty;
+
+  public int readOnly1, readOnly2;  //read only range (-1 to disable)
 
   //biome data
   public byte biome[] = new byte[16 * 16];
@@ -1399,7 +1401,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     return "Chunk:" + cx + "," + cz;
   }
 
-  private static final byte ver = 0;
+  private static final byte ver = 1;
 
   private static final int magic = 0x12345678;
 
@@ -1413,12 +1415,15 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       if (file) {
         buffer.writeLong(seed);
         int bits = 0;
-        if (readOnly) bits |= 0x1;
+//        if (readOnly) bits |= 0x1;
         if (needPhase2) bits |= 0x2;
         if (needPhase3) bits |= 0x4;
         if (needLights) bits |= 0x8;
         buffer.writeInt(bits);
+        buffer.writeInt(readOnly1);
+        buffer.writeInt(readOnly2);
       }
+
 
       //blocks
       int cnt1 = 0, cnt2 = 0;
@@ -1553,10 +1558,14 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     if (file) {
       seed = buffer.readLong();
       int bits = buffer.readInt();
-      readOnly = ((bits & 0x01) != 0);
+//      readOnly = ((bits & 0x01) != 0);
       needPhase2 = ((bits & 0x02) != 0);
       needPhase3 = ((bits & 0x04) != 0);
       needLights = ((bits & 0x08) != 0);
+      if (ver > 0) {
+        readOnly1 = buffer.readInt();
+        readOnly2 = buffer.readInt();
+      }
     }
 
     //blocks

@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+Aug 27, 2015 : v0.21 released!
+  - added particles (uses : break block, tame horse)
+  - added new camera views (F5 to toggle)
+  - added jfcraft.move.MoveBase
+    - new base class for moving entities
+    - will become better AI logic for entities
+  - bug fixes
+
 Aug 18, 2015 : v0.20 released!
   - attempted to use SWT (GLCanvas) but their keyboard support is not designed for gaming
     - it doesn't generate key release events if multiple keys are pressed
