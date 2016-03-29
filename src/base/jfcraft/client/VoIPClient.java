@@ -57,7 +57,7 @@ public class VoIPClient implements SIPClientInterface, RTPInterface {
         return;
       }
     }
-    sip.register(Settings.current.player, null, "12345");  //12345 = bad password
+    sip.register(Settings.current.player, Settings.current.player, null, "12345");  //12345 = bad password
   }
 
   public void stop() {

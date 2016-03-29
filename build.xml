@@ -1,11 +1,11 @@
 <project name="jfcraft" default="jar" basedir=".">
   <description>jfcraft</description>
   <!-- set global properties for this build -->
-  <property name="app" location="jfcraft-client"/>
-  <property name="app2" location="jfcraft-server"/>
+  <property name="app" value="jfcraft-client"/>
+  <property name="app2" value="jfcraft-server"/>
   <property name="home" location="../.."/>
-  <property name="ico" location="jfcraft"/>
-  <property name="msi" location="jfcraft"/>
+  <property name="ico" value="jfcraft"/>
+  <property name="msi" value="jfcraft"/>
   <property name="src" location="src/base"/>
   <property name="build" location="classes"/>
   <property name="version" value="0.21"/>
