@@ -1,16 +1,23 @@
 List of TODOs to make JFCraft as feature full as the real thing:
 
+need list:
+
+mobs (spider, ghast, blaze, endermite(silverfish), magma cube, witch, guardian)
+generate cave rooms, springs, lakes, rivers, items, stuff, castles, etc.
+improve world generating algorithms (move to native code?)
+create complex AI logic for each mob (currently they are all passive but attack if attacked and all animals run if attacked)
+more animals (chicken, rabbit, wolf, bat, squid, ocelet)
+chars (villagers) (don't move, just sell stuff in castles)
+fishing
+money (silver, gold)
+fix bugs
+
+want list:
+
 use items : shears (grass, leaves), flint and steel, ender pearl, etc.
 weather : rain, snow, storms
 more farming (melon seeds, pumpkin seeds)
-fishing
 enchanting (requires XP)
-generate cave rooms, springs, lakes, rivers, items, stuff, etc.
-improve world generating algorithms
-mobs (spider, ghast, blaze, endermite(silverfish), magma cube, witch, guardian)
-create complex AI logic for each mob (currently they are all passive but attack if attacked and all animals run if attacked)
-chars (villagers)
-more animals (chicken, rabbit, wolf, bat, squid, ocelet)
 misc (iron golem, snow golem)
 bosses (wither, dragon)
 brewing (potions)

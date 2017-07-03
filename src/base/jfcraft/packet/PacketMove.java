@@ -45,17 +45,19 @@ public class PacketMove extends Packet {
       e.pos.y = f2;
       e.pos.z = f3;
       Chunk chunk2 = e.getChunk();
-      if (chunk1 != chunk2) {
-        if (chunk1 != null) {  //should never be null (???)
-          chunk1.delEntity(e);
-        } else {
-//          Static.log("C:Error:MOVE:chunk1 == null");
-        }
-        if (chunk2 != null) {
-          //entity moved into unknown area
-          chunk2.addEntity(e);
-        } else {
-//          Static.log("C:Error:MOVE:chunk2 == null");
+      if (uid != client.player.uid) {
+        if (chunk1 != chunk2) {
+          if (chunk1 != null) {  //should never be null (???)
+            chunk1.delEntity(e);
+          } else {
+  //          Static.log("C:Error:MOVE:chunk1 == null");
+          }
+          if (chunk2 != null) {
+            //entity moved into unknown area
+            chunk2.addEntity(e);
+          } else {
+  //          Static.log("C:Error:MOVE:chunk2 == null");
+          }
         }
       }
     }
