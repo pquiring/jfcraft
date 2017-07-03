@@ -704,6 +704,18 @@ public class Game extends RenderScreen {
         Static.blocks.initPerf();
         Static.client.rebuildAll();
         break;
+      case GLVK.VK_F7:
+        //dec fov
+        fov -= 1.0f;
+        JFLog.log("fov=" + fov);
+        perspective = null;
+        break;
+      case GLVK.VK_F8:
+        //inc fov
+        fov += 1.0f;
+        JFLog.log("fov=" + fov);
+        perspective = null;
+        break;
       case '/':
         chat = (ChatMenu)Static.screens.screens[Client.CHAT];
         chat.setup("/");
