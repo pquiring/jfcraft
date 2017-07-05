@@ -8,7 +8,7 @@
   <property name="msi" value="jfcraft"/>
   <property name="src" location="src/base"/>
   <property name="build" location="classes"/>
-  <property name="version" value="0.21"/>
+  <property name="version" value="0.22"/>
 
   <import file="${home}/base.xml"/>
 

@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+Jul 4, 2017 : v0.22 released!
+  - fix : self appears while riding on horse
+  - fix : set default fov to 70 degs
+
 Aug 27, 2015 : v0.21 released!
   - added particles (uses : break block, tame horse)
   - added new camera views (F5 to toggle)
