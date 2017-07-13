@@ -9,7 +9,8 @@ import java.lang.reflect.*;
 import java.io.*;
 import java.util.*;
 import java.util.zip.*;
-import javaforce.JF;
+
+import javaforce.*;
 
 import jfcraft.data.*;
 
@@ -24,11 +25,11 @@ public class PluginLoader {
     String jars[] = Dplugins.split(File.pathSeparator);
     //load base assets
     if (!Assets.addZip("base.zip")) {  //faithfull texture pack
-      JF.showError("Error", "Failed to load base.zip");
+      JFAWT.showError("Error", "Failed to load base.zip");
       System.exit(0);
     }
     if (!Assets.addZip("jfassets.zip")) {
-      JF.showError("Error", "Failed to load jfassets.zip");
+      JFAWT.showError("Error", "Failed to load jfassets.zip");
       System.exit(0);
     }
     for(int a=0;a<jars.length;a++) {

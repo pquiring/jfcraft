@@ -242,12 +242,12 @@ public class PanelSettings extends javax.swing.JPanel {
   public void start() {
     String name = (String)worlds.getSelectedItem();
     if (name == null) {
-      JF.showError("Error", "Select or create a world first");
+      JFAWT.showError("Error", "Select or create a world first");
       return;
     }
     String worldFolder = Static.getWorldsPath() + name;
     if (!new File(worldFolder + "/world.dat").exists()) {
-      JF.showError("Error", "World does not exist");
+      JFAWT.showError("Error", "World does not exist");
       return;
     }
     Settings.current.server_voip = voip.isSelected();
@@ -286,7 +286,7 @@ public class PanelSettings extends javax.swing.JPanel {
       System.exit(0);
     } catch (Exception e) {
       Static.log(e);
-      JF.showError("Error", "Failed to start (see stdout)");
+      JFAWT.showError("Error", "Failed to start (see stdout)");
     }
   }
 }

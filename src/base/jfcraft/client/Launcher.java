@@ -27,7 +27,7 @@ public class Launcher extends javax.swing.JFrame {
     Settings.load();
     player.setText(Settings.current.player);
     setTitle("jfCraft/" + Static.version);
-    JF.centerWindow(this);
+    JFAWT.centerWindow(this);
     JFImage icon = new JFImage();
     icon.loadPNG(this.getClass().getClassLoader().getResourceAsStream("jfcraft.png"));
     setIconImage(icon.getImage());
@@ -210,12 +210,12 @@ public class Launcher extends javax.swing.JFrame {
   }// </editor-fold>//GEN-END:initComponents
 
   private void getPluginsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getPluginsActionPerformed
-    JF.showMessage("TODO", "Not implemented yet!");
+    JFAWT.showMessage("TODO", "Not implemented yet!");
   }//GEN-LAST:event_getPluginsActionPerformed
 
   private void startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startActionPerformed
     if (player.getText().length() < 3) {
-      JF.showError("Error", "Playername must be at least 3 chars");
+      JFAWT.showError("Error", "Playername must be at least 3 chars");
       return;
     }
     Settings.current.player = player.getText();
@@ -246,7 +246,7 @@ public class Launcher extends javax.swing.JFrame {
       System.exit(0);
     } catch (Exception e) {
       Static.log(e);
-      JF.showError("Error", "Failed to start (see stdout)");
+      JFAWT.showError("Error", "Failed to start (see stdout)");
     }
   }//GEN-LAST:event_startActionPerformed
 
@@ -264,7 +264,7 @@ public class Launcher extends javax.swing.JFrame {
    */
   public static void main(String args[]) {
     if (JF.isMac()) {
-      JF.showError("Error", "Sorry, Mac is not supported yet");
+      JFAWT.showError("Error", "Sorry, Mac is not supported yet");
       return;
     }
     /* Create and display the form */

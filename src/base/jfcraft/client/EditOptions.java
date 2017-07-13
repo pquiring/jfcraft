@@ -18,7 +18,7 @@ public class EditOptions extends javax.swing.JDialog {
   public EditOptions(java.awt.Frame parent, boolean modal) {
     super(parent, modal);
     initComponents();
-    JF.centerWindow(this);
+    JFAWT.centerWindow(this);
     load();
     listDevices();
   }

@@ -79,7 +79,7 @@ public class World implements SerialClass, SerialCreator {
         fis.close();
         World world = (World)coder.decodeObject(data, new World(true), true);
         if (world != null && world.incompatible && !listingOnly) {
-          JF.showError("Error : Can not load world", "World is saved in incompatible version");
+          JFAWT.showError("Error : Can not load world", "World is saved in incompatible version");
           return null;
         }
         return world;
@@ -491,7 +491,7 @@ public class World implements SerialClass, SerialCreator {
 //    Static.log("block:" + name + "=" + (int)nid);
     if (nid == 32767) {
       Static.log("Too many blocks loaded");
-      JF.showError("Error", "Too many blocks loaded, remove some plugins");
+      JFAWT.showError("Error", "Too many blocks loaded, remove some plugins");
       System.exit(0);
     }
     blockMap.add(name);
@@ -541,7 +541,7 @@ public class World implements SerialClass, SerialCreator {
 //    Static.log("item:" + name + "=" + (int)nid);
     if (nid == 32767) {
       Static.log("Too many items loaded");
-      JF.showError("Error", "Too many items loaded, remove some plugins");
+      JFAWT.showError("Error", "Too many items loaded, remove some plugins");
       System.exit(0);
     }
     itemMap.add(name);
@@ -948,7 +948,7 @@ public class World implements SerialClass, SerialCreator {
       if (cnt > 0) {
         Static.log("World.load():Plugins missing:" + sb.toString());
         if (!listingOnly) {
-          JF.showError("Error : Can not load world", "Plugins missing:\n" + sb.toString());
+          JFAWT.showError("Error : Can not load world", "Plugins missing:\n" + sb.toString());
           return false;
         }
       }

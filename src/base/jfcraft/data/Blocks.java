@@ -709,7 +709,7 @@ public class Blocks {
         }
         int loc[] = texture.placeSubTexture(ai.images[0].getPixels(), w, w);
         if (loc == null) {
-          JF.showError("Error", "Your texture pack size can not fit into your video cards max texture size\nPlease remove high resolution packs and restart.");
+          JFAWT.showError("Error", "Your texture pack size can not fit into your video cards max texture size\nPlease remove high resolution packs and restart.");
           valid = false;
           return;
         }
@@ -722,7 +722,7 @@ public class Blocks {
         ai.h = h;
         int loc[] = texture.placeSubTexture(ai.image.getPixels(), w, h);
         if (loc == null) {
-          JF.showError("Error", "Your texture pack size can not fit into your video cards max texture size\nPlease remove high resolution packs and restart.");
+          JFAWT.showError("Error", "Your texture pack size can not fit into your video cards max texture size\nPlease remove high resolution packs and restart.");
           valid = false;
           return;
         }

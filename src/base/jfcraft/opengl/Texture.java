@@ -123,7 +123,7 @@ public class Texture {
     ids[0] = -1;
     glGenTextures(1, ids);
     if (ids[0] == -1) {
-      JF.showError("Error", "glGenTextures failed");
+      JFAWT.showError("Error", "glGenTextures failed");
       System.exit(0);
     }
     glid = ids[0];

@@ -201,7 +201,7 @@ public class PanelServer extends javax.swing.JPanel implements ServerInterface {
     Static.setInterface(this);
     Main.server = new Server();
     if (!Main.server.startWorld(worldFolder)) {
-      JF.showError("Error:", Main.server.errmsg);
+      JFAWT.showError("Error:", Main.server.errmsg);
       System.exit(0);
     }
     timer = new Timer();

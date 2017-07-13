@@ -68,7 +68,7 @@ public class RenderEngine {
 
     Static.glver = getVersion();
     if (Static.glver[0] < 2) {
-      JF.showError("Error", "OpenGL Version < 2.0");
+      JFAWT.showError("Error", "OpenGL Version < 2.0");
       System.exit(0);
     }
 

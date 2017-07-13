@@ -27,7 +27,7 @@ public class Main extends javax.swing.JFrame {
     } else {
       setContentPane(new PanelSettings());
     }
-    JF.centerWindow(this);
+    JFAWT.centerWindow(this);
     JFImage icon = new JFImage();
     icon.loadPNG(this.getClass().getClassLoader().getResourceAsStream("jfcraft.png"));
     setIconImage(icon.getImage());

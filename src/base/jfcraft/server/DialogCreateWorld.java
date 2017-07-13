@@ -19,7 +19,7 @@ public class DialogCreateWorld extends javax.swing.JDialog {
   public DialogCreateWorld(java.awt.Frame parent, boolean modal) {
     super(parent, modal);
     initComponents();
-    JF.centerWindow(this);
+    JFAWT.centerWindow(this);
   }
 
   /**
