@@ -20,6 +20,7 @@ public class Arrow extends EntityBase {
   public static RenderDest dest;
   public static Texture texture;
   protected static String textureName;
+  private static GLModel model;
 
   public Arrow() {
     id = Entities.ARROW;
@@ -54,11 +55,14 @@ public class Arrow extends EntityBase {
   }
 
   public void initStatic() {
+    super.initStatic();
     dest = new RenderDest(parts.length);
     textureName = "entity/arrow";
+    model = loadModel("arrow");
   }
 
   public void initStaticGL() {
+    super.initStaticGL();
     texture = Textures.getTexture(textureName, 0);
   }
 
@@ -69,11 +73,10 @@ public class Arrow extends EntityBase {
   private static String parts[] = {"ARROW"};
 
   public void buildBuffers(RenderDest dest, RenderData data) {
-    GLModel mod = loadModel("arrow");
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = mod.getObject(parts[a]);
+      GLObject obj = model.getObject(parts[a]);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();

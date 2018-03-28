@@ -37,10 +37,12 @@ public class Lever extends BlockEntity {
   }
 
   public void initStatic() {
+    super.initStatic();
     model = loadModel("lever");
   }
 
   public void initStaticGL() {
+    super.initStaticGL();
   }
 
   public void initInstance() {

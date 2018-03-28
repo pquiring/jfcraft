@@ -52,6 +52,7 @@ public class EndPortal extends BlockEntity {
   }
 
   public void initStatic() {
+    super.initStatic();
     tw = 256;
     th = 256;
     textureName = "entity/end_portal";
@@ -59,6 +60,7 @@ public class EndPortal extends BlockEntity {
   }
 
   public void initStaticGL() {
+    super.initStaticGL();
     texture = Textures.getTexture(textureName, 0);
   }
 

@@ -61,11 +61,13 @@ public class Minecart extends VehicleBase {
   }
 
   public void initStatic() {
+    super.initStatic();
     textureName = "entity/minecart";
     model = Assets.getModel("minecart").model;
   }
 
   public void initStaticGL() {
+    super.initStaticGL();
     texture = Textures.getTexture(textureName, 0);
   }
 

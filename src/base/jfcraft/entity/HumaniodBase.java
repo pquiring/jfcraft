@@ -18,11 +18,14 @@ public abstract class HumaniodBase extends CreatureBase {
   public Item armors[];
 
   private static RenderDest dest;
+  private static GLModel model;
 
   private static String parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG"};
 
   public void initStatic() {
+    super.initStatic();
     dest = new RenderDest(parts.length);
+    model = loadModel("armor");
   }
 
   public RenderDest getDest() {
@@ -30,11 +33,10 @@ public abstract class HumaniodBase extends CreatureBase {
   }
 
   public void buildBuffers(RenderDest dest, RenderData data) {
-    GLModel mod = loadModel("armor");
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = mod.getObject(parts[a]);
+      GLObject obj = model.getObject(parts[a]);
       if (obj == null) {
         System.out.println("Warning:Couldn't find part:" + parts[a]);
       }

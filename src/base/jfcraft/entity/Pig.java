@@ -27,6 +27,7 @@ public class Pig extends CreatureBase {
   private RenderDest dest;
   private static Texture texture;
   private static String textureName;
+  private static GLModel model;
 
   public static int initHealth = 10;
 
@@ -64,10 +65,13 @@ public class Pig extends CreatureBase {
   }
 
   public void initStatic() {
+    super.initStatic();
     textureName = "entity/pig/pig";
+    model = loadModel("pig");
   }
 
   public void initStaticGL() {
+    super.initStaticGL();
     texture = Textures.getTexture(textureName, 0);
   }
 
@@ -81,11 +85,10 @@ public class Pig extends CreatureBase {
   private static final int SNOUT = 6;
 
   public void buildBuffers(RenderDest dest, RenderData data) {
-    GLModel mod = loadModel("pig");
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = mod.getObject(parts[a]);
+      GLObject obj = model.getObject(parts[a]);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();

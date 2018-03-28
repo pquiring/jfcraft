@@ -55,12 +55,14 @@ public class Boat extends VehicleBase {
   }
 
   public void initStatic() {
+    super.initStatic();
     textureName = "entity/boat";
+    model = loadModel("boat");
   }
 
   public void initStaticGL() {
+    super.initStaticGL();
     texture = Textures.getTexture(textureName, 0);
-    model = loadModel("boat");
   }
 
   public void initInstance() {

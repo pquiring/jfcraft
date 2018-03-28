@@ -51,10 +51,12 @@ public class Piston extends BlockEntity {
   }
 
   public void initStatic() {
+    super.initStatic();
     model = loadModel("piston");
   }
 
   public void initStaticGL() {
+    super.initStaticGL();
   }
 
   public void initInstance() {

@@ -40,11 +40,13 @@ public class EnderChest extends BlockEntity {
   }
 
   public void initStatic() {
+    super.initStatic();
     textureName = "entity/chest/ender";
     model = loadModel("chest");
   }
 
   public void initStaticGL() {
+    super.initStaticGL();
     texture = Textures.getTexture(textureName, 0);
   }
 

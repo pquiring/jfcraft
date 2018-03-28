@@ -27,6 +27,7 @@ public class Zombie extends HumaniodBase {
   public static RenderDest dest;
   private static Texture texture;
   private static String textureName;
+  private static GLModel model;
 
   private static int initHealth = 20;
   private static int initArmor = 2;
@@ -73,22 +74,24 @@ public class Zombie extends HumaniodBase {
   }
 
   public void initStatic() {
+    super.initStatic();
     textureName = "entity/zombie/zombie";
     dest = new RenderDest(parts.length);
+    model = loadModel("zombie");
   }
 
   public void initStaticGL() {
+    super.initStaticGL();
     texture = Textures.getTexture(textureName, 0);
   }
 
   private static String parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG"};
 
   public void buildBuffers(RenderDest dest, RenderData data) {
-    GLModel mod = loadModel("zombie");
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = mod.getObject(parts[a]);
+      GLObject obj = model.getObject(parts[a]);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();

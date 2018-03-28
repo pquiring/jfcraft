@@ -28,6 +28,7 @@ public class Sheep extends CreatureBase {
   //render assets
   private static RenderDest dest;
   private static Texture texture, furTexture;
+  private static GLModel model;
 
   public static int initHealth = 10;
 
@@ -80,9 +81,13 @@ public class Sheep extends CreatureBase {
     setMove(new MoveCreature());
   }
 
-  public void initStatic() {}
+  public void initStatic() {
+    super.initStatic();
+    model = loadModel("sheep");
+  }
 
   public void initStaticGL() {
+    super.initStaticGL();
     texture = Textures.getTexture("entity/sheep/sheep", 0);
     furTexture = Textures.getTexture("entity/sheep/sheep_fur", 0);
     dest = new RenderDest(parts.length);
@@ -94,11 +99,10 @@ public class Sheep extends CreatureBase {
   };
 
   public void buildBuffers(RenderDest dest, RenderData data) {
-    GLModel mod = loadModel("sheep");
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = mod.getObject(parts[a]);
+      GLObject obj = model.getObject(parts[a]);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();

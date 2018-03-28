@@ -31,6 +31,8 @@ public class Horse extends VehicleBase {
   public static final int tameCounterMax = 20 * 15;
   public ExtraHorse inventory;
 
+  private static GLModel model;
+
   public int hearts;
 
   public static final int FLAG_TAMED = 1;
@@ -143,7 +145,20 @@ public class Horse extends VehicleBase {
   }
 
   public void initStatic() {
+    super.initStatic();
     dest = new RenderDest(parts.length);
+    model = loadModel("horse");
+  }
+
+  public void initStaticGL() {
+    super.initStaticGL();
+    textures = new Texture[textureNames.length];
+    int unit = 0;
+    for(int a=0;a<textureNames.length;a++) {
+      if (a == 11) unit = 2;  //markings
+      if (a == 15) unit = 3;  //armor
+      textures[a] = Textures.getTexture(textureNames[a], unit);
+    }
   }
 
   private static final String textureNames[] = {
@@ -169,16 +184,6 @@ public class Horse extends VehicleBase {
     "entity/horse/armor/horse_armor_gold",
     "entity/horse/armor/horse_armor_diamond",
   };
-
-  public void initStaticGL() {
-    textures = new Texture[textureNames.length];
-    int unit = 0;
-    for(int a=0;a<textureNames.length;a++) {
-      if (a == 11) unit = 2;  //markings
-      if (a == 15) unit = 3;  //armor
-      textures[a] = Textures.getTexture(textureNames[a], unit);
-    }
-  }
 
   private static String parts[] = {
     "HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG"
@@ -235,12 +240,11 @@ public class Horse extends VehicleBase {
   };
 
   public void buildBuffers(RenderDest dest, RenderData data) {
-    GLModel mod = loadModel("horse");
     org = new GLVertex[parts.length];
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = mod.getObject(parts[a]);
+      GLObject obj = model.getObject(parts[a]);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();

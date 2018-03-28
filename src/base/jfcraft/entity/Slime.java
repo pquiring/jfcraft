@@ -27,6 +27,7 @@ public class Slime extends CreatureBase {
   private static RenderDest dest;
   private static Texture texture;
   private static String textureName;
+  private static GLModel model;
 
   private static int initHealth = 20;
   private static int initArmor = 2;
@@ -73,22 +74,24 @@ public class Slime extends CreatureBase {
   }
 
   public void initStatic() {
+    super.initStatic();
     textureName = "entity/slime/slime";
     dest = new RenderDest(parts.length);
+    model = loadModel("slime");
   }
 
   public void initStaticGL() {
+    super.initStaticGL();
     texture = Textures.getTexture(textureName, 0);
   }
 
   private static String parts[] = {"INNER", "L_EYE", "R_EYE", "MOUTH", "OUTTER"};  //outter MUST be last (transparent)
 
   public void buildBuffers(RenderDest dest, RenderData data) {
-    GLModel mod = loadModel("slime");
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = mod.getObject(parts[a]);
+      GLObject obj = model.getObject(parts[a]);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();

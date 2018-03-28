@@ -27,6 +27,7 @@ public class Cow extends CreatureBase {
   //render assets
   public static Texture texture;
   protected static String textureName;
+  private static GLModel model;
 
   public static int initHealth = 10;
 
@@ -65,11 +66,14 @@ public class Cow extends CreatureBase {
   }
 
   public void initStatic() {
+    super.initStatic();
     textureName = "entity/cow/cow";
     dest = new RenderDest(parts.length);
+    model = loadModel("cow");
   }
 
   public void initStaticGL() {
+    super.initStaticGL();
     texture = Textures.getTexture(textureName, 0);
   }
 
@@ -79,11 +83,10 @@ public class Cow extends CreatureBase {
   private static final int R_HORN = 7;
 
   public void buildBuffers(RenderDest dest, RenderData data) {
-    GLModel mod = loadModel("cow");
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = mod.getObject(parts[a]);
+      GLObject obj = model.getObject(parts[a]);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();

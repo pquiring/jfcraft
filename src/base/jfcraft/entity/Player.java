@@ -36,6 +36,7 @@ public class Player extends HumaniodBase {
   private static RenderDest dest;
   //texture size
   private static Texture texture;
+  private static GLModel model;
 
   public Player() {
     super(4*9, 4);
@@ -73,6 +74,10 @@ public class Player extends HumaniodBase {
     attackDmg = 1.0f;  //base damage (fists)
     attackRange = 5.0f;
     legLength = 0.625f;
+  }
+
+  public void initStatic() {
+    model = loadModel("steve");
   }
 
   public void initStaticGL() {
@@ -118,11 +123,10 @@ public class Player extends HumaniodBase {
 
   public void buildBuffers(RenderDest dest, RenderData data) {
     super.buildBuffers(super.getDest(), data);  //HumanoidBase
-    GLModel mod = loadModel("steve");
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = mod.getObject(parts[a]);
+      GLObject obj = model.getObject(parts[a]);
       if (obj == null) {
         System.out.println("Warning:Couldn't find part:" + parts[a]);
       }
