@@ -104,6 +104,7 @@ public class Recipes {
     registerRecipe(new RecipeRedstoneComparator());
     registerRecipe(new RecipeRedstoneRepeater());
     registerRecipe(new RecipeDyes());
+    registerRecipe(new RecipeShield());
   }
 
   public Item make3x3(Item items[]) {

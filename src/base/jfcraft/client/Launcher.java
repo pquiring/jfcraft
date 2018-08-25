@@ -230,8 +230,6 @@ public class Launcher extends javax.swing.JFrame {
       String cp = "";
       cp += getJar("javaforce.jar");
       cp += File.pathSeparator;
-      cp += getJar("lwjgl.jar");
-      cp += File.pathSeparator;
       cp += getJar("jfcraft.jar");
       int rows = pluginsModel.getRowCount();
       for(int row=0;row<rows;row++) {
