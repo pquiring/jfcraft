@@ -13,6 +13,7 @@ public class Types {
   public final static int TOOL_HOE = 4;
   public final static int TOOL_FLINT_STEEL = 5;
   public final static int TOOL_SHEARS = 6;
+  public final static int TOOL_SHIELD = 7;
   public final static int TOOL_SWORD = 8;  //is a weapon type too
   public final static int TOOL_OTHER = 9;
 
@@ -25,6 +26,7 @@ public class Types {
   public final static int ARMOR_CHEST = 1;
   public final static int ARMOR_LEGS = 2;
   public final static int ARMOR_FEET = 3;
+  public final static int ARMOR_SHIELD = 4;
 
   //material types
   public final static int MAT_UNKNOWN = 0;

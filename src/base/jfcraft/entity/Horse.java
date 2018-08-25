@@ -156,7 +156,7 @@ public class Horse extends VehicleBase {
     int unit = 0;
     for(int a=0;a<textureNames.length;a++) {
       if (a == 11) unit = 2;  //markings
-      if (a == 15) unit = 3;  //armor
+      if (a == 14) unit = 3;  //armor
       textures[a] = Textures.getTexture(textureNames[a], unit);
     }
   }
@@ -176,7 +176,7 @@ public class Horse extends VehicleBase {
     "entity/horse/horse_white",
     //markings (texture unit #2) (overlay)
     "entity/horse/horse_markings_blackdots",
-    "entity/horse/horse_markings_white",
+//    "entity/horse/horse_markings_white",
     "entity/horse/horse_markings_whitedots",
     "entity/horse/horse_markings_whitefield",
     //armor (texture unit #3) (overlay)

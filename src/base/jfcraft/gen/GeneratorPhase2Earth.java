@@ -35,7 +35,10 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
     if (cabin == null) {
       //BUG : This needs to get reloaded whenever a new world is loaded
       cabin = Assets.getBluePrint("cabin").blueprint;
-      cabin.convertIDs(Static.server.world);
+      if (!cabin.convertIDs(Static.server.world)) {
+        JFAWT.showError("Error", "BluePrint.convertIDs() failed, missing:" + cabin.missingID);
+        System.exit(1);
+      }
     }
     this.chunk = chunk;
 

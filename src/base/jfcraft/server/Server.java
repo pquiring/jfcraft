@@ -1188,6 +1188,11 @@ public class Server {
       doCommand(client, "/give @p diamond_axe");
       doCommand(client, "/give @p diamond_shovel");
       doCommand(client, "/give @p diamond_hoe");
+      doCommand(client, "/give @p diamond_chest");
+      doCommand(client, "/give @p diamond_pants");
+      doCommand(client, "/give @p diamond_boots");
+      doCommand(client, "/give @p diamond_helmet");
+      doCommand(client, "/give @p shield");
     }
     else if (p[0].equals("/delete")) {
       // /delete all entities in player's chunk (for debugging)

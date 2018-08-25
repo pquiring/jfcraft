@@ -26,7 +26,7 @@ public class MarioWorldPlugin extends PluginBase {
   public void registerPlugin() {
     registerBlock(new BlockScrew("SCREW", new String[] {"Screw"}, new String[] {"screw"}));
     registerBlock(new BlockCoinBlock("COIN_BLOCK", new String[] {"Coin Block"}, new String[] {"coinblock"}));
-    registerBlock(new BlockMarioPortal("MARIO_PORTAL", new String[] {"Mario Portal"}, new String[] {"portal"}));
+    registerBlock(new BlockMarioPortal("MARIO_PORTAL", new String[] {"Mario Portal"}, new String[] {"nether_portal"}));
     registerRecipe(new RecipeCoinBlock());
     registerEntity(new Turtle());
     registerDimension(new DimMarioWorld());

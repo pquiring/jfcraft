@@ -28,7 +28,7 @@ public class InventoryMenu extends RenderScreen {
     id = Client.INVENTORY;
     gui_width = 350;
     gui_height = 330;
-    slots = new Slot[4*9 + 4 + 4 + 1 + 1];  //slots(4*9), armor(4), craft input(4), craft output(1), hand(1)
+    slots = new Slot[4*9 + 4 + 1 + 4 + 1 + 1];  //slots(4*9), armor(4), shield(1), craft input(4), craft output(1), hand(1)
     //inventory blocks
     int p = 0;
     int x = 16, y = (int)(gui_height - 131);
@@ -63,13 +63,20 @@ public class InventoryMenu extends RenderScreen {
       p++;
       y += 36;
     }
+    //shield
+    x = 154;
+    y = 124 + 36;
+    slots[p] = new Slot();
+    slots[p].x = x;
+    slots[p].y = y;
+    p++;
 
     //crafting slots(4)
-    x = 175;
-    y = 50 + 36;
+    x = 196;
+    y = 36 + 36;
     for(int a=0;a<4;a++) {
       if (a > 0 && a % 2 == 0) {
-        x = 175;
+        x = 196;
         y += 36;
       }
       slots[p] = new Slot();
@@ -80,8 +87,8 @@ public class InventoryMenu extends RenderScreen {
     }
 
     //crafted item
-    x = 287;
-    y = 70 + 36;
+    x = 308;
+    y = 56 + 36;
     slots[p] = new Slot();
     slots[p].x = x;
     slots[p].y = y;
@@ -165,7 +172,7 @@ public class InventoryMenu extends RenderScreen {
     }
 
     //armor slots
-    for(int a=0;a<4;a++) {
+    for(int a=0;a<5;a++) {
       slots[p++].item = Static.client.player.armors[a];
     }
 
@@ -231,12 +238,18 @@ public class InventoryMenu extends RenderScreen {
       }
       by += 36;
     }
-    //check crafting area
-    bx = 175;
-    by = 50;
+    //check shield
+    bx = 154;
+    by = 124;
+    if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
+      Static.client.clickArmor((byte)4, button == 1);
+    }
+    //check crafting area (4)
+    bx = 196;
+    by = 36;
     for(byte a=0;a<4;a++) {
       if (a != 0 && a % 2 == 0) {
-        bx = 175;
+        bx = 196;
         by += 36;
       }
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
@@ -245,8 +258,8 @@ public class InventoryMenu extends RenderScreen {
       bx += 36;
     }
     //check craft output
-    bx = 287;
-    by = 70;
+    bx = 308;
+    by = 56;
     if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
       Static.client.clickCraftOutput(button == 1);
     }

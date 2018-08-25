@@ -63,8 +63,9 @@ public class BluePrint implements SerialClass, SerialCreator {
         }
       }
       if (!ok) {
+        System.out.println("Warning:ID not found:" + name);
         missingID = name;
-        return false;
+//        return false;
       }
     }
 
@@ -81,8 +82,9 @@ public class BluePrint implements SerialClass, SerialCreator {
         }
       }
       if (!ok) {
+        System.out.println("Warning:ID not found:" + name);
         missingID = name;
-        return false;
+//        return false;
       }
     }
 
@@ -99,8 +101,9 @@ public class BluePrint implements SerialClass, SerialCreator {
         }
       }
       if (!ok) {
+        System.out.println("Warning:ID not found:" + name);
         missingID = name;
-        return false;
+//        return false;
       }
     }
 
@@ -117,8 +120,9 @@ public class BluePrint implements SerialClass, SerialCreator {
         }
       }
       if (!ok) {
+        System.out.println("Warning:ID not found:" + name);
         missingID = name;
-        return false;
+//        return false;
       }
     }
 

@@ -200,6 +200,8 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
   }
 
   public void addStuff() {
+    BlockBase flower = Static.blocks.getBlock(Blocks.FLOWER);
+    BlockBase tallgrass = Static.blocks.getBlock(Blocks.TALLGRASS);
     for(int x=0;x<16;x++) {
       for(int z=0;z<16;z++) {
         int p = z * 16 + x;
@@ -223,10 +225,10 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
                 addTree(x, elev+1, z, trees[r.nextInt(2)], bt == Chunk.TAIGA);
               }
               else if (r.nextInt() % 10 == 0) {
-                setBlock(x, elev+1, z, Blocks.FLOWER, 0, r.nextInt(11));
+                setBlock(x, elev+1, z, Blocks.FLOWER, 0, r.nextInt(flower.getMaxVar()));
               }
               else if (r.nextInt() % 5 == 0) {
-                setBlock(x, elev+1, z, Blocks.TALLGRASS, 0, r.nextInt(2));
+                setBlock(x, elev+1, z, Blocks.TALLGRASS, 0, r.nextInt(tallgrass.getMaxVar()));
               }
               else if (r.nextInt() % 100 == 0) {
                 spawnAnimal(x, elev+1, z);

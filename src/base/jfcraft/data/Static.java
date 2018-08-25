@@ -277,7 +277,7 @@ public class Static {
       Static.screens.registerDefault();
       Static.blocks.stitchTiles();
       Static.items.stitchTiles();
-      Static.blocks.initPerf();  //must redo this if fancy/fast is toggled
+      Static.blocks.initPerf(false);  //must redo this if fancy/fast is toggled
     }
     packets.registerDefault();
     extras.registerDefault();

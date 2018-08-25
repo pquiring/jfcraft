@@ -12,16 +12,18 @@ import jfcraft.data.*;
 import jfcraft.opengl.*;
 
 public class BlockOpaqueVarPerf extends BlockOpaque {
-  public BlockOpaqueVarPerf(String id, String names[], String images[], String images_opaque[]) {
+  public BlockOpaqueVarPerf(String id, String names[], String images[]) {
     super(id, names, images);
-    this.images2 = images_opaque;
     isVar = true;
     isPerf = true;
+    clampAlpha = true;
   }
   public SubTexture getTexture(RenderData data) {
-    if (Settings.current.fancy)
-      return textures[data.dir[data.side]];
-    else
-      return textures2[data.dir[data.side]];
+    return textures[data.dir[data.side]];
+  }
+  public void reloadAll() {
+    for(int a=0;a<textures.length;a++) {
+      textures[a].ai.reload(Settings.current.fancy);
+    }
   }
 }

@@ -78,8 +78,7 @@ public class Blocks {
   public static char LAVA;
   public static char SAND;
   public static char CLAY;
-  public static char HARDENED_CLAY;
-  public static char STAINED_CLAY;
+  public static char TERRACOTA;
   public static char OIL;
   public static char GRAVEL;
   public static char STONE;
@@ -107,6 +106,7 @@ public class Blocks {
   public static char DEADBUSH;
   public static char PISTON;
   public static char WOOL;
+  public static char DANDELION;
   public static char FLOWER;
   public static char MUSHROOM_BROWN;
   public static char MUSHROOM_RED;
@@ -241,44 +241,42 @@ public class Blocks {
   //...
 
   //flower vars
-  public static final byte VAR_DANDELION = 0;
-  public static final byte VAR_ALLIUM = 0;
-  public static final byte VAR_BLUE_ORCHID = 0;
-  public static final byte VAR_HOUSTONIA = 0;
-  public static final byte VAR_OXEYE_DAISY = 0;
-  public static final byte VAR_PAEONIA = 0;
-  public static final byte VAR_ROSE = 0;
-  public static final byte VAR_TULIP_ORANGE = 0;
-  public static final byte VAR_TULIP_PINK = 0;
-  public static final byte VAR_TULIP_RED = 0;
-  public static final byte VAR_TULIP_WHITE = 0;
+  public static final byte VAR_POPPY = 0;
+  public static final byte VAR_BLUE_ORCHID = 1;
+  public static final byte VAR_ALLIUM = 2;
+  public static final byte VAR_AZURE_BLUET = 3;
+  public static final byte VAR_TULIP_RED = 4;
+  public static final byte VAR_TULIP_ORANGE = 5;
+  public static final byte VAR_TULIP_WHITE = 6;
+  public static final byte VAR_TULIP_PINK = 7;
+  public static final byte VAR_OXEYE_DAISY = 8;
 
   public void registerDefault() {
     registerBlock(new BlockAir("AIR"));
     registerBlock(new BlockOpaque("STONE", new String[] {"Stone"}, new String[] {"stone"})
       .setDrop("COBBLESTONE").setSmooth("STEP").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockGrass("GRASS", new String[] {"Grass"}, new String[] {"grass_top", "grass_side", "dirt"})
+    registerBlock(new BlockGrass("GRASS", new String[] {"Grass"}, new String[] {"grass_block_top", "grass_block_side", "dirt"})
       .setGreenTop().setSupportsPlant().setSmooth("STEP").setDrop("DIRT").setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
     registerBlock(new BlockCarpet("SNOW", new String[] {"Snow"}, new String[] {"snow"})
       .setDrop("AIR").setSupported().setBlocks2().setCanReplace().setHardness(0.2f, TOOL_SHOVEL, CLS_NONE));
     registerBlock(new BlockDirt("DIRT", new String[] {"Dirt", "Podzol", "Farmland", "Farmland"}
       , new String[] {
         "dirt", "dirt", "dirt",
-        "dirt_podzol_top", "dirt_podzol_side", "dirt",
-        "farmland_dry", "dirt", "dirt",
-        "farmland_wet", "dirt", "dirt"
+        "podzol_top", "podzol_side", "dirt",
+        "farmland", "dirt", "dirt",
+        "farmland_moist", "dirt", "dirt"
       })
       .setSupportsPlant().setSmooth("STEP").setVar().setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
     registerBlock(new BlockOpaque("COBBLESTONE", new String[] {"Cobble Stone"}, new String[] {"cobblestone"})
       .setSmooth("STEP").setHardness(2.0f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaqueVar("PLANKS"
       , new String[] {"Oak Wood Planks", "Spruce Wood Planks", "Birch Wood Planks", "Jungle Wood Planks", "Acacia Wood Planks", "Dark Oak Wood Planks"}
-      , new String[] {"planks_oak", "planks_spruce", "planks_birch", "planks_jungle", "planks_acacia", "planks_big_oak"})
+      , new String[] {"oak_planks", "spruce_planks", "birch_planks", "jungle_planks", "acacia_planks", "dark_oak_planks"})
       .setFuel(15).setMaterial(MAT_WOOD).setHardness(2.0f, TOOL_AXE, CLS_NONE)
     );
     registerBlock(new BlockXVar("SAPLING"
       , new String[] {"Oak Wood Sapling", "Spruce Wood Sapling", "Birch Wood Sapling", "Jungle Wood Sapling", "Acacia Wood Sapling", "Dark Oak Wood Sapling"}
-      , new String[] {"sapling_oak", "sapling_spruce", "sapling_birch", "sapling_jungle", "sapling_acacia", "sapling_roofed_oak"})
+      , new String[] {"oak_sapling", "spruce_sapling", "birch_sapling", "jungle_sapling", "acacia_sapling", "dark_oak_sapling"})
       .setFuel(5).setMaterial(MAT_WOOD)
     );
     registerBlock(new BlockOpaque("BEDROCK", new String[] {"Bedrock"}, new String[] {"bedrock"}).setHardness(-1f, TOOL_NONE, CLS_NONE));
@@ -294,43 +292,42 @@ public class Blocks {
     registerBlock(new BlockOpaqueVar("WOOD"
       , new String[] {"Oak Wood", "Spruce Wood", "Birch Wood", "Jungle Wood", "Acacia Wood", "Dark Oak Wood"}
       , new String[] {
-        "log_oak_top", "log_oak",
-        "log_spruce_top", "log_spruce",
-        "log_birch_top", "log_birch",
-        "log_jungle_top", "log_jungle",
-        "log_acacia_top", "log_acacia",
-        "log_big_oak_top", "log_big_oak"
+        "oak_log_top", "oak_log",
+        "spruce_log_top", "spruce_log",
+        "birch_log_top", "birch_log",
+        "jungle_log_top", "jungle_log",
+        "acacia_log_top", "acacia_log",
+        "dark_oak_log_top", "dark_oak_log"
       })
       .setFuel(15).setMaterial(MAT_WOOD).setDir().setHardness(2f, TOOL_AXE, CLS_NONE)
     );
     registerBlock(new BlockLeaves("LEAVES"
       , new String[] {"Oak Wood Leaves", "Spruce Wood Leaves", "Birch Wood Leaves", "Jungle Wood Leaves", "Acacia Wood Leaves", "Dark Oak Wood Leaves"}
-      , new String[] {"leaves_oak", "leaves_spruce", "leaves_birch", "leaves_jungle", "leaves_acacia", "leaves_big_oak"}
-      , new String[] {"leaves_oak_opaque", "leaves_spruce_opaque", "leaves_birch_opaque", "leaves_jungle_opaque", "leaves_acacia_opaque", "leaves_big_oak_opaque"}
+      , new String[] {"oak_leaves", "spruce_leaves", "birch_leaves", "jungle_leaves", "acacia_leaves", "dark_oak_leaves"}
     ).setGreenAllSides().setPerf().setDrop("AIR").setHardness(0.2f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockOpaque("SPONGE", new String[] {"Sponge"}, new String[] {"sponge"}).setHardness(0.6f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockTrans("GLASSBLOCK", new String[] {"Glass Block"}, new String[] {"glass"}).setHardness(0.3f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockOpaque("LAPIS_ORE", new String[] {"Lapis Ore"}, new String[] {"lapis_ore"}).setHardness(3f, TOOL_PICKAXE, CLS_STONE));
     registerBlock(new BlockOpaque("LAPIS_BLOCK", new String[] {"Lapis Block"}, new String[] {"lapis_block"}).setHardness(3f, TOOL_PICKAXE, CLS_STONE));
     registerBlock(new BlockDispenser("DISPENSER", new String[] {"Dispenser"}
-      , new String[] {"dispenser_front_horizontal", "dispenser_front_vertical", "piston_bottom"}).setHardness(3.5f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockOpaque("SAND_STONE", new String[] {"Sand Stone"}, new String[] {"sandstone_top", "sandstone_normal", "sandstone_bottom"}).setHardness(0.8f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockOpaque("NOTE_BLOCK", new String[] {"Note Block"}, new String[] {"noteblock"}).setHardness(0.8f, TOOL_AXE, CLS_NONE));
-    registerBlock(new BlockRail("RAIL_POWERED", new String[] {"Rail Powered"}, new String[] {"rail_golden", "rail_golden_powered"}).setRedstone().setHardness(0.7f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockRail("RAIL_DETECTOR", new String[] {"Rail Detector"}, new String[] {"rail_detector", "rail_detector_powered"}).setRedstone().setHardness(0.7f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockPiston("PISTON_STICKY", new String[] {"Sticky Piston"}, new String[] {"piston_bottom", "piston_side", "piston_inner", "piston_side", "piston_top_normal", "piston_side", "piston_top_sticky"}).setSticky().setHardness(0.5f, TOOL_NONE, CLS_NONE));
-    registerBlock(new BlockX("WEB", new String[] {"Web"}, new String[] {"web"}).addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setHardness(4f, TOOL_SWORD, CLS_NONE));
+      , new String[] {"dispenser_front", "dispenser_front_vertical", "piston_bottom"}).setHardness(3.5f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("SAND_STONE", new String[] {"Sand Stone"}, new String[] {"sandstone_top", "sandstone", "sandstone_bottom"}).setHardness(0.8f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("NOTE_BLOCK", new String[] {"Note Block"}, new String[] {"note_block"}).setHardness(0.8f, TOOL_AXE, CLS_NONE));
+    registerBlock(new BlockRail("RAIL_POWERED", new String[] {"Rail Powered"}, new String[] {"powered_rail", "powered_rail_on"}).setRedstone().setHardness(0.7f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockRail("RAIL_DETECTOR", new String[] {"Rail Detector"}, new String[] {"detector_rail", "detector_rail_on"}).setRedstone().setHardness(0.7f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockPiston("PISTON_STICKY", new String[] {"Sticky Piston"}, new String[] {"piston_bottom", "piston_side", "piston_inner", "piston_side", "piston_top", "piston_side", "piston_top_sticky"}).setSticky().setHardness(0.5f, TOOL_NONE, CLS_NONE));
+    registerBlock(new BlockX("WEB", new String[] {"Web"}, new String[] {"cobweb"}).addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setHardness(4f, TOOL_SWORD, CLS_NONE));
     registerBlock(new BlockXVar("TALLGRASS"
-      , new String[] {"Tall Grass", "Fern"}
-      , new String[] {"tallgrass", "fern"})
-      .setGreenAllSides().setDrop("SEEDS").setSupported().setDropVar(false).addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
+      , new String[] {"Fern", "Fern"}
+      , new String[] {"fern", "fern"}
+      ).setGreenAllSides().setDrop("SEEDS").setSupported().setDropVar(false).addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
     );
     registerBlock(new BlockX("DEADBUSH"
       , new String[] {"Dead Bush"}
-      , new String[] {"deadbush"}).
+      , new String[] {"dead_bush"}).
       setSupported().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
     );
-    registerBlock(new BlockPiston("PISTON", new String[] {"Piston"}, new String[] {"piston_bottom", "piston_side", "piston_inner", "piston_side", "piston_top_normal", "piston_side", "piston_top_normal"}).setHardness(0.5f, TOOL_NONE, CLS_NONE));
+    registerBlock(new BlockPiston("PISTON", new String[] {"Piston"}, new String[] {"piston_bottom", "piston_side", "piston_inner", "piston_side", "piston_top", "piston_side", "piston_top"}).setHardness(0.5f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockOpaque("WOOL",
       new String[] {
         "Wool White", "Wool Orange",
@@ -343,53 +340,68 @@ public class Blocks {
         "Wool Red", "Wool Black"
       },
       new String[] {
-        "wool_colored_white",
-        "wool_colored_orange",
-        "wool_colored_magenta",
-        "wool_colored_light_blue",
-        "wool_colored_yellow",
-        "wool_colored_lime",
-        "wool_colored_pink",
-        "wool_colored_gray",
-        "wool_colored_silver",
-        "wool_colored_cyan",
-        "wool_colored_purple",
-        "wool_colored_blue",
-        "wool_colored_brown",
-        "wool_colored_green",
-        "wool_colored_red",
-        "wool_colored_black"
+        "white_wool",
+        "orange_wool",
+        "magenta_wool",
+        "light_blue_wool",
+        "yellow_wool",
+        "lime_wool",
+        "pink_wool",
+        "gray_wool",
+        "light_gray_wool",
+        "cyan_wool",
+        "purple_wool",
+        "blue_wool",
+        "brown_wool",
+        "green_wool",
+        "red_wool",
+        "black_wool"
       }
     ).setVar().setHardness(0.8f, TOOL_NONE, CLS_NONE));
-    registerBlock(new BlockXVar("FLOWER"
-      , new String[] {"Dandelion",        "Allium",        "Blue Orchid",        "Houstonia",        "Oxeye Daisy",        "Paeonia",        "Rose",        "Orange Tulip",        "Pink Tulip",        "Red Tulip",        "White Tulip"}
-      , new String[] {"flower_dandelion", "flower_allium", "flower_blue_orchid", "flower_houstonia", "flower_oxeye_daisy", "flower_paeonia", "flower_rose", "flower_tulip_orange", "flower_tulip_pink", "flower_tulip_red", "flower_tulip_white"})
+    registerBlock(new BlockX("DANDELION"
+      , new String[] {"Dandelion"}
+      , new String[] {"dandelion"})
       .resetBoxes(BlockHitTest.Type.SELECTION).addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION)
       .setSupported().setPlant().setShowAsItem()
     );
+    registerBlock(new BlockXVar("FLOWER"
+      , new String[] {"Poppy", "Blue Orchid", "Allium", "Azure Bluet", "Red Tulip", "Orange Tulip", "White Tulip", "Pink Tulip", "Oxeye Daisy"}
+      , new String[] {"poppy", "blue_orchid", "allium", "azure_bluet", "red_tulip", "orange_tulip", "white_tulip", "pink_tulip", "oxeye_daisy"}
+      ).resetBoxes(BlockHitTest.Type.SELECTION).addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION)
+      .setSupported().setPlant().setShowAsItem()
+    );
 
-    registerBlock(new BlockX("MUSHROOM_BROWN", new String[] {"Brown Mushroom"}, new String[] {"mushroom_brown"}).setShowAsItem().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION));
-    registerBlock(new BlockX("MUSHROOM_RED", new String[] {"Red Mushroom"}, new String[] {"mushroom_red"}).setShowAsItem().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION));
+/*
+    //TODO
+    registerBlock(new BlockXVar("TALL_PLANT"
+      , new String[] {"Sunflower", "Lilac", "Tall Grass", "Tall Fern", "Rose Bush", "Peony"}
+      , new String[] {"complex", "lilac", "tallgrass", "tall_fern", "rose_bush", "peony"})
+      .resetBoxes(BlockHitTest.Type.SELECTION).addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION)
+      .setSupported().setPlant().setShowAsItem()
+    );
+*/
+    registerBlock(new BlockX("MUSHROOM_BROWN", new String[] {"Brown Mushroom"}, new String[] {"brown_mushroom"}).setShowAsItem().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION));
+    registerBlock(new BlockX("MUSHROOM_RED", new String[] {"Red Mushroom"}, new String[] {"red_mushroom"}).setShowAsItem().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION));
     registerBlock(new BlockOpaque("GOLD_BLOCK", new String[] {"Gold Block"}, new String[] {"gold_block"}).setHardness(3f, TOOL_PICKAXE, CLS_IRON));
     registerBlock(new BlockOpaque("IRON_BLOCK", new String[] {"Iron Block"}, new String[] {"iron_block"}).setHardness(5f, TOOL_PICKAXE, CLS_STONE));
     registerBlock(new BlockSlab("SLAB", new String[] {"Slab"}, new String[] {"stone_slab_top", "stone_slab_side"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockOpaque("BRICK", new String[] {"Brick"}, new String[] {"brick"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("BRICK", new String[] {"Brick"}, new String[] {"bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("TNT", new String[] {"TNT"}, new String[] {"tnt_top", "tnt_side", "tnt_bottom"}));
     registerBlock(new BlockOpaque("BOOKSHELF", new String[] {"Book Shelf"}, new String[] {"bookshelf"}).setHardness(1.5f, TOOL_AXE, CLS_NONE));
     registerBlock(new BlockObsidian("OBSIDIAN", new String[] {"Obsidian"}, new String[] {"obsidian"}).setHardness(50f, TOOL_PICKAXE, CLS_DIAMOND));
-    registerBlock(new BlockTorch("TORCH", new String[] {"Torch"}, new String[] {"torch_on"})
+    registerBlock(new BlockTorch("TORCH", new String[] {"Torch"}, new String[] {"torch"})
       .setLight((byte)14).setShowAsItem());
-    registerBlock(new BlockFire("FIRE", new String[] {"Fire"}, new String[] {"fire_layer_0"})
+    registerBlock(new BlockFire("FIRE", new String[] {"Fire"}, new String[] {"fire_0"})
       .setLight((byte)15));
     registerBlock(new BlockStairs("STAIRS_WOOD"
       , new String[] {"Oak Stairs", "Spruce Stairs", "Birch Stairs", "Jungle Stairs", "Acacia Stairs", "Dark Oak Stairs"}
       , new String[] {
-        "planks_oak",
-        "planks_spruce",
-        "planks_birch",
-        "planks_jungle",
-        "planks_acacia",
-        "planks_big_oak",
+        "oak_planks",
+        "spruce_planks",
+        "birch_planks",
+        "jungle_planks",
+        "acacia_planks",
+        "dark_oak_planks",
       })
       .setFuel(15).setMaterial(MAT_WOOD).setHardness(2f, TOOL_AXE, CLS_NONE)
     );
@@ -397,35 +409,34 @@ public class Blocks {
     registerBlock(new BlockOpaque("DIAMOND_ORE", new String[] {"Diamond Ore"}, new String[] {"diamond_ore"}).setHardness(3f, TOOL_PICKAXE, CLS_IRON));
     registerBlock(new BlockOpaque("DIAMOND_BLOCK", new String[] {"Diamond Block"}, new String[] {"diamond_block"}).setHardness(5f, TOOL_PICKAXE, CLS_IRON));
     registerBlock(new BlockCraftTable("CRAFTTABLE", new String[] {"Crafting Table"}
-      , new String[] {"crafting_table_top", "crafting_table_front", "crafting_table_side", "planks_oak"}).setHardness(2.5f, TOOL_AXE, CLS_NONE)
+      , new String[] {"crafting_table_top", "crafting_table_front", "crafting_table_side", "oak_planks"}).setHardness(2.5f, TOOL_AXE, CLS_NONE)
     );
     registerBlock(new BlockFurnace("FURNACE", new String[] {"Furnace"}
-      , new String[] {"furnace_top", "furnace_front_off", "furnace_side", "cobblestone"}).setHardness(3.5f, TOOL_PICKAXE, CLS_NONE)
+      , new String[] {"furnace_top", "furnace_front", "furnace_side", "cobblestone"}).setHardness(3.5f, TOOL_PICKAXE, CLS_NONE)
     );
     registerBlock(new BlockFurnace("FURNACE_ACTIVE", new String[] {"Furnace"}
       , new String[] {"furnace_top", "furnace_front_on", "furnace_side", "cobblestone"})
       .setLight((byte)13).setHardness(3.5f, TOOL_PICKAXE, CLS_NONE)
     );
     registerBlock(new BlockLadder("LADDER", new String[] {"Ladder"}, new String[] {"ladder"}).setHardness(0.4f, TOOL_AXE, CLS_NONE));
-    registerBlock(new BlockRail("RAIL", new String[] {"Rail"}, new String[] {"rail_normal", "rail_normal_turned"}).setHardness(0.7f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockRail("RAIL", new String[] {"Rail"}, new String[] {"rail", "rail_corner"}).setHardness(0.7f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockStairs("STAIRS_STONE", new String[] {"Stairs"}, new String[] {"stone"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockLever("LEVER", new String[] {"Lever"}, new String[] {"lever", "stone"}).setHardness(0.5f, TOOL_NONE, CLS_NONE));
-    registerBlock(new BlockPressurePlate("PRESSURE_PLATE", new String[] {"Wood Pressure Plate", "Stone Pressure Plate"}, new String[] {"planks_oak", "stone"}).setHardness(0.5f, TOOL_PICKAXE, CLS_NONE));  //fix me : hardness prefered tool varies
+    registerBlock(new BlockPressurePlate("PRESSURE_PLATE", new String[] {"Wood Pressure Plate", "Stone Pressure Plate"}, new String[] {"oak_planks", "stone"}).setHardness(0.5f, TOOL_PICKAXE, CLS_NONE));  //fix me : hardness prefered tool varies
     registerBlock(new BlockOpaque("REDSTONE_ORE", new String[] {"Red Stone Ore"}, new String[] {"redstone_ore"})
       .setBake("RED_STONE").setHardness(3f, TOOL_PICKAXE, CLS_IRON)
     );
-    registerBlock(new BlockRedStoneTorch("REDSTONE_TORCH", new String[] {"Red Stone Torch"}, new String[] {"redstone_torch_on"}));
-    registerBlock(new BlockButton("BUTTON", new String[] {"Wood Button", "Stone Button"}, new String[] {"planks_oak", "stone"}).setHardness(0.5f, TOOL_NONE, CLS_NONE));
+    registerBlock(new BlockRedStoneTorch("REDSTONE_TORCH", new String[] {"Red Stone Torch"}, new String[] {"redstone_torch"}));
+    registerBlock(new BlockButton("BUTTON", new String[] {"Wood Button", "Stone Button"}, new String[] {"oak_planks", "stone"}).setHardness(0.5f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockAlpha("ICEBLOCK", new String[] {"Ice"}, new String[] {"ice"}).setDrop("AIR").setHardness(0.5f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockCactus("CACTUS", new String[] {"Cactus"}, new String[] {"cactus_top", "cactus_side", "cactus_bottom"}).setHardness(0.4f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockFence("FENCE",
       new String[] {"Oak Wood Fence", "Spruce Wood Fence", "Birch Wood Fence", "Jungle Wood Fence", "Acacia Wood Fence", "Dark Oak Wood Fence"},
-      new String[] {"planks_oak", "planks_spruce", "planks_birch", "planks_jungle", "planks_acacia", "planks_big_oak"})
+      new String[] {"oak_planks", "spruce_planks", "birch_planks", "jungle_planks", "acacia_planks", "dark_oak_planks"})
       .setHardness(2f, TOOL_AXE, CLS_NONE)
     );
     registerBlock(new BlockOpaque("CLAY", new String[] {"Clay Block"}, new String[] {"clay"}).setDrop("CLAY_BALL", 4).setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
-    registerBlock(new BlockOpaque("HARDENED_CLAY", new String[] {"Hardened Clay"}, new String[] {"hardened_clay"}).setHardness(1.25f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockOpaque("STAINED_CLAY",
+    registerBlock(new BlockOpaque("TERRACOTA",
       new String[] {
         "Stained Clay White", "Stained Clay Orange",
         "Stained Clay Magenta", "Stained Clay Light Blue",
@@ -437,35 +448,39 @@ public class Blocks {
         "Stained Clay Red", "Stained Clay Black"
       },
       new String[] {
-        "hardened_clay_stained_white",
-        "hardened_clay_stained_orange",
-        "hardened_clay_stained_magenta",
-        "hardened_clay_stained_light_blue",
-        "hardened_clay_stained_yellow",
-        "hardened_clay_stained_lime",
-        "hardened_clay_stained_pink",
-        "hardened_clay_stained_gray",
-        "hardened_clay_stained_silver",
-        "hardened_clay_stained_cyan",
-        "hardened_clay_stained_purple",
-        "hardened_clay_stained_blue",
-        "hardened_clay_stained_brown",
-        "hardened_clay_stained_green",
-        "hardened_clay_stained_red",
-        "hardened_clay_stained_black"
+        "white_terracotta",
+        "orange_terracotta",
+        "magenta_terracotta",
+        "light_blue_terracotta",
+        "yellow_terracotta",
+        "lime_terracotta",
+        "pink_terracotta",
+        "gray_terracotta",
+        "light_gray_terracotta",
+        "cyan_terracotta",
+        "purple_terracotta",
+        "blue_terracotta",
+        "brown_terracotta",
+        "green_terracotta",
+        "red_terracotta",
+        "black_terracotta"
       }
     ).setVar().setHardness(1.25f, TOOL_PICKAXE, CLS_NONE));
+
     registerBlock(new BlockLiquid("OIL", new String[] {"Oil"}, new String[] {"water_still"}).setHardness(100f, TOOL_NONE, CLS_NONE));  //TODO
-    registerBlock(new BlockOpaque("MUSIC_BOX", new String[] {"Music Box"}, new String[] {"planks_oak"}).setHardness(2f, TOOL_AXE, CLS_NONE));
-    registerBlock(new BlockOpaque("PUMPKIN", new String[] {"Pumpkin"}, new String[] {"pumpkin_top", "pumpkin_face_off", "pumpkin_side", "pumpkin_side"}).setHardness(1f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("MUSIC_BOX", new String[] {"Music Box"}, new String[] {"oak_planks"}).setHardness(2f, TOOL_AXE, CLS_NONE));
+    registerBlock(new BlockOpaque("PUMPKIN", new String[] {"Pumpkin"}, new String[] {"pumpkin_top", "carved_pumpkin", "pumpkin_side", "pumpkin_side"}).setHardness(1f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("NETHER_RACK", new String[] {"Nether Rack"}, new String[] {"netherrack"}).setHardness(0.4f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("SOUL_SAND", new String[] {"Soul Sand"}, new String[] {"soul_sand"}).setHardness(0.5f, TOOL_SHOVEL, CLS_NONE));
     registerBlock(new BlockOpaque("GLOWSTONE", new String[] {"Glowstone"}, new String[] {"glowstone"}).setHardness(0.3f, TOOL_NONE, CLS_NONE));
-    registerBlock(new BlockNetherPortal("NETHER_PORTAL", new String[] {"Nether Portal"}, new String[] {"portal"}).setHardness(-1f, TOOL_NONE, CLS_NONE));
-    registerBlock(new BlockOpaque("PUMPKIN_LIT", new String[] {"Pumpkin Lit"}, new String[] {"pumpkin_top", "pumpkin_face_on", "pumpkin_side", "pumpkin_side"}).setHardness(1f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockRedStoneRepeater("REDSTONE_REPEATER", new String[] {"-item-"}, new String[] {"repeater_off", "repeater_on", "stone", "redstone_torch_off", "redstone_torch_on"}));
+    registerBlock(new BlockNetherPortal("NETHER_PORTAL", new String[] {"Nether Portal"}, new String[] {"nether_portal"}).setHardness(-1f, TOOL_NONE, CLS_NONE));
+    registerBlock(new BlockOpaque("PUMPKIN_LIT", new String[] {"Pumpkin Lit"}, new String[] {"pumpkin_top", "jack_o_lantern", "pumpkin_side", "pumpkin_side"}).setHardness(1f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockRedStoneRepeater("REDSTONE_REPEATER", new String[] {"-item-"}, new String[] {"repeater", "repeater_on", "stone", "redstone_torch_off", "redstone_torch"}));
     registerBlock(new BlockOpaque("GLASSBLOCK_COLOR", new String[] {"Glass Block"}, new String[] {"glass"}).setHardness(0.3f, TOOL_NONE, CLS_NONE));
-    registerBlock(new BlockTrapDoor("TRAP_DOOR", new String[] {"Trap Door"}, new String[] {"trapdoor"}).setHardness(3f, TOOL_AXE, CLS_NONE));
+    registerBlock(new BlockTrapDoor("TRAP_DOOR",
+      new String[] {"Oak Wood Trapdoor", "Spruce Wood Trapdoor", "Birch Wood Trapdoor", "Jungle Wood Trapdoor", "Acacia Wood Trapdoor", "Dark Oak Wood Trapdoor"},
+      new String[] {"oak_trapdoor", "spruce_trapdoor", "birch_trapdoor", "jungle_trapdoor", "acacia_trapdoor", "dark_oak_trapdoor"}
+    ).setHardness(3f, TOOL_AXE, CLS_NONE));
     registerBlock(new BlockPane("BARS", new String[] {"Iron Bars"}, new String[] {"iron_bars", "iron_bars"}).setHardness(5f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockPane("GLASS_PANE", new String[] {"Glass Pane"}, new String[] {"glass", "glass_pane_top"}).setHardness(0.3f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockOpaque("MELON", new String[] {"Melon"}, new String[] {"melon_top", "melon_side"}).setHardness(1f, TOOL_PICKAXE, CLS_NONE));
@@ -473,47 +488,47 @@ public class Blocks {
     registerBlock(new BlockGate("GATE"
       , new String[] {"Oak Gate", "Spruce Gate", "Birch Gate", "Jungle Gate", "Acacia Gate", "Dark Oak Gate"}
       , new String[] {
-        "planks_oak",
-        "planks_spruce",
-        "planks_birch",
-        "planks_jungle",
-        "planks_acacia",
-        "planks_big_oak",
+        "oak_planks",
+        "spruce_planks",
+        "birch_planks",
+        "jungle_planks",
+        "acacia_planks",
+        "dark_oak_planks",
       }
     ).setHardness(2f, TOOL_AXE, CLS_NONE));
-    registerBlock(new BlockStairs("STAIRS_BRICK", new String[] {"Stairs"}, new String[] {"brick"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockStairs("STAIRS_BLOCK", new String[] {"Stairs"}, new String[] {"planks_oak"}));
+    registerBlock(new BlockStairs("STAIRS_BRICK", new String[] {"Stairs"}, new String[] {"bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockStairs("STAIRS_BLOCK", new String[] {"Stairs"}, new String[] {"oak_planks"}));
     registerBlock(new BlockOpaque("MYCELIUM", new String[] {"Mycelium"}, new String[] {"mycelium_top", "mycelium_side", "dirt"}));
-    registerBlock(new BlockFace("LILLYPAD", new String[] {"Lilypad"}, new String[] {"waterlily"}).setGreenAllSides().setShowAsItem().setHardness(0f, TOOL_NONE, CLS_NONE));
-    registerBlock(new BlockOpaque("NETHER_BRICK", new String[] {"Nether Brick"}, new String[] {"nether_brick"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockOpaque("NETHER_FENCE", new String[] {"Nether Fence"}, new String[] {"nether_brick"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockStairs("STAIRS_NETHER", new String[] {"Nether Stairs"}, new String[] {"nether_brick"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockFace("LILLYPAD", new String[] {"Lilypad"}, new String[] {"lily_pad"}).setGreenAllSides().setShowAsItem().setHardness(0f, TOOL_NONE, CLS_NONE));
+    registerBlock(new BlockOpaque("NETHER_BRICK", new String[] {"Nether Brick"}, new String[] {"nether_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("NETHER_FENCE", new String[] {"Nether Fence"}, new String[] {"nether_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockStairs("STAIRS_NETHER", new String[] {"Nether Stairs"}, new String[] {"nether_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("ENCHANTING_TABLE", new String[] {"Enchanting Table"}, new String[] {"enchanting_table_top", "enchanting_table_side", "enchanting_table_bottom"}).setHardness(5f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockEndPortal("END_PORTAL", new String[] {"End Portal"}, new String[] {}).setHardness(-1f, TOOL_NONE, CLS_NONE));
-    registerBlock(new BlockEndFrame("END_PORTAL_FRAME", new String[] {"End Portal"}, new String[] {"endframe_top", "endframe_side", "end_stone", "endframe_eye"}).setHardness(-1f, TOOL_NONE, CLS_NONE));
+    registerBlock(new BlockEndFrame("END_PORTAL_FRAME", new String[] {"End Portal"}, new String[] {"end_portal_frame_top", "end_portal_frame_side", "end_stone", "end_portal_frame_eye"}).setHardness(-1f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockOpaque("END_STONE", new String[] {"End Stone"}, new String[] {"end_stone"}).setHardness(3f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockOpaque("COCOA", new String[] {"Cocoa", "Cocoa", "Cocoa"}, new String[] {"cocoa_stage_0", "cocoa_stage_1", "cocoa_stage_2"}));  //fix me
+    registerBlock(new BlockOpaque("COCOA", new String[] {"Cocoa", "Cocoa", "Cocoa"}, new String[] {"cocoa_stage0", "cocoa_stage1", "cocoa_stage2"}));  //fix me
     registerBlock(new BlockOpaque("EMERALD_ORE", new String[] {"Emerald Ore"}, new String[] {"emerald_ore"}).setHardness(3f, TOOL_PICKAXE, CLS_IRON));
     registerBlock(new BlockEnderChest("ENDER_CHEST").setHardness(22.5f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockFace("TRIP_HOOK", new String[] {"Trip Line"}, new String[] {"trip_wire"}));
+    registerBlock(new BlockFace("TRIP_HOOK", new String[] {"Trip Line"}, new String[] {"tripwire_hook"}));
     registerBlock(new BlockOpaque("EMERALD_BLOCK", new String[] {"Emerald Block"}, new String[] {"emerald_block"}).setHardness(5f, TOOL_PICKAXE, CLS_IRON));
-    registerBlock(new BlockOpaque("COMMAND_BLOCK", new String[] {"Command Block"}, new String[] {"command_block"}));  //fix me
+    registerBlock(new BlockOpaque("COMMAND_BLOCK", new String[] {"Command Block"}, new String[] {"command_block_back", "command_block_front", "command_block_side", "command_block_side"}));
     registerBlock(new BlockOpaque("BEACON", new String[] {"Beacon"}, new String[] {"beacon"}));
     registerBlock(new BlockWall("WALL", new String[] {"Stone Wall"}, new String[] {"stone"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockOpaque("ANVIL", new String[] {"Anvil"}, new String[] {"anvil_base"}).setHardness(5f, TOOL_PICKAXE, CLS_NONE));  //TODO
+    registerBlock(new BlockOpaque("ANVIL", new String[] {"Anvil"}, new String[] {"anvil", "anvil_top"}).setHardness(5f, TOOL_PICKAXE, CLS_NONE));  //TODO
 //    registerBlock(new BlockOpaque("CHEST_TRAP, new String[] {"Chest Trapped"}, new String[] {""}).setHardness(2.5f, TOOL_AXE, CLS_NONE));  //TODO
     registerBlock(new BlockCarpet("PLATE_GOLD", new String[] {"Gold Pressure Plate"}, new String[] {"gold_block"}));
     registerBlock(new BlockCarpet("PLATE_IRON", new String[] {"Iron Pressure Plate"}, new String[] {"iron_block"}));
-    registerBlock(new BlockRedStoneComparator("REDSTONE_COMPARATOR", new String[] {"-item-"}, new String[] {"comparator_off", "comparator_on", "stone", "redstone_torch_off", "redstone_torch_on"}));
+    registerBlock(new BlockRedStoneComparator("REDSTONE_COMPARATOR", new String[] {"-item-"}, new String[] {"comparator", "comparator_on", "stone", "redstone_torch_off", "redstone_torch"}));
     registerBlock(new BlockDaylightSensor("SOLAR_PANEL", new String[] {"Daylight Sensor"}, new String[] {"daylight_detector_top", "daylight_detector_side"}).setHardness(0.2f, TOOL_AXE, CLS_NONE));
     registerBlock(new BlockOpaque("REDSTONE_BLOCK", new String[] {"Redstone Block"}, new String[] {"redstone_block"}).setHardness(5f, TOOL_PICKAXE, CLS_WOOD));
 
-    registerBlock(new BlockOpaque("QUARTZ_ORE", new String[] {"Quartz"}, new String[] {"quartz_ore"}).setDrop("QUARTZ").setHardness(3f, TOOL_PICKAXE, CLS_WOOD));
+    registerBlock(new BlockOpaque("QUARTZ_ORE", new String[] {"Quartz"}, new String[] {"nether_quartz_ore"}).setDrop("QUARTZ").setHardness(3f, TOOL_PICKAXE, CLS_WOOD));
     registerBlock(new BlockHopper("HOPPER", new String[] {"-item-"}, new String[] {"hopper_top", "hopper_inside", "hopper_outside"}).setHardness(3f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("QUARTZ_BLOCK", new String[] {"Quartz Block"}, new String[] {"quartz_block_top"}).setHardness(0.8f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockStairs("STAIRS_QUARTZ", new String[] {"Quartz Stairs"}, new String[] {"quartz_block_top"}).setHardness(0.8f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockRail("RAIL_ACTIVATOR", new String[] {"Rail Activator"}, new String[] {"rail_activator", "rail_activator_powered"}).setRedstone().setHardness(0.7f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockDropper("DROPPER", new String[] {"Dropper"}, new String[] {"dropper_front_horizontal", "dropper_front_vertical", "piston_bottom"}).setHardness(3.5f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockRail("RAIL_ACTIVATOR", new String[] {"Rail Activator"}, new String[] {"activator_rail", "activator_rail_on"}).setRedstone().setHardness(0.7f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockDropper("DROPPER", new String[] {"Dropper"}, new String[] {"dropper_front", "dropper_front_vertical", "piston_bottom"}).setHardness(3.5f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockPane("GLASS_PANE_COLOR",
       new String[] {
         "Glass Pane White", "Glass Pane Orange",
@@ -526,37 +541,46 @@ public class Blocks {
         "Glass Pane Red", "Glass Pane Black"
       },
       new String[] {
-        "glass_white", "glass_pane_top_white",
-        "glass_orange", "glass_pane_top_orange",
-        "glass_magenta", "glass_pane_top_magenta",
-        "glass_light_blue", "glass_pane_top_light_blue",
-        "glass_yellow", "glass_pane_top_yellow",
-        "glass_lime", "glass_pane_top_lime",
-        "glass_pink", "glass_pane_top_pink",
-        "glass_gray", "glass_pane_top_gray",
-        "glass_silver", "glass_pane_top_silver",
-        "glass_cyan", "glass_pane_top_cyan",
-        "glass_purple", "glass_pane_top_purple",
-        "glass_blue", "glass_pane_top_blue",
-        "glass_brown", "glass_pane_top_brown",
-        "glass_green", "glass_pane_top_green",
-        "glass_red", "glass_pane_top_red",
-        "glass_black", "glass_pane_top_black"
+        "white_stained_glass", "white_stained_glass_pane_top",
+        "orange_stained_glass", "orange_stained_glass_pane_top",
+        "magenta_stained_glass", "magenta_stained_glass_pane_top",
+        "light_blue_stained_glass", "light_blue_stained_glass_pane_top",
+        "yellow_stained_glass", "yellow_stained_glass_pane_top",
+        "lime_stained_glass", "lime_stained_glass_pane_top",
+        "pink_stained_glass", "pink_stained_glass_pane_top",
+        "gray_stained_glass", "gray_stained_glass_pane_top",
+        "light_gray_stained_glass", "light_gray_stained_glass_pane_top",
+        "cyan_stained_glass", "cyan_stained_glass_pane_top",
+        "purple_stained_glass", "purple_stained_glass_pane_top",
+        "blue_stained_glass", "blue_stained_glass_pane_top",
+        "brown_stained_glass", "brown_stained_glass_pane_top",
+        "green_stained_glass", "green_stained_glass_pane_top",
+        "red_stained_glass", "red_stained_glass_pane_top",
+        "black_stained_glass", "black_stained_glass_pane_top"
       }
     ));
     registerBlock(new BlockOpaque("HAYBALE", new String[] {"Hay Bale"}, new String[] {"hay_block_top", "hay_block_side"}).setDir().setHardness(0.5f, TOOL_NONE, CLS_NONE));
-    registerBlock(new BlockCarpet("CARPET", new String[] {"Carpet"}, new String[] {"wool_colored_white"}).setHardness(0.1f, TOOL_NONE, CLS_NONE));
+    registerBlock(new BlockCarpet("CARPET", new String[] {"Carpet"}, new String[] {"white_wool"}).setHardness(0.1f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockOpaque("COAL_BLOCK", new String[] {"Coal Block"}, new String[] {"coal_block"}).setFuel(800).setHardness(5f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("SNOW_PACKED", new String[] {"Packed Snow"}, new String[] {"snow"}));
 
     registerBlock(new BlockStep("STEP", new String[] {"Step"}, new String[] {/*"grass_top", "grass_side",*/ "dirt"}));
-    registerBlock(new BlockBed("BED", new String[] {"Bed"}, new String[] {"planks_oak", "bed_feet_end", "bed_head_end", "bed_feet_side", "bed_head_side", "bed_feet_top", "bed_head_top"})
+    registerBlock(new BlockBed("BED", new String[] {"Bed"}, new String[] {"oak_planks", "bed_feet_end", "bed_head_end", "bed_feet_side", "bed_head_side", "bed_feet_top", "bed_head_top"})
       .setHardness(0.2f, TOOL_NONE, CLS_NONE)
     );
-    registerBlock(new BlockDoor("WOOD_DOOR", new String[] {"-item-"}, new String[] {"door_wood_upper", "door_wood_lower"})
-      .setDrop("WOOD_DOOR_ITEM").setHardness(3f, TOOL_AXE, CLS_NONE)
+    registerBlock(new BlockDoor("WOOD_DOOR"
+      , new String[] {"Oak Wood Door", "Spruce Wood Door", "Birch Wood Door", "Jungle Wood Door", "Acacia Wood Door", "Dark Oak Wood Door"}
+      , new String[] {
+        "oak_door_top", "oak_door_bottom",
+        "spruce_door_top", "spruce_door_bottom",
+        "birch_door_top", "birch_door_bottom",
+        "jungle_door_top", "jungle_door_bottom",
+        "acacia_door_top", "acacia_door_bottom",
+        "dark_oak_door_top", "dark_oak_door_bottom"
+      }
+      ).setDrop("WOOD_DOOR_ITEM").setHardness(3f, TOOL_AXE, CLS_NONE)
     );
-    registerBlock(new BlockDoor("IRON_DOOR", new String[] {"Iron Door"}, new String[] {"door_wood_upper", "door_wood_lower"})
+    registerBlock(new BlockDoor("IRON_DOOR", new String[] {"Iron Door"}, new String[] {"iron_door_top", "iron_door_bottom"})
       .setDrop("IRON_DOOR_ITEM").setHardness(5f, TOOL_PICKAXE, CLS_NONE)
     );
 
@@ -567,13 +591,13 @@ public class Blocks {
     registerBlock(new BlockWheat("WHEAT", new String[] {
       "Wheat", "Wheat", "Wheat", "Wheat", "Wheat", "Wheat", "Wheat", "Wheat",
     }, new String[] {
-      "wheat_stage_0", "wheat_stage_1", "wheat_stage_2", "wheat_stage_3", "wheat_stage_4", "wheat_stage_5", "wheat_stage_6", "wheat_stage_7"
+      "wheat_stage0", "wheat_stage1", "wheat_stage2", "wheat_stage3", "wheat_stage4", "wheat_stage5", "wheat_stage6", "wheat_stage7"
     }));
-    registerBlock(new BlockRedStoneDust("RED_STONE", new String[] {"Red Stone Dust"}, new String[] {"redstone_dust_cross", "redstone_dust_line"}));
+    registerBlock(new BlockRedStoneDust("RED_STONE", new String[] {"Red Stone Dust"}, new String[] {"redstone_dust_dot", "redstone_dust_line0", "redstone_dust_line1", "redstone_dust_overlay"}));
 
-    registerBlock(new BlockSign("SIGN", new String[] {"Sign"}, new String[] {"planks_oak"}).setHardness(1f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockSign("SIGN", new String[] {"Sign"}, new String[] {"oak_planks"}).setHardness(1f, TOOL_PICKAXE, CLS_NONE));
 
-    registerBlock(new BlockOpaque("SOLID",
+    registerBlock(new BlockOpaque("SOLID",  //jfasset
       new String[] {
         "Solid Block White",
         "Solid Block Ornage",
@@ -601,7 +625,7 @@ public class Blocks {
         "solid_lime",
         "solid_pink",
         "solid_gray",
-        "solid_silver",
+        "solid_light_gray",
         "solid_cyan",
         "solid_purple",
         "solid_blue",
@@ -612,14 +636,14 @@ public class Blocks {
       }
     ).setVar());
 
-    registerBlock(new BlockOpaque("TEST_ARROW", new String[] {"test"}, new String[] {"arrow"}).setDir());
+    registerBlock(new BlockOpaque("TEST_ARROW", new String[] {"test"}, new String[] {"arrow"}).setDir());  //jfasset
 
   }
 
   public static char x = 0;
 
   private void addSubTexture(BlockBase block, String name) {
-    name = "blocks/" + name;
+    name = "block/" + name;
     //check if asset already loaded
     for(int a=0;a<tiles.size();a++) {
       AssetImage ai = tiles.get(a);
@@ -629,6 +653,20 @@ public class Blocks {
     }
     //asset not loaded yet, load it now
     AssetImage ai = Assets.getImage(name);
+    ai.isPerf = block.isPerf;
+    if (block.clampAlpha) {
+      int px[] = ai.image.getBuffer();
+      int pxs = px.length;
+      for(int a=0;a<pxs;a++) {
+        int alpha = (px[a] & 0xff000000) >>> 24;
+        if (alpha == 0 || alpha == 0xff) continue;
+        if (alpha < 128) {
+          px[a] &= 0xffffff;  //remove alpha
+        } else {
+          px[a] |= 0xff000000;  //full alpha
+        }
+      }
+    }
     if (ai.image.getWidth() != ai.image.getHeight()) {
       //animated image
       ai.isAnimated = true;
@@ -664,7 +702,7 @@ public class Blocks {
       }
     }
     for(int a=0;a<=9;a++) {
-      AssetImage ai = Assets.getImage("blocks/destroy_stage_" + a);
+      AssetImage ai = Assets.getImage("block/destroy_stage_" + a);
       ai.isCrack = true;
       tiles.add(ai);
     }
@@ -707,7 +745,7 @@ public class Blocks {
           frame.putPixels(px, 0, 0, w, w, 0);
           ai.images[b] = frame;
         }
-        int loc[] = texture.placeSubTexture(ai.images[0].getPixels(), w, w);
+        int loc[] = texture.placeSubTexture(ai.getPixels(0), w, w);
         if (loc == null) {
           JFAWT.showError("Error", "Your texture pack size can not fit into your video cards max texture size\nPlease remove high resolution packs and restart.");
           valid = false;
@@ -720,7 +758,7 @@ public class Blocks {
         //normal
         ai.w = w;
         ai.h = h;
-        int loc[] = texture.placeSubTexture(ai.image.getPixels(), w, h);
+        int loc[] = texture.placeSubTexture(ai.getPixels(), w, h);
         if (loc == null) {
           JFAWT.showError("Error", "Your texture pack size can not fit into your video cards max texture size\nPlease remove high resolution packs and restart.");
           valid = false;
@@ -754,12 +792,13 @@ public class Blocks {
   private Face face = new Face();
 
   private SubTexture getSubTexture(String name) {
-    name = "blocks/" + name;
+    name = "block/" + name;
     for(int a=0;a<tiles.size();a++) {
       AssetImage ai = tiles.get(a);
       if (ai.name.equals(name)) {
         boolean isFlow = ai.name.endsWith("_flow");
         SubTexture st = new SubTexture();
+        st.ai = ai;
         Texture texture;
         if (ai.isCrack)
           texture = cracks;
@@ -838,7 +877,7 @@ public class Blocks {
     cracks.load();
   }
 
-  public void initPerf() {
+  public void initPerf(boolean reload) {
     for(int a=0;a<MAX_ID;a++) {
       if (regBlocks[a] == null) continue;
       BlockBase block = regBlocks[a];
@@ -846,6 +885,7 @@ public class Blocks {
       block.isOpaque = !Settings.current.fancy;
       block.isComplex = Settings.current.fancy;
       block.isSolid = !Settings.current.fancy;
+      if (reload) block.reloadAll();
     }
   }
 

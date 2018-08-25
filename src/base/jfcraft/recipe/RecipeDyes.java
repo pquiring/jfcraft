@@ -41,19 +41,19 @@ public class RecipeDyes extends Recipe {
       //check flowers
       char id = items[0].id;
       if (id == Blocks.CACTUS) return new Item(Items.COLOR, Items.VAR_GREEN);
+      if (id == Blocks.DANDELION) return new Item(Items.COLOR, Items.VAR_YELLOW);
       if (id == Blocks.FLOWER) {
         byte var = items[0].var;
-        if (var == Blocks.VAR_DANDELION) return new Item(Items.COLOR, Items.VAR_YELLOW);
+//        if (var == Blocks.VAR_DANDELION) return new Item(Items.COLOR, Items.VAR_YELLOW);
 //        if (var == Blocks.VAR_SUNFLOWER) return new Item(Items.COLOR, Items.VAR_YELLOW);
         if (var == Blocks.VAR_ALLIUM) return new Item(Items.COLOR, Items.VAR_MAGENTA);
 //        if (var == Blocks.VAR_LILAC) return new Item(Items.COLOR, Items.VAR_MAGENTA);
         if (var == Blocks.VAR_BLUE_ORCHID) return new Item(Items.COLOR, Items.VAR_LIGHT_BLUE);
-//        if (var == Blocks.VAR_POPPY) return new Item(Items.COLOR, Items.VAR_RED);
+        if (var == Blocks.VAR_POPPY) return new Item(Items.COLOR, Items.VAR_RED);
         if (var == Blocks.VAR_TULIP_RED) return new Item(Items.COLOR, Items.VAR_RED);
-//        if (var == Blocks.VAR_ROSE_BUSH) return new Item(Items.COLOR, Items.VAR_RED);
         if (var == Blocks.VAR_TULIP_WHITE) return new Item(Items.COLOR, Items.VAR_LIGHT_GRAY);
         if (var == Blocks.VAR_OXEYE_DAISY) return new Item(Items.COLOR, Items.VAR_LIGHT_GRAY);
-//        if (var == Blocks.VAR_AZURE_BLUET) return new Item(Items.COLOR, Items.VAR_LIGHT_GRAY);
+        if (var == Blocks.VAR_AZURE_BLUET) return new Item(Items.COLOR, Items.VAR_LIGHT_BLUE);
         if (var == Blocks.VAR_TULIP_ORANGE) return new Item(Items.COLOR, Items.VAR_ORANGE);
         if (var == Blocks.VAR_TULIP_PINK) return new Item(Items.COLOR, Items.VAR_PINK);
 //        if (var == Blocks.VAR_PENOY) return new Item(Items.COLOR, Items.VAR_PINK);

@@ -202,6 +202,14 @@ public class ItemBase {
     return names;
   }
 
+  public int getMaxVar() {
+    if (isVar) {
+      return textures.length / names.length;
+    } else {
+      return 0;
+    }
+  }
+
   public boolean canPlace(Coords c) {
     if (!canPlace) return false;
     BlockBase block1 = Static.blocks.blocks[c.chunk.getID(c.gx,c.gy,c.gz)];

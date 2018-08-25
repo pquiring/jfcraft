@@ -139,7 +139,7 @@ public class Texture {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     }
     glTexImage2D(GL_TEXTURE_2D, 0, 4, image.getWidth(), image.getHeight(), 0, GL_BGRA
-      , GL_UNSIGNED_BYTE, image.getPixels());
+      , GL_UNSIGNED_BYTE, image.getBuffer());
   }
 
   public void unload() {

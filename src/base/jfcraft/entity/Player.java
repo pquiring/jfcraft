@@ -39,7 +39,7 @@ public class Player extends HumaniodBase {
   private static GLModel model;
 
   public Player() {
-    super(4*9, 4);
+    super(4*9, 5);
     id = Entities.PLAYER;
   }
 

@@ -1,7 +1,15 @@
 List of TODOs to make JFCraft as feature full as the real thing:
 
+- fix inventory positions
+- fix leaves not rendering correctly
+- test making shield
+- test equiping shield and all other armor
+- release 0.23
+
 need list:
 
+shield
+better caves with rooms
 mobs (spider, ghast, blaze, endermite(silverfish), magma cube, witch, guardian)
 generate cave rooms, springs, lakes, rivers, items, stuff, castles, etc.
 improve world generating algorithms (move to native code?)

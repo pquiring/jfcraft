@@ -76,6 +76,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public boolean canSmooth;  //has a step version
   public boolean canSelect;
   public boolean canSpawnOn;
+  public boolean clampAlpha;
   public char stepID;  //step to smooth block type
   public String stepBlock;
   public char dropID;
@@ -103,6 +104,9 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     int idx = 0;
     if (isVar) {
       idx = (data.var[X] & varMask) * cnt;
+    }
+    if ((idx + cnt - 1) >= textures.length) {
+      System.out.println("textures missing for block:" + name + ":" + idx + ">" + textures.length);
     }
     switch (cnt) {
       case 1:
@@ -864,4 +868,6 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     else
       return textures[0];
   }
+
+  public void reloadAll() {}
 }

@@ -42,7 +42,7 @@ public class BlockBed extends BlockBase {
     dropID = Items.BED_ITEM;
   }
 
-  //"planks_oak" 0
+  //"oak_planks" 0
   //"bed_feet_end" 1
   //"bed_head_end" 2
   //"bed_feet_side" 3

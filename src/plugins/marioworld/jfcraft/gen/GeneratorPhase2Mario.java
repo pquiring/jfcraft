@@ -182,7 +182,7 @@ public class GeneratorPhase2Mario implements GeneratorPhase2Base {
     float s = Static.abs(fx) + Static.abs(fy) + 0.1f;
     if (s >= 4f) return;  //leave corners
     if (s >= 3f) {
-      setBlock(x,y,z,Blocks.STAINED_CLAY,bits_lime);
+      setBlock(x,y,z,Blocks.TERRACOTA,bits_lime);
     } else {
       clearBlock(x,y,z);
     }
@@ -195,7 +195,7 @@ public class GeneratorPhase2Mario implements GeneratorPhase2Base {
     float s = Static.abs(fx) + Static.abs(fy) + Static.abs(fz) + 0.1f;
     if (s >= 14f) return;  //leave corners
     if (s >= 4.5f) {
-      setBlock(x,y,z,Blocks.STAINED_CLAY,bits_lime);
+      setBlock(x,y,z,Blocks.TERRACOTA,bits_lime);
     } else {
       clearBlock(x,y,z);
     }
@@ -272,7 +272,7 @@ public class GeneratorPhase2Mario implements GeneratorPhase2Base {
       if (dir == A) {
         //put steps in the tube
         int idx = pos % 8;
-        setBlock(x+steps[idx][0],y,z+steps[idx][1],Blocks.STAINED_CLAY,bits_green);
+        setBlock(x+steps[idx][0],y,z+steps[idx][1],Blocks.TERRACOTA,bits_green);
       }
 
       x += dx;
@@ -351,7 +351,7 @@ public class GeneratorPhase2Mario implements GeneratorPhase2Base {
     float fz = dz - 7.5f;
     float s = Static.abs(fx) + Static.abs(fz) + 0.1f;
     if (s >= 14f) return;
-    setBlock(x,y,z,Blocks.STAINED_CLAY,bits_green);
+    setBlock(x,y,z,Blocks.TERRACOTA,bits_green);
   }
 
   private float cap[] = {
@@ -363,7 +363,7 @@ public class GeneratorPhase2Mario implements GeneratorPhase2Base {
     float fz = dz - 7.5f;
     float s = Static.abs(fx) + Static.abs(fz) + 0.1f;
     if (s >= cap[dy]) return;
-    setBlock(x,y,z,Blocks.STAINED_CLAY,bits_green);
+    setBlock(x,y,z,Blocks.TERRACOTA,bits_green);
   }
 
   private void addMountian() {

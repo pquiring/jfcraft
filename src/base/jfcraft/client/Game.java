@@ -701,7 +701,8 @@ public class Game extends RenderScreen {
       case GLVK.VK_F10:
         //toggle fancy/fast graphics
         Settings.current.fancy = !Settings.current.fancy;
-        Static.blocks.initPerf();
+        Static.blocks.stitched.bind();
+        Static.blocks.initPerf(true);
         Static.client.rebuildAll();
         break;
       case GLVK.VK_F7:

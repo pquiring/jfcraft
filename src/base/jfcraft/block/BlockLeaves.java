@@ -8,8 +8,8 @@ package jfcraft.block;
 import jfcraft.data.*;
 
 public class BlockLeaves extends BlockOpaqueVarPerf {
-  public BlockLeaves(String name, String names[], String textures[], String textures2[]) {
-    super(name, names, textures, textures2);
+  public BlockLeaves(String name, String names[], String textures[]) {
+    super(name, names, textures);
     canSpawnOn = false;  //stop animals from spawning on trees
     absorbLight = 1;
     isDirFace = true;
