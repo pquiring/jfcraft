@@ -1,0 +1,154 @@
+<html>
+<body>
+<pre>
+ChangeLog
+=========
+
+Aug 27, 2015 : v0.21 released!
+  - added particles (uses : break block, tame horse)
+  - added new camera views (F5 to toggle)
+  - added jfcraft.move.MoveBase
+    - new base class for moving entities
+    - will become better AI logic for entities
+  - bug fixes
+
+Aug 18, 2015 : v0.20 released!
+  - attempted to use SWT (GLCanvas) but their keyboard support is not designed for gaming
+    - it doesn't generate key release events if multiple keys are pressed
+      - a known bug since v1.0 and still present in v4.5
+  - started using LWJGL/3.0 (which uses GLFW)
+    - GLFW has a mouse locking feature which is better than using java.awt.Robot
+    - GLFW can not set the window icon (feature is implemented in git, not released yet)
+    - LWJGL uses libffi which in my experience is PAINfully slow
+  - finally switched to GLFW (now part of JavaForce)
+    - GLFW doesn't support icons yet but I added some JNI to overcome that (Windows only)
+  - added block hardness
+  - added clouds (see http://gamedev.stackexchange.com/questions/105753/how-does-minecraft-render-its-clouds)
+  - lots of improvements and bug fixes
+
+Aug 1, 2015 : v0.19 released!
+  - fix major opengl resource leak (crashing on some systems)
+  - climb ladders & vines
+  - leaves decay (like a branch would, not randomly)
+  - move slowly in webs
+
+Jul 31, 2015 : v0.18 released!
+  - players armor is now rendered
+  - new /import /export commands added
+    - load and save blueprints (kinda like schematics)
+    - this will allow for rapid development of villages, etc.
+  - a cabin is now generated randomly (the cabin is a blueprint)
+  - many bug fixes
+
+Jul 1, 2015 : v0.17 released!
+  - fixed sync problem when players are in vehicles (minecart, boat)
+    - the server controls everything now while in vehicle
+  - horse is mostly complete now
+    - a message "Horse Tamed" appears when a horse is tamed (todo : heart particles)
+    - mule/donkey can use chest
+    - horses can use armor
+    - saddle can be crafted (4 leather, 2 iron bars)
+    - TODO : lead
+
+Jun 21, 2015 : v0.16 released!
+  - fixed cracking boat/minecart (cracks must be on their own texture unit)
+  - added Mario World dimension
+    - new turtle entity
+    - new block types
+    - create portal using [?] blocks (see RecipeCoinBlock)
+
+Jun 16, 2015 : v0.15 released!
+  - water/lava now flow
+  - animations and cracks are now built into the main stitched texture and updated on the tick timer
+  - many performance issues and bugs fixed
+
+Jun 11, 2015 : v0.14 released!
+  - 2 days to implement the Sign
+    - signs can be placed on the side of other blocks or in the ground at any angle (full 360)
+  - entities will no longer spawn on water
+  - JNA has been completely replaced with JNI (now even faster)
+
+May 18, 2015 : v0.12 released!
+  - FPS doubled after using JNI to call OpenGL (JavaForce/8.0)
+  - added enderman, zombie pigman, slime
+
+May 7, 2015 : v0.11 released!
+  - new blocks : Hopper, Dropper, Dispenser
+  - all blocks/items/entities/dims/extras (including plugins) use dynamic IDs saved in the world
+    - so there will be no id conflicts
+  - reduced GC usage more (now better than the reference impl)
+    - using a custom build of JNA (a modified version that creates less new Object[] arrays)
+      - see github.com/pquiring/jna
+    - javaforce.gl.GL - no more new Object[] arrays for each func call
+    - FPS looks a bit faster and more stable
+  - added a chat history
+  - make sure to delete all worlds before upgrading
+  - many bugs fixed
+
+Apr 30, 2015 : v0.10 released!
+  - major changes for performance, but nothing new
+  - thanks to VisualVM GC usage has been greatly reduced
+    - the biggest offender now is JNA - I have plans to improve it
+  - java.io.Serializable has been replaced with a custom process which is much faster
+    - see jfcraft.data.Serial*
+  - moved Domino to a plugin
+  - many bugs fixed
+    - the dominos will always fall now - introduced BlockEntity to find them better
+
+Apr 24, 2015 : v0.9 released!
+  - added an in-game communications system (like TeamSpeak)
+    - hold right CTRL to talk (Push To Talk : PTT)
+    - the server is a minimal VoIP PBX - borrowed code from jPBXLite
+    - the client borrows code from jPhoneLite
+    - even regular soft phones (like jPhoneLite or XLite) can call the server and join in the conference
+      - the user acct can be anything, the password must be '12345' (which is a bad password) and then just dial '1234'.
+  - finished the dedicated server
+  - added Domino block as requested by my little nephew
+    - no recipe so use a command to get some "/give @p domino 64"
+  - torches stick into walls and drop if supporting block is removed
+  - many more bugs fixed
+
+Apr 22, 2015 : v0.8 released!
+  - added : slabs, cactus, trap door, vines, ender chest, daylight sensor, glass pane (coloured too), iron bars and stone walls
+    - using blender has made this process so easy now
+  - fixed more bugs
+
+Apr 20, 2015 : v0.7 released!
+  - more complex blocks are now blender files
+  - added skeleton
+  - added fence and gate
+  - fixed many bugs (most were regressions - retested all blocks and they are working again)
+
+Apr 7, 2015 : v0.6 released!
+  - item in hand is animated
+  - entities are now loaded from 3D files (blender), no more coding by hand
+
+Dec 26, 2014 : v0.5 released!
+  - Minecart implemented (normal rails and powered rails only)
+
+Nov 21, 2014 : v0.4 released!
+  - portals to nether and end world completed
+  - sneak and run implemented
+  - bow&arrow
+  - boat
+  - animals swim and don't fall off high places
+  - drowning
+  - starvation and eating food
+
+Nov 7, 2014 : v0.3 released!
+  - the chunk has been changed to match that used in MC (16 x 256 x 16)
+    - spliting the chunk into true cubes was a drag on performance
+    - the chunk is stored in y sections (16x16) and empty sections are not stored
+      which has dramatically decreased memory requirements
+  - caves and ravines are now generated
+
+Oct 24, 2014 : v0.2 released!
+  - render player in inventory menu
+  - render item in hand (doesn't move yet)
+  - introduce plugin system : jfcraft.plugin.PluginBase
+  - added first plugin : creeper (does not explode yet)
+  - many bug fixes
+  - performance and stability improvements
+
+Oct 10, 2014 : v0.1 released!
+  - first public release

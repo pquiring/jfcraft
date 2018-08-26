@@ -1,18 +1,15 @@
 List of TODOs to make JFCraft as feature full as the real thing:
 
-- fix inventory positions
-- fix leaves not rendering correctly
-- test making shield
-- test equiping shield and all other armor
-- release 0.23
+ - create a exe launcher (do not use javaw.exe)
 
 need list:
 
-shield
+render items in right hand (including shield in left hand) on inventory screen
+render items of other players
 better caves with rooms
 mobs (spider, ghast, blaze, endermite(silverfish), magma cube, witch, guardian)
 generate cave rooms, springs, lakes, rivers, items, stuff, castles, etc.
-improve world generating algorithms (move to native code?)
+improve world generating algorithms
 create complex AI logic for each mob (currently they are all passive but attack if attacked and all animals run if attacked)
 more animals (chicken, rabbit, wolf, bat, squid, ocelet)
 chars (villagers) (don't move, just sell stuff in castles)
@@ -25,7 +22,8 @@ want list:
 use items : shears (grass, leaves), flint and steel, ender pearl, etc.
 weather : rain, snow, storms
 more farming (melon seeds, pumpkin seeds)
-enchanting (requires XP)
+enchanting (requires mana)
+RPG elements : level, stats, etc.
 misc (iron golem, snow golem)
 bosses (wither, dragon)
 brewing (potions)
@@ -34,7 +32,6 @@ more particles
 double chest
 random ticks : replace snow
 support ogg audio files (JCraft:JOrbis/0.0.17) or MP3 (ffmpeg)
-XP
 suffication (in blocks)
 trip line
 beacon ?
