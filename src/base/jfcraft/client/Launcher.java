@@ -221,26 +221,57 @@ public class Launcher extends javax.swing.JFrame {
     Settings.current.player = player.getText();
     Settings.save();
     try {
-      ArrayList<String> cmd = new ArrayList<String>();
-      if (JF.isWindows())
-        cmd.add(System.getProperty("java.home") + "/bin/javaw.exe");
-      else
-        cmd.add(System.getProperty("java.home") + "/bin/java");
-      cmd.add("-Xmx" + memory.getSelectedItem());
-      String cp = "";
-      cp += getJar("javaforce.jar");
-      cp += File.pathSeparator;
-      cp += getJar("jfcraft.jar");
+      String cfg = Static.getBasePath() + "/jfcraft-client.cfg";
+      String bin;
+      if (JF.isWindows()) {
+        java_app_home = System.getenv("java.app.home");
+        if (java_app_home == null) {
+          java_app_home = System.getProperty("user.dir");
+        }
+        bin = Static.getBasePath() + "/jfcraft-client.exe";
+        String src = java_app_home + "/jfcraft-client.exe";
+        if (!new File(src).exists()) {
+          throw new Exception("Unable to find exe");
+        }
+        JF.copyAll(src, bin);
+        if (false) {
+          String dllsrc = java_app_home + "/jfnative64.dll";
+          String dlldst = Static.getBasePath() + "/jfnative64.dll";
+          JF.copyAll(dllsrc, dlldst);
+        }
+      } else {
+        bin = Static.getBasePath() + "/jfcraft-client";
+        JF.copyAll("/usr/bin/jfcraft-client", bin);
+      }
+      StringBuilder opts = new StringBuilder();
+      opts.append("OPTIONS=-Xmx" + memory.getSelectedItem() + "\r\n");
+      if (JF.isWindows()) {
+        opts.append("JAVA_HOME=" + System.getProperty("java.home") + "\r\n");
+      }
+      StringBuilder cp = new StringBuilder();
+      cp.append(getJar("javaforce.jar"));
+      cp.append(File.pathSeparator);
+      cp.append(getJar("jfcraft.jar"));
       int rows = pluginsModel.getRowCount();
       for(int row=0;row<rows;row++) {
         if ((Boolean)pluginsModel.getValueAt(row,0)) {
-          cp += File.pathSeparator + plugins[row][0];
+          cp.append(File.pathSeparator + plugins[row][0]);
         }
       }
-      cmd.add("-cp");
-      cmd.add(cp);
-      cmd.add("jfcraft.client.Main");
-      Runtime.getRuntime().exec(cmd.toArray(new String[0]));
+      opts.append("CLASSPATH=" + cp.toString().replaceAll("\\\\", "/") + "\r\n");
+      opts.append("MAINCLASS=jfcraft/client/Main\r\n");
+      FileOutputStream fos = new FileOutputStream(cfg);
+      fos.write(opts.toString().getBytes());
+      fos.close();
+      //patch executable with Java options in .cfg file
+      if (JF.isWindows()) {
+        javaforce.utils.WinPE.main(new String[] {bin, cfg});
+      } else {
+        javaforce.utils.jresmgr.main(new String[] {bin, cfg});
+        File fbin = new File(bin);
+        fbin.setExecutable(true);
+      }
+      Runtime.getRuntime().exec(bin, null, new File(System.getProperty("user.dir")));
       System.exit(0);
     } catch (Exception e) {
       Static.log(e);
@@ -291,6 +322,7 @@ public class Launcher extends javax.swing.JFrame {
 
   String plugins[][];  //jar/class/name/version/desc
   DefaultTableModel pluginsModel;
+  String java_app_home;
 
   public void checkVersion() {
     try {
@@ -309,9 +341,12 @@ public class Launcher extends javax.swing.JFrame {
   }
 
   public String getJar(String name) {
-    String full = "/usr/share/java/" + name;
-    if (new File(full).exists()) return full;
-    return name;
+    if (name.indexOf("/") != -1) return name;
+    if (JF.isWindows()) {
+      return java_app_home + "/" + name;
+    } else {
+      return "/usr/share/java/" + name;
+    }
   }
 
   public void initWeb() {
