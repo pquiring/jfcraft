@@ -51,6 +51,7 @@ public class PacketPos extends Packet {
     boolean b2 = (bits & Player.RT_BUTTON) != 0;
     boolean fup = (bits & Player.FLY_UP) != 0;
     boolean fdn = (bits & Player.FLY_DN) != 0;
+    boolean used = false;
     client.player.ang.x = f4;
     client.player.ang.y = f5;
     client.player.ang.z = f6;
@@ -70,6 +71,7 @@ public class PacketPos extends Packet {
         if (false && client.cheat > 20) {
           client.serverTransport.close();
           server.removeClient(client);
+          Static.log("Removing Player because cheat > 20");
           return;
         }
       } else {
@@ -114,9 +116,15 @@ public class PacketPos extends Packet {
         client.serverTransport.sendAir(client.player);
       }
     }
-    if (chunk1 == null) return;
+    if (chunk1 == null) {
+      Static.log("Error:chunk1 == null");
+      return;
+    }
     Chunk chunk2 = client.player.getChunk();
-    if (chunk2 == null) return;
+    if (chunk2 == null) {
+      Static.log("Error:chunk2 == null");
+      return;
+    }
     if (chunk1 != chunk2) {
       chunk1.delEntity(client.player);
       chunk2.addEntity(client.player);
@@ -169,7 +177,10 @@ public class PacketPos extends Packet {
       if (client.s1 != null) {
         if (client.s1.block != null) {
           //break block
-          if (client.s1.block.id == 0) return;
+          if (client.s1.block.id == 0) {
+            Static.log("Error:Player tried to break air?");
+            return;
+          }
           synchronized(client.s1.chunk.lock) {
             float dmg = client.s1.block.dmg(client.player.items[client.player.activeSlot]);
             if (client.crack.x != client.s1.gx || client.crack.y != client.s1.gy || client.crack.z != client.s1.gz || client.crack_cx != client.s1.cx || client.crack_cz != client.s1.cz) {
@@ -223,82 +234,19 @@ public class PacketPos extends Packet {
             //useTool();
             client.action[1] = Client.ACTION_USE_TOOL;
             synchronized(client.lock) {
-              boolean used;
               if (client.s1.block != null) {
                 used = client.s1.block.useTool(client, client.s1);
               } else if (client.s1.entity != null) {
                 used = client.s1.entity.useTool(client, client.s1);
-              } else {
-                used = false;
               }
               if (!used) {
-                itembase.useItem(client, client.s1);
+                used = itembase.useItem(client, client.s1);
               }
             }
           } else {
-            //placeBlock();
-            client.action[1] = Client.ACTION_PLACE;
-            if (client.placeCounter > 0) {
-              client.placeCounter--;
-              return;
-            }
-            client.placeCounter = 10;
-            synchronized(client.lock) {
-              if (item.id == Blocks.AIR) return;
-              ItemBase itembase2;
-              if (Static.isBlock(item.id)) {
-                itembase2 = Static.blocks.blocks[item.id];
-              } else {
-                itembase2 = Static.items.items[item.id];
-              }
-              if (itembase2.canPlaceInWater) {
-                client.player.findBlock(Blocks.WATER, BlockHitTest.Type.SELECTION, client.player.vehicle, client.s2);
-                if (client.s2.block != null) {
-                  client.s1.copy(client.s2);
-                }
-              }
-              synchronized(client.s1.chunk.lock) {
-                if (itembase2.canPlace(client.s1) && server.blockClear(client.s1)) {
-                  if (itembase2.isDir) {
-                    client.player.getDir(client.s1);
-                    client.s1.otherSide();
-                  }
-                  if (itembase2.isVar) {
-                    client.s1.var = item.var;
-                  }
-                  if (!itembase2.place(client, client.s1)) return;
-                  server.world.checkPowered(client.s1.chunk.dim, client.s1.x, client.s1.y, client.s1.z);
-                  item.count--;
-                  if (item.count == 0) {
-                    item.clear();
-                  }
-                  client.serverTransport.setInvItem((byte)client.player.activeSlot, item);
-                  return;
-                }
-              }
-              //try placing on adjacent block
-              if (client.s1.dir == -1) return;  //no side available ???
-              client.s1.otherSide();
-              client.s1.adjacentBlock();
-              client.s1.otherSide();
-              synchronized(client.s1.chunk.lock) {
-                if (itembase2.canPlace(client.s1) && server.blockClear(client.s1)) {
-                  if (itembase2.isDir) {
-                    client.player.getDir(client.s1);
-                    client.s1.otherSide();
-                  }
-                  if (itembase2.isVar) {
-                    client.s1.var = item.var;
-                  }
-                  if (!itembase2.place(client, client.s1)) return;
-                  server.world.checkPowered(client.s1.chunk.dim, client.s1.x, client.s1.y, client.s1.z);
-                  item.count--;
-                  if (item.count == 0) {
-                    item.clear();
-                  }
-                  client.serverTransport.setInvItem((byte)client.player.activeSlot, item);
-                }
-              }
+            if (!placeBlock(client, server, item)) {
+              itembase = Static.items.items[client.player.armors[4].id];
+              itembase.useItem(client, client.s1);
             }
           }
         }
@@ -307,7 +255,7 @@ public class PacketPos extends Packet {
         ItemBase itembase3 = Static.items.items[client.player.items[client.player.activeSlot].id];
         if (itembase3.isTool || itembase3.isWeapon || itembase3.isFood) {
           client.action[1] = Client.ACTION_USE_TOOL;
-          itembase3.useItem(client, null);
+          used = itembase3.useItem(client, null);
         }
       }
     } else {
@@ -318,7 +266,81 @@ public class PacketPos extends Packet {
       client.action[1] = Client.ACTION_IDLE;
       ItemBase item = Static.items.items[client.player.items[client.player.activeSlot].id];
       item.releaseItem(client);
+      item = Static.items.items[client.player.armors[4].id];
+      item.releaseItem(client);
     }
+    if (b2 && !used) {
+      //try to use shield
+      ItemBase itembase = Static.items.items[client.player.armors[4].id];
+      itembase.useItem(client, client.s1);
+    }
+  }
+
+  private boolean placeBlock(Client client, Server server, Item item) {
+    client.action[1] = Client.ACTION_PLACE;
+    if (client.placeCounter > 0) {
+      client.placeCounter--;
+      return false;
+    }
+    client.placeCounter = 10;
+    synchronized(client.lock) {
+      if (item.id == Blocks.AIR) return false;
+      ItemBase itembase2;
+      if (Static.isBlock(item.id)) {
+        itembase2 = Static.blocks.blocks[item.id];
+      } else {
+        itembase2 = Static.items.items[item.id];
+      }
+      if (itembase2.canPlaceInWater) {
+        client.player.findBlock(Blocks.WATER, BlockHitTest.Type.SELECTION, client.player.vehicle, client.s2);
+        if (client.s2.block != null) {
+          client.s1.copy(client.s2);
+        }
+      }
+      synchronized(client.s1.chunk.lock) {
+        if (itembase2.canPlace(client.s1) && server.blockClear(client.s1)) {
+          if (itembase2.isDir) {
+            client.player.getDir(client.s1);
+            client.s1.otherSide();
+          }
+          if (itembase2.isVar) {
+            client.s1.var = item.var;
+          }
+          if (!itembase2.place(client, client.s1)) return true;
+          server.world.checkPowered(client.s1.chunk.dim, client.s1.x, client.s1.y, client.s1.z);
+          item.count--;
+          if (item.count == 0) {
+            item.clear();
+          }
+          client.serverTransport.setInvItem((byte)client.player.activeSlot, item);
+          return false;
+        }
+      }
+      //try placing on adjacent block
+      if (client.s1.dir == -1) return false;  //no side available ???
+      client.s1.otherSide();
+      client.s1.adjacentBlock();
+      client.s1.otherSide();
+      synchronized(client.s1.chunk.lock) {
+        if (itembase2.canPlace(client.s1) && server.blockClear(client.s1)) {
+          if (itembase2.isDir) {
+            client.player.getDir(client.s1);
+            client.s1.otherSide();
+          }
+          if (itembase2.isVar) {
+            client.s1.var = item.var;
+          }
+          if (!itembase2.place(client, client.s1)) return false;
+          server.world.checkPowered(client.s1.chunk.dim, client.s1.x, client.s1.y, client.s1.z);
+          item.count--;
+          if (item.count == 0) {
+            item.clear();
+          }
+          client.serverTransport.setInvItem((byte)client.player.activeSlot, item);
+        }
+      }
+    }
+    return false;
   }
 
   @Override

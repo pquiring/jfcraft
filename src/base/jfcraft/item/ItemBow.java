@@ -18,20 +18,20 @@ public class ItemBow extends ItemBase {
     isWeapon = true;
     weapon = WEAPON_BOW;
   }
-  public void useItem(Client client, Coords c) {
-    if (client.bowPower < maxPower) {
-      client.bowPower++;
+  public boolean useItem(Client client, Coords c) {
+    if (client.player.bowPower < maxPower) {
+      client.player.bowPower++;
     }
-    Static.log("bowPower=" + client.bowPower);
+    Static.log("bowPower=" + client.player.bowPower);
+    return true;
   }
   public void releaseItem(Client client) {
-    if (client.bowPower > 0) {
+    if (client.player.bowPower > 0) {
       Static.log("shootArrow");
       shootArrow(client);
     }
-    client.bowPower = 0;
+    client.player.bowPower = 0;
   }
-  private static Vectors v = new Vectors();
   //uses static v so MUST be sync'ed
   private synchronized void shootArrow(Client client) {
     Item bow = client.player.items[client.player.activeSlot];
@@ -55,26 +55,6 @@ public class ItemBow extends ItemBase {
         return;
       }
     }
-    Chunk c = client.player.getChunk();
-    Arrow e = new Arrow();
-    e.setOwner(client.player);
-    e.init(Static.server.world);
-    e.dim = c.dim;
-    e.uid = Static.server.world.generateUID();
-    //position should be out of player's hitbox area
-    client.player.calcVectors(1, v);
-    e.pos.x = client.player.pos.x + v.facing.v[0];
-    e.pos.y = client.player.pos.y + client.player.eyeHeight + v.facing.v[1];
-    e.pos.z = client.player.pos.z + v.facing.v[2];
-    e.ang.x = client.player.ang.x;
-    e.ang.y = client.player.ang.y;
-    e.ang.z = client.player.ang.z;
-    //max velocity = 60m/s
-    e.vel.x = v.facing.v[0] * client.bowPower * 1.5f / 20f;
-    e.vel.y = v.facing.v[1] * client.bowPower * 1.5f / 20f;
-    e.vel.z = v.facing.v[2] * client.bowPower * 1.5f / 20f;
-    c.addEntity(e);
-    Static.server.world.addEntity(e);
-    Static.server.broadcastEntitySpawn(e);
+    client.player.shootArrow();
   }
 }

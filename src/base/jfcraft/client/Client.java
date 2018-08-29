@@ -44,7 +44,6 @@ public class Client {
   public int spawnAreaChunksTodo;
   public int spawnAreaChunksDone;
   public boolean teleport;
-  public int bowPower;
   public int foodCounter;
   public int placeCounter;
   public int underwaterCounter;

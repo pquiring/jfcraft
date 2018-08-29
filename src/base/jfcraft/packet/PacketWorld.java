@@ -30,6 +30,7 @@ public class PacketWorld extends Packet {
     if (!client.clientTransport.isLocal()) {
       client.world.assignIDs();
       Static.dims.init();
+      Static.dims.initEnvironments();
     }
     if (client.world.genSpawnAreaDone) {
       client.spawnAreaDonePercent = 100;

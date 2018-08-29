@@ -1,7 +1,5 @@
 List of TODOs to make JFCraft as feature full as the real thing:
 
- - create a exe launcher (do not use javaw.exe)
-
 need list:
 
 render items in right hand (including shield in left hand) on inventory screen

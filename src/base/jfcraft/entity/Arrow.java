@@ -131,23 +131,48 @@ public class Arrow extends EntityBase {
       if (e.hitBox(pos.x, pos.y + height2, pos.z, width2, height2, depth2)) {
         if (e instanceof CreatureBase) {
           CreatureBase cb = (CreatureBase)e;
-          float dmg = (float)Math.sqrt(vel.x * vel.x + vel.y * vel.y + vel.z * vel.z) * 2f;
-          if (!armed) {
-            //give to entity
-            if (e instanceof Player) {
-              Player p = (Player)e;
-              if (!p.client.addItem(new Item(Items.ARROW), true)) {
-                return;  //can not give so leave it there
-              }
+          boolean deflected = false;
+          if (cb.blocking) {
+            //check if shield is facing arrow (45 deg cover)
+            float aa = ang.y;
+            float ca = cb.ang.y;
+            ca += 180.0f;
+            if (ca > 360.0f) ca -= 360.0f;
+            if (ca < 180f && aa > 180.0f) aa -= 360.0f;  //move aa to -180 to 180 range
+            float min = ca - 80f;
+            float max = ca + 80f;
+            if (aa > min && aa < max) {
+              //arrow deflected by shield
+              ang.y += 180.0f;
+              if (ang.y > 360.0f) ang.y -= 360.0f;
+              vel.x *= -1f;
+              vel.z *= -1f;
+              move(false, true, false, -1, AVOID_NONE);  //move once backwards to avoid hitting target again
+              vel.x *= 0.2f;
+              vel.z *= 0.2f;
+              deflected = true;
+              System.out.println("deflected");
             }
-          } else {
-            cb.takeDmg(dmg, owner);
           }
-          Chunk c = getChunk();
-          c.delEntity(this);
-          Static.server.world.delEntity(uid);
-          Static.server.broadcastEntityDespawn(this);
-          return;
+          if (!deflected) {
+            System.out.println("!deflected");
+            if (!armed) {
+              //give to entity
+              if (e instanceof Player) {
+                Player p = (Player)e;
+                if (!p.client.addItem(new Item(Items.ARROW), true)) {
+                  return;  //can not give so leave it there
+                }
+              }
+            } else {
+              float dmg = (float)Math.sqrt(vel.x * vel.x + vel.y * vel.y + vel.z * vel.z) * 2f;
+              cb.takeDmg(dmg, owner);
+            }
+            Chunk c = getChunk();
+            c.delEntity(this);
+            Static.server.world.delEntity(uid);
+            Static.server.broadcastEntityDespawn(this);
+          }
         }
       }
     }

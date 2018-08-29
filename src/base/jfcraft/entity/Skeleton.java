@@ -65,7 +65,7 @@ public class Skeleton extends HumaniodBase {
       sneakSpeed = 1.3f;
       swimSpeed = (walkSpeed / 2.0f);
       reach = 5.0f;
-      attackRange = 2.0f;
+      attackRange = 12.0f;  //can shoot arrows far
       attackDelay = 30;  //1.5 sec per attack
       attackDmg = 1.0f;
       maxAge = 20 * 60 * 15;  //15 mins
@@ -234,5 +234,28 @@ public class Skeleton extends HumaniodBase {
   }
   public int[] getSpawnDims() {
     return new int[] {Dims.EARTH, Dims.NETHER};
+  }
+  boolean arrowLoaded = false;
+  int loadCounter = -1;
+  int shootCounter = -1;
+  public void attack(CreatureBase target) {
+    //shoot arrow at target
+    if (!arrowLoaded) {
+      if (loadCounter == -1) loadCounter = 10;
+      loadCounter--;
+      if (loadCounter == 0) {
+        arrowLoaded = true;
+        shootCounter = 5;
+        bowPower = 1;
+      }
+    } else {
+      if (shootCounter > 0) {
+        shootCounter--;
+        bowPower += 5;
+      } else {
+        shootArrow();
+        arrowLoaded = false;
+      }
+    }
   }
 }

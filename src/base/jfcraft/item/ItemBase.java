@@ -225,7 +225,7 @@ public class ItemBase {
     Static.log("BIBase.equals() not allowed");
     return false;
   }
-  public void useItem(Client client, Coords c) {
+  public boolean useItem(Client client, Coords c) {
     if (isFood) {
       client.foodCounter++;
       if (client.foodCounter == 2 * 20) {
@@ -247,7 +247,9 @@ public class ItemBase {
         }
         client.serverTransport.sendHunger(client.player);
       }
+      return true;
     }
+    return false;
   }
   public void releaseItem(Client client) {
     if (isFood) {

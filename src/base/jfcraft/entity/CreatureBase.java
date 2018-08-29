@@ -23,6 +23,8 @@ public abstract class CreatureBase extends EntityBase {
   public float hunger;  //20 = full
   public float saturation;  //20 = full
   public float exhaustion;  //when >= 4.0 : -1 from saturation or food
+  public int blockCount;
+  public boolean blocking;  //blocking with a shield
 
   public VehicleBase vehicle;
   public int vcid, vuid;  //vehicle id (vcid=in chunk on disk ,vuid=in game)
@@ -292,16 +294,19 @@ public abstract class CreatureBase extends EntityBase {
       mode = MODE_WALK;
     } else {
       mode = MODE_IDLE;
-      //attack!!!
-      if (attackCount == 0) {
-        target.takeDmg(attackDmg, this);
-        attackCount = attackDelay;
-      } else {
-        attackCount--;
-      }
+      attack(target);
     }
     //find angle(x) between target.y and this.y
     ang.x = (float)-Math.toDegrees(Math.atan(dy / dist));
+  }
+
+  public void attack(CreatureBase target) {
+    if (attackCount == 0) {
+      target.takeDmg(attackDmg, this);
+      attackCount = attackDelay;
+    } else {
+      attackCount--;
+    }
   }
 
   public int walkLength, runCount;
@@ -417,5 +422,32 @@ public abstract class CreatureBase extends EntityBase {
         vehicle = (VehicleBase)chunk.getEntity(vuid);
       }
     }
+  }
+
+  private static Vectors v = new Vectors();
+
+  public int bowPower;
+
+  public void shootArrow() {
+    Arrow e = new Arrow();
+    e.setOwner(this);
+    e.init(Static.server.world);
+    e.dim = dim;
+    e.uid = Static.server.world.generateUID();
+    //position should be out of player's hitbox area
+    calcVectors(1, v);
+    e.pos.x = pos.x + v.facing.v[0];
+    e.pos.y = pos.y + eyeHeight + v.facing.v[1];
+    e.pos.z = pos.z + v.facing.v[2];
+    e.ang.x = ang.x;
+    e.ang.y = ang.y;
+    e.ang.z = ang.z;
+    //max velocity = 60m/s
+    e.vel.x = v.facing.v[0] * bowPower * 1.5f / 20f;
+    e.vel.y = v.facing.v[1] * bowPower * 1.5f / 20f;
+    e.vel.z = v.facing.v[2] * bowPower * 1.5f / 20f;
+    getChunk().addEntity(e);
+    Static.server.world.addEntity(e);
+    Static.server.broadcastEntitySpawn(e);
   }
 }

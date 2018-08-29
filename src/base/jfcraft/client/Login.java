@@ -27,13 +27,11 @@ public class Login extends RenderScreen {
   public void setup(Client client) {
     //assume already logged in
     Static.client = client;
-    Static.client = client;
     client.clientTransport.start();
     client.clientTransport.login();
     client.player = null;
     reqWorld = false;
     reqPlayer = false;
-    Static.dims.initEnvironments();
   }
 
   public void render(int width, int height) {

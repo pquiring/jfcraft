@@ -22,16 +22,23 @@ public class MainMenu extends RenderScreen {
     id = Client.MAIN;
   }
 
+  private void reset() {
+    Static.client = null;
+    Static.server = null;
+  }
+
   public void init() {
     super.init();
     clear();
     addButton("Single Player", 56, 200, 400, new Runnable() {public void run() {
       //single player
+      reset();
       if (!Static.blocks.valid) return;
       Static.video.setScreen(Static.screens.screens[Client.SINGLE]);
     }});
     addButton("Multi Player", 56, 300, 400, new Runnable() {public void run() {
       //multi player
+      reset();
       if (!Static.blocks.valid) return;
       Static.video.setScreen(Static.screens.screens[Client.MULTI]);
     }});
