@@ -196,4 +196,8 @@ public abstract class HumaniodBase extends CreatureBase {
     }
     return true;
   }
+
+  public boolean hasShieldEquiped() {
+    return items[items.length-1].id == Items.SHIELD;
+  }
 }

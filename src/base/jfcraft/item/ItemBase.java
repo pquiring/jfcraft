@@ -283,6 +283,14 @@ public class ItemBase {
     return this;
   }
 
+  private static float[][] aniNull = {
+    //action, xAngle, yAngle, zAngle, xPos, yPos, zPos, steps, nextIdx, hold
+    {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //idle
+    //hold in front at 45 deg angle
+    {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //b1 (not used)
+    {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //b2 (not used)
+  };
+
   private static float[][] aniAttack = {
     //action, xAngle, yAngle, zAngle, xPos, yPos, zPos, steps, nextIdx, hold
     {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //idle
@@ -294,10 +302,10 @@ public class ItemBase {
 
   private static float[][] aniDefend = {
     //action, xAngle, yAngle, zAngle, xPos, yPos, zPos, steps, nextIdx, hold
-    {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //idle
+    {ANI_SET ,0,0,0  ,0,0,0 ,1,0,0},  //idle
     //hold in front at 45 deg angle
-    {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //b1 (not used)
-    {ANI_SET ,0,0,90 ,0,0,0 ,1,0,1},  //b2 : -1 steps means hold until b2 released
+    {ANI_SET ,0,0,0  ,0,0,0 ,1,0,0},  //b1 (not used)
+    {ANI_SET ,0,0,90 ,0,0,0 ,1,2,1},  //b2 : -1 steps means hold until b2 released
   };
 
   private static float[][] aniPlace = {
@@ -373,7 +381,14 @@ public class ItemBase {
         aniStep = 0;
         switch (aniStyle2) {
           case ANI_STYLE_ATTACK: aniData = aniAttack; break;
-          case ANI_STYLE_DEFEND: aniData = aniDefend; break;
+          case ANI_STYLE_DEFEND: {
+            if (Static.client.player.hasShieldEquiped()) {
+              aniData = aniNull;
+            } else {
+              aniData = aniDefend;
+            }
+            break;
+          }
           case ANI_STYLE_PLACE: aniData = aniPlace; break;
           case ANI_STYLE_FOOD: aniData = aniFood; break;
           case ANI_STYLE_BOW: aniData = aniBow; break;
