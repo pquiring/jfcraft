@@ -49,6 +49,7 @@ public class Entities implements SerialCreator {
   public static int PISTON_STICKY;
   public static int LEVER;
   public static int ENDER_CHEST;
+  public static int SHIELD;
 
   public int entityCount;
   public EntityBase[] regEntities = new EntityBase[MAX_ID];
@@ -90,6 +91,7 @@ public class Entities implements SerialCreator {
     registerEntity(new Boat());
     registerEntity(new Minecart());
     registerEntity(new Horse());
+    registerEntity(new Shield());
   }
 
   public void initStatic() {

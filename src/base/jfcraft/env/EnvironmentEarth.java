@@ -84,6 +84,7 @@ public class EnvironmentEarth implements EnvironmentBase {
 
   public void init() {
     if (inited) return;
+    Static.log("EnvironmentEarth.init()");
     RenderData data = new RenderData();
     sun = new Texture();
     sun.load(makeAlpha("environment/sun"));

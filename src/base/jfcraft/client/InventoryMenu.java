@@ -172,9 +172,12 @@ public class InventoryMenu extends RenderScreen {
     }
 
     //armor slots
-    for(int a=0;a<5;a++) {
+    for(int a=0;a<4;a++) {
       slots[p++].item = Static.client.player.armors[a];
     }
+
+    //shield
+    slots[p++].item = Static.client.player.items[Player.shield_idx];
 
     //crafting slots(4)
     for(int a=0;a<4;a++) {
@@ -242,7 +245,7 @@ public class InventoryMenu extends RenderScreen {
     bx = 154;
     by = 124;
     if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
-      Static.client.clickArmor((byte)4, button == 1);
+      Static.client.clickShield();
     }
     //check crafting area (4)
     bx = 196;

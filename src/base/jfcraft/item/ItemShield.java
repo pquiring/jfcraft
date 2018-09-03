@@ -9,29 +9,36 @@ import jfcraft.client.*;
 import jfcraft.data.*;
 import jfcraft.entity.*;
 import static jfcraft.data.Types.*;
+import jfcraft.packet.*;
 
 public class ItemShield extends ItemBase {
   public ItemShield(String name, String names[], String texture[]) {
     super(name, names, texture);
     useRelease = true;
-    isArmor = true;
-    armor = ARMOR_SHIELD;
     isTool = true;
     tool = TOOL_SHIELD;
     material = MAT_WOOD;
+    renderAsEntity = true;
+    entityID = 0;  //TODO
+  }
+  public void getIDs(World world) {
+    super.getIDs(world);
+    entityID = Entities.SHIELD;
   }
   public boolean useItem(Client client, Coords c) {
     if (client.player.blockCount < 4) {
       client.player.blockCount++;
+      client.serverTransport.addUpdate(new PacketShield(Packets.SHIELD, client.player.blockCount));
     } else {
       client.player.blocking = true;
-      System.out.println("Shields up");
     }
     return true;
   }
   public void releaseItem(Client client) {
-    client.player.blockCount = 0;
+    if (client.player.blockCount != 0) {
+      client.player.blockCount = 0;
+      client.serverTransport.addUpdate(new PacketShield(Packets.SHIELD, client.player.blockCount));
+    }
     client.player.blocking = false;
-    System.out.println("Shields down");
   }
 }

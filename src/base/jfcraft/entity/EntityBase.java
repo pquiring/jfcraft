@@ -38,6 +38,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public int teleportTimer;
   public int cid;  //id within chunk (saved to disk)
   public int flags;  //generic flags (usage depends on derived entities)
+  public int part;  //part to render (applies to only Shield right now)
 
   public float width, width2, height, height2, depth, depth2;
   public float legLength;  //for when in vehicle
@@ -927,6 +928,8 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public static final int R_ARM = 3;
   public static final int L_LEG = 4;
   public static final int R_LEG = 5;
+  public static final int L_ITEM = 6;
+  public static final int R_ITEM = 7;
 
   //transportation mode (used in CreatureBase for mobs)
   public static final int MODE_IDLE = 0;
@@ -1235,5 +1238,10 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   public void setFlags(int newFlags) {
     flags = newFlags;
+  }
+
+  /** Sets which part to render. */
+  public void setPart(int part) {
+    this.part = part;
   }
 }

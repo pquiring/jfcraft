@@ -483,6 +483,20 @@ public class Client {
       clientTransport.armorGet(idx);
     }
   }
+  public void clickShield() {
+    if (hand != null) {
+      ItemBase itembase = Static.items.items[hand.id];
+      if (itembase.id != Items.SHIELD) return;
+      if (player.items[Player.shield_idx].id != 0) {
+        clientTransport.invExchange(Player.shield_idx);
+      } else {
+        clientTransport.invPut(Player.shield_idx, (byte)1);
+      }
+    } else {
+      if (player.items[Player.shield_idx].count == 0) return;
+      clientTransport.invGet(Player.shield_idx, (byte)1);
+    }
+  }
   public void clickCraftlInput(byte idx, boolean first) {
     if (craft[idx].count == 0) {
       if (hand == null) {

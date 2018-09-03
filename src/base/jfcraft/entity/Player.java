@@ -39,7 +39,7 @@ public class Player extends HumaniodBase {
   private static GLModel model;
 
   public Player() {
-    super(4*9, 5);
+    super(4*9 + 1, 4);  //+1 for shield
     id = Entities.PLAYER;
   }
 

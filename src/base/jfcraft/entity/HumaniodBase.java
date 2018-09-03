@@ -17,28 +17,32 @@ public abstract class HumaniodBase extends CreatureBase {
   public int activeSlot;  //0-8
   public Item armors[];
 
-  private static RenderDest dest;
-  private static GLModel model;
+  public static final byte items_active_slots = 9;  //0-8
+  public static final byte items_inventory = 3*9;  //9-35
+  public static final byte shield_idx = 4*9;  //36
 
-  private static String parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG"};
+  private static GLModel body;
+  private static RenderDest body_dest;
+  private static String body_parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG"};
 
   public void initStatic() {
     super.initStatic();
-    dest = new RenderDest(parts.length);
-    model = loadModel("armor");
+    body = loadModel("armor");
+    body_dest = new RenderDest(body_parts.length);
   }
 
   public RenderDest getDest() {
-    return dest;
+    return body_dest;
   }
 
   public void buildBuffers(RenderDest dest, RenderData data) {
+    //BUG : some derived classes to DOT call this base method
     //transfer data into dest
-    for(int a=0;a<parts.length;a++) {
-      RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = model.getObject(parts[a]);
+    for(int a=0;a<body_parts.length;a++) {
+      RenderBuffers buf = body_dest.getBuffers(a);
+      GLObject obj = body.getObject(body_parts[a]);
       if (obj == null) {
-        System.out.println("Warning:Couldn't find part:" + parts[a]);
+        System.out.println("Warning:Couldn't find part:" + body_parts[a]);
       }
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
@@ -61,7 +65,7 @@ public abstract class HumaniodBase extends CreatureBase {
   }
 
   public void copyBuffers() {
-    dest.copyBuffers();
+    body_dest.copyBuffers();
   }
 
   public HumaniodBase(int itemCnt, int armorCnt) {
@@ -88,7 +92,7 @@ public abstract class HumaniodBase extends CreatureBase {
         scale = item.getArmorScale(layer);
         for(int partidx=0;partidx<parts;partidx++) {
           int part = item.getArmorPart(layer, partidx);
-          RenderBuffers buf = dest.getBuffers(part);
+          RenderBuffers buf = body_dest.getBuffers(part);
           setMatrixModel(part, buf);
           buf.bindBuffers();
           buf.render();

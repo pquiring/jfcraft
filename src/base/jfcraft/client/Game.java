@@ -20,6 +20,7 @@ import jfcraft.item.*;
 import jfcraft.opengl.*;
 import jfcraft.server.*;
 import static jfcraft.data.Direction.*;
+import static jfcraft.entity.EntityBase.*;
 
 public class Game extends RenderScreen {
   private GLMatrix perspective, view;
@@ -448,7 +449,9 @@ public class Game extends RenderScreen {
     Static.dims.dims[dim].getEnvironment().postRender(world.time, sunLight, Static.client, Static.camera_pos, chunks);
 
     if (showControls) {
-      renderItemInHand();
+      if (camview == Views.normal) {
+        renderItemInHand();
+      }
 
       glUniform1f(Static.uniformSunLight, 1.0f);
 
@@ -795,34 +798,43 @@ public class Game extends RenderScreen {
     Static.client.clientTransport.changeActiveSlot((byte)activeSlot);
   }
 
-  private final XYZ baseHandAngle = new XYZ(35.0f, 45.0f, 0f);
-  private final XYZ baseHandPos = new XYZ(3, -3, -5.0f);
+  private final XYZ rightHandAngle = new XYZ(35.0f, 45.0f, +5f);
+  private final XYZ rightHandPos = new XYZ(3, -3, -5.0f);
+
+  private final XYZ leftHandAngle = new XYZ(35.0f, 45.0f, -5f);
+  private final XYZ leftHandPos = new XYZ(-16, -12, -5.0f);
+
   private GLMatrix handMat = new GLMatrix();
 
   private void renderItemInHand() {
-    Item item = Static.client.player.items[Static.client.player.activeSlot];
     glClear(GL_DEPTH_BUFFER_BIT);
 
     glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, perspective.m);  //perspective matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
 
     float elight = Static.client.player.getLight(sunLight);
+
+    Item item = Static.client.player.items[Static.client.player.activeSlot];
     glUniform1f(Static.uniformSunLight, elight);
     if (item.id == 0) {
       renderHand();
     } else {
-      renderItemInHand(item, elight);
+      renderItemInHand(item, elight, false);
+    }
+    item = Static.client.player.items[Player.shield_idx];
+    if (item.id == Items.SHIELD) {
+      renderItemInHand(item, elight, true);
     }
   }
 
   private RenderDest o_items = new RenderDest(Chunk.buffersCount);
   private RenderData data = new RenderData();
 
-  private void renderItemInHand(Item item, float light) {
+  private void renderItemInHand(Item item, float light, boolean leftHand) {
     o_items.resetAll();
     Texture texture = null;
     boolean isBlock = false;
-    boolean isBlockEntity = false;
+    boolean isEntity = false;
     int buffersIdx = -1;
     EntityBase eb = null;
     BlockBase block = null;
@@ -830,7 +842,7 @@ public class Game extends RenderScreen {
     if (Static.isBlock(item.id)) {
       block = Static.blocks.blocks[item.id];
       if (block.renderAsEntity) {
-        isBlockEntity = true;
+        isEntity = true;
         eb = Static.entities.entities[block.entityID];
         eb.pos.x = 0;
         eb.pos.y = 0;
@@ -859,28 +871,64 @@ public class Game extends RenderScreen {
       }
     } else {
       ItemBase itembase = Static.items.items[item.id];
-      texture = itembase.textures[0].texture;  //BUG : zero?
-      itembase.addFaceWorldItem(o_items.getBuffers(0), item.var, itembase.isGreen);
-      buffersIdx = 0;
+      if (itembase.renderAsEntity) {
+        isEntity = true;
+        eb = Static.entities.entities[itembase.entityID];
+        eb.pos.x = 0;
+        eb.pos.y = 0;
+        eb.pos.z = 0;
+        eb.ang.y = 180;
+        eb.setScale(1.0f);
+        if (leftHand) {
+          eb.setPart(L_ITEM);
+        } else {
+          eb.setPart(R_ITEM);
+        }
+      } else {
+        texture = itembase.textures[0].texture;  //BUG : zero?
+        itembase.addFaceWorldItem(o_items.getBuffers(0), item.var, itembase.isGreen);
+        buffersIdx = 0;
+      }
     }
 
     handMat.setIdentity();
-    handMat.addRotate(Static.client.handAngle.x, 1, 0, 0);
-    handMat.addRotate(Static.client.handAngle.y, 0, 1, 0);
-    handMat.addRotate(Static.client.handAngle.z, 0, 0, 1);
+    if (leftHand) {
+      handMat.addRotate(90, 0, 1, 0);
+      handMat.addRotate(90, 1, 0, 0);
+      handMat.addScale(10, 10, 10);
+    } else {
+      handMat.addRotate(Static.client.handAngle.x, 1, 0, 0);
+      handMat.addRotate(Static.client.handAngle.y, 0, 1, 0);
+      handMat.addRotate(Static.client.handAngle.z, 0, 0, 1);
+    }
 
     if (isBlock) {
-      handMat.addRotate(baseHandAngle.x, 1, 0, 0);
-      handMat.addRotate(baseHandAngle.y, 0, 1, 0);
+      if (leftHand) {
+        handMat.addRotate(leftHandAngle.x, 1, 0, 0);
+        handMat.addRotate(leftHandAngle.y, 0, 1, 0);
+      } else {
+        handMat.addRotate(rightHandAngle.x, 1, 0, 0);
+        handMat.addRotate(rightHandAngle.y, 0, 1, 0);
+      }
 //      handMat.addRotate(baseHandAngle.z, 0, 0, 1);
       handMat.addTranslate(-0.5f, -0.5f, 0);
     }
-    handMat.addTranslate(baseHandPos.x, baseHandPos.y, baseHandPos.z);
-    handMat.addTranslate(Static.client.handPos.x, Static.client.handPos.y, Static.client.handPos.z);
+    if (leftHand) {
+      handMat.addTranslate(leftHandPos.x, leftHandPos.y, leftHandPos.z);
+    } else {
+      handMat.addTranslate(rightHandPos.x, rightHandPos.y, rightHandPos.z);
+    }
+    //now apply hand animation
+    if (leftHand) {
+      float raise = 0.2f * Static.client.player.blockCount;
+      handMat.addTranslate(raise, raise, 0f);
+    } else {
+      handMat.addTranslate(Static.client.handPos.x, Static.client.handPos.y, Static.client.handPos.z);
+    }
 
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, handMat.m);  //view matrix
 
-    if (isBlockEntity) {
+    if (isEntity) {
       eb.bindTexture();
       eb.render();
     } else {
@@ -902,7 +950,7 @@ public class Game extends RenderScreen {
     handMat.addRotate4(Static.client.handAngle.z, 0, 0, 1);
     handMat.addTranslate2(-hand.org.x, -hand.org.y, -hand.org.z);
     handMat.addTranslate(-0.5f,-1.5f,0);
-    handMat.addTranslate(baseHandPos.x, baseHandPos.y, baseHandPos.z);
+    handMat.addTranslate(rightHandPos.x, rightHandPos.y, rightHandPos.z);
     handMat.addTranslate(Static.client.handPos.x, Static.client.handPos.y, Static.client.handPos.z);
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, handMat.m);  //view matrix
     Static.entities.entities[Entities.PLAYER].bindTexture();

@@ -245,7 +245,7 @@ public class PacketPos extends Packet {
             }
           } else {
             if (!placeBlock(client, server, item)) {
-              itembase = Static.items.items[client.player.armors[4].id];
+              itembase = Static.items.items[client.player.items[Player.shield_idx].id];
               itembase.useItem(client, client.s1);
             }
           }
@@ -264,14 +264,14 @@ public class PacketPos extends Packet {
       }
       client.action[0] = Client.ACTION_IDLE;
       client.action[1] = Client.ACTION_IDLE;
-      ItemBase item = Static.items.items[client.player.items[client.player.activeSlot].id];
-      item.releaseItem(client);
-      item = Static.items.items[client.player.armors[4].id];
-      item.releaseItem(client);
+      ItemBase itembase = Static.items.items[client.player.items[client.player.activeSlot].id];
+      itembase.releaseItem(client);
+      itembase = Static.items.items[client.player.items[Player.shield_idx].id];
+      itembase.releaseItem(client);
     }
     if (b2 && !used) {
       //try to use shield
-      ItemBase itembase = Static.items.items[client.player.armors[4].id];
+      ItemBase itembase = Static.items.items[client.player.items[Player.shield_idx].id];
       itembase.useItem(client, client.s1);
     }
   }

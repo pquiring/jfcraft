@@ -283,11 +283,7 @@ public class Items {
     registerItem(new ItemBase("BREAD", new String[]{"Bread"}, new String[]{"bread"}).setFood(5, 6));
     registerItem(new ItemBase("CHAIN", new String[]{"Chainmail"}, new String[]{"chainmail"}));
 
-    registerItem(new ItemShield("SHIELD", new String[]{"Shield"}, new String[]{"shield"})
-      .setArmorTextures(new String[] {"models/armor/chainmail_layer_1"}
-        , new float[] {1.2f}
-        , new int[][] {{EntityBase.HEAD}})
-    );
+    registerItem(new ItemShield("SHIELD", new String[]{"Shield"}, new String[]{"shield"}));
 
     registerItem(new ItemBase("LEATHER_CAP", new String[]{"Leather Cap"}, new String[]{"leather_helmet"}).setArmor(ARMOR_HEAD)
       .setArmorTextures(new String[] {"models/armor/leather_layer_1", "models/armor/leather_layer_2"}

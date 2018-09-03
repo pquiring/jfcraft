@@ -41,6 +41,8 @@ public class ItemBase {
   public boolean useRelease;  //activate on release (bow)
   public int material;
   public RenderDest bufs[];  //inventory (vars)
+  public boolean renderAsEntity;
+  public int entityID;
 
   //armor info
   public Texture armorTextures[];
