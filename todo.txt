@@ -4,16 +4,18 @@ need list:
 
 render items in right hand (including shield in left hand) on inventory screen
 render items of other players
-better caves with rooms
-mobs (spider, ghast, blaze, endermite(silverfish), magma cube, witch, guardian)
-generate cave rooms, springs, lakes, rivers, items, stuff, castles, etc.
-improve world generating algorithms
+improve world generating algorithms : generate cave rooms, springs, lakes, rivers, items, stuff, castles, etc.
 create complex AI logic for each mob (currently they are all passive but attack if attacked and all animals run if attacked)
-more animals (chicken, rabbit, wolf, bat, squid, ocelet)
-chars (villagers) (don't move, just sell stuff in castles)
 fishing
 money (silver, gold)
 fix bugs
+
+add:
+
+add more mobs (spider, ghast, blaze, endermite(silverfish), magma cube, witch, guardian)
+add level increased mobs based on distance from start position
+add more animals (chicken, rabbit, wolf, bat, squid, ocelet)
+add more chars (villagers) (sell stuff in castles)
 
 want list:
 

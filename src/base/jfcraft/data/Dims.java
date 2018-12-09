@@ -48,7 +48,7 @@ public class Dims {
 
   public void initEnvironments() {
     for(int a=0;a<MAX_ID;a++) {
-      DimBase db = dims[a];
+      DimBase db = regDims[a];
       if (db != null) {
         db.getEnvironment().init();
       }

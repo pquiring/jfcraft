@@ -7,10 +7,13 @@ package jfcraft.entity;
  */
 
 import javaforce.gl.*;
+import static javaforce.gl.GL.*;
 
 import jfcraft.data.*;
 import jfcraft.item.*;
+import jfcraft.block.*;
 import jfcraft.opengl.*;
+import static jfcraft.data.Direction.*;
 
 public abstract class HumaniodBase extends CreatureBase {
   public Item items[];
@@ -24,6 +27,14 @@ public abstract class HumaniodBase extends CreatureBase {
   private static GLModel body;
   private static RenderDest body_dest;
   private static String body_parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG"};
+  private static final int part_head = 0;
+  private static final int part_body = 1;
+  private static final int part_left_arm = 2;
+  private static final int part_right_arm = 3;
+  private static final int part_left_leg = 4;
+  private static final int part_right_leg = 5;
+
+  public boolean disable_cull_face = false;
 
   public void initStatic() {
     super.initStatic();
@@ -79,6 +90,31 @@ public abstract class HumaniodBase extends CreatureBase {
     }
   }
 
+  public Item getRightItem() {
+    return items[activeSlot];
+  }
+
+  public Item getLeftItem() {
+    if (items == null || items.length <= shield_idx) return null;
+    return items[shield_idx];
+  }
+
+  public void render() {
+    if (disable_cull_face) glDisable(GL_CULL_FACE);
+    RenderDest dest = getDest();
+    int cnt = dest.count();
+    for(int a=0;a<cnt;a++) {
+      RenderBuffers buf = dest.getBuffers(a);
+      setMatrixModel(a, buf);
+      buf.bindBuffers();
+      buf.render();
+    }
+    if (disable_cull_face) glEnable(GL_CULL_FACE);
+    renderArmor();
+    renderItemInHand(getRightItem(), 1.0f, false);
+    renderItemInHand(getLeftItem(), 1.0f, true);
+  }
+
   public void renderArmor() {
     int cnt = armors.length;
     for(int a=0;a<cnt;a++) {
@@ -102,8 +138,41 @@ public abstract class HumaniodBase extends CreatureBase {
     scale = 1.0f;
   }
 
-  public void renderItemInHand() {
-    //TODO
+  private static RenderData render_data = new RenderData();
+  private static RenderDest render_dest = new RenderDest(Chunk.buffersCount);
+
+  public static final XYZ rightHandAngle = new XYZ(35.0f, 45.0f, +5f);
+  public static final XYZ rightHandPos = new XYZ(3, -3, -5.0f);
+
+  public static final XYZ leftHandAngle = new XYZ(35.0f, 45.0f, -5f);
+  public static final XYZ leftHandPos = new XYZ(6, -11, -5.0f);
+
+  public void renderItemInHand(Item item, float light, boolean left) {
+    if (item == null || item.count == 0) return;
+    ItemBase itembase = Static.items.items[item.id];
+    if (Static.isBlock(item.id)) {
+      BlockBase block = Static.blocks.blocks[item.id];
+      if (block.isDirXZ) {
+        render_data.dir[X] = S;
+      } else {
+        render_data.dir[X] = A;
+      }
+    }
+    itembase.buildBuffers(render_dest, render_data);
+
+    itembase.setViewMatrix(left);
+
+    itembase.bindTexture();
+
+    itembase.render();
+  }
+
+  public Item getRightArmItem() {
+    return null;
+  }
+
+  public Item getLeftArmItem() {
+    return null;
   }
 
   public void convertIDs(char blockIDs[], char itemIDs[]) {

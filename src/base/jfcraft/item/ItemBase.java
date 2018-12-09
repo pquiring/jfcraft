@@ -9,17 +9,20 @@ package jfcraft.item;
 
 import javaforce.*;
 import javaforce.gl.*;
+import static javaforce.gl.GL.GL_FALSE;
+import static javaforce.gl.GL.glUniformMatrix4fv;
 
 import jfcraft.item.Item;
 import jfcraft.opengl.*;
 import jfcraft.client.*;
 import jfcraft.block.*;
 import jfcraft.data.*;
+import jfcraft.entity.*;
 import static jfcraft.data.Direction.*;
 import jfcraft.item.*;
 import static jfcraft.data.Types.*;
 
-public class ItemBase {
+public class ItemBase implements RenderSource {
   public char id;
   public String blockName;
   public char blockID;  //item id -> block id
@@ -495,6 +498,127 @@ public class ItemBase {
 
   public int getArmorPart(int layer, int partidx) {
     return armorParts[layer][partidx];
+  }
+
+  private static RenderDest renderDest;
+  public static boolean isBlock;
+  public static boolean isEntity;
+  public static Texture texture;
+  public static EntityBase entity;
+
+  public void buildBuffers(RenderDest dest, RenderData data) {
+    renderDest = dest;
+    isBlock = false;
+    isEntity = false;
+    ItemBase itembase = Static.items.items[id];
+    if (itembase.renderAsEntity) {
+      isEntity = true;
+      entity = Static.entities.entities[itembase.entityID];
+      entity.pos.x = 0;
+      entity.pos.y = 0;
+      entity.pos.z = 0;
+      entity.ang.y = 180;
+      entity.setScale(1.0f);
+      if (data.hand == LEFT) {
+        entity.setPart(EntityBase.L_ITEM);
+      } else {
+        entity.setPart(EntityBase.R_ITEM);
+      }
+    } else {
+      texture = itembase.textures[0].texture;  //BUG : zero?
+      itembase.addFaceWorldItem(renderDest.getBuffers(0), data.var[X], itembase.isGreen);
+      buffersIdx = 0;
+    }
+  }
+
+  public void bindTexture() {
+    if (isEntity) {
+      entity.bindTexture();
+    } else {
+      texture.bind();
+    }
+  }
+
+  public void render() {
+    if (isEntity) {
+      entity.render();
+    } else {
+      RenderBuffers buf = renderDest.getBuffers(buffersIdx);
+      buf.copyBuffers();
+      buf.bindBuffers();
+      buf.render();
+    }
+  }
+
+  private static GLMatrix itemView = new GLMatrix();
+
+  public void setViewMatrix(boolean left) {
+    itemView.setIdentity();
+
+    itemView.addRotate(90, 0, 1, 0);
+    itemView.addRotate(90, 1, 0, 0);
+    itemView.addScale(10, 10, 10);
+
+    if (ItemBase.isBlock) {
+      if (left) {
+        itemView.addRotate(HumaniodBase.leftHandAngle.x, 1, 0, 0);
+        itemView.addRotate(HumaniodBase.leftHandAngle.y, 0, 1, 0);
+      } else {
+        itemView.addRotate(HumaniodBase.rightHandAngle.x, 1, 0, 0);
+        itemView.addRotate(HumaniodBase.rightHandAngle.y, 0, 1, 0);
+      }
+//      handMat.addRotate(baseHandAngle.z, 0, 0, 1);
+      itemView.addTranslate(-0.5f, -0.5f, 0);
+    }
+    if (left) {
+      itemView.addTranslate(HumaniodBase.leftHandPos.x, HumaniodBase.leftHandPos.y, HumaniodBase.leftHandPos.z);
+    } else {
+      itemView.addTranslate(HumaniodBase.rightHandPos.x, HumaniodBase.rightHandPos.y, HumaniodBase.rightHandPos.z);
+    }
+
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, itemView.m);  //view matrix
+  }
+
+  public void setViewMatrixSelf(boolean left, GLVector3 l3) {
+    itemView.setIdentity();
+
+    if (left) {
+      itemView.addRotate(-90, 0, 1, 0);
+      itemView.addRotate(90, 1, 0, 0);
+      itemView.addScale(10, 10, 10);
+    } else {
+      //TODO : move these into HumaniodBase entity instance (arg) (amimated ang)
+      itemView.addRotate(Static.client.handAngle.x, 1, 0, 0);
+      itemView.addRotate(Static.client.handAngle.y, 0, 1, 0);
+      itemView.addRotate(Static.client.handAngle.z, 0, 0, 1);
+    }
+
+    if (isBlock) {
+      if (left) {
+        itemView.addRotate(HumaniodBase.leftHandAngle.x, 1, 0, 0);
+        itemView.addRotate(HumaniodBase.leftHandAngle.y, 0, 1, 0);
+      } else {
+        itemView.addRotate(HumaniodBase.rightHandAngle.x, 1, 0, 0);
+        itemView.addRotate(HumaniodBase.rightHandAngle.y, 0, 1, 0);
+      }
+//      handMat.addRotate(baseHandAngle.z, 0, 0, 1);
+      itemView.addTranslate(-0.5f, -0.5f, 0);
+    }
+    if (left) {
+      itemView.addTranslate(HumaniodBase.leftHandPos.x, HumaniodBase.leftHandPos.y, HumaniodBase.leftHandPos.z);
+    } else {
+      itemView.addTranslate(HumaniodBase.rightHandPos.x, HumaniodBase.rightHandPos.y, HumaniodBase.rightHandPos.z);
+    }
+    //now apply hand animation
+    if (left) {
+      float raise = 0.2f * Static.client.player.blockCount;
+      itemView.addTranslate(raise, raise, 0f);
+    } else {
+      //TODO : move these into HumaniodBase entity too (animated pos)
+      itemView.addTranslate(Static.client.handPos.x, Static.client.handPos.y, Static.client.handPos.z);
+    }
+
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, itemView.m);  //view matrix
   }
 
   public String toString() {

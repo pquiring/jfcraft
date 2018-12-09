@@ -181,16 +181,6 @@ public class Enderman extends HumaniodBase {
     }
   }
 
-  public void render() {
-    for(int a=0;a<dest.count();a++) {
-      RenderBuffers buf = dest.getBuffers(a);
-      if (buf.isBufferEmpty()) continue;
-      setMatrixModel(a, buf);
-      buf.bindBuffers();
-      buf.render();
-    }
-  }
-
   public EntityBase spawn(Chunk chunk) {
     World world = Static.server.world;
     float px = r.nextInt(16) + chunk.cx * 16.0f + 0.5f;

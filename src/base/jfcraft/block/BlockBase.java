@@ -654,26 +654,42 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   }
 
   public void buildBuffers(RenderDest dest, RenderData data) {
-    RenderBuffers buf = dest.getBuffers(buffersIdx);
-    for(int a=0;a<6;a++) {
-      int side = a;
-      if (isDir) {
-        if (!isDirXZ) {
-          side = rotateSide(side, data.dir[X]);
-        } else {
-          side = rotateSideXZ(side, data.dir[X]);
+    ItemBase.isBlock = false;
+    ItemBase.isEntity = false;
+    if (renderAsEntity) {
+      ItemBase.isEntity = true;
+      entity = Static.entities.entities[entityID];
+      entity.pos.x = 0;
+      entity.pos.y = 0;
+      entity.pos.z = 0;
+      entity.ang.y = 180;
+      entity.setScale(1.0f);
+    } else if (renderAsItem) {
+      texture = textures[0].texture;
+      buffersIdx = 0;
+      addFaceWorldItem(dest.getBuffers(0), data.var[X], isGreen);
+    } else {
+      texture = textures[0].texture;  //BUG : zero?
+      ItemBase.isBlock = true;
+      buffersIdx = textures[0].buffersIdx;  //BUG : zero?
+
+      RenderBuffers buf = dest.getBuffers(buffersIdx);
+      for(int a=0;a<6;a++) {
+        int side = a;
+        if (isDir) {
+          if (!isDirXZ) {
+            side = rotateSide(side, data.dir[X]);
+          } else {
+            side = rotateSideXZ(side, data.dir[X]);
+          }
         }
+        data.dirSide = side;
+        if (data.opaque[side]) continue;
+        data.side = a;
+        addFace(buf, data, getTexture(data));
       }
-      data.dirSide = side;
-      if (data.opaque[side]) continue;
-      data.side = a;
-      addFace(buf, data, getTexture(data));
     }
   }
-
-  public void bindTexture() {}
-
-  public void render() {}
 
   private static Faces faces = new Faces();
 

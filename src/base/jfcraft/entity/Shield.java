@@ -14,7 +14,7 @@ import jfcraft.opengl.*;
 
 public class Shield extends BlockEntity {
   public float lidAngle;
-  public RenderDest dest;  //TODO : make this static since Shield's can not be damaged
+  public static RenderDest dest;
   public static GLModel model;
 
   //render assets
@@ -23,7 +23,6 @@ public class Shield extends BlockEntity {
 
   public Shield() {
     id = Entities.SHIELD;
-    part = L_ITEM;
   }
 
   public String getName() {
@@ -36,13 +35,13 @@ public class Shield extends BlockEntity {
 
   public void init(World world) {
     super.init(world);
-    dest = new RenderDest(parts.length);
   }
 
   public void initStatic() {
     super.initStatic();
     textureName = "entity/shield_base_nopattern";
     model = loadModel("shield");
+    dest = new RenderDest(parts.length);
   }
 
   public void initStaticGL() {
@@ -51,10 +50,11 @@ public class Shield extends BlockEntity {
   }
 
   public void initInstance() {
+    part = L_ITEM;
     super.initInstance();
   }
 
-  private static String parts[] = {null, null, null, null, null, "L_SHIELD", "R_SHIELD"};
+  private static String parts[] = {null, null, null, null, null, null, "L_SHIELD", "R_SHIELD"};
 
   public void buildBuffers(RenderDest dest, RenderData data) {
     dest.resetAll();

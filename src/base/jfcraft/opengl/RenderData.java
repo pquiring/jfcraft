@@ -15,6 +15,7 @@ public class RenderData {
   public float x,y,z;
   public int side;  //side we are rendering
   public int dirSide;  //side after rotating
+  public int hand;  //LEFT or RIGHT
 
   public boolean isDir, isDirXZ;
   public boolean isGreen, isRed;

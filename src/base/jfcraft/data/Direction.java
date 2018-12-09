@@ -27,6 +27,10 @@ public class Direction {
   public static final int SE2 = 14;
 
   public static final int _15 = 15;  //reserved
+  
+  //left/right hand
+  public static final int LEFT = 1;
+  public static final int RIGHT = 2;
 
   public static int opposite(int dir) {
     switch (dir) {

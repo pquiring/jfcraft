@@ -221,7 +221,6 @@ public class SinglePlayerMenu extends RenderScreen {
     server.addClient(serverTransport, serverClient);
     Login login = (Login)Static.screens.screens[Client.LOGIN];
     login.setup(clientClient);
-    Static.dims.initEnvironments();
     Static.video.setScreen(login);
   }
 

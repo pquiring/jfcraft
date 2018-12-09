@@ -37,6 +37,11 @@ public class Skeleton extends HumaniodBase {
     id = Entities.SKELETON;
   }
 
+  public void initInstance() {
+    super.initInstance();
+    disable_cull_face = true;
+  }
+
   public RenderDest getDest() {
     return dest;
   }
@@ -176,18 +181,6 @@ public class Skeleton extends HumaniodBase {
     if ((walkAngle < -45.0) || (walkAngle > 45.0)) {
       walkAngleDelta *= -1;
     }
-  }
-
-  public void render() {
-    glDisable(GL_CULL_FACE);
-    for(int a=0;a<dest.count();a++) {
-      RenderBuffers buf = dest.getBuffers(a);
-      if (buf.isBufferEmpty()) continue;
-      setMatrixModel(a, buf);
-      buf.bindBuffers();
-      buf.render();
-    }
-    glEnable(GL_CULL_FACE);
   }
 
   public EntityBase spawn(Chunk chunk) {

@@ -91,6 +91,7 @@ public class Loading extends RenderScreen {
       Static.entities.initStaticGL();
       RenderScreen.initStatic();
       Static.screens.init();
+      Static.dims.initEnvironments();
     } catch (Exception e) {
       Static.log(e);
     }

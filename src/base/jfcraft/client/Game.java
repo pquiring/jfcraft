@@ -798,14 +798,6 @@ public class Game extends RenderScreen {
     Static.client.clientTransport.changeActiveSlot((byte)activeSlot);
   }
 
-  private final XYZ rightHandAngle = new XYZ(35.0f, 45.0f, +5f);
-  private final XYZ rightHandPos = new XYZ(3, -3, -5.0f);
-
-  private final XYZ leftHandAngle = new XYZ(35.0f, 45.0f, -5f);
-  private final XYZ leftHandPos = new XYZ(-16, -12, -5.0f);
-
-  private GLMatrix handMat = new GLMatrix();
-
   private void renderItemInHand() {
     glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -830,127 +822,42 @@ public class Game extends RenderScreen {
   private RenderDest o_items = new RenderDest(Chunk.buffersCount);
   private RenderData data = new RenderData();
 
-  private void renderItemInHand(Item item, float light, boolean leftHand) {
+  private void renderItemInHand(Item item, float light, boolean left) {
     o_items.resetAll();
-    Texture texture = null;
-    boolean isBlock = false;
-    boolean isEntity = false;
-    int buffersIdx = -1;
-    EntityBase eb = null;
-    BlockBase block = null;
+    data.reset();
+    data.hand = left ? LEFT : RIGHT;
 
+    ItemBase itembase = Static.items.items[item.id];
     if (Static.isBlock(item.id)) {
-      block = Static.blocks.blocks[item.id];
-      if (block.renderAsEntity) {
-        isEntity = true;
-        eb = Static.entities.entities[block.entityID];
-        eb.pos.x = 0;
-        eb.pos.y = 0;
-        eb.pos.z = 0;
-        eb.ang.y = 180;
-        eb.setScale(1.0f);
-      } else if (block.renderAsItem) {
-        texture = block.textures[0].texture;
-        buffersIdx = 0;
-        block.addFaceWorldItem(o_items.getBuffers(0), item.var, block.isGreen);
+      BlockBase block = Static.blocks.blocks[item.id];
+      if (block.isDirXZ) {
+        data.dir[X] = S;
       } else {
-        texture = block.textures[0].texture;
-        isBlock = true;
-        data.x = 0;
-        data.y = 0;
-        data.z = 0;
-        data.sl[X] = 1.0f;
-        data.crack = -1;
-        if (block.isDirXZ) {
-          data.dir[X] = S;
-        } else {
-          data.dir[X] = A;  //zero
-        }
-        block.buildBuffers(o_items, data);
-        buffersIdx = block.textures[0].buffersIdx;  //BUG : zero?
-      }
-    } else {
-      ItemBase itembase = Static.items.items[item.id];
-      if (itembase.renderAsEntity) {
-        isEntity = true;
-        eb = Static.entities.entities[itembase.entityID];
-        eb.pos.x = 0;
-        eb.pos.y = 0;
-        eb.pos.z = 0;
-        eb.ang.y = 180;
-        eb.setScale(1.0f);
-        if (leftHand) {
-          eb.setPart(L_ITEM);
-        } else {
-          eb.setPart(R_ITEM);
-        }
-      } else {
-        texture = itembase.textures[0].texture;  //BUG : zero?
-        itembase.addFaceWorldItem(o_items.getBuffers(0), item.var, itembase.isGreen);
-        buffersIdx = 0;
+        data.dir[X] = A;
       }
     }
+    itembase.buildBuffers(o_items, data);
 
-    handMat.setIdentity();
-    if (leftHand) {
-      handMat.addRotate(90, 0, 1, 0);
-      handMat.addRotate(90, 1, 0, 0);
-      handMat.addScale(10, 10, 10);
-    } else {
-      handMat.addRotate(Static.client.handAngle.x, 1, 0, 0);
-      handMat.addRotate(Static.client.handAngle.y, 0, 1, 0);
-      handMat.addRotate(Static.client.handAngle.z, 0, 0, 1);
-    }
+    itembase.bindTexture();
 
-    if (isBlock) {
-      if (leftHand) {
-        handMat.addRotate(leftHandAngle.x, 1, 0, 0);
-        handMat.addRotate(leftHandAngle.y, 0, 1, 0);
-      } else {
-        handMat.addRotate(rightHandAngle.x, 1, 0, 0);
-        handMat.addRotate(rightHandAngle.y, 0, 1, 0);
-      }
-//      handMat.addRotate(baseHandAngle.z, 0, 0, 1);
-      handMat.addTranslate(-0.5f, -0.5f, 0);
-    }
-    if (leftHand) {
-      handMat.addTranslate(leftHandPos.x, leftHandPos.y, leftHandPos.z);
-    } else {
-      handMat.addTranslate(rightHandPos.x, rightHandPos.y, rightHandPos.z);
-    }
-    //now apply hand animation
-    if (leftHand) {
-      float raise = 0.2f * Static.client.player.blockCount;
-      handMat.addTranslate(raise, raise, 0f);
-    } else {
-      handMat.addTranslate(Static.client.handPos.x, Static.client.handPos.y, Static.client.handPos.z);
-    }
+    itembase.setViewMatrixSelf(left, l3);
 
-    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, handMat.m);  //view matrix
-
-    if (isEntity) {
-      eb.bindTexture();
-      eb.render();
-    } else {
-      texture.bind();
-      RenderBuffers buf = o_items.getBuffers(buffersIdx);
-      buf.copyBuffers();
-      buf.bindBuffers();
-      buf.render();
-    }
+    itembase.render();
   }
+
+  private static GLMatrix handMat = new GLMatrix();
 
   public void renderHand() {
     handMat.setIdentity();
     handMat.addTranslate(hand.org.x, hand.org.y, hand.org.z);
-    handMat.addScale(2, 2, 2);
+    handMat.addScale(3, 3, 3);
     handMat.addRotate2(-170, 0, 0, 1);
     handMat.addRotate4(Static.client.handAngle.x, 1, 0, 0);
     handMat.addRotate4(Static.client.handAngle.y, 0, 1, 0);
     handMat.addRotate4(Static.client.handAngle.z, 0, 0, 1);
     handMat.addTranslate2(-hand.org.x, -hand.org.y, -hand.org.z);
-    handMat.addTranslate(-0.5f,-1.5f,0);
-    handMat.addTranslate(rightHandPos.x, rightHandPos.y, rightHandPos.z);
+    handMat.addTranslate(-0.5f,-2f,0);
+    handMat.addTranslate(HumaniodBase.rightHandPos.x, HumaniodBase.rightHandPos.y, HumaniodBase.rightHandPos.z);
     handMat.addTranslate(Static.client.handPos.x, Static.client.handPos.y, Static.client.handPos.z);
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, handMat.m);  //view matrix
     Static.entities.entities[Entities.PLAYER].bindTexture();
