@@ -46,8 +46,6 @@ public class Static {
   public static XYZ camera_pos = new XYZ();  //camera position
   public static XYZ camera_ang = new XYZ();  //camera angle
 
-  public static boolean enablePrebuildItems = false;  //not ready yet (see RenderScreen.renderItemFast())
-
   public static boolean debugRotate = false;
   public static boolean debugProfile = false;
   public static boolean debugCaves = false;
@@ -253,6 +251,12 @@ public class Static {
   public static int abs(int x) { return x >= 0 ? x : -x; }
   public static int min(int a, int b) { return a < b ? a : b; }
   public static int max(int a, int b) { return a > b ? a : b; }
+
+  public static int getTime() {
+    if (client == null) return 0;
+    if (client.world == null) return 0;
+    return client.world.time;
+  }
 
   public static String getBasePath() {
     if (JF.isWindows()) {

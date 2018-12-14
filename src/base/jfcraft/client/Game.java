@@ -393,7 +393,7 @@ public class Game extends RenderScreen {
       if (!chunk.inRange) continue;
       EntityBase entities[] = chunk.getEntities();
       int numEntities = entities.length;
-      data.reset();
+      entity_data.reset();
       for(int b=0;b<numEntities;b++) {
         EntityBase entity = entities[b];
 //        if (entity.uid == Static.client.player.uid && camview == Views.normal) continue;  //do not render self
@@ -819,28 +819,20 @@ public class Game extends RenderScreen {
     }
   }
 
-  private RenderDest o_items = new RenderDest(Chunk.buffersCount);
-  private RenderData data = new RenderData();
+  private static RenderData data = new RenderData();
 
   private void renderItemInHand(Item item, float light, boolean left) {
-    o_items.resetAll();
     data.reset();
-    data.hand = left ? LEFT : RIGHT;
 
     ItemBase itembase = Static.items.items[item.id];
-    if (Static.isBlock(item.id)) {
-      BlockBase block = Static.blocks.blocks[item.id];
-      if (block.isDirXZ) {
-        data.dir[X] = S;
-      } else {
-        data.dir[X] = A;
-      }
-    }
-    itembase.buildBuffers(o_items, data);
 
     itembase.bindTexture();
 
     itembase.setViewMatrixSelf(left, l3);
+
+    data.var[X] = item.var;
+    data.hand = left ? LEFT : RIGHT;
+    itembase.prepRender(data);
 
     itembase.render();
   }
@@ -865,13 +857,15 @@ public class Game extends RenderScreen {
     hand.render();
   }
 
+  private static RenderData entity_data = new RenderData();
+
   public void renderEntity(EntityBase entity) {
     if (!entity.instanceInited) {
       entity.initInstance();
     }
     if (!entity.isStatic) {
       if (entity.dirty) {
-        entity.buildBuffers(entity.getDest(), data);
+        entity.buildBuffers(entity.getDest(), entity_data);
         entity.dirty = false;
       }
       if (entity.needCopyBuffers) {

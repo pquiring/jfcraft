@@ -520,8 +520,8 @@ public abstract class RenderScreen {
     glUniform1i(Static.uniformEnableTint, 0);
   }
 
-  // this method is slightly FASTER but ItemCompass and ItemClock need to update their image another way
-  private void renderItemFast(Item item, int x, int y) {
+  /** Render an item in an inventory slot. */
+  private void renderItem(Item item, int x, int y) {
     if (item.id == 0) return;
     if (Static.isBlock(item.id)) {
       BlockBase block = Static.blocks.blocks[item.id];
@@ -564,70 +564,6 @@ public abstract class RenderScreen {
       buf.bindBuffers();
       buf.render();
     }
-  }
-
-  private void renderItem(Item item, int x, int y) {
-    if (Static.enablePrebuildItems) {
-      renderItemFast(item, x, y);
-    } else {
-      renderItemSlow(item, x, y);
-    }
-  }
-
-  private void renderItemSlow(Item item, int x, int y) {
-    if (item.id == 0) return;
-    if (o_items == null) {
-      o_items = new RenderDest(Chunk.buffersCount);
-    }
-    o_items.resetAll();
-    int buffersIdx;
-    if (Static.isBlock(item.id)) {
-      BlockBase block = Static.blocks.blocks[item.id];
-      if (block.renderAsEntity) {
-        setViewportBlock(x, y);
-        EntityBase eb = Static.entities.entities[block.entityID];
-        eb.pos.x = 0.5f;
-        eb.pos.y = 0.5f;
-        eb.pos.z = 0.5f;
-        eb.ang.y = -90;
-        eb.setScale(1.0f);
-        eb.bindTexture();
-        glClear(GL.GL_DEPTH_BUFFER_BIT);
-        glDepthFunc(GL.GL_LEQUAL);
-        eb.render();
-        glDepthFunc(GL.GL_ALWAYS);
-        return;
-      } else if (block.renderAsItem) {
-        setViewportItem(x, y);
-        block.addFaceInvItem(o_items.getBuffers(0), item.var, block.isGreen);
-        buffersIdx = 0;
-      } else {
-        setViewportBlock(x, y);
-        data.x = 0;
-        data.y = 0;
-        data.z = 0;
-        data.sl[X] = 1.0f;
-        data.bl[X] = 1.0f;
-        data.crack = -1;
-        data.dir[X] = block.getPreferredDir();
-        if (block.isVar) {
-          data.var[X] = item.var;
-        } else {
-          data.var[X] = 0;
-        }
-        block.buildBuffers(o_items, data);
-        buffersIdx = block.buffersIdx;
-      }
-    } else {
-      setViewportItem(x, y);
-      ItemBase itembase = Static.items.items[item.id];
-      buffersIdx = 0;
-      itembase.addFaceInvItem(o_items.getBuffers(0), item.var, false);
-    }
-    RenderBuffers obj = o_items.getBuffers(buffersIdx);
-    obj.copyBuffers();
-    obj.bindBuffers();
-    obj.render();
   }
 
   private void renderItemName(Item item, int x,int y) {

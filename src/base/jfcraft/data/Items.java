@@ -642,7 +642,7 @@ public class Items {
       item.bufs = new RenderDest[vars];
       for(int b=0;b<vars;b++) {
         item.bufs[b] = new RenderDest(Chunk.buffersCount);
-        item.addFaceInvItem(item.bufs[b].getBuffers(0), b, false);
+        item.buildBuffers(item.bufs[b], ItemBase.data);
         item.bufs[b].getBuffers(0).copyBuffers();
       }
     }

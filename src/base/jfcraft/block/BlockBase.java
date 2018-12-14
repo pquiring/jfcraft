@@ -557,12 +557,6 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
 
   public void teleport(EntityBase e, Coords c) {}
 
-  public void init() {
-  }
-
-  public void initGL() {
-  }
-
   public int rotateSide(int side, int dir) {
     switch (dir) {
       case A: return side;
@@ -654,23 +648,17 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   }
 
   public void buildBuffers(RenderDest dest, RenderData data) {
-    ItemBase.isBlock = false;
-    ItemBase.isEntity = false;
     if (renderAsEntity) {
-      ItemBase.isEntity = true;
-      entity = Static.entities.entities[entityID];
+      EntityBase entity = Static.entities.entities[entityID];
       entity.pos.x = 0;
       entity.pos.y = 0;
       entity.pos.z = 0;
       entity.ang.y = 180;
       entity.setScale(1.0f);
     } else if (renderAsItem) {
-      texture = textures[0].texture;
       buffersIdx = 0;
       addFaceWorldItem(dest.getBuffers(0), data.var[X], isGreen);
     } else {
-      texture = textures[0].texture;  //BUG : zero?
-      ItemBase.isBlock = true;
       buffersIdx = textures[0].buffersIdx;  //BUG : zero?
 
       RenderBuffers buf = dest.getBuffers(buffersIdx);

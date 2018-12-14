@@ -80,13 +80,9 @@ public class Loading extends RenderScreen {
   private void loadGL() {
     try {
       Static.blocks.initTexture();
-      if (Static.enablePrebuildItems) {
-        Static.blocks.initBuffers();
-      }
+      Static.blocks.initBuffers();
       Static.items.initTexture();
-      if (Static.enablePrebuildItems) {
-        Static.items.initBuffers();
-      }
+      Static.items.initBuffers();
       Static.entities.initStatic();
       Static.entities.initStaticGL();
       RenderScreen.initStatic();

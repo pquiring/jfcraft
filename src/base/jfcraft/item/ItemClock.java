@@ -22,7 +22,7 @@ public class ItemClock extends ItemBase {
     if (!isVar) var = 0;
     //calc angle and add to ty1/ty2
     float time = 0;
-    if (Static.client != null) time = Static.client.world.time;  //24000 ticks / day
+    if (Static.client != null) time = Static.getTime();  //24000 ticks / day
     //the clock is based on 6am
     time += 12000;
     if (time < 0) time += 24000;
@@ -51,7 +51,7 @@ public class ItemClock extends ItemBase {
     if (!isVar) var = 0;
     //calc angle and add to ty1/ty2
     float ay = 0.0f;
-    float time = Static.client.world.time;  //24000 ticks / day
+    float time = Static.getTime();  //24000 ticks / day
     float w = textures[var].ai.image.getWidth();
     float h = textures[var].ai.image.getHeight();
 //    Static.log("w/h=" + w + "," + h);
@@ -71,5 +71,11 @@ public class ItemClock extends ItemBase {
     x1 = x2;
     x2 = -0.5f;
     obj.addFace2D(x1,y1,x2,y2,tx1,ty1,tx2,ty2,Static.white);
+  }
+  public void render() {
+    data.reset();
+    buildBuffers(bufs[0], data);
+    bufs[0].copyBuffers();
+    super.render();
   }
 }

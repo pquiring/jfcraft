@@ -63,4 +63,10 @@ public class ItemCompass extends ItemBase {
     x2 = -0.5f;
     obj.addFace2D(x1,y1,x2,y2,tx1,ty1,tx2,ty2,Static.white);
   }
+  public void render() {
+    data.reset();
+    buildBuffers(bufs[0], data);
+    bufs[0].copyBuffers();
+    super.render();
+  }
 }

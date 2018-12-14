@@ -500,20 +500,34 @@ public class ItemBase implements RenderSource {
     return armorParts[layer][partidx];
   }
 
-  private static RenderDest renderDest;
-  public static boolean isBlock;
-  public static boolean isEntity;
-  public static Texture texture;
-  public static EntityBase entity;
+  public static RenderData data = new RenderData();
+
+  public RenderDest getDest(RenderData data) {
+    return bufs[data.var[X]];
+  }
 
   public void buildBuffers(RenderDest dest, RenderData data) {
-    renderDest = dest;
-    isBlock = false;
-    isEntity = false;
-    ItemBase itembase = Static.items.items[id];
-    if (itembase.renderAsEntity) {
-      isEntity = true;
-      entity = Static.entities.entities[itembase.entityID];
+    if (renderAsEntity) return;
+    addFaceWorldItem(dest.getBuffers(0), data.var[X], isGreen);
+    buffersIdx = 0;
+  }
+
+  public void prepRender(RenderData data) {
+    this.data = data;
+  }
+
+  public void bindTexture() {
+    if (renderAsEntity) {
+      EntityBase entity = Static.entities.entities[entityID];
+      entity.bindTexture();
+    } else {
+      textures[0].texture.bind();  //BUG? Zero?
+    }
+  }
+
+  public void render() {
+    if (renderAsEntity) {
+      EntityBase entity = Static.entities.entities[entityID];
       entity.pos.x = 0;
       entity.pos.y = 0;
       entity.pos.z = 0;
@@ -524,27 +538,9 @@ public class ItemBase implements RenderSource {
       } else {
         entity.setPart(EntityBase.R_ITEM);
       }
-    } else {
-      texture = itembase.textures[0].texture;  //BUG : zero?
-      itembase.addFaceWorldItem(renderDest.getBuffers(0), data.var[X], itembase.isGreen);
-      buffersIdx = 0;
-    }
-  }
-
-  public void bindTexture() {
-    if (isEntity) {
-      entity.bindTexture();
-    } else {
-      texture.bind();
-    }
-  }
-
-  public void render() {
-    if (isEntity) {
       entity.render();
     } else {
-      RenderBuffers buf = renderDest.getBuffers(buffersIdx);
-      buf.copyBuffers();
+      RenderBuffers buf = getDest(data).getBuffers(buffersIdx);
       buf.bindBuffers();
       buf.render();
     }
@@ -559,7 +555,7 @@ public class ItemBase implements RenderSource {
     itemView.addRotate(90, 1, 0, 0);
     itemView.addScale(10, 10, 10);
 
-    if (ItemBase.isBlock) {
+    if (Static.isBlock(id)) {
       if (left) {
         itemView.addRotate(HumaniodBase.leftHandAngle.x, 1, 0, 0);
         itemView.addRotate(HumaniodBase.leftHandAngle.y, 0, 1, 0);
@@ -593,7 +589,7 @@ public class ItemBase implements RenderSource {
       itemView.addRotate(Static.client.handAngle.z, 0, 0, 1);
     }
 
-    if (isBlock) {
+    if (Static.isBlock(id)) {
       if (left) {
         itemView.addRotate(HumaniodBase.leftHandAngle.x, 1, 0, 0);
         itemView.addRotate(HumaniodBase.leftHandAngle.y, 0, 1, 0);
