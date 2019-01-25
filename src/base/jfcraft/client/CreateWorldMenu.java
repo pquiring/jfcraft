@@ -7,6 +7,8 @@ package jfcraft.client;
  * Created : Mar 24, 2014
  */
 
+import java.util.*;
+
 import javaforce.gl.*;
 import static javaforce.gl.GL.*;
 
@@ -18,6 +20,7 @@ public class CreateWorldMenu extends RenderScreen {
   private Texture t_menu;
   private RenderBuffers o_menu;
   private TextField world_name;
+  private TextField seed;
   private String initTxt;
 
   public CreateWorldMenu() {
@@ -29,8 +32,13 @@ public class CreateWorldMenu extends RenderScreen {
   }
 
   public void init() {
+    Random r = new Random();
     super.init();
     world_name = addTextField("New World", 5, 32, 512-10, Static.black4, 64, false, 1);
+    seed = addTextField(Long.toString(r.nextLong()), 5, 79, 512-10, Static.black4, 64, false, 1);
+    addButton("Random", 20, 79+32, 226, new Runnable() {public void run() {
+      randomSeed();
+    }});
     addButton("Start", 20, 390, 226, new Runnable() {public void run() {
       createWorld();
     }});
@@ -94,7 +102,13 @@ public class CreateWorldMenu extends RenderScreen {
     String name = world_name.getText();
     if (name.length() == 0) return;
     Server server = new Server();
-    if (!server.createWorld(name)) {
+    long seedValue;
+    try {
+      seedValue = Long.decode(seed.getText());
+    } catch (Exception e) {
+      seedValue = 0;
+    }
+    if (!server.createWorld(name, seedValue)) {
       MessageMenu message = (MessageMenu)Static.screens.screens[Client.MESSAGE];
       message.setup("Error", server.errmsg, Static.screens.screens[Client.MAIN]);
       Static.video.setScreen(message);
@@ -114,5 +128,11 @@ public class CreateWorldMenu extends RenderScreen {
     Login login = (Login)Static.screens.screens[Client.LOGIN];
     login.setup(clientClient);
     Static.video.setScreen(login);
+  }
+
+  private void randomSeed() {
+    Random r = new Random();
+    long seedValue = r.nextLong();
+    seed.setText(Long.toString(seedValue));
   }
 }

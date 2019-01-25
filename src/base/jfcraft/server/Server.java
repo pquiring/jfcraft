@@ -47,14 +47,14 @@ public class Server {
   }
 
   /** Starts server and create new world. */
-  public boolean createWorld(String worldName) {
+  public boolean createWorld(String worldName, long seed) {
     Static.log("Creating world:" + worldName);
     world = new World(true);
     world.init();
     world.chunks = new Chunks(world);
     world.name = worldName;
     world.type = "default";
-    world.seed = 0;  //new Random().nextLong();  //use a real seed later
+    world.seed = seed;
     world.assignIDs();
     Static.dims.init();
     folderName = world.createFolderName(worldName);
