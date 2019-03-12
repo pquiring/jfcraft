@@ -48,9 +48,13 @@ jfCraft is built on top of JavaForce, so check it out first:
   git clone https://github.com/pquiring/javaforce.git
 Then checkout jfCraft within it:
   git clone https://github.com/pquiring/jfcraft.git javaforce/games/jfcraft
-Download the JavaForce binary files.
+Compile Javaforce and it's native libraries (requires mingw) (see javaforce/readme.txt)
   cd javaforce
-  ant get-bin
+  ant
+  cd javaforce\native\windows
+  ant
+  cd javaforce\stubs\windows
+  ant
 Then build jfCraft.
   cd javaforce/games/jfcraft
   ant
