@@ -267,7 +267,7 @@ public class Launcher extends javax.swing.JFrame {
       if (JF.isWindows()) {
         javaforce.utils.WinPE.main(new String[] {bin, cfg});
       } else {
-        javaforce.utils.jresmgr.main(new String[] {bin, cfg});
+        javaforce.utils.ResourceManager.main(new String[] {bin, cfg});
         File fbin = new File(bin);
         fbin.setExecutable(true);
       }
