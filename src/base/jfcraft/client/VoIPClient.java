@@ -48,7 +48,7 @@ public class VoIPClient implements SIPClientInterface, RTPInterface {
     sip = new SIPClient();
     int port = 5061;
     int fail = 0;
-    while (!sip.init(server, 5060, port, this, SIP.Transport.UDP)) {
+    while (!sip.init(server, 5060, port, this, TransportType.UDP)) {
       port++;
       fail++;
       if (fail == 5) {

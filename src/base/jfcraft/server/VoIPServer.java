@@ -24,7 +24,7 @@ public class VoIPServer implements SIPServerInterface, VoIPEventHandler {
     Static.log("Setting VoIP:RTP UDP port range 33000-33999");
     RTP.setPortRange(33000, 33999);
     ss = new SIPServer();
-    ss.init(5060, this, SIP.Transport.UDP);
+    ss.init(5060, this, TransportType.UDP);
   }
 
   public void stop() {
