@@ -280,7 +280,7 @@ public class Launcher extends javax.swing.JFrame {
   }//GEN-LAST:event_startActionPerformed
 
   private void htmlHyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {//GEN-FIRST:event_htmlHyperlinkUpdate
-    JF.openURL(evt.getURL().toString());
+    JFAWT.openURL(evt.getURL().toString());
   }//GEN-LAST:event_htmlHyperlinkUpdate
 
   private void optsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optsActionPerformed
