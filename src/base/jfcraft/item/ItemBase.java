@@ -508,7 +508,7 @@ public class ItemBase implements RenderSource {
 
   public void buildBuffers(RenderDest dest, RenderData data) {
     if (renderAsEntity) return;
-    addFaceWorldItem(dest.getBuffers(0), data.var[X], isGreen);
+    addFaceInvItem(dest.getBuffers(0), data.var[X], isGreen);
     buffersIdx = 0;
   }
 

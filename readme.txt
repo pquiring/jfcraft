@@ -1,4 +1,4 @@
-JFCraft/0.23
+jfCraft/0.23
 ============
 
 Yet another implementation of the MineCraft game.
@@ -48,7 +48,7 @@ jfCraft is built on top of JavaForce, so check it out first:
   git clone https://github.com/pquiring/javaforce.git
 Then checkout jfCraft within it:
   git clone https://github.com/pquiring/jfcraft.git javaforce/games/jfcraft
-Compile Javaforce and it's native libraries (requires mingw) (see javaforce/readme.txt)
+Compile Javaforce and it's native libraries (see javaforce/readme.txt)
   cd javaforce
   ant
   cd javaforce\native\windows
@@ -56,7 +56,7 @@ Compile Javaforce and it's native libraries (requires mingw) (see javaforce/read
   cd javaforce\stubs\windows
   ant
 Then build jfCraft.
-  cd javaforce/games/jfcraft
+  cd javaforce\games\jfcraft
   ant
 
 This is alpha software so please do not open bug requests.
@@ -65,3 +65,4 @@ Thanks.
 
 By : Peter Quiring (pquiring@gmail.com)
 Web : http://pquiring.github.io/jfcraft
+Source : https://github.com/pquiring/jfcraft
