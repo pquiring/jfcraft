@@ -2,7 +2,6 @@
   <description>jfcraft</description>
   <!-- set global properties for this build -->
   <property name="app" value="jfcraft-client"/>
-  <property name="apptype" value="c"/>
   <property name="app2" value="jfcraft-server"/>
   <property name="home" location="../.."/>
   <property name="ico" value="jfcraft"/>
