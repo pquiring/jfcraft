@@ -101,6 +101,10 @@ public class Horse extends VehicleBase {
   public static final int PATTERN_WHITEDOTS = 13;
   public static final int PATTERN_WHITEFIELD = 14;
 
+  public static final int ARMOR_IRON = 15;
+  public static final int ARMOR_GOLD = 16;
+  public static final int ARMOR_DIAMOND = 17;
+
   //render assets
   public static Texture textures[];
   public static GLVertex org[];
@@ -155,8 +159,8 @@ public class Horse extends VehicleBase {
     textures = new Texture[textureNames.length];
     int unit = 0;
     for(int a=0;a<textureNames.length;a++) {
-      if (a == 11) unit = 2;  //markings
-      if (a == 14) unit = 3;  //armor
+      if (a == PATTERN_BLACKDOTS) unit = 2;  //markings
+      if (a == ARMOR_IRON) unit = 3;  //armor
       textures[a] = Textures.getTexture(textureNames[a], unit);
     }
   }
@@ -176,7 +180,7 @@ public class Horse extends VehicleBase {
     "entity/horse/horse_white",
     //markings (texture unit #2) (overlay)
     "entity/horse/horse_markings_blackdots",
-//    "entity/horse/horse_markings_white",
+    "entity/horse/horse_markings_whitedots",  //should be just "white" but missing texture
     "entity/horse/horse_markings_whitedots",
     "entity/horse/horse_markings_whitefield",
     //armor (texture unit #3) (overlay)
@@ -272,15 +276,15 @@ public class Horse extends VehicleBase {
       glUniform1i(Static.uniformEnableHorsePattern, 1);
     }
     if (haveArmor(FLAG_ARMOR_IRON)) {
-      textures[15].bind();
+      textures[ARMOR_IRON].bind();
       glUniform1i(Static.uniformEnableHorseArmor, 1);
     }
     else if (haveArmor(FLAG_ARMOR_GOLD)) {
-      textures[16].bind();
+      textures[ARMOR_GOLD].bind();
       glUniform1i(Static.uniformEnableHorseArmor, 1);
     }
     else if (haveArmor(FLAG_ARMOR_DIAMOND)) {
-      textures[17].bind();
+      textures[ARMOR_DIAMOND].bind();
       glUniform1i(Static.uniformEnableHorseArmor, 1);
     }
   }

@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+Jan 8, 2020 : v0.25 released!
+  - fix : horse textures were changed in texture pack 1.13
+    - replaced old 1.8 textures for now
+    - will need to redo texture coords for horse in blender later
+
 Jan 7, 2020 : v0.24 released!
   - new : just some performance improvements
 
