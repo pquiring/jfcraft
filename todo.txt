@@ -1,4 +1,4 @@
-List of TODOs to make JFCraft as feature full as the real thing:
+List of TODOs to make jfCraft as feature full as the real thing:
 
 need list:
 
@@ -24,14 +24,14 @@ weather : rain, snow, storms
 more farming (melon seeds, pumpkin seeds)
 enchanting (requires mana)
 RPG elements : level, stats, etc.
-misc (iron golem, snow golem)
-bosses (wither, dragon)
+add iron golem, snow golem
+add wither, dragon
 brewing (potions)
 more sounds and music (jfMusic)
 more particles
 double chest
 random ticks : replace snow
-support ogg audio files (JCraft:JOrbis/0.0.17) or MP3 (ffmpeg)
+support ogg audio files (jCraft:jOrbis/0.0.17) or MP3 (ffmpeg)
 suffication (in blocks)
 trip line
 beacon ?
