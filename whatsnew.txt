@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+Mar 20, 2020 : v0.26 released!
+  - re-release for recent fixes in javaforce
+
 Jan 8, 2020 : v0.25 released!
   - fix : horse textures were changed in texture pack 1.13
     - replaced old 1.8 textures for now
