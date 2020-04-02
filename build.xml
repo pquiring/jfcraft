@@ -2,14 +2,15 @@
   <description>jfcraft</description>
   <!-- set global properties for this build -->
   <property name="app" value="jfcraft-client"/>
-  <property name="app2" value="jfcraft-server"/>
   <property name="home" location="../.."/>
-  <property name="ico" value="jfcraft"/>
+  <property name="ico" value="jfcraft.ico"/>
   <property name="jre" location="${home}/jre_base_desktop"/>
   <property name="msi" value="jfcraft"/>
   <property name="src" location="src/base"/>
   <property name="build" location="classes"/>
   <property name="version" value="0.26"/>
+
+  <property name="project2" location="build-server"/>
 
   <import file="${home}/base.xml"/>
 
