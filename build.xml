@@ -10,7 +10,7 @@
   <property name="build" location="classes"/>
   <property name="version" value="0.26"/>
 
-  <property name="project2" location="build-server"/>
+  <property name="project2" value="build-server"/>
 
   <import file="${home}/base.xml"/>
 
