@@ -39,7 +39,7 @@ public class Creeper extends CreatureBase {
     return "Creeper";
   }
 
-  public void getIDs() {
+  public void getIDs(World world) {
     CREEPER = world.getEntityID("CREEPER");
   }
 

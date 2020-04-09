@@ -15,8 +15,8 @@ public class BlockMarioPortal extends BlockPortal {
     super(id, names, images);
   }
 
-  public void getIDs() {
-    MARIO_PORTAL = Static.server.world.getBlockID("MARIO_PORTAL");
+  public void getIDs(World world) {
+    MARIO_PORTAL = world.getBlockID("MARIO_PORTAL");
   }
 
   public int getDimension() {

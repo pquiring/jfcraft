@@ -36,7 +36,7 @@ public class Domino extends BlockEntity {
     return "DOMINO";
   }
 
-  public void getIDs() {
+  public void getIDs(World world) {
     DOMINO = world.getEntityID("DOMINO");
   }
 

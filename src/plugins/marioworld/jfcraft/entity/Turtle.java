@@ -40,7 +40,7 @@ public class Turtle extends CreatureBase {
     id = TURTLE;
   }
 
-  public void getIDs() {
+  public void getIDs(World world) {
     TURTLE = world.getEntityID("TURTLE");
   }
 

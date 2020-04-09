@@ -1127,7 +1127,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return new Item[0];
   }
 
-  public void getIDs() {}
+  public void getIDs(World world) {}
 
   public boolean isFlagSet(int flag) {
     return (flags & flag) != 0;

@@ -12,7 +12,7 @@ public class BlockScrew extends BlockBase {
   public BlockScrew(String name, String names[], String images[]) {
     super(name, names, images);
   }
-  public void getIDs() {
-    SCREW = Static.server.world.getBlockID("SCREW");
+  public void getIDs(World world) {
+    SCREW = world.getBlockID("SCREW");
   }
 }

@@ -14,8 +14,8 @@ public class BlockCoinBlock extends BlockOpaque {
   public BlockCoinBlock(String name, String names[], String images[]) {
     super(name, names, images);
   }
-  public void getIDs() {
-    COIN_BLOCK = Static.server.world.getBlockID("COIN_BLOCK");
+  public void getIDs(World world) {
+    COIN_BLOCK = world.getBlockID("COIN_BLOCK");
   }
   public boolean useTool(Client client, Coords c) {
     Item item = client.player.items[client.player.activeSlot];

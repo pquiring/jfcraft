@@ -15,7 +15,7 @@ import jfcraft.data.*;
 public abstract class DimBase {
   public int id;
   public abstract String getName();
-  public void getIDs() {};
+  public void getIDs(World world) {};
   public void init() {
     getGeneratorPhase1().getIDs();
     getGeneratorPhase2().getIDs();

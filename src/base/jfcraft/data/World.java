@@ -678,10 +678,10 @@ public class World implements SerialClass, SerialCreator {
       items[idx].getIDs(this);
     }
     for(int idx=0;idx<ecnt;idx++) {
-      entities[idx].getIDs();
+      entities[idx].getIDs(this);
     }
     for(int idx=0;idx<dcnt;idx++) {
-      dims[idx].getIDs();
+      dims[idx].getIDs(this);
     }
     Static.items.orderItems();  //must do this before blocks
     Static.blocks.orderBlocks();  //these are also copied into items
