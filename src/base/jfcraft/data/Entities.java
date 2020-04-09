@@ -51,6 +51,31 @@ public class Entities implements SerialCreator {
   public static int ENDER_CHEST;
   public static int SHIELD;
 
+  public static void getIDs(World world) {
+    PLAYER = world.getEntityID("player");
+    ZOMBIE = world.getEntityID("ZOMBIE");
+    SKELETON = world.getEntityID("SKELETON");
+    ENDERMAN = world.getEntityID("ENDERMAN");
+    ZOMBIE_PIGMAN = world.getEntityID("ZOMBIE_PIGMAN");
+    SLIME = world.getEntityID("SLIME");
+    PIG = world.getEntityID("PIG");
+    COW = world.getEntityID("COW");
+    SHEEP = world.getEntityID("SHEEP");
+    HORSE = world.getEntityID("HORSE");
+    MOVINGBLOCK = world.getEntityID("MOVINGBLOCK");
+    WORLDITEM = world.getEntityID("WORLDITEM");
+    END_PORTAL = world.getEntityID("END_PORTAL");
+    ARROW = world.getEntityID("ARROW");
+    CHEST = world.getEntityID("CHEST");
+    BOAT = world.getEntityID("BOAT");
+    MINECART = world.getEntityID("MINECART");
+    PISTON = world.getEntityID("PISTON");
+    PISTON_STICKY = world.getEntityID("PISTON_STICKY");
+    LEVER = world.getEntityID("LEVER");
+    ENDER_CHEST = world.getEntityID("ENDER_CHEST");
+    SHIELD = world.getEntityID("SHIELD");
+  }
+
   public int entityCount;
   public EntityBase[] regEntities = new EntityBase[MAX_ID];
   public EntityBase[] entities;

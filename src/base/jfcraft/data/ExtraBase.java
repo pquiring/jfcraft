@@ -11,10 +11,6 @@ public abstract class ExtraBase implements SerialClass {
 
   public abstract String getName();
 
-  public Class getIDClass() {
-    return Extras.class;
-  }
-
   /** Override in derived extras. */
   public void update(ExtraBase update) {}
 

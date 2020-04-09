@@ -18,6 +18,12 @@ public class Dims {
   public static int END;
   public static int NETHER;
 
+  public static void getIDs(World world) {
+    EARTH = world.getDimID("earth");
+    END = world.getDimID("end");
+    NETHER = world.getDimID("nether");
+  }
+
   public void registerDimension(DimBase dim) {
     regDims[dimCount++] = dim;
   }

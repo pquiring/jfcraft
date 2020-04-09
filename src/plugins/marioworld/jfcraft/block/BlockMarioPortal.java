@@ -7,6 +7,7 @@ package jfcraft.block;
 
 import jfcraft.block.*;
 import jfcraft.dim.*;
+import jfcraft.data.*;
 
 public class BlockMarioPortal extends BlockPortal {
   public static char MARIO_PORTAL;
@@ -14,8 +15,8 @@ public class BlockMarioPortal extends BlockPortal {
     super(id, names, images);
   }
 
-  public Class getIDClass() {
-    return BlockMarioPortal.class;
+  public void getIDs() {
+    MARIO_PORTAL = Static.server.world.getBlockID("MARIO_PORTAL");
   }
 
   public int getDimension() {

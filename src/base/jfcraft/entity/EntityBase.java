@@ -102,11 +102,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   public abstract String getName();
 
-  /** Returns a class to receive the assigned ID.  The class must contain a public static int with the name of the entity (all uppercase). */
-  public Class getIDClass() {
-    return Entities.class;
-  }
-
   public GLModel loadModel(String fn) {
     return Assets.getModel(fn).model;
   }

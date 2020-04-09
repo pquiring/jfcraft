@@ -5,12 +5,14 @@ package jfcraft.block;
  * @author pquiring
  */
 
+import jfcraft.data.*;
+
 public class BlockScrew extends BlockBase {
   public static char SCREW;
   public BlockScrew(String name, String names[], String images[]) {
     super(name, names, images);
   }
-  public Class getIDClass() {
-    return BlockScrew.class;
+  public void getIDs() {
+    SCREW = Static.server.world.getBlockID("SCREW");
   }
 }

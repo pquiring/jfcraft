@@ -52,10 +52,6 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     }
   }
 
-  public Class getIDClass() {
-    return Blocks.class;
-  }
-
   public boolean isOpaque;  //completely opaque block (no transparent parts)
   public boolean isSolid;  //is solid full block
   public boolean isAlpha;  //has alpha blending

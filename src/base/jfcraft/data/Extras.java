@@ -21,6 +21,17 @@ public class Extras implements SerialCreator {
   public static byte SIGN;
   public static byte HORSE;
 
+  public static void getIDs(World world) {
+    DROPPER = world.getExtraID("dropper");
+    CHEST = world.getExtraID("chest");
+    FURNACE = world.getExtraID("furnace");
+    HOPPER = world.getExtraID("hopper");
+    CRACK = world.getExtraID("crack");
+    REDSTONE = world.getExtraID("redstone");
+    SIGN = world.getExtraID("sign");
+    HORSE = world.getExtraID("horse");
+  }
+
   public void registerExtra(ExtraBase eb) {
     regExtras[extraCount++] = eb;
   }

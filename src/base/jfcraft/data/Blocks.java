@@ -204,6 +204,141 @@ public class Blocks {
 
   public static char TEST_ARROW;
 
+  public static void getIDs(World world) {
+    AIR = world.getBlockID("AIR");
+    DIRT = world.getBlockID("DIRT");
+    GRASS = world.getBlockID("GRASS");
+    SNOW = world.getBlockID("SNOW");
+    WATER = world.getBlockID("WATER");
+    LAVA = world.getBlockID("LAVA");
+    SAND = world.getBlockID("SAND");
+    CLAY = world.getBlockID("CLAY");
+    TERRACOTA = world.getBlockID("TERRACOTA");
+    OIL = world.getBlockID("OIL");
+    GRAVEL = world.getBlockID("GRAVEL");
+    STONE = world.getBlockID("STONE");
+    COBBLESTONE = world.getBlockID("COBBLESTONE");
+    PLANKS = world.getBlockID("PLANKS");
+    SAPLING = world.getBlockID("SAPLING");
+    BEDROCK = world.getBlockID("BEDROCK");
+    GOLDORE = world.getBlockID("GOLDORE");
+    IRONORE = world.getBlockID("IRONORE");
+    COALORE = world.getBlockID("COALORE");
+    WOOD = world.getBlockID("WOOD");
+    LEAVES = world.getBlockID("LEAVES");
+    SPONGE = world.getBlockID("SPONGE");
+    GLASSBLOCK = world.getBlockID("GLASSBLOCK");
+    LAPIS_ORE = world.getBlockID("LAPIS_ORE");
+    LAPIS_BLOCK = world.getBlockID("LAPIS_BLOCK");
+    DISPENSER = world.getBlockID("DISPENSER");
+    SAND_STONE = world.getBlockID("SAND_STONE");
+    NOTE_BLOCK = world.getBlockID("NOTE_BLOCK");
+    RAIL_POWERED = world.getBlockID("RAIL_POWERED");
+    RAIL_DETECTOR = world.getBlockID("RAIL_DETECTOR");
+    PISTON_STICKY = world.getBlockID("PISTON_STICKY");
+    WEB = world.getBlockID("WEB");
+    TALLGRASS = world.getBlockID("TALLGRASS");
+    DEADBUSH = world.getBlockID("DEADBUSH");
+    PISTON = world.getBlockID("PISTON");
+    WOOL = world.getBlockID("WOOL");
+    DANDELION = world.getBlockID("DANDELION");
+    FLOWER = world.getBlockID("FLOWER");
+    MUSHROOM_BROWN = world.getBlockID("MUSHROOM_BROWN");
+    MUSHROOM_RED = world.getBlockID("MUSHROOM_RED");
+    GOLD_BLOCK = world.getBlockID("GOLD_BLOCK");
+    IRON_BLOCK = world.getBlockID("IRON_BLOCK");
+    STONE_VARS = world.getBlockID("STONE_VARS");
+    SLAB = world.getBlockID("SLAB");
+    BRICK = world.getBlockID("BRICK");
+    TNT = world.getBlockID("TNT");
+    BOOKSHELF = world.getBlockID("BOOKSHELF");
+    OBSIDIAN = world.getBlockID("OBSIDIAN");
+    TORCH = world.getBlockID("TORCH");
+    FIRE = world.getBlockID("FIRE");
+    SPAWNER = world.getBlockID("SPAWNER");
+    STAIRS_WOOD = world.getBlockID("STAIRS_WOOD");
+    STAIRS_STONE = world.getBlockID("STAIRS_STONE");
+    STAIRS_BRICK = world.getBlockID("STAIRS_BRICK");
+    STAIRS_BLOCK = world.getBlockID("STAIRS_BLOCK");
+    STAIRS_NETHER = world.getBlockID("STAIRS_NETHER");
+    STAIRS_QUARTZ = world.getBlockID("STAIRS_QUARTZ");
+    CHEST = world.getBlockID("CHEST");
+    DIAMOND_ORE = world.getBlockID("DIAMOND_ORE");
+    DIAMOND_BLOCK = world.getBlockID("DIAMOND_BLOCK");
+    CRAFTTABLE = world.getBlockID("CRAFTTABLE");
+    FURNACE = world.getBlockID("FURNACE");
+    FURNACE_ACTIVE = world.getBlockID("FURNACE_ACTIVE");
+    LADDER = world.getBlockID("LADDER");
+    RAIL = world.getBlockID("RAIL");
+    LEVER = world.getBlockID("LEVER");
+    PRESSURE_PLATE = world.getBlockID("PRESSURE_PLATE");
+    REDSTONE_ORE = world.getBlockID("REDSTONE_ORE");
+    REDSTONE_TORCH = world.getBlockID("REDSTONE_TORCH");
+    BUTTON = world.getBlockID("BUTTON");
+    ICEBLOCK = world.getBlockID("ICEBLOCK");
+    CACTUS = world.getBlockID("CACTUS");
+    MUSIC_BOX = world.getBlockID("MUSIC_BOX");
+    FENCE = world.getBlockID("FENCE");
+    PUMPKIN = world.getBlockID("PUMPKIN");
+    NETHER_RACK = world.getBlockID("NETHER_RACK");
+    SOUL_SAND = world.getBlockID("SOUL_SAND");
+    GLOWSTONE = world.getBlockID("GLOWSTONE");
+    NETHER_PORTAL = world.getBlockID("NETHER_PORTAL");
+    PUMPKIN_LIT = world.getBlockID("PUMPKIN_LIT");
+    REDSTONE_REPEATER = world.getBlockID("REDSTONE_REPEATER");
+    GLASSBLOCK_COLOR = world.getBlockID("GLASSBLOCK_COLOR");
+    TRAP_DOOR = world.getBlockID("TRAP_DOOR");
+    BARS = world.getBlockID("BARS");
+    GLASS_PANE = world.getBlockID("GLASS_PANE");
+    MELON = world.getBlockID("MELON");
+    VINES = world.getBlockID("VINES");
+    GATE = world.getBlockID("GATE");
+    MYCELIUM = world.getBlockID("MYCELIUM");
+    LILLYPAD = world.getBlockID("LILLYPAD");
+    NETHER_BRICK = world.getBlockID("NETHER_BRICK");
+    NETHER_FENCE = world.getBlockID("NETHER_FENCE");
+    ENCHANTING_TABLE = world.getBlockID("ENCHANTING_TABLE");
+    END_PORTAL = world.getBlockID("END_PORTAL");
+    END_PORTAL_FRAME = world.getBlockID("END_PORTAL_FRAME");
+    END_STONE = world.getBlockID("END_STONE");
+    DRAGON_EGG = world.getBlockID("DRAGON_EGG");
+    COCOA = world.getBlockID("COCOA");
+    EMERALD_ORE = world.getBlockID("EMERALD_ORE");
+    ENDER_CHEST = world.getBlockID("ENDER_CHEST");
+    TRIP_HOOK = world.getBlockID("TRIP_HOOK");
+    EMERALD_BLOCK = world.getBlockID("EMERALD_BLOCK");
+    COMMAND_BLOCK = world.getBlockID("COMMAND_BLOCK");
+    BEACON = world.getBlockID("BEACON");
+    WALL = world.getBlockID("WALL");
+    ANVIL = world.getBlockID("ANVIL");
+    CHEST_TRAP = world.getBlockID("CHEST_TRAP");
+    PLATE_GOLD = world.getBlockID("PLATE_GOLD");
+    PLATE_IRON = world.getBlockID("PLATE_IRON");
+    REDSTONE_COMPARATOR = world.getBlockID("REDSTONE_COMPARATOR");
+    SOLAR_PANEL = world.getBlockID("SOLAR_PANEL");
+    REDSTONE_BLOCK = world.getBlockID("REDSTONE_BLOCK");
+    QUARTZ_ORE = world.getBlockID("QUARTZ_ORE");
+    HOPPER = world.getBlockID("HOPPER");
+    QUARTZ_BLOCK = world.getBlockID("QUARTZ_BLOCK");
+    RAIL_ACTIVATOR = world.getBlockID("RAIL_ACTIVATOR");
+    DROPPER = world.getBlockID("DROPPER");
+    GLASS_PANE_COLOR = world.getBlockID("GLASS_PANE_COLOR");
+    HAYBALE = world.getBlockID("HAYBALE");
+    CARPET = world.getBlockID("CARPET");
+    COAL_BLOCK = world.getBlockID("COAL_BLOCK");
+    SNOW_PACKED = world.getBlockID("SNOW_PACKED");
+    STEP = world.getBlockID("STEP");
+    SIGN = world.getBlockID("SIGN");
+    BED = world.getBlockID("BED");
+    WOOD_DOOR = world.getBlockID("WOOD_DOOR");
+    IRON_DOOR = world.getBlockID("IRON_DOOR");
+    BARRIER = world.getBlockID("BARRIER");
+    RED_STONE = world.getBlockID("RED_STONE");
+    WHEAT = world.getBlockID("WHEAT");
+    SOLID = world.getBlockID("SOLID");
+    TEST_ARROW = world.getBlockID("TEST_ARROW");
+  }
+
   //wood vars
   public static final byte VAR_OAK = 0;
   public static final byte VAR_SPRUCE = 1;
@@ -672,9 +807,6 @@ public class Blocks {
       ai.isAnimated = true;
     }
     tiles.add(ai);
-  }
-
-  public void getIDs() {
   }
 
   public void stitchTiles() {

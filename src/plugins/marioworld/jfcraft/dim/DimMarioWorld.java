@@ -23,8 +23,8 @@ public class DimMarioWorld extends DimBase {
     return "Mario World";
   }
 
-  public Class getIDClass() {
-    return this.getClass();
+  public void getIDs() {
+    MARIO_WORLD = Static.server.world.getEntityID("MARIO_WORLD");
   }
 
   public void init() {

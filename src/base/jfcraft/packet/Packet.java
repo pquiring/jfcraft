@@ -22,10 +22,6 @@ public class Packet implements SerialClass {
 
   public Packet() {}
 
-  public Class getIDClass() {
-    return Packets.class;
-  }
-
   //process on client side
   public void process(Client client) {
     Static.logTrace("Error:Packet.process() called (client side)");

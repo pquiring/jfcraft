@@ -10,7 +10,6 @@ package jfcraft.data;
 import java.io.*;
 import java.nio.channels.*;
 import java.util.*;
-import java.lang.reflect.*;
 
 import javaforce.*;
 
@@ -455,13 +454,13 @@ public class World implements SerialClass, SerialCreator {
   }
 
   public char getBlockID(String name) {
-    char id = getBlockID(name, null, false);
+    char id = getBlockID(name, false);
     if (id != 0xffff) return id;
-    return getItemID(name, null, false);
+    return getItemID(name, false);
   }
 
   //blocks are numbered 0 -> 32767
-  private char getBlockID(String name, Class cls, boolean create) {
+  private char getBlockID(String name, boolean create) {
     name = name.toLowerCase();
     int cid = -1;
     int cnt = blockMap.size();
@@ -472,14 +471,6 @@ public class World implements SerialClass, SerialCreator {
       }
     }
     if (cid != -1) {
-      if (create) {
-        try {
-          Field f = cls.getField(name.toUpperCase().replaceAll(" ", "_"));
-          f.setChar(null, (char)cid);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
       return (char)cid;
     }
     if (!create) return 0xffff;
@@ -495,23 +486,17 @@ public class World implements SerialClass, SerialCreator {
       System.exit(0);
     }
     blockMap.add(name);
-    try {
-      Field f = cls.getField(name.toUpperCase().replaceAll(" ", "_"));
-      f.setChar(null, nid);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
     return nid;
   }
 
   public char getItemID(String name) {
-    char id = getItemID(name, null, false);
+    char id = getItemID(name, false);
     if (id != 0xffff) return id;
-    return getBlockID(name, null, false);
+    return getBlockID(name, false);
   }
 
   //items are numbered 32768 -> 65535
-  private char getItemID(String name, Class cls, boolean create) {
+  private char getItemID(String name, boolean create) {
     name = name.toLowerCase();
     int cid = -1;
     int cnt = itemMap.size();
@@ -522,14 +507,6 @@ public class World implements SerialClass, SerialCreator {
       }
     }
     if (cid != -1) {
-      if (create) {
-        try {
-          Field f = cls.getField(name.toUpperCase().replaceAll(" ", "_"));
-          f.setChar(null, (char)(Items.FIRST_ID + cid));
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
       return (char)(Items.FIRST_ID + cid);
     }
     if (!create) return 0xffff;
@@ -545,20 +522,14 @@ public class World implements SerialClass, SerialCreator {
       System.exit(0);
     }
     itemMap.add(name);
-    try {
-      Field f = cls.getField(name.toUpperCase().replaceAll(" ", "_"));
-      f.setChar(null, (char)(Items.FIRST_ID + nid));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
     return (char)(Items.FIRST_ID + nid);
   }
 
   public int getEntityID(String name) {
-    return getEntityID(name, null, false);
+    return getEntityID(name, false);
   }
 
-  private int getEntityID(String name, Class cls, boolean create) {
+  private int getEntityID(String name, boolean create) {
     name = name.toLowerCase();
     int cid = -1;
     int cnt = entityMap.size();
@@ -569,14 +540,6 @@ public class World implements SerialClass, SerialCreator {
       }
     }
     if (cid != -1) {
-      if (create) {
-        try {
-          Field f = cls.getField(name.toUpperCase().replaceAll(" ", "_"));
-          f.setInt(null, cid);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
 //      Static.log("old entity:" + name + "=" + (int)cid);
       return cid;
     }
@@ -585,20 +548,14 @@ public class World implements SerialClass, SerialCreator {
     int nid = entityMap.size();
 //    Static.log("new entity:" + name + "=" + (int)nid);
     entityMap.add(name);
-    try {
-      Field f = cls.getField(name.toUpperCase().replaceAll(" ", "_"));
-      f.setInt(null, nid);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
     return nid;
   }
 
   public int getDimID(String name) {
-    return getDimID(name, null, false);
+    return getDimID(name, false);
   }
 
-  public int getDimID(String name, Class cls, boolean create) {
+  public int getDimID(String name, boolean create) {
     name = name.toLowerCase();
     int cid = -1;
     int cnt = dimMap.size();
@@ -609,34 +566,20 @@ public class World implements SerialClass, SerialCreator {
       }
     }
     if (cid != -1) {
-      if (create) {
-        try {
-          Field f = cls.getField(name.toUpperCase().replaceAll(" ", "_"));
-          f.setInt(null, cid);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
       return cid;
     }
     if (!create) return -1;
     //assign new id
     int nid = dimMap.size();
     dimMap.add(name);
-    try {
-      Field f = cls.getField(name.toUpperCase().replaceAll(" ", "_"));
-      f.setInt(null, nid);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
     return nid;
   }
 
   public byte getExtraID(String name) {
-    return getExtraID(name, null, false);
+    return getExtraID(name, false);
   }
 
-  public byte getExtraID(String name, Class cls, boolean create) {
+  public byte getExtraID(String name, boolean create) {
     name = name.toLowerCase();
     byte cid = -1;
     int cnt = extraMap.size();
@@ -647,26 +590,12 @@ public class World implements SerialClass, SerialCreator {
       }
     }
     if (cid != -1) {
-      if (create) {
-        try {
-          Field f = cls.getField(name.toUpperCase().replaceAll(" ", "_"));
-          f.setByte(null, cid);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
       return cid;
     }
     if (!create) return -1;
     //assign new id
     byte nid = (byte)extraMap.size();
     extraMap.add(name);
-    try {
-      Field f = cls.getField(name.toUpperCase().replaceAll(" ", "_"));
-      f.setByte(null, nid);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
     return nid;
   }
 
@@ -710,33 +639,38 @@ public class World implements SerialClass, SerialCreator {
     int bcnt = Static.blocks.blockCount;
     BlockBase blocks[] = Static.blocks.regBlocks;
     for(int idx=0;idx<bcnt;idx++) {
-      blocks[idx].id = getBlockID(blocks[idx].getName(), blocks[idx].getIDClass(), true);
+      blocks[idx].id = getBlockID(blocks[idx].getName(), true);
     }
     //items
     int icnt = Static.items.itemCount;
     ItemBase items[] = Static.items.regItems;
     for(int idx=0;idx<icnt;idx++) {
-      items[idx].id = getItemID(items[idx].getName(), items[idx].getIDClass(), true);
+      items[idx].id = getItemID(items[idx].getName(), true);
     }
     //entity
     int ecnt = Static.entities.entityCount;
     EntityBase entities[] = Static.entities.regEntities;
     for(int idx=0;idx<ecnt;idx++) {
-      entities[idx].id = getEntityID(entities[idx].getName(), entities[idx].getIDClass(), true);
+      entities[idx].id = getEntityID(entities[idx].getName(), true);
     }
     //dim
     int dcnt = Static.dims.dimCount;
     DimBase dims[] = Static.dims.regDims;
     for(int idx=0;idx<dcnt;idx++) {
-      dims[idx].id = getDimID(dims[idx].getName(), dims[idx].getIDClass(), true);
+      dims[idx].id = getDimID(dims[idx].getName(), true);
     }
     //extra
     int xcnt = Static.extras.extraCount;
     ExtraBase extras[] = Static.extras.regExtras;
     for(int idx=0;idx<xcnt;idx++) {
-      extras[idx].id = getExtraID(extras[idx].getName(), extras[idx].getIDClass(), true);
+      extras[idx].id = getExtraID(extras[idx].getName(), true);
     }
     //now allow everyone to find IDs as needed
+    Static.blocks.getIDs(this);
+    Static.items.getIDs(this);
+    Static.entities.getIDs(this);
+    Static.dims.getIDs(this);
+    Static.extras.getIDs(this);
     for(int idx=0;idx<bcnt;idx++) {
       blocks[idx].getIDs(this);
     }
@@ -754,7 +688,6 @@ public class World implements SerialClass, SerialCreator {
     Static.entities.orderEntities();
     Static.dims.orderDims();
     Static.extras.orderExtras();
-    Static.blocks.getIDs();
   }
 
   private static final int magic = 0x5743464a;

@@ -194,11 +194,6 @@ public class ItemBase implements RenderSource {
     return name;
   }
 
-  /** Returns a class to receive the assigned ID.  The class must contain a public static char with the name of the item/block (all uppercase) */
-  public Class getIDClass() {
-    return Items.class;
-  }
-
   public String getName(int var) {
     if (isVar) return names[var]; else return names[0];
   }

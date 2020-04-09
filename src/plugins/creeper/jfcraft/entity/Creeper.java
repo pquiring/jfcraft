@@ -39,8 +39,8 @@ public class Creeper extends CreatureBase {
     return "Creeper";
   }
 
-  public Class getIDClass() {
-    return Creeper.class;
+  public void getIDs() {
+    CREEPER = world.getEntityID("CREEPER");
   }
 
   public RenderDest getDest() {

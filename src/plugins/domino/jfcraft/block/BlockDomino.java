@@ -26,11 +26,9 @@ public class BlockDomino extends BlockBase {
     resetBoxes(Type.ENTITY);
   }
   public void getIDs(World world) {
+    DOMINO = world.getBlockID("DOMINO");
     super.getIDs(world);
     entityID = Domino.DOMINO;
-  }
-  public Class getIDClass() {
-    return BlockDomino.class;
   }
   public void buildBuffers(RenderDest dest, RenderData data) {
     Coords c = new Coords();
