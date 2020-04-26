@@ -9,9 +9,6 @@ package jfcraft.gen;
 
 import java.util.*;
 
-import javaforce.*;
-
-import jfcraft.block.*;
 import jfcraft.data.*;
 import static jfcraft.data.Chunk.*;
 import static jfcraft.data.Direction.*;
@@ -47,10 +44,10 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       for(int x=0;x<16;x++) {
         int wx = chunk.cx * 16 + x;
         int wz = chunk.cz * 16 + z;
-        float temp = Static.noises[Static.N_TEMP].noise_2d(wx, wz) * 60.0f + 50.0f;
-        float rain = Static.noises[Static.N_RAIN].noise_2d(wx, wz) * 60.0f + 50.0f;
+        float temp = Static.noises[Static.N_TEMP].noise_2d(wx, wz) * 50.0f + 50.0f;  //0 - 100
+        float rain = Static.noises[Static.N_RAIN].noise_2d(wx, wz) * 50.0f + 50.0f;  //0 - 100
 
-        //determine biome type (Biome....) - could be overriden by oceans
+        //determine biome type (Biome....)
         byte biome = -1;
         if (temp < 16.0) {
           biome = TUNDRA;
@@ -72,34 +69,25 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
           }
         }
 
-        float plains = Static.noises[Static.N_ELEV1].noise_2d(wx, wz) * 10.0f + 10.0f;  //0-20
-        float plains_scale = Static.noises[Static.N_ELEV2].noise_2d(wx, wz);
+        float plains = Static.abs(Static.noises[Static.N_ELEV1].noise_2d(wx, wz) * 3.0f);
 
-        //mountains
-        float mountains = Static.noises[Static.N_ELEV3].noise_2d(wx, wz) * 30.0f + 30.0f;  //0-60
-        float mountains_scale = Static.noises[Static.N_ELEV4].noise_2d(wx, wz) * 2.0f;
-        if (mountains_scale > 1.0) mountains_scale = 1.0f;
+        float hills = Static.noises[Static.N_ELEV2].noise_2d(wx, wz) * 10.0f;
 
-        //oceans
-        float oceans = Static.noises[Static.N_ELEV5].noise_2d(wx, wz) * 10.0f + 11.0f;  //1-21
-        float oceans_scale = Static.noises[Static.N_ELEV6].noise_2d(wx, wz) * 2.0f;
-        if (oceans_scale > 1.0) oceans_scale = 1.0f;
-        mountains_scale -= oceans_scale;
-        plains_scale -= oceans_scale;
+        float extreme = Static.noises[Static.N_ELEV3].noise_2d(wx, wz) * 100.0f;
 
-        if (biome == SWAMP) {
-          //swamp area = lower plains_scale
-          plains_scale /= (temp - 49);  //temp=50-80
-        }
-
-        chunk.elev[p] = (64 + (plains * plains_scale));
-        if (oceans_scale > 0.0f) {
-          chunk.elev[p] -= (oceans * oceans_scale);
+        chunk.elev[p] = (64 + plains);
+        if (extreme <= -25.0f) {
+          extreme += 25.0f;
+          chunk.elev[p] += extreme;
           biome = OCEAN;
         }
-        else if (mountains_scale > 0.0f) {
-          chunk.elev[p] += (mountains * mountains_scale);
-          biome = MOUNTAIN;
+        else if (extreme >= 25.0f) {
+          extreme -= 25.0f;
+          chunk.elev[p] += extreme;
+        }
+
+        if (hills > 0.0f) {
+          chunk.elev[p] += hills;
         }
 
         chunk.temp[p] = temp;
@@ -148,7 +136,6 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         float rain = chunk.rain[p];
         int elev = (int)Math.ceil(chunk.elev[p]);
         int bt = chunk.biome[p];
-        boolean mountain = (bt & Chunk.MOUNTAIN) != 0;
         bt &= 0x7;
 
         float sand = 0.0f;

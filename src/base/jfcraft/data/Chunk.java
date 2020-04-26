@@ -75,12 +75,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   public static final byte OCEAN = 7;   //the sea/rivers
   public static final byte NETHER = 8;  //nether
   public static final byte END = 9;     //end
-  public static final byte MOUNTAIN = 64;  //mountains (modifier)
 
   public static String getBiomeName(byte type) {
-    if ((type & MOUNTAIN) != 0) {
-      return "MOUNTAIN";
-    }
     switch (type) {
       case TUNDRA: return "TUNDRA";
       case TAIGA: return "TAIGA";

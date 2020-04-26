@@ -192,17 +192,13 @@ public class Static {
     {3, 0.7f, 0.007f},  //random1 : high octave for greater complexity
     {3, 0.7f, 0.007f},  //random2 : high octave for greater complexity
 
-    //plains
-    {3, 0.5f, 0.01f},   //elev1 : waveform1 : high octave for greater complexity
-    {2, 0.5f, 0.002f},  //elev2 : scale1 : low octave for smooth changes
-
-    //mountains
-    {2, 0.5f, 0.01f},   //elev3 : waveform2 : high octave for greater complexity
-    {2, 0.5f, 0.002f},  //elev4 : scale2 : low octave for smooth changes
-
-    //oceans
-    {2, 0.5f, 0.01f},   //elev5 : waveform3 : high octave for greater complexity
-    {1, 0.0f, 0.001f},  //elev6 : scale3 : low octave for smooth changes
+    //elevations
+    {5, 0.5f, 0.005f},  //elev1 : plains
+    {5, 0.5f, 0.005f},  //elev2 : hills
+    {5, 0.5f, 0.003f},  //elev3 : extremes (mountains / oceans)
+    {5, 0.5f, 0.005f},  //elev4 : free
+    {5, 0.5f, 0.005f},  //elev5 : free
+    {5, 0.5f, 0.005f},  //elev6 : free
 
     //soil/gravel deposites (3d)
     {1, 0.0f, 0.1f},   //soil : 3d

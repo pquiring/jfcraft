@@ -204,7 +204,6 @@ public class NoiseTestPanel extends javax.swing.JPanel {
         .addComponent(canvas, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jLabel14)
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(jLabel1)
@@ -215,7 +214,8 @@ public class NoiseTestPanel extends javax.swing.JPanel {
               .addComponent(jLabel8)
               .addComponent(jLabel13)
               .addComponent(jLabel15)
-              .addComponent(jLabel16))
+              .addComponent(jLabel16)
+              .addComponent(jLabel14))
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(base, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -293,9 +293,9 @@ public class NoiseTestPanel extends javax.swing.JPanel {
                   .addComponent(cz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                   .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                  .addComponent(jLabel14)
-                  .addComponent(seed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                  .addComponent(seed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                  .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                   .addComponent(jLabel15)
@@ -401,10 +401,9 @@ public class NoiseTestPanel extends javax.swing.JPanel {
   // End of variables declaration//GEN-END:variables
 
   private JFImage img = new JFImage(256, 384);
-  private Noise noise;
 
   public void generate() {
-    noise = new Noise();
+    Noise noise = new Noise();
     Random rand = new Random();
     rand.setSeed(JF.atoi(seed.getText()));
     noise.init(rand, (Integer)octaves.getValue(), (Float)persist.getValue(), (Float)scale.getValue());
