@@ -18,6 +18,7 @@ import jfcraft.block.*;
 import jfcraft.entity.*;
 import static jfcraft.data.Direction.*;
 import static jfcraft.data.Biomes.*;
+import jfcraft.tree.TreeBase;
 
 public class GeneratorPhase3Earth implements GeneratorPhase3Base {
   private Chunk chunk;
@@ -90,14 +91,6 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
       z -= 16;
     }
     return Static.blocks.blocks[c.getID(x,y,z)];
-  }
-  public void spawnAnimal(int x,int y,int z, int id) {
-    if (id == -1) return;
-    EntityBase e = Static.entities.getEntity(id).spawn(chunk);
-    if (e == null) return;  //failed to spawn
-    e.uid = Static.server.world.generateUID();
-    chunk.addEntity(e);
-    Static.server.world.addEntity(e);
   }
 
   public void smoothSteps() {
@@ -172,34 +165,16 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
   }
 
   public void addStuff() {
+    BiomeBase.chunk = chunk;
+    TreeBase.chunk = chunk;
     for(int x=0;x<16;x++) {
       for(int z=0;z<16;z++) {
         int p = z * 16 + x;
         int y = (int)Math.ceil(chunk.elev[p]);
-        if (y < 64) continue;  //under water
 //        float temp = chunk.temp[p];
 //        float rain = chunk.rain[p];
         BiomeBase biome = Static.biomes.biomes[chunk.biome[p]];
-        BlockBase block, blockA;
-        block = getBlock(x,y,z);
-        blockA = getBlock(x,y+1,z);
-        if (block.canPlantOn && blockA.id == Blocks.AIR) {
-          if (block.id != Blocks.GRASS && block.id != Blocks.DIRT) {
-            System.out.println("Error:canPlantOn != soil:" + (int)block.id);
-          }
-          else if (biome.hasTree(nextInt())) {
-            biome.getTree(nextInt()).plant(x,y+1,z,chunk);
-          }
-          else if (biome.hasFlower(nextInt())) {
-            setBlock(x, y+1, z, Blocks.FLOWER, 0, biome.getFlower(nextInt()));
-          }
-          else if (biome.hasTallGrass(nextInt())) {
-            setBlock(x, y+1, z, Blocks.TALLGRASS, 0, biome.getTallGrass(nextInt()));
-          }
-          else if (biome.hasAnimal(nextInt())) {
-            spawnAnimal(x, y+1, z, biome.getAnimal(nextInt()));
-          }
-        }
+        biome.build(x, y, z, r.nextInt() & 0x3fffffff);
       }
     }
   }

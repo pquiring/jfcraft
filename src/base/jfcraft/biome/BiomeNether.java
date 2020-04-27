@@ -15,32 +15,43 @@ public class BiomeNether extends BiomeBase {
     return NETHER;
   }
 
-  public boolean hasTree(int rv) {
-    return false;
+  public void build(int x,int y,int z, int rand) {
+    if (canPlantOn(x, y, z)) {
+      if (rand % 1 == 1) {
+        rand++;
+        getTree(rand).plant(x, y+1, z);
+        return;
+      }
+      rand++;
+      if (rand % 1 == 1) {
+        rand++;
+        setBlock(x,y,z,Blocks.FLOWER,0,getFlower(rand));
+        return;
+      }
+      rand++;
+      if (rand % 1 == 1) {
+        rand++;
+        setBlock(x,y,z,Blocks.TALLGRASS,0,getTallGrass(rand));
+        return;
+      }
+      rand++;
+      if (rand % 100 == 0) {
+        rand++;
+        spawnAnimal(x, y, z, getAnimal(rand));
+      }
+    }
   }
 
   public TreeBase getTree(int rv) {
     return null;
   }
 
-  public boolean hasFlower(int rv) {
-    return false;
-  }
-
   public int getFlower(int rv) {
     return -1;
   }
 
-  public boolean hasTallGrass(int rv) {
-    return false;
-  }
-
   public int getTallGrass(int rv) {
     return -1;
-  }
-
-  public boolean hasAnimal(int rv) {
-    return rv % 100 == 0;
   }
 
   public int getAnimal(int rv) {

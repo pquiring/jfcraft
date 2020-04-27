@@ -18,33 +18,27 @@ public class TreeNormal extends TreeBase {
     this.snow = snow;
     return this;
   }
-  public void plant(int x,int y, int z, Chunk chunk) {
-    this.chunk = chunk;
-    setBlock(x  ,y  ,z  ,Blocks.WOOD, 0, var);
-    setBlock(x  ,y+1,z  ,Blocks.WOOD, 0, var);
-    setBlock(x  ,y+2,z  ,Blocks.WOOD, 0, var);
-    setBlock(x  ,y+3,z  ,Blocks.WOOD, 0, var);
-    setBlock(x  ,y+4,z  ,Blocks.WOOD, 0, var);
-
-    setBlock(x  ,y+5,z  ,Blocks.LEAVES, 0, Chunk.makeBits(B,var));
-    setBlock(x  ,y+4,z-1,Blocks.LEAVES, 0, Chunk.makeBits(S,var));
-    setBlock(x  ,y+4,z+1,Blocks.LEAVES, 0, Chunk.makeBits(N,var));
-    setBlock(x-1,y+4,z  ,Blocks.LEAVES, 0, Chunk.makeBits(E,var));
-    setBlock(x-1,y+4,z-1,Blocks.LEAVES, 0, Chunk.makeBits(E,var));  //SE
-    setBlock(x-1,y+4,z+1,Blocks.LEAVES, 0, Chunk.makeBits(E,var));  //NW
-    setBlock(x+1,y+4,z  ,Blocks.LEAVES, 0, Chunk.makeBits(W,var));
-    setBlock(x+1,y+4,z-1,Blocks.LEAVES, 0, Chunk.makeBits(W,var));  //SW
-    setBlock(x+1,y+4,z+1,Blocks.LEAVES, 0, Chunk.makeBits(W,var));  //NW
-    //place snow on top of tree
-    if (!snow) return;
-    setBlock(x  ,y+6,z  ,Blocks.SNOW, 0, 0);
-    setBlock(x  ,y+5,z-1,Blocks.SNOW, 0, 0);
-    setBlock(x  ,y+5,z+1,Blocks.SNOW, 0, 0);
-    setBlock(x-1,y+5,z  ,Blocks.SNOW, 0, 0);
-    setBlock(x-1,y+5,z-1,Blocks.SNOW, 0, 0);
-    setBlock(x-1,y+5,z+1,Blocks.SNOW, 0, 0);
-    setBlock(x+1,y+5,z  ,Blocks.SNOW, 0, 0);
-    setBlock(x+1,y+5,z-1,Blocks.SNOW, 0, 0);
-    setBlock(x+1,y+5,z+1,Blocks.SNOW, 0, 0);
+  private int leaves[] = {
+    0,0,0,2,3,2
+  };
+  public void plant(int x,int y, int z) {
+    for(int yy=0;yy<leaves.length;yy++) {
+      int wood = leaves.length - 2;
+      if (yy < wood) {
+        setBlock(x  ,y+yy,z  ,Blocks.WOOD, 0, var);
+      }
+      int leaveCnt = leaves[yy];
+      if (leaveCnt == 0) continue;
+      int neg = -leaveCnt;
+      int pos = leaveCnt;
+      for(int xx = neg; xx <= pos; xx++) {
+        for(int zz = neg; zz <= pos; zz++) {
+          setBlock(x+xx,y+yy,z+zz,Blocks.LEAVES, getDir(xx,zz), var);
+          if (snow) {
+            setBlock(x+xx,y+yy+1,z+zz,Blocks.SNOW, 0, 0);
+          }
+        }
+      }
+    }
   }
 }

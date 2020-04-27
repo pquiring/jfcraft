@@ -1,35 +1,39 @@
 package jfcraft.tree;
 
 /**
- * TreeBush
+ * TreeNormal
  */
 
 import jfcraft.data.*;
 import static jfcraft.data.Direction.*;
 
-public class TreeBush extends TreeBase {
+public class TreeQuad extends TreeBase {
   public byte var;
   public boolean snow;
-  public TreeBush setVar(byte var) {
+  public TreeQuad setVar(byte var) {
     this.var = var;
     return this;
   }
-  public TreeBush setSnow(boolean snow) {
+  public TreeQuad setSnow(boolean snow) {
     this.snow = snow;
     return this;
   }
   private int leaves[] = {
-    3,4,3,2
+    0,0,0,0,0,0,0,1,2,3,3,2,1
   };
   public void plant(int x,int y, int z) {
     for(int yy=0;yy<leaves.length;yy++) {
-      if (yy == 0) {
+      int wood = leaves.length - 3;
+      if (yy < wood) {
         setBlock(x  ,y+yy,z  ,Blocks.WOOD, 0, var);
+        setBlock(x+1,y+yy,z  ,Blocks.WOOD, 0, var);
+        setBlock(x  ,y+yy,z+1,Blocks.WOOD, 0, var);
+        setBlock(x+1,y+yy,z+1,Blocks.WOOD, 0, var);
       }
       int leaveCnt = leaves[yy];
       if (leaveCnt == 0) continue;
       int neg = -leaveCnt;
-      int pos = leaveCnt;
+      int pos = leaveCnt+1;
       for(int xx = neg; xx <= pos; xx++) {
         for(int zz = neg; zz <= pos; zz++) {
           setBlock(x+xx,y+yy,z+zz,Blocks.LEAVES, getDir(xx,zz), var);

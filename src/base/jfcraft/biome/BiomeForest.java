@@ -15,16 +15,35 @@ public class BiomeForest extends BiomeBase {
     return FOREST;
   }
 
-  public boolean hasTree(int rv) {
-    return rv % 30 == 0;
+  public void build(int x,int y,int z, int rand) {
+    if (canPlantOn(x, y, z)) {
+      if (rand % 30 == 0) {
+        rand++;
+        getTree(rand).plant(x, y+1, z);
+        return;
+      }
+      rand++;
+      if (rand % 20 == 0) {
+        rand++;
+        setBlock(x,y,z,Blocks.FLOWER,0,getFlower(rand));
+        return;
+      }
+      rand++;
+      if (rand % 50 == 0) {
+        rand++;
+        setBlock(x,y,z,Blocks.TALLGRASS,0,getTallGrass(rand));
+        return;
+      }
+      rand++;
+      if (rand % 100 == 0) {
+        rand++;
+        spawnAnimal(x, y, z, getAnimal(rand));
+      }
+    }
   }
 
   public TreeBase getTree(int rv) {
     return Static.trees.trees[rv % 2];  //OAK or SPRUCE
-  }
-
-  public boolean hasFlower(int rv) {
-    return rv % 25 == 0;
   }
 
   private byte flowers[] = {
@@ -43,20 +62,12 @@ public class BiomeForest extends BiomeBase {
     return flowers[rv & flowers.length-1];
   }
 
-  public boolean hasTallGrass(int rv) {
-    return rv % 50 == 0;
-  }
-
   private int grasses[] = {
     0  //??? TODO : tall grass VARs ???
   };
 
   public int getTallGrass(int rv) {
     return grasses[rv % grasses.length];
-  }
-
-  public boolean hasAnimal(int rv) {
-    return rv % 100 == 0;
   }
 
   public int getAnimal(int rv) {

@@ -19,7 +19,7 @@ public class BlockOpaqueVarPerf extends BlockOpaque {
     clampAlpha = true;
   }
   public SubTexture getTexture(RenderData data) {
-    return textures[data.dir[data.side]];
+    return textures[data.var[data.side]];
   }
   public void reloadAll() {
     for(int a=0;a<textures.length;a++) {

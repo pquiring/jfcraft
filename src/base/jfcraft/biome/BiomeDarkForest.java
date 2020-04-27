@@ -15,24 +15,37 @@ public class BiomeDarkForest extends BiomeBase {
     return DARK_FOREST;
   }
 
-  public boolean hasTree(int rv) {
-    return rv % 25 == 0;
+  public void build(int x,int y,int z, int rand) {
+    if (canPlantOn(x, y, z)) {
+      if (rand % 50 == 0) {
+        getTree(rand).plant(x, y+1, z);
+        return;
+      }
+      rand++;
+      if (rand % 1 == 1) {
+        rand++;
+        setBlock(x,y,z,Blocks.FLOWER,0,getFlower(rand));
+        return;
+      }
+      rand++;
+      if (rand % 50 == 0) {
+        setBlock(x,y,z,Blocks.TALLGRASS,0,getTallGrass(rand));
+        return;
+      }
+      rand++;
+      if (rand % 100 == 0) {
+        rand++;
+        spawnAnimal(x, y, z, getAnimal(rand));
+      }
+    }
   }
 
   public TreeBase getTree(int rv) {
     return Static.trees.trees[Trees.TREE_DARK_OAK];
   }
 
-  public boolean hasFlower(int rv) {
-    return false;
-  }
-
   public int getFlower(int rv) {
     return -1;
-  }
-
-  public boolean hasTallGrass(int rv) {
-    return rv % 50 == 0;
   }
 
   private int grasses[] = {
@@ -41,10 +54,6 @@ public class BiomeDarkForest extends BiomeBase {
 
   public int getTallGrass(int rv) {
     return grasses[rv % grasses.length];
-  }
-
-  public boolean hasAnimal(int rv) {
-    return rv % 100 == 0;
   }
 
   public int getAnimal(int rv) {

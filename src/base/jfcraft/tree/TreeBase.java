@@ -8,8 +8,8 @@ import jfcraft.data.*;
 import static jfcraft.data.Direction.*;
 
 public abstract class TreeBase {
-  public abstract void plant(int x,int y, int z, Chunk chunk);
-  public Chunk chunk;
+  public abstract void plant(int x,int y, int z);
+  public static Chunk chunk;
   public void setBlock(int x, int y, int z, char id, int dir, int var) {
     if (y < 1) return;  //do not change bedrock
     if (y > 255) return;
@@ -33,5 +33,12 @@ public abstract class TreeBase {
     char orgid = c.getBlock(x, y, z).id;
     if (orgid != Blocks.AIR && orgid != Blocks.SNOW) return;
     c.setBlock(x, y, z, id, Chunk.makeBits(dir,var));
+  }
+  public int getDir(int xx, int zz) {
+    if (xx < 0) return E;
+    if (xx > 0) return W;
+    if (zz < 0) return S;
+    if (zz > 0) return N;
+    return B;  //anchor below
   }
 };

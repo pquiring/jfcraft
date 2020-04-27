@@ -339,7 +339,7 @@ public class Blocks {
     TEST_ARROW = world.getBlockID("TEST_ARROW");
   }
 
-  //wood vars
+  //wood/leaves vars
   public static final byte VAR_OAK = 0;
   public static final byte VAR_SPRUCE = 1;
   public static final byte VAR_BIRCH = 2;
