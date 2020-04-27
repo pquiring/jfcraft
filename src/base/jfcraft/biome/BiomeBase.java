@@ -4,10 +4,13 @@ package jfcraft.biome;
  * BiomeBase interface
  */
 
+import javaforce.*;
+
 import jfcraft.block.BlockBase;
 import jfcraft.tree.*;
 import jfcraft.data.*;
 import jfcraft.entity.EntityBase;
+import static jfcraft.data.Blocks.*;
 
 public abstract class BiomeBase {
   public static Chunk chunk;
@@ -16,7 +19,7 @@ public abstract class BiomeBase {
    * @param x,y,z = coord of top block of soil in chunk
    * @param rand = random int value (absolute)
    */
-  public abstract void build(int x,int y,int z, int rand);
+  public abstract void build(int x,int y,int z, int r1, int r2);
   private BlockBase getBlock(int x, int y, int z) {
     if (y < 0) return null;
     if (y > 255) return null;
@@ -61,6 +64,13 @@ public abstract class BiomeBase {
     }
     if (c.getBlock(x, y, z).id != Blocks.AIR) return;  //only replace air
     c.setBlock(x, y, z, id, Chunk.makeBits(dir,var));
+  }
+  public void setBlock2(int x, int y, int z, char id, int dir, int var) {
+    if (var > 6 || var < 0) {
+      JFLog.log("Debug:Error:invalid var spawned:" + var);
+    }
+    setBlock(x,y,z,id,dir,var);
+    setBlock(x,y+1,z,id,dir,var + VAR_UPPER);
   }
   public boolean canPlantOn(int x,int y,int z) {
     BlockBase block = getBlock(x,y,z);

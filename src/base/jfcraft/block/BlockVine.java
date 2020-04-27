@@ -29,7 +29,7 @@ public class BlockVine extends BlockFace {
     if (dir == A || dir == B) return;
     if (y == 0) return;
     y--;
-    synchronized(chunk) {
+    synchronized(chunk.lock) {
       if (chunk.isEmpty(x, y, z)) {
         chunk.setBlock(x, y, z, id, bits);
         x += chunk.cx * 16;

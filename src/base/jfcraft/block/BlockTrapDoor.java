@@ -94,7 +94,7 @@ public class BlockTrapDoor extends BlockBase {
       Static.log("BlockTrapDoor:Can not place:xzdir invalid");
       return false;
     }
-    synchronized(c.chunk) {
+    synchronized(c.chunk.lock) {
       ExtraRedstone er = new ExtraRedstone(c.gx, c.gy, c.gz);
       c.chunk.addExtra(er);
       Static.server.broadcastExtra(c.chunk.dim, c.x, c.y, c.z, er, true);

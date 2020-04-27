@@ -174,7 +174,7 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
 //        float temp = chunk.temp[p];
 //        float rain = chunk.rain[p];
         BiomeBase biome = Static.biomes.biomes[chunk.biome[p]];
-        biome.build(x, y, z, r.nextInt() & 0x3fffffff);
+        biome.build(x, y, z, r.nextInt() & 0x3fffffff, r.nextInt() & 0x3fffffff);
       }
     }
   }

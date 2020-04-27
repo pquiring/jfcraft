@@ -35,7 +35,7 @@ public class PacketB2E extends Packet {
     int gz = Static.floor(z % 16.0f);
     if (z < 0 && gz != 0) gz = 16 + gz;
     Chunk chunk = client.world.chunks.getChunk(client.player.dim,cx,cz);
-    synchronized(chunk) {
+    synchronized(chunk.lock) {
       char id = chunk.getID(gx, gy, gz);
       int bits = chunk.getBits(gx, gy, gz);
       if (id == 0) {

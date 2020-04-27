@@ -15,27 +15,27 @@ public class BiomeDarkForest extends BiomeBase {
     return DARK_FOREST;
   }
 
-  public void build(int x,int y,int z, int rand) {
+  public void build(int x,int y,int z, int r1, int r2) {
     if (canPlantOn(x, y, z)) {
-      if (rand % 50 == 0) {
-        getTree(rand).plant(x, y+1, z);
+      if (r1 % 50 == 0) {
+        getTree(r1).plant(x, y+1, z);
         return;
       }
-      rand++;
-      if (rand % 1 == 1) {
-        rand++;
-        setBlock(x,y,z,Blocks.FLOWER,0,getFlower(rand));
+      r1++;
+      if (r1 % 1 == 1) {
+        r1++;
+        setBlock(x,y,z,Blocks.FLOWER,0,getFlower(r2));
         return;
       }
-      rand++;
-      if (rand % 50 == 0) {
-        setBlock(x,y,z,Blocks.TALLGRASS,0,getTallGrass(rand));
+      r1++;
+      if (r1 % 1 == 1) {
+        setBlock2(x,y,z,Blocks.TALLGRASS,0,getTallGrass(r2));
         return;
       }
-      rand++;
-      if (rand % 100 == 0) {
-        rand++;
-        spawnAnimal(x, y, z, getAnimal(rand));
+      r1++;
+      if (r1 % 100 == 0) {
+        r1++;
+        spawnAnimal(x, y, z, getAnimal(r2));
       }
     }
   }
@@ -48,12 +48,8 @@ public class BiomeDarkForest extends BiomeBase {
     return -1;
   }
 
-  private int grasses[] = {
-    0  //??? TODO : tall grass VARs ???
-  };
-
   public int getTallGrass(int rv) {
-    return grasses[rv % grasses.length];
+    return -1;
   }
 
   public int getAnimal(int rv) {

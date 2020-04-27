@@ -17,6 +17,7 @@ import jfcraft.block.*;
 import jfcraft.entity.*;
 import static jfcraft.data.Direction.*;
 import static jfcraft.data.Biomes.*;
+import static jfcraft.data.Blocks.*;
 import jfcraft.dim.DimMarioWorld;
 
 public class GeneratorPhase3Mario implements GeneratorPhase3Base {
@@ -66,6 +67,10 @@ public class GeneratorPhase3Mario implements GeneratorPhase3Base {
       z -= 16;
     }
     c.setBlock(x, y, z, id, Chunk.makeBits(dir,var));
+  }
+  public void setBlock2(int x, int y, int z, char id, int dir, int var) {
+    setBlock(x,y,z,id,dir,var);
+    setBlock(x,y+1,z,id,dir,var + VAR_UPPER);
   }
   private BlockBase getBlock(int x, int y, int z) {
     if (y < 0) return null;
@@ -155,7 +160,7 @@ public class GeneratorPhase3Mario implements GeneratorPhase3Base {
                 setBlock(x, elev+1, z, Blocks.FLOWER, 0, r.nextInt(11));
               }
               else if (r.nextInt() % 50 == 0) {
-                setBlock(x, elev+1, z, Blocks.TALLGRASS, 0, r.nextInt(2));
+                setBlock2(x, elev+1, z, Blocks.TALLGRASS, 0, r.nextInt(2));
               }
               else if (r.nextInt() % 50 == 0) {
                 spawnAnimal(x, elev+1, z);

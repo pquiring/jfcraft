@@ -165,15 +165,13 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
             dirt = 0.0f;
             break;
           case PLAINS:
-            if (r.nextInt() % 3 == 0) {
-              blocks[p + elev * 256] = Blocks.TALLGRASS;
-            }
             break;
           case TAIGA:
             break;
           case FOREST:
             break;
           case SWAMP:
+            //TODO : move this to BiomeSwamp
             if (elev < 64 && r.nextInt() % 2 == 0) {
               blocks[p + 65 * 256] = Blocks.LILLYPAD;
               bits[p + 65 * 256] = (byte)Chunk.makeBits(B, 0);

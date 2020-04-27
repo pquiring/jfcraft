@@ -37,7 +37,7 @@ public class ItemSeeds extends ItemBase {
     }
     c.dir = A;
     c.adjacentBlock();
-    synchronized(c.chunk) {
+    synchronized(c.chunk.lock) {
       //check if area is clear
       if (c.chunk.getID(c.gx, c.gy, c.gz) != 0) {
         Static.log("Seeds:no room to plant");

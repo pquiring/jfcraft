@@ -102,6 +102,7 @@ public class Blocks {
   public static char RAIL_DETECTOR;
   public static char PISTON_STICKY;
   public static char WEB;
+  public static char FERN;
   public static char TALLGRASS;
   public static char DEADBUSH;
   public static char PISTON;
@@ -237,6 +238,7 @@ public class Blocks {
     RAIL_DETECTOR = world.getBlockID("RAIL_DETECTOR");
     PISTON_STICKY = world.getBlockID("PISTON_STICKY");
     WEB = world.getBlockID("WEB");
+    FERN = world.getBlockID("FERN");
     TALLGRASS = world.getBlockID("TALLGRASS");
     DEADBUSH = world.getBlockID("DEADBUSH");
     PISTON = world.getBlockID("PISTON");
@@ -339,6 +341,9 @@ public class Blocks {
     TEST_ARROW = world.getBlockID("TEST_ARROW");
   }
 
+  //upper flag (door, tall grass)
+  public static final byte VAR_UPPER = 8;
+
   //wood/leaves vars
   public static final byte VAR_OAK = 0;
   public static final byte VAR_SPRUCE = 1;
@@ -385,6 +390,13 @@ public class Blocks {
   public static final byte VAR_TULIP_WHITE = 6;
   public static final byte VAR_TULIP_PINK = 7;
   public static final byte VAR_OXEYE_DAISY = 8;
+
+  //tallgrass vars
+  public static final byte VAR_TALL_GRASS = 0;
+  public static final byte VAR_LARGE_FERN = 1;
+  public static final byte VAR_LILAC = 2;
+  public static final byte VAR_ROSE_BUSH = 3;
+  public static final byte VAR_PEONY = 4;
 
   public void registerDefault() {
     registerBlock(new BlockAir("AIR"));
@@ -452,9 +464,9 @@ public class Blocks {
     registerBlock(new BlockRail("RAIL_DETECTOR", new String[] {"Rail Detector"}, new String[] {"detector_rail", "detector_rail_on"}).setRedstone().setHardness(0.7f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockPiston("PISTON_STICKY", new String[] {"Sticky Piston"}, new String[] {"piston_bottom", "piston_side", "piston_inner", "piston_side", "piston_top", "piston_side", "piston_top_sticky"}).setSticky().setHardness(0.5f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockX("WEB", new String[] {"Web"}, new String[] {"cobweb"}).addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setHardness(4f, TOOL_SWORD, CLS_NONE));
-    registerBlock(new BlockXVar("TALLGRASS"
-      , new String[] {"Fern", "Fern"}
-      , new String[] {"fern", "fern"}
+    registerBlock(new BlockX("FERN"
+      , new String[] {"Fern"}
+      , new String[] {"fern"}
       ).setGreenAllSides().setDrop("SEEDS").setSupported().setDropVar(false).addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
     );
     registerBlock(new BlockX("DEADBUSH"
@@ -505,16 +517,20 @@ public class Blocks {
       ).resetBoxes(BlockHitTest.Type.SELECTION).addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION)
       .setSupported().setPlant().setShowAsItem()
     );
-
-/*
-    //TODO
-    registerBlock(new BlockXVar("TALL_PLANT"
-      , new String[] {"Sunflower", "Lilac", "Tall Grass", "Tall Fern", "Rose Bush", "Peony"}
-      , new String[] {"complex", "lilac", "tallgrass", "tall_fern", "rose_bush", "peony"})
+    registerBlock(new BlockXVar2("TALLGRASS"
+      , new String[] {
+        "Tall Grass", "Large Fern", "Lilac", "Rose Bush", "Peony"
+      }
+      , new String[] {
+        "tall_grass_top", "tall_grass_bottom",
+        "large_fern_top", "large_fern_bottom",
+        "lilac_top", "lilac_bottom",
+        "rose_bush_top", "rose_bush_bottom",
+        "peony_top", "peony_bottom"
+      })
       .resetBoxes(BlockHitTest.Type.SELECTION).addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION)
-      .setSupported().setPlant().setShowAsItem()
+      .setSupported().setPlant().setShowAsItem().setDrop("SEEDS").setDropVar(false)
     );
-*/
     registerBlock(new BlockX("MUSHROOM_BROWN", new String[] {"Brown Mushroom"}, new String[] {"brown_mushroom"}).setShowAsItem().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION));
     registerBlock(new BlockX("MUSHROOM_RED", new String[] {"Red Mushroom"}, new String[] {"red_mushroom"}).setShowAsItem().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION));
     registerBlock(new BlockOpaque("GOLD_BLOCK", new String[] {"Gold Block"}, new String[] {"gold_block"}).setHardness(3f, TOOL_PICKAXE, CLS_IRON));

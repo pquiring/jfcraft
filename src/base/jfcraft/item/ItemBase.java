@@ -46,6 +46,7 @@ public class ItemBase implements RenderSource {
   public RenderDest bufs[];  //inventory (vars)
   public boolean renderAsEntity;
   public int entityID;
+  public int varMask = 0xf;
 
   //armor info
   public Texture armorTextures[];
@@ -498,7 +499,7 @@ public class ItemBase implements RenderSource {
   public static RenderData data = new RenderData();
 
   public RenderDest getDest(RenderData data) {
-    return bufs[data.var[X]];
+    return bufs[data.var[X] & varMask];
   }
 
   public void buildBuffers(RenderDest dest, RenderData data) {

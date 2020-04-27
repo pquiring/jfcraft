@@ -82,7 +82,6 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public int emitLight = 0;  //0-14 (15 = sunLight)
   public int absorbLight = 0;
   public boolean renderAsItem;
-  public int varMask = 0xf;
   public float hardness = 0f;
   public int preferedTool = TOOL_NONE;
   public int cls = 0;  //item class : ROCK I,II,III,IV, etc.

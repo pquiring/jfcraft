@@ -85,7 +85,7 @@ public class BlockGate extends BlockBase {
       Static.log("Gate:Can not place:xzdir invalid");
       return false;
     }
-    synchronized(c.chunk) {
+    synchronized(c.chunk.lock) {
       if (c.chunk.getID(c.gx, c.gy, c.gz) != 0) return false;
       ExtraRedstone er = new ExtraRedstone(c.gx, c.gy, c.gz);
       c.chunk.addExtra(er);

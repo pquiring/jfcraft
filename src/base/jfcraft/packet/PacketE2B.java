@@ -40,7 +40,7 @@ public class PacketE2B extends Packet {
     int gz = Static.floor(z % 16.0f);
     if (z < 0 && gz != 0) gz = 16 + gz;
     Chunk chunk = client.world.chunks.getChunk(client.player.dim,cx,cz);
-    synchronized(chunk) {
+    synchronized(chunk.lock) {
       chunk.setBlock(gx, gy, gz, mb.blockid, Chunk.makeBits(mb.dir, mb.blockvar));
       chunk.delEntity(mb);
       client.world.delEntity(uid);

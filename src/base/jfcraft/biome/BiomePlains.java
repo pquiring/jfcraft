@@ -15,29 +15,29 @@ public class BiomePlains extends BiomeBase {
     return PLAINS;
   }
 
-  public void build(int x,int y,int z, int rand) {
+  public void build(int x,int y,int z, int r1, int r2) {
     if (canPlantOn(x, y, z)) {
-      if (rand % 200 == 0) {
-        rand++;
-        getTree(rand).plant(x, y+1, z);
+      if (r1 % 200 == 0) {
+        r1++;
+        getTree(r1).plant(x, y+1, z);
         return;
       }
-      rand++;
-      if (rand % 25 == 0) {
-        rand++;
-        setBlock(x,y,z,Blocks.FLOWER,0,getFlower(rand));
+      r1++;
+      if (r1 % 25 == 0) {
+        r1++;
+        setBlock(x,y+1,z,Blocks.FLOWER,0,getFlower(r2));
         return;
       }
-      rand++;
-      if (rand % 25 == 0) {
-        rand++;
-        setBlock(x,y,z,Blocks.TALLGRASS,0,getTallGrass(rand));
+      r1++;
+      if (r1 % 25 == 0) {
+        r1++;
+        setBlock2(x,y+1,z,Blocks.TALLGRASS,0,getTallGrass(r2));
         return;
       }
-      rand++;
-      if (rand % 100 == 0) {
-        rand++;
-        spawnAnimal(x, y, z, getAnimal(rand));
+      r1++;
+      if (r1 % 100 == 0) {
+        r1++;
+        spawnAnimal(x, y, z, getAnimal(r2));
       }
     }
   }
@@ -59,11 +59,15 @@ public class BiomePlains extends BiomeBase {
   };
 
   public int getFlower(int rv) {
-    return flowers[rv & flowers.length-1];
+    return flowers[rv % flowers.length];
   }
 
-  private int grasses[] = {
-    0  //??? TODO : tall grass VARs ???
+  private byte grasses[] = {
+    VAR_TALL_GRASS,
+    VAR_LARGE_FERN,
+    VAR_LILAC,
+    VAR_ROSE_BUSH,
+    VAR_PEONY
   };
 
   public int getTallGrass(int rv) {

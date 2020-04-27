@@ -10,6 +10,7 @@ package jfcraft.block;
 
 import jfcraft.data.*;
 import jfcraft.opengl.*;
+import static jfcraft.data.Direction.*;
 
 public class BlockOpaqueVarPerf extends BlockOpaque {
   public BlockOpaqueVarPerf(String id, String names[], String images[]) {
@@ -19,7 +20,13 @@ public class BlockOpaqueVarPerf extends BlockOpaque {
     clampAlpha = true;
   }
   public SubTexture getTexture(RenderData data) {
-    return textures[data.var[data.side]];
+    int idx = 0;
+    if (isDir) {
+      idx = data.var[data.side] & varMask;
+    } else {
+      idx = data.var[X] & varMask;
+    }
+    return textures[idx];
   }
   public void reloadAll() {
     for(int a=0;a<textures.length;a++) {

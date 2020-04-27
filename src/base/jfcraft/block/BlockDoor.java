@@ -16,6 +16,7 @@ import jfcraft.client.*;
 import jfcraft.data.*;
 import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
+import static jfcraft.data.Blocks.*;
 
 public class BlockDoor extends BlockBase {
   private static GLModel model_upper, model_lower;
@@ -37,8 +38,6 @@ public class BlockDoor extends BlockBase {
     cantGive = true;  //give item instead
   }
 
-  public static final int VAR_UPPER = 0x8;  //placed in var
-
   public void buildBuffers(RenderDest dest, RenderData data) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
     ExtraRedstone er = (ExtraRedstone)data.chunk.getExtra((int)data.x, (int)data.y, (int)data.z, Extras.REDSTONE);
@@ -51,11 +50,11 @@ public class BlockDoor extends BlockBase {
 
     if ((data.var[X] & VAR_UPPER) == VAR_UPPER) {
       //upper
-      st = textures[0];  //TODO : data.var[X]];
+      st = textures[(data.var[X] & varMask) * 2];
       obj = model_upper.getObject("DOOR_UPPER");
     } else {
       //lower
-      st = textures[1];  //TODO : 6 + data.var[X]];
+      st = textures[(data.var[X] & varMask) * 2 + 1];
       obj = model_lower.getObject("DOOR_LOWER");
     }
 
@@ -109,7 +108,7 @@ public class BlockDoor extends BlockBase {
       Static.log("Door:Can not place:xzdir invalid");
       return false;
     }
-    synchronized(c.chunk) {
+    synchronized(c.chunk.lock) {
       if (c.chunk.getID(c.gx, c.gy, c.gz) != 0) return false;
       if (c.chunk.getID(c2.gx, c2.gy, c2.gz) != 0) return false;
       ExtraRedstone er1 = new ExtraRedstone(c.gx, c.gy, c.gz);
