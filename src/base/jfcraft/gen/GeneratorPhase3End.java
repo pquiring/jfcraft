@@ -21,8 +21,6 @@ public class GeneratorPhase3End implements GeneratorPhase3Base {
   private Chunk chunk;
   private Random r = new Random();
 
-  private byte trees[] = {Blocks.VAR_OAK, Blocks.VAR_SPRUCE, Blocks.VAR_JUNGLE};
-
   public void getIDs() {}
 
   public void reset() {}
@@ -85,7 +83,6 @@ public class GeneratorPhase3End implements GeneratorPhase3Base {
     }
     return Static.blocks.blocks[c.getID(x,y,z)];
   }
-  private static final char AIR = 0;
 
   public void smoothSteps() {
     for(int x=0;x<16;x++) {

@@ -21,11 +21,7 @@ public class GeneratorPhase3Nether implements GeneratorPhase3Base {
   private Chunk chunk;
   private Random r = new Random();
 
-  private byte trees[];
-
-  public void getIDs() {
-    trees = new byte[] {Blocks.VAR_OAK, Blocks.VAR_SPRUCE, Blocks.VAR_JUNGLE};
-  }
+  public void getIDs() {}
 
   public void reset() {}
 

@@ -44,6 +44,5 @@ banners
 horse leads
 spawn eggs
 implement more commands
-double block plants
 dye recipes (a few remaining : requires double block plants)
 fence/gate 1.5 blocks high

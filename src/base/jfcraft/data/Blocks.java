@@ -476,7 +476,7 @@ public class Blocks {
     registerBlock(new BlockX("DEADBUSH"
       , new String[] {"Dead Bush"}
       , new String[] {"dead_bush"}).
-      setSupported().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
+      setSupported().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD).setDrop("STICK")
     );
     registerBlock(new BlockPiston("PISTON", new String[] {"Piston"}, new String[] {"piston_bottom", "piston_side", "piston_inner", "piston_side", "piston_top", "piston_side", "piston_top"}).setHardness(0.5f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockOpaque("WOOL",
@@ -529,7 +529,7 @@ public class Blocks {
         "tall_grass_top", "tall_grass_bottom",
         "large_fern_top", "large_fern_bottom",
       })
-      .resetBoxes(BlockHitTest.Type.SELECTION).addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION)
+      .resetBoxes(BlockHitTest.Type.SELECTION).addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION)
       .setSupported().setPlant().setShowAsItem().setDrop("SEEDS").setDropVar(false).setGreenAllSides()
     );
     registerBlock(new BlockXVar2("TALLPLANT"
@@ -541,7 +541,7 @@ public class Blocks {
         "rose_bush_top", "rose_bush_bottom",
         "peony_top", "peony_bottom"
       })
-      .resetBoxes(BlockHitTest.Type.SELECTION).addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION)
+      .resetBoxes(BlockHitTest.Type.SELECTION).addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION)
       .setSupported().setPlant().setShowAsItem().setDrop("SEEDS").setDropVar(false)
     );
     registerBlock(new BlockX("MUSHROOM_BROWN", new String[] {"Brown Mushroom"}, new String[] {"brown_mushroom"}).setShowAsItem().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION));

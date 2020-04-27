@@ -23,17 +23,17 @@ public class BiomeDesert extends BiomeBase {
       }
       r1++;
       if (r1 % 50 == 0) {
-        setBlock(x,y,z,Blocks.DEADBUSH,0,0);
+        setBlock(x,y+1,z,Blocks.DEADBUSH,0,0);
         return;
       }
       r1++;
       if (r1 % 1 == 1) {
-        setBlock2(x,y,z,Blocks.TALLGRASS,0,getTallGrass(r2));
+        setBlock2(x,y+1,z,Blocks.TALLGRASS,0,getTallGrass(r2));
         return;
       }
       r1++;
       if (r1 % 1 == 1) {
-        spawnAnimal(x, y, z, getAnimal(r2));
+        spawnAnimal(x, y+1, z, getAnimal(r2));
       }
 //    }
   }

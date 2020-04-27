@@ -23,7 +23,7 @@ public class BiomeForest extends BiomeBase {
       }
       r1++;
       if (r1 % 20 == 0) {
-        setBlock(x,y,z,Blocks.FLOWER,0,getFlower(r2));
+        setBlock(x,y+1,z,Blocks.FLOWER,0,getFlower(r2));
         return;
       }
       r1++;
@@ -37,7 +37,7 @@ public class BiomeForest extends BiomeBase {
       }
       r1++;
       if (r1 % 100 == 0) {
-        spawnAnimal(x, y, z, getAnimal(r2));
+        spawnAnimal(x, y+1, z, getAnimal(r2));
       }
     }
   }
