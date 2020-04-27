@@ -10,6 +10,9 @@ import static jfcraft.data.Direction.*;
 public abstract class TreeBase {
   public abstract void plant(int x,int y, int z);
   public static Chunk chunk;
+  public static void setChunk(Chunk chunk) {
+    TreeBase.chunk = chunk;
+  }
   public void setBlock(int x, int y, int z, char id, int dir, int var) {
     if (y < 1) return;  //do not change bedrock
     if (y > 255) return;

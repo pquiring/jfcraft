@@ -14,12 +14,16 @@ import static jfcraft.data.Blocks.*;
 
 public abstract class BiomeBase {
   public static Chunk chunk;
+  public static final int INF = Integer.MAX_VALUE;  //infinite odds (ie: never)
+  public static void setChunk(Chunk chunk) {
+    BiomeBase.chunk = chunk;
+  }
   public abstract byte getID();
   /** Adds trees/flowers/etc to coords in chunk.
    * @param x,y,z = coord of top block of soil in chunk
    * @param rand = random int value (absolute)
    */
-  public abstract void build(int x,int y,int z, int r1, int r2);
+  public abstract void build(int x,int y,int z, BiomeData data);
   private BlockBase getBlock(int x, int y, int z) {
     if (y < 0) return null;
     if (y > 255) return null;
@@ -72,7 +76,12 @@ public abstract class BiomeBase {
   public boolean canPlantOn(int x,int y,int z) {
     BlockBase block = getBlock(x,y,z);
     BlockBase blockA = getBlock(x,y+1,z);
-    return block.canPlantOn && blockA.id == Blocks.AIR;
+    return block.canPlantOn && (blockA.id == Blocks.AIR || blockA.id == Blocks.SNOW);
+  }
+  public boolean canPlantOn(int x,int y,int z, char id) {
+    BlockBase block = getBlock(x,y,z);
+    BlockBase blockA = getBlock(x,y+1,z);
+    return block.id == id && (blockA.id == Blocks.AIR || blockA.id == Blocks.SNOW);
   }
   public void spawnAnimal(int x,int y,int z, int id) {
     if (id == -1) return;

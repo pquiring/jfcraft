@@ -15,30 +15,42 @@ public class BiomeDesert extends BiomeBase {
     return DESERT;
   }
 
-  public void build(int x,int y,int z, int r1, int r2) {
-//    if (canPlantOn(x, y, z)) {
-      if (r1 % 1 == 1) {
-        getTree(r1).plant(x, y+1, z);
+  private static final int TREE_ODDS = INF;
+  private static final int FLOWER_CHUNK_ODDS = 10;
+  private static final int FLOWER_BLOCK_ODDS = 50;
+  private static final int TALLGRASS_CHUNK_ODDS = INF;
+  private static final int TALLGRASS_BLOCK_ODDS = INF;
+  private static final int ANIMAL_CHUNK_ODDS = INF;
+  private static final int ANIMAL_BLOCK_ODDS = INF;
+
+  public void build(int x,int y,int z, BiomeData data) {
+    if (canPlantOn(x, y, z, Blocks.SAND)) {
+      if (data.b1 % TREE_ODDS == 0) {
+        getTree(data.b2).plant(x, y+1, z);
         return;
       }
-      r1++;
-      if (r1 % 50 == 0) {
-        setBlock(x,y+1,z,Blocks.DEADBUSH,0,0);
-        return;
+      if (data.c1 % FLOWER_CHUNK_ODDS == 0) {
+        if (data.b1 % FLOWER_BLOCK_ODDS == 0) {
+          setBlock(x,y+1,z,Blocks.DEADBUSH,0,0);
+          return;
+        }
       }
-      r1++;
-      if (r1 % 1 == 1) {
-        setBlock2(x,y+1,z,Blocks.TALLGRASS,0,getTallGrass(r2));
-        return;
+      if (data.c2 % TALLGRASS_CHUNK_ODDS == 0) {
+        if (data.b1 % TALLGRASS_BLOCK_ODDS == 0) {
+          setBlock2(x,y+1,z,Blocks.TALLGRASS,0,getTallGrass(data.c1));
+          return;
+        }
       }
-      r1++;
-      if (r1 % 1 == 1) {
-        spawnAnimal(x, y+1, z, getAnimal(r2));
+      if (data.c3 % ANIMAL_CHUNK_ODDS == 0) {
+        if (data.b1 % ANIMAL_BLOCK_ODDS == 0) {
+          spawnAnimal(x, y+1, z, getAnimal(data.c1));
+        }
       }
-//    }
+    }
   }
 
   public TreeBase getTree(int rv) {
+    //TODO : return cactus
     return null;
   }
 

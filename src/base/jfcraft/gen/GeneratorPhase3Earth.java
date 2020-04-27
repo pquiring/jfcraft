@@ -23,10 +23,7 @@ import jfcraft.tree.TreeBase;
 public class GeneratorPhase3Earth implements GeneratorPhase3Base {
   private Chunk chunk;
   private Random r = new Random();
-
-  private int nextInt() {
-    return Static.abs(r.nextInt());
-  }
+  private BiomeData data = new BiomeData();
 
   public void getIDs() {
   }
@@ -165,16 +162,22 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
   }
 
   public void addStuff() {
-    BiomeBase.chunk = chunk;
-    TreeBase.chunk = chunk;
+    BiomeBase.setChunk(chunk);
+    TreeBase.setChunk(chunk);
+    data.c1 = r.nextInt(Integer.MAX_VALUE);
+    data.c2 = r.nextInt(Integer.MAX_VALUE);
+    data.c3 = r.nextInt(Integer.MAX_VALUE);
     for(int x=0;x<16;x++) {
       for(int z=0;z<16;z++) {
         int p = z * 16 + x;
         int y = (int)Math.ceil(chunk.elev[p]);
-//        float temp = chunk.temp[p];
-//        float rain = chunk.rain[p];
+        data.temp = chunk.temp[p];
+        data.rain = chunk.rain[p];
+        data.b1 = r.nextInt(Integer.MAX_VALUE);
+        data.b2 = r.nextInt(Integer.MAX_VALUE);
+        data.b3 = r.nextInt(Integer.MAX_VALUE);
         BiomeBase biome = Static.biomes.biomes[chunk.biome[p]];
-        biome.build(x, y, z, r.nextInt() & 0x3fffffff, r.nextInt() & 0x3fffffff);
+        biome.build(x, y, z, data);
       }
     }
   }

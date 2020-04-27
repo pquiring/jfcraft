@@ -73,6 +73,7 @@ public class Blocks {
   public static char AIR;  //will be zero
   public static char DIRT;
   public static char GRASS;
+  public static char WEEDS;
   public static char SNOW;
   public static char WATER;
   public static char LAVA;
@@ -210,6 +211,7 @@ public class Blocks {
     AIR = world.getBlockID("AIR");
     DIRT = world.getBlockID("DIRT");
     GRASS = world.getBlockID("GRASS");
+    WEEDS = world.getBlockID("WEEDS");
     SNOW = world.getBlockID("SNOW");
     WATER = world.getBlockID("WATER");
     LAVA = world.getBlockID("LAVA");
@@ -471,6 +473,11 @@ public class Blocks {
     registerBlock(new BlockX("FERN"
       , new String[] {"Fern"}
       , new String[] {"fern"}
+      ).setGreenAllSides().setDrop("SEEDS").setSupported().setDropVar(false).addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
+    );
+    registerBlock(new BlockX("WEEDS"
+      , new String[] {"Weeds"}
+      , new String[] {"grass"}
       ).setGreenAllSides().setDrop("SEEDS").setSupported().setDropVar(false).addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
     );
     registerBlock(new BlockX("DEADBUSH"
