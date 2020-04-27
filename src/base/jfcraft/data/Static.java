@@ -36,6 +36,8 @@ public class Static {
   public static Extras extras = new Extras();
   public static Screens screens = new Screens();
   public static Dims dims = new Dims();
+  public static Biomes biomes = new Biomes();
+  public static Trees trees = new Trees();
   public static Client client;  //playing client (client side only)
   public static Server server;  //current server (server side only)
   public static Game game;  //main screen for rendering game

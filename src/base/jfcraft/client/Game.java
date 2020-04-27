@@ -530,7 +530,7 @@ public class Game extends RenderScreen {
         Chunk chunk = Static.client.player.getChunk();
         if (chunk != null) {
           int gp = (gz << 4) + gx;
-          renderText(dx,dy,"Biome:" + Chunk.getBiomeName(chunk.biome[gp]));
+          renderText(dx,dy,"Biome:" + Biomes.getBiomeName(chunk.biome[gp]));
           dy += fontSize;
           renderText(dx,dy," Elev:" + chunk.elev[gp]);
           dy += fontSize;

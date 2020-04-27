@@ -13,20 +13,21 @@ import javaforce.*;
 import javaforce.gl.*;
 
 import jfcraft.data.*;
+import jfcraft.biome.*;
 import jfcraft.block.*;
 import jfcraft.entity.*;
 import static jfcraft.data.Direction.*;
+import static jfcraft.data.Biomes.*;
 
 public class GeneratorPhase3Earth implements GeneratorPhase3Base {
   private Chunk chunk;
   private Random r = new Random();
 
-  private byte trees[] = {Blocks.VAR_OAK, Blocks.VAR_SPRUCE, Blocks.VAR_JUNGLE};
-
-  private EntityBase animals[];
+  private int nextInt() {
+    return Static.abs(r.nextInt());
+  }
 
   public void getIDs() {
-    animals = Static.entities.listGenerate(Dims.EARTH);
   }
 
   public void reset() {}
@@ -65,6 +66,7 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
       c = c.S;
       z -= 16;
     }
+    if (c.getBlock(x, y, z).id != Blocks.AIR) return;  //only replace air
     c.setBlock(x, y, z, id, Chunk.makeBits(dir,var));
   }
   private BlockBase getBlock(int x, int y, int z) {
@@ -89,44 +91,14 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
     }
     return Static.blocks.blocks[c.getID(x,y,z)];
   }
-  private void addTree(int x, int y, int z, byte var, boolean snow) {
-    setBlock(x  ,y  ,z  ,Blocks.WOOD, 0, var);
-    setBlock(x  ,y+1,z  ,Blocks.WOOD, 0, var);
-    setBlock(x  ,y+2,z  ,Blocks.WOOD, 0, var);
-    setBlock(x  ,y+3,z  ,Blocks.WOOD, 0, var);
-    setBlock(x  ,y+4,z  ,Blocks.WOOD, 0, var);
-
-    setBlock(x  ,y+5,z  ,Blocks.LEAVES, 0, Chunk.makeBits(B,var));
-    setBlock(x  ,y+4,z-1,Blocks.LEAVES, 0, Chunk.makeBits(S,var));
-    setBlock(x  ,y+4,z+1,Blocks.LEAVES, 0, Chunk.makeBits(N,var));
-    setBlock(x-1,y+4,z  ,Blocks.LEAVES, 0, Chunk.makeBits(E,var));
-    setBlock(x-1,y+4,z-1,Blocks.LEAVES, 0, Chunk.makeBits(E,var));  //SE
-    setBlock(x-1,y+4,z+1,Blocks.LEAVES, 0, Chunk.makeBits(E,var));  //NW
-    setBlock(x+1,y+4,z  ,Blocks.LEAVES, 0, Chunk.makeBits(W,var));
-    setBlock(x+1,y+4,z-1,Blocks.LEAVES, 0, Chunk.makeBits(W,var));  //SW
-    setBlock(x+1,y+4,z+1,Blocks.LEAVES, 0, Chunk.makeBits(W,var));  //NW
-    if (!snow) return;
-    //place snow on top of tree
-    setBlock(x  ,y+6,z  ,Blocks.SNOW, 0, 0);
-    setBlock(x  ,y+5,z-1,Blocks.SNOW, 0, 0);
-    setBlock(x  ,y+5,z+1,Blocks.SNOW, 0, 0);
-    setBlock(x-1,y+5,z  ,Blocks.SNOW, 0, 0);
-    setBlock(x-1,y+5,z-1,Blocks.SNOW, 0, 0);
-    setBlock(x-1,y+5,z+1,Blocks.SNOW, 0, 0);
-    setBlock(x+1,y+5,z  ,Blocks.SNOW, 0, 0);
-    setBlock(x+1,y+5,z-1,Blocks.SNOW, 0, 0);
-    setBlock(x+1,y+5,z+1,Blocks.SNOW, 0, 0);
-
-  }
-  public void spawnAnimal(int x,int y,int z) {
-    int idx = r.nextInt(animals.length);
-    EntityBase e = animals[idx].spawn(chunk);
+  public void spawnAnimal(int x,int y,int z, int id) {
+    if (id == -1) return;
+    EntityBase e = Static.entities.getEntity(id).spawn(chunk);
     if (e == null) return;  //failed to spawn
     e.uid = Static.server.world.generateUID();
     chunk.addEntity(e);
     Static.server.world.addEntity(e);
   }
-  private static final char AIR = 0;
 
   public void smoothSteps() {
     for(int x=0;x<16;x++) {
@@ -200,41 +172,33 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
   }
 
   public void addStuff() {
-    BlockBase flower = Static.blocks.getBlock(Blocks.FLOWER);
-    BlockBase tallgrass = Static.blocks.getBlock(Blocks.TALLGRASS);
     for(int x=0;x<16;x++) {
       for(int z=0;z<16;z++) {
         int p = z * 16 + x;
-        int elev = (int)Math.ceil(chunk.elev[p]);
-        if (elev < 64) continue;  //under water
+        int y = (int)Math.ceil(chunk.elev[p]);
+        if (y < 64) continue;  //under water
 //        float temp = chunk.temp[p];
 //        float rain = chunk.rain[p];
-        int bt = chunk.biome[p];
+        BiomeBase biome = Static.biomes.biomes[chunk.biome[p]];
         BlockBase block, blockA;
-        switch (bt) {
-          default:
-          case Chunk.TAIGA:
-          case Chunk.FOREST:
-            block = getBlock(x,elev,z);
-            blockA = getBlock(x,elev+1,z);
-            if (block.canPlantOn && blockA.id == 0) {
-              if (block.id != Blocks.GRASS && block.id != Blocks.DIRT) {
-                System.out.println("canPlantOn != soil:" + (int)block.id);
-              }
-              else if (r.nextInt() % 50 == 0) {
-                addTree(x, elev+1, z, trees[r.nextInt(2)], bt == Chunk.TAIGA);
-              }
-              else if (r.nextInt() % 10 == 0) {
-                setBlock(x, elev+1, z, Blocks.FLOWER, 0, r.nextInt(flower.getMaxVar()));
-              }
-              else if (r.nextInt() % 5 == 0) {
-                setBlock(x, elev+1, z, Blocks.TALLGRASS, 0, r.nextInt(tallgrass.getMaxVar()));
-              }
-              else if (r.nextInt() % 100 == 0) {
-                spawnAnimal(x, elev+1, z);
-              }
-            }
-            break;
+        block = getBlock(x,y,z);
+        blockA = getBlock(x,y+1,z);
+        if (block.canPlantOn && blockA.id == Blocks.AIR) {
+          if (block.id != Blocks.GRASS && block.id != Blocks.DIRT) {
+            System.out.println("Error:canPlantOn != soil:" + (int)block.id);
+          }
+          else if (biome.hasTree(nextInt())) {
+            biome.getTree(nextInt()).plant(x,y+1,z,chunk);
+          }
+          else if (biome.hasFlower(nextInt())) {
+            setBlock(x, y+1, z, Blocks.FLOWER, 0, biome.getFlower(nextInt()));
+          }
+          else if (biome.hasTallGrass(nextInt())) {
+            setBlock(x, y+1, z, Blocks.TALLGRASS, 0, biome.getTallGrass(nextInt()));
+          }
+          else if (biome.hasAnimal(nextInt())) {
+            spawnAnimal(x, y+1, z, biome.getAnimal(nextInt()));
+          }
         }
       }
     }

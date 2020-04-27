@@ -198,4 +198,14 @@ public class Entities implements SerialCreator {
       return null;
     }
   }
+
+  public EntityBase getEntity(int id) {
+    for(int a=0;a<entities.length;a++) {
+      if (entities[a].id == id) {
+        return entities[a];
+      }
+    }
+    JFLog.log("Error:Entity ID not found:" + id);
+    return null;
+  }
 }

@@ -64,32 +64,6 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   public static final int Y = 256;
   public static final int Z = 16;
 
-  //biome types
-  public static final byte TUNDRA = 0;  //snow plains
-  public static final byte TAIGA = 1;   //snow forest
-  public static final byte PLAINS = 2;  //dry plains (few trees)
-  public static final byte DESERT = 3;  //dry sand
-  public static final byte FOREST = 4;  //lots o trees
-  public static final byte SWAMP = 5;   //swamp/marsh area
-  public static final byte JUNGLE = 6;  //thick trees/plants
-  public static final byte OCEAN = 7;   //the sea/rivers
-  public static final byte NETHER = 8;  //nether
-  public static final byte END = 9;     //end
-
-  public static String getBiomeName(byte type) {
-    switch (type) {
-      case TUNDRA: return "TUNDRA";
-      case TAIGA: return "TAIGA";
-      case PLAINS: return "PLAINS";
-      case DESERT: return "DESERT";
-      case FOREST: return "FOREST";
-      case SWAMP: return "SWAMP";
-      case JUNGLE: return "JUNGLE";
-      case OCEAN: return "OCEAN";
-    }
-    return null;
-  }
-
   public Chunk N,E,S,W;  //links : north, east, south, west
   public Object lock = new Object();
   public RenderDest dest;

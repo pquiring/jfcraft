@@ -13,6 +13,7 @@ import javaforce.*;
 
 import jfcraft.block.*;
 import jfcraft.data.*;
+import static jfcraft.data.Biomes.*;
 
 public class GeneratorPhase1End implements GeneratorPhase1Base {
   public World world;
@@ -50,7 +51,7 @@ public class GeneratorPhase1End implements GeneratorPhase1Base {
         chunk.elev[p] = noise_top.noise_2d(wx, wz) * 5.0f + 64.0f;
         chunk.depth[p] = noise_bottom.noise_2d(wx, wz) * 5.0f + 16.0f;
         chunk.rain[p] = 0;
-        chunk.biome[p] = Chunk.END;
+        chunk.biome[p] = END;
         p++;
       }
     }

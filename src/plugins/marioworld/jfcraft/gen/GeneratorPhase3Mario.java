@@ -16,6 +16,7 @@ import jfcraft.data.*;
 import jfcraft.block.*;
 import jfcraft.entity.*;
 import static jfcraft.data.Direction.*;
+import static jfcraft.data.Biomes.*;
 import jfcraft.dim.DimMarioWorld;
 
 public class GeneratorPhase3Mario implements GeneratorPhase3Base {
@@ -140,15 +141,15 @@ public class GeneratorPhase3Mario implements GeneratorPhase3Base {
         BlockBase block;
         switch (bt) {
           default:
-          case Chunk.TAIGA:
-          case Chunk.FOREST:
+          case TAIGA:
+          case FOREST:
             block = getBlock(x,elev,z);
             if (block.canPlantOn) {
               if (block.id != Blocks.GRASS && block.id != Blocks.DIRT) {
                 System.out.println("canPlantOn != soil:" + (int)block.id);
               }
               else if (r.nextInt() % 200 == 0) {
-                addTree(x, elev+1, z, trees[r.nextInt(2)], bt == Chunk.TAIGA);
+                addTree(x, elev+1, z, trees[r.nextInt(2)], bt == TAIGA);
               }
               else if (r.nextInt() % 100 == 0) {
                 setBlock(x, elev+1, z, Blocks.FLOWER, 0, r.nextInt(11));

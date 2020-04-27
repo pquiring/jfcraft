@@ -12,6 +12,7 @@ import java.util.*;
 import jfcraft.data.*;
 import static jfcraft.data.Chunk.*;
 import static jfcraft.data.Direction.*;
+import static jfcraft.data.Biomes.*;
 
 public class GeneratorPhase1Earth implements GeneratorPhase1Base {
   public World world;
@@ -60,7 +61,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
             } else if (temp > 50.0) {
               biome = SWAMP;
             } else {
-              biome = FOREST;
+              biome = DARK_FOREST;
             }
           } else if (rain < 33.0) {
             biome = temp < 80.0 ? PLAINS : DESERT;
@@ -143,7 +144,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         float clay = 0.0f;
         float grass = 1.0f;
 
-        if (bt == Chunk.OCEAN) {
+        if (bt == OCEAN) {
           if (chunk.elev[p] > 64) {
             sand = 3.0f + (r.nextFloat() - 0.5f) * 4.0f;  //beach
           } else {
@@ -158,27 +159,27 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         }
 
         switch (bt) {
-          case Chunk.DESERT:
+          case DESERT:
             grass = 0.0f;
             sand = 5.0f + (r.nextFloat() - 0.5f) * 4.0f;
             dirt = 0.0f;
             break;
-          case Chunk.PLAINS:
+          case PLAINS:
             if (r.nextInt() % 3 == 0) {
               blocks[p + elev * 256] = Blocks.TALLGRASS;
             }
             break;
-          case Chunk.TAIGA:
+          case TAIGA:
             break;
-          case Chunk.FOREST:
+          case FOREST:
             break;
-          case Chunk.SWAMP:
+          case SWAMP:
             if (elev < 64 && r.nextInt() % 2 == 0) {
               blocks[p + 65 * 256] = Blocks.LILLYPAD;
               bits[p + 65 * 256] = (byte)Chunk.makeBits(B, 0);
             }
             break;
-          case Chunk.OCEAN:
+          case OCEAN:
             grass = 0.0f;
             break;
         }

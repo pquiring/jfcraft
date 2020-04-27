@@ -13,6 +13,7 @@ import javaforce.*;
 
 import jfcraft.block.*;
 import jfcraft.data.*;
+import static jfcraft.data.Biomes.*;
 
 public class GeneratorPhase1Nether implements GeneratorPhase1Base {
   public World world;
@@ -46,7 +47,7 @@ public class GeneratorPhase1Nether implements GeneratorPhase1Base {
         chunk.elev[p] = 128;
         chunk.temp[p] = 100;
         chunk.rain[p] = 0;
-        chunk.biome[p] = Chunk.NETHER;
+        chunk.biome[p] = NETHER;
         p++;
       }
     }

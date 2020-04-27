@@ -15,6 +15,7 @@ import jfcraft.block.*;
 import jfcraft.data.*;
 import static jfcraft.data.Chunk.*;
 import static jfcraft.data.Direction.*;
+import static jfcraft.data.Biomes.*;
 
 public class GeneratorPhase1Mario implements GeneratorPhase1Base {
   public World world;
@@ -121,7 +122,6 @@ public class GeneratorPhase1Mario implements GeneratorPhase1Base {
         float rain = chunk.rain[p];
         int elev = (int)Math.ceil(chunk.elev[p]);
         int bt = chunk.biome[p];
-        boolean mountain = (bt & Chunk.MOUNTAIN) != 0;
         bt &= 0x7;
 
         float sand = 0.0f;
@@ -129,7 +129,7 @@ public class GeneratorPhase1Mario implements GeneratorPhase1Base {
         float clay = 0.0f;
         float grass = 1.0f;
 
-        if (bt == Chunk.OCEAN) {
+        if (bt == OCEAN) {
           if (chunk.elev[p] > 64) {
             sand = 3.0f + (r.nextFloat() - 0.5f) * 4.0f;  //beach
           } else {
@@ -144,20 +144,20 @@ public class GeneratorPhase1Mario implements GeneratorPhase1Base {
         }
 
         switch (bt) {
-          case Chunk.DESERT:
+          case DESERT:
             grass = 0.0f;
             sand = 16f;
             dirt = 0.0f;
             break;
-          case Chunk.PLAINS:
+          case PLAINS:
             break;
-          case Chunk.TAIGA:
+          case TAIGA:
             break;
-          case Chunk.FOREST:
+          case FOREST:
             break;
-          case Chunk.SWAMP:
+          case SWAMP:
             break;
-          case Chunk.OCEAN:
+          case OCEAN:
             break;
         }
 
