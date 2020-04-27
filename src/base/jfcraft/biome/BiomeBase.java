@@ -66,9 +66,6 @@ public abstract class BiomeBase {
     c.setBlock(x, y, z, id, Chunk.makeBits(dir,var));
   }
   public void setBlock2(int x, int y, int z, char id, int dir, int var) {
-    if (var > 6 || var < 0) {
-      JFLog.log("Debug:Error:invalid var spawned:" + var);
-    }
     setBlock(x,y,z,id,dir,var);
     setBlock(x,y+1,z,id,dir,var + VAR_UPPER);
   }

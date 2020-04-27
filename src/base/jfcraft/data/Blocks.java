@@ -104,6 +104,7 @@ public class Blocks {
   public static char WEB;
   public static char FERN;
   public static char TALLGRASS;
+  public static char TALLPLANT;
   public static char DEADBUSH;
   public static char PISTON;
   public static char WOOL;
@@ -240,6 +241,7 @@ public class Blocks {
     WEB = world.getBlockID("WEB");
     FERN = world.getBlockID("FERN");
     TALLGRASS = world.getBlockID("TALLGRASS");
+    TALLPLANT = world.getBlockID("TALLPLANT");
     DEADBUSH = world.getBlockID("DEADBUSH");
     PISTON = world.getBlockID("PISTON");
     WOOL = world.getBlockID("WOOL");
@@ -394,9 +396,11 @@ public class Blocks {
   //tallgrass vars
   public static final byte VAR_TALL_GRASS = 0;
   public static final byte VAR_LARGE_FERN = 1;
-  public static final byte VAR_LILAC = 2;
-  public static final byte VAR_ROSE_BUSH = 3;
-  public static final byte VAR_PEONY = 4;
+
+  //tallplant vars
+  public static final byte VAR_LILAC = 0;
+  public static final byte VAR_ROSE_BUSH = 1;
+  public static final byte VAR_PEONY = 2;
 
   public void registerDefault() {
     registerBlock(new BlockAir("AIR"));
@@ -519,11 +523,20 @@ public class Blocks {
     );
     registerBlock(new BlockXVar2("TALLGRASS"
       , new String[] {
-        "Tall Grass", "Large Fern", "Lilac", "Rose Bush", "Peony"
+        "Tall Grass", "Large Fern"
       }
       , new String[] {
         "tall_grass_top", "tall_grass_bottom",
         "large_fern_top", "large_fern_bottom",
+      })
+      .resetBoxes(BlockHitTest.Type.SELECTION).addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION)
+      .setSupported().setPlant().setShowAsItem().setDrop("SEEDS").setDropVar(false).setGreenAllSides()
+    );
+    registerBlock(new BlockXVar2("TALLPLANT"
+      , new String[] {
+        "Lilac", "Rose Bush", "Peony"
+      }
+      , new String[] {
         "lilac_top", "lilac_bottom",
         "rose_bush_top", "rose_bush_bottom",
         "peony_top", "peony_bottom"

@@ -23,7 +23,6 @@ public class BiomeDarkForest extends BiomeBase {
       }
       r1++;
       if (r1 % 1 == 1) {
-        r1++;
         setBlock(x,y,z,Blocks.FLOWER,0,getFlower(r2));
         return;
       }
@@ -34,7 +33,6 @@ public class BiomeDarkForest extends BiomeBase {
       }
       r1++;
       if (r1 % 100 == 0) {
-        r1++;
         spawnAnimal(x, y, z, getAnimal(r2));
       }
     }

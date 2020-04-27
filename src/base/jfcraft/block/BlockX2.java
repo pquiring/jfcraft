@@ -40,10 +40,6 @@ public class BlockX2 extends BlockBase {
     } else {
       idx = (data.var[X] & varMask) * 2 + 1;
     }
-    if (idx >= textures.length) {
-      JFLog.log("Debug:Error:invalid var:var=" + data.var[X] + ",name=" + getName());
-      idx = 0;
-    }
     st = textures[idx];
     buildBuffers(model.getObject("X"), buf, data, st);
   }

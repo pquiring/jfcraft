@@ -23,19 +23,16 @@ public class BiomeBadLands extends BiomeBase {
       }
       r1++;
       if (r1 % 1 == 1) {
-        r1++;
         setBlock(x,y,z,Blocks.FLOWER,0,getFlower(r2));
         return;
       }
       r1++;
       if (r1 % 1 == 1) {
-        r1++;
         setBlock2(x,y,z,Blocks.TALLGRASS,0,getTallGrass(r2));
         return;
       }
       r1++;
       if (r1 % 100 == 0) {
-        r1++;
         spawnAnimal(x, y, z, getAnimal(r2));
       }
     }

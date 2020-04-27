@@ -18,25 +18,25 @@ public class BiomeForest extends BiomeBase {
   public void build(int x,int y,int z, int r1, int r2) {
     if (canPlantOn(x, y, z)) {
       if (r1 % 30 == 0) {
-        r1++;
         getTree(r1).plant(x, y+1, z);
         return;
       }
       r1++;
       if (r1 % 20 == 0) {
-        r1++;
         setBlock(x,y,z,Blocks.FLOWER,0,getFlower(r2));
         return;
       }
       r1++;
       if (r1 % 50 == 0) {
-        r1++;
-        setBlock2(x,y,z,Blocks.TALLGRASS,0,getTallGrass(r2));
+        if ((r2 & 1) == 1) {
+          setBlock2(x,y+1,z,Blocks.TALLGRASS,0,getTallGrass(r2));
+        } else {
+          setBlock2(x,y+1,z,Blocks.TALLPLANT,0,getTallPlant(r2));
+        }
         return;
       }
       r1++;
       if (r1 % 100 == 0) {
-        r1++;
         spawnAnimal(x, y, z, getAnimal(r2));
       }
     }
@@ -65,13 +65,20 @@ public class BiomeForest extends BiomeBase {
   private byte grasses[] = {
     VAR_TALL_GRASS,
     VAR_LARGE_FERN,
+  };
+
+  public int getTallGrass(int rv) {
+    return grasses[rv % grasses.length];
+  }
+
+  private byte plants[] = {
     VAR_LILAC,
     VAR_ROSE_BUSH,
     VAR_PEONY
   };
 
-  public int getTallGrass(int rv) {
-    return grasses[rv % grasses.length];
+  public int getTallPlant(int rv) {
+    return plants[rv % plants.length];
   }
 
   public int getAnimal(int rv) {
