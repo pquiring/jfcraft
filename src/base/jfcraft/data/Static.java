@@ -268,6 +268,10 @@ public class Static {
     return getBasePath() + "saves/";
   }
 
+  public static String getScreenShotPath() {
+    return getBasePath() + "screenshots/";
+  }
+
   public static void registerAll(boolean client) {
     PluginLoader.loadPlugins();
     Static.registerDefault();

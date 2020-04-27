@@ -688,6 +688,9 @@ public class Game extends RenderScreen {
       case GLVK.VK_F1:
         showControls = !showControls;
         break;
+      case GLVK.VK_F2:
+        screenShot();
+        break;
       case GLVK.VK_F3:
         debug = !debug;
         break;
@@ -909,5 +912,21 @@ public class Game extends RenderScreen {
       }
       dist -= step;
     }
+  }
+
+  public void screenShot() {
+    JFImage img = JFImage.createScreenCapture();
+    Calendar now = Calendar.getInstance();
+    new java.io.File(Static.getScreenShotPath()).mkdir();
+    String filename = String.format("%s%d-%02d-%02d_%02d-%02d-%02d.png",
+      Static.getScreenShotPath(),
+      now.get(Calendar.YEAR),
+      now.get(Calendar.MONTH)+1,
+      now.get(Calendar.DAY_OF_MONTH),
+      now.get(Calendar.HOUR_OF_DAY),
+      now.get(Calendar.MINUTE),
+      now.get(Calendar.SECOND)
+    );
+    img.savePNG(filename);
   }
 }
