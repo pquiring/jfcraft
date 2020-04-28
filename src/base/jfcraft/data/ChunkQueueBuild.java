@@ -33,9 +33,16 @@ public class ChunkQueueBuild {
       int pos = tail;
       while (pos != head1 && cnt != 0) {
         Chunk chunk = chunks[pos];
-        if (chunk != null && chunk.canRender()) {
-          chunk.buildBuffers();
-          if (next != null) next.add(chunk);
+        if (chunk != null) {
+          if (chunk.canRender()) {
+            try {
+              chunk.buildBuffers();
+            } catch (Exception e) {
+              Static.log(e);
+            }
+            if (next != null) next.add(chunk);
+          }
+          chunks[pos] = null;
         }
         pos++;
         if (pos == BUFSIZ) pos = 0;

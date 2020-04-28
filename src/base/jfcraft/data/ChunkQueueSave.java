@@ -24,6 +24,7 @@ public class ChunkQueueSave {
       while (pos != head1) {
         Chunk chunk = chunks[pos];
         if (chunk != null) {
+          chunks[pos] = null;
           world.chunks.saveChunk(chunk);
         }
         pos++;

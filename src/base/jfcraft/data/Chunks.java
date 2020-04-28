@@ -260,10 +260,10 @@ public class Chunks {
   }
   public synchronized void unlinkChunk(Chunk chunk) {
     //remove all links
-    if (chunk.N != null) {chunk.N.S = null; chunk.N.adjCount--; }
-    if (chunk.E != null) {chunk.E.W = null; chunk.E.adjCount--; }
-    if (chunk.S != null) {chunk.S.N = null; chunk.S.adjCount--; }
-    if (chunk.W != null) {chunk.W.E = null; chunk.W.adjCount--; }
+    if (chunk.N != null) {chunk.N.S = null; chunk.N.adjCount--; chunk.N = null;}
+    if (chunk.E != null) {chunk.E.W = null; chunk.E.adjCount--; chunk.E = null;}
+    if (chunk.S != null) {chunk.S.N = null; chunk.S.adjCount--; chunk.S = null;}
+    if (chunk.W != null) {chunk.W.E = null; chunk.W.adjCount--; chunk.W = null;}
     //check corners
     Chunk NE = getChunk(chunk.dim, chunk.cx + 1, chunk.cz - 1);
     if (NE != null) {

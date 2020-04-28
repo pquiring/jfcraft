@@ -34,6 +34,7 @@ public class ChunkQueueCopy {
         Chunk chunk = chunks[pos];
         if (chunk != null) {
           chunk.copyBuffers();
+          chunks[pos] = null;
         }
         pos++;
         if (pos == BUFSIZ) pos = 0;
