@@ -15,7 +15,7 @@ public class BiomeSwamp extends BiomeBase {
     return SWAMP;
   }
 
-  private static final int TREE_ODDS = 500;
+  private static final int TREE_ODDS = 150;
   private static final int FLOWER_CHUNK_ODDS = INF;
   private static final int FLOWER_BLOCK_ODDS = INF;
   private static final int TALLGRASS_CHUNK_ODDS = INF;
