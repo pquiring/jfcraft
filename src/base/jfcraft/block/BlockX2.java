@@ -47,16 +47,11 @@ public class BlockX2 extends BlockBase {
     Coords c2 = c.clone();
     c2.y++;
     c2.gy++;
-    synchronized(c.chunk.lock) {
-      if (c.chunk.getID(c.gx, c.gy, c.gz) != 0) return false;
-      if (c.chunk.getID(c2.gx, c2.gy, c2.gz) != 0) return false;
-      int bits1 = Chunk.makeBits(0,c.var);
-      c.chunk.setBlock(c.gx,c.gy,c.gz,id,bits1);
-      Static.server.broadcastSetBlock(c.chunk.dim,c.x,c.y,c.z,id,bits1);
-      int bits2 = Chunk.makeBits(0,c.var | VAR_UPPER);
-      c2.chunk.setBlock(c2.gx,c2.gy,c2.gz,id,bits2);
-      Static.server.broadcastSetBlock(c2.chunk.dim,c2.x,c2.y,c2.z,id,bits2);
-    }
+    int bits1 = Chunk.makeBits(0,c.var);
+    int bits2 = Chunk.makeBits(0,c.var | VAR_UPPER);
+    if (!c.chunk.setBlocksIfEmpty(c, id, bits1, c2, id, bits2)) return false;
+    Static.server.broadcastSetBlock(c.chunk.dim,c.x,c.y,c.z,id,bits1);
+    Static.server.broadcastSetBlock(c2.chunk.dim,c2.x,c2.y,c2.z,id,bits2);
     return true;
   }
   public void destroy(Client client, Coords c, boolean doDrop) {

@@ -85,15 +85,12 @@ public class BlockGate extends BlockBase {
       Static.log("Gate:Can not place:xzdir invalid");
       return false;
     }
-    synchronized(c.chunk.lock) {
-      if (c.chunk.getID(c.gx, c.gy, c.gz) != 0) return false;
-      ExtraRedstone er = new ExtraRedstone(c.gx, c.gy, c.gz);
-      c.chunk.addExtra(er);
-      Static.server.broadcastExtra(c.chunk.dim, c.x, c.y, c.z, er, true);
-      int bits = Chunk.makeBits(c.dir_xz,c.var);
-      c.chunk.setBlock(c.gx,c.gy,c.gz,id,bits);
-      Static.server.broadcastSetBlock(c.chunk.dim,c.x,c.y,c.z,id,bits);
-    }
+    int bits = Chunk.makeBits(c.dir_xz,c.var);
+    if (!c.chunk.setBlockIfEmpty(c.gx,c.gy,c.gz,id,bits)) return false;
+    ExtraRedstone er = new ExtraRedstone(c.gx, c.gy, c.gz);
+    c.chunk.addExtra(er);
+    Static.server.broadcastExtra(c.chunk.dim, c.x, c.y, c.z, er, true);
+    Static.server.broadcastSetBlock(c.chunk.dim,c.x,c.y,c.z,id,bits);
     return true;
   }
   public void activate(Client client, Coords c) {

@@ -31,7 +31,7 @@ public class GeneratorPhase2Nether implements GeneratorPhase2Base {
   public void generate(Chunk chunk) {
     this.chunk = chunk;
 
-    synchronized(chunk.lock) {
+//    synchronized(chunk.lock) {
       chunk.needPhase2 = false;
       chunk.dirty = true;
 
@@ -46,7 +46,7 @@ public class GeneratorPhase2Nether implements GeneratorPhase2Base {
       if (r.nextInt(10000) == 0) {
 //        addFortress();  //todo
       }
-    }
+//    }
   }
 
   private void setBlock(int x, int y, int z, char id, int bits) {

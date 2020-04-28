@@ -74,17 +74,13 @@ public class BlockBed extends BlockBase {
     c2.otherSide();
     int dir1 = c1.dir_xz;
     int dir2 = c2.dir_xz;
+    int bits1 = Chunk.makeBits(dir1, VAR_FEET);
+    int bits2 = Chunk.makeBits(dir2, VAR_HEAD);
     if (c2.chunk == null) {Static.log("BlockBed.place():Error:next chunk not found"); return false;}
-    synchronized(c1.chunk.lock) {
-      synchronized(c2.chunk.lock) {
-        if (c1.chunk.getID(c1.gx,c1.gy,c1.gz) != Blocks.AIR) {Static.log("can't place bed there(1)"); return false;}
-        if (c2.chunk.getID(c2.gx,c2.gy,c2.gz) != Blocks.AIR) {Static.log("can't place bed there(2)"); return false;}
-        c1.chunk.setBlock(c1.gx, c1.gy, c1.gz, id, Chunk.makeBits(dir1, VAR_FEET));  //feet
-        Static.server.broadcastSetBlock(c1.chunk.dim,c1.x,c1.y,c1.z,id,Chunk.makeBits(dir1, 0));
-        c2.chunk.setBlock(c2.gx, c2.gy, c2.gz, id, Chunk.makeBits(dir2, VAR_HEAD));  //head
-        Static.server.broadcastSetBlock(c2.chunk.dim,c2.x,c2.y,c2.z,id,Chunk.makeBits(dir2, 1));
-      }
-    }
+    boolean placed = c1.chunk.setBlocksIfEmpty(c1, id, bits1, c2, id, bits2);
+    if (!placed) return false;
+    Static.server.broadcastSetBlock(c1.chunk.dim,c1.x,c1.y,c1.z,id,Chunk.makeBits(dir1, 0));
+    Static.server.broadcastSetBlock(c2.chunk.dim,c2.x,c2.y,c2.z,id,Chunk.makeBits(dir2, 1));
     return true;
   }
 

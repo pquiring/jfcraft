@@ -39,17 +39,9 @@ public class BlockWheat extends BlockBase {
     int x = chunk.cx * 16 + gx;
     int y = gy;
     int z = chunk.cz * 16 + gz;
-    synchronized(chunk.lock) {
-      int bits = chunk.getBits(gx, gy, gz);
-      int var = Chunk.getVar(bits);
-      if (var == 7) {
-        return;
-      }
-      var++;
-      //TODO : grow faster if in wet farmland
-      chunk.setBlock(gx,gy,gz,id,Chunk.makeBits(0,var));
-      Static.server.broadcastSetBlock(chunk.dim,x,y,z,id,Chunk.makeBits(0,var));
-    }
+    int var = chunk.incVar(gx,gy,gz,7);
+    if (var == -1) return;
+    Static.server.broadcastSetBlock(chunk.dim,x,y,z,id,Chunk.makeBits(0,var));
   }
   private static Random rnd = new Random();
   public Item[] drop(Coords c, int var) {

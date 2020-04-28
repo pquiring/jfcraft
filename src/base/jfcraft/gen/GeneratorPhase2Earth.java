@@ -42,7 +42,7 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
     }
     this.chunk = chunk;
 
-    synchronized(chunk.lock) {
+//    synchronized(chunk.lock) {
       chunk.needPhase2 = false;
       chunk.dirty = true;
 
@@ -57,7 +57,7 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
       if (r.nextInt(10000) == 0 || (chunk.cx == 0 && chunk.cz == -3)) {
         addCabin();
       }
-    }
+//    }
   }
   private void setBlock(int x, int y, int z, char id, int bits) {
     if (y < 1) return;  //do not change bedrock

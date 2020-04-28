@@ -28,7 +28,7 @@ public class GeneratorPhase3End implements GeneratorPhase3Base {
   public void generate(Chunk chunk) {
     this.chunk = chunk;
 
-    synchronized(chunk.lock) {
+//    synchronized(chunk.lock) {
       chunk.needPhase3 = false;
       chunk.dirty = true;
 
@@ -37,7 +37,7 @@ public class GeneratorPhase3End implements GeneratorPhase3Base {
 //      if (Static.doSteps) smoothSteps();
 
 //      addStuff();
-    }
+//    }
   }
   private void setBlock(int x, int y, int z, char id, int dir, int var) {
     if (y < 1) return;  //do not change bedrock

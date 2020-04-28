@@ -37,21 +37,9 @@ public class ItemSeeds extends ItemBase {
     }
     c.dir = A;
     c.adjacentBlock();
-    synchronized(c.chunk.lock) {
-      //check if area is clear
-      if (c.chunk.getID(c.gx, c.gy, c.gz) != 0) {
-        Static.log("Seeds:no room to plant");
-        return false;
-      }
-      //place seeds
-      char id = seedPlantedID;
-      if (id == 0) {
-        Static.log("Seeds:not seeds?");
-        return false;
-      }
-      c.chunk.setBlock(c.gx,c.gy,c.gz,id,0);
-      Static.server.broadcastSetBlock(c.chunk.dim,c.x,c.y,c.z,id,0);
-    }
+    //place seeds
+    c.chunk.setBlockIfEmpty(c.gx,c.gy,c.gz,seedPlantedID,0);
+    Static.server.broadcastSetBlock(c.chunk.dim,c.x,c.y,c.z,id,0);
     return true;
   }
 }

@@ -48,12 +48,10 @@ public class BlockButton extends BlockBase {
       return;
     }
     World world = Static.server.world;
-    synchronized(c.chunk.lock) {
 //      Static.log("act button@" + c);
-      er.active = true;
-      Static.server.broadcastExtra(c.chunk.dim, c.x, c.y, c.z, er, true);
-      c.chunk.addTick(c.gx, c.gy, c.gz, isBlocks2);
-    }
+    er.active = true;
+    Static.server.broadcastExtra(c.chunk.dim, c.x, c.y, c.z, er, true);
+    c.chunk.addTick(c.gx, c.gy, c.gz, isBlocks2);
     //activate surrounding blocks
     world.powerChanged(c.chunk.dim, c.x,c.y,c.z);
   }

@@ -29,6 +29,8 @@ public abstract class CreatureBase extends EntityBase {
   public VehicleBase vehicle;
   public int vcid, vuid;  //vehicle id (vcid=in chunk on disk ,vuid=in game)
 
+  private Object lock = new Object();
+
   public void hit() {
     runCount = 7;
   }

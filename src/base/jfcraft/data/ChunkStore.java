@@ -10,6 +10,8 @@ package jfcraft.data;
 import java.io.*;
 import java.util.*;
 
+import jfcraft.entity.*;
+
 public class ChunkStore {
   public RandomAccessFile raf;
 
@@ -282,7 +284,8 @@ public class ChunkStore {
             //delete any players in chunk (should not happen)
             cnt = chunk.entities.size();
             for(a=0;a<cnt;) {
-              if (chunk.entities.get(a).id == Entities.PLAYER) {
+              EntityBase e = (EntityBase)chunk.entities.get(a);
+              if (e.id == Entities.PLAYER) {
                 chunk.entities.remove(a);
                 cnt--;
               } else {

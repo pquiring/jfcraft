@@ -35,27 +35,7 @@ public class PacketB2E extends Packet {
     int gz = Static.floor(z % 16.0f);
     if (z < 0 && gz != 0) gz = 16 + gz;
     Chunk chunk = client.world.chunks.getChunk(client.player.dim,cx,cz);
-    synchronized(chunk.lock) {
-      char id = chunk.getID(gx, gy, gz);
-      int bits = chunk.getBits(gx, gy, gz);
-      if (id == 0) {
-        Static.log("C:B2E=0:" + cx +"," + cz + ":" + gx + "," + gy + ","+ gz);
-        return;
-      }
-      chunk.clearBlock(gx, gy, gz);
-      MovingBlock mb = new MovingBlock();
-      mb.init(Static.client.world);
-      mb.dim = client.player.dim;
-      mb.uid = uid;
-      mb.pos.x = x;
-      mb.pos.y = y;
-      mb.pos.z = z;
-      mb.blockid = id;
-      mb.dir = Chunk.getDir(bits);
-      mb.blockvar = Chunk.getVar(bits);
-      client.world.addEntity(mb);
-      chunk.addEntity(mb);
-    }
+    chunk.B2E(gx,gy,gz,x,y,z,uid);
   }
 
   public PacketB2E(byte cmd, float f1, float f2, float f3, int i1) {

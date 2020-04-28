@@ -23,7 +23,8 @@ public class ChunkQueueLight {
   private boolean isClient;
   private int max = 3;
   private Profiler pro = new Profiler("lp:");
-  private Object lock = new Object();
+  private static class Lock {};
+  private Lock lock = new Lock();
 
   public ChunkQueueLight(ChunkQueueBuild next, boolean isClient) {
     this.next = next;
@@ -54,10 +55,11 @@ public class ChunkQueueLight {
             int z2 = z2s[pos];
             pro.start();
             try {
-              if (isClient)
+              if (isClient) {
                 Static.dims.dims[chunk.dim].getLightingClient().update(chunk, x1,y1,z1, x2,y2,z2);
-              else
+              } else {
                 Static.dims.dims[chunk.dim].getLightingServer().update(chunk, x1,y1,z1, x2,y2,z2);
+              }
             } catch (Exception e) {
               Static.log(e);
             }

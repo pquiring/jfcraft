@@ -84,9 +84,11 @@ public class BlockLever extends BlockBase {
     }
   }
 
+  private static Object lock = new Object();
+
   public void useBlock(Client client, Coords c) {
     World world = Static.server.world;
-    synchronized(c.chunk.lock) {
+    synchronized(lock) {
       ExtraRedstone er = (ExtraRedstone)c.chunk.getExtra(c.gx, c.gy, c.gz, Extras.REDSTONE);
       if (er == null) {
         Static.log("Lever:Error:Can't find Extra data");

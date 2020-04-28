@@ -94,26 +94,24 @@ public class BlockTrapDoor extends BlockBase {
       Static.log("BlockTrapDoor:Can not place:xzdir invalid");
       return false;
     }
-    synchronized(c.chunk.lock) {
-      ExtraRedstone er = new ExtraRedstone(c.gx, c.gy, c.gz);
-      c.chunk.addExtra(er);
-      Static.server.broadcastExtra(c.chunk.dim, c.x, c.y, c.z, er, true);
-      c.otherSide();
-      int var = c.dir_xz;  //var = open dir
-      int dir;  //dir = closed dir
-      float y = c.sy % 1.0f;
-      if (y < 0) y = 1.0f - y;
-      if (y >= 0.5f) {
-        //place upper
-        dir = A;
-      } else {
-        //place lower
-        dir = B;
-      }
-      int bits = Chunk.makeBits(dir,var);
-      c.chunk.setBlock(c.gx,c.gy,c.gz,id,bits);
-      Static.server.broadcastSetBlock(c.chunk.dim,c.x,c.y,c.z,id,bits);
+    c.otherSide();
+    int var = c.dir_xz;  //var = open dir
+    int dir;  //dir = closed dir
+    float y = c.sy % 1.0f;
+    if (y < 0) y = 1.0f - y;
+    if (y >= 0.5f) {
+      //place upper
+      dir = A;
+    } else {
+      //place lower
+      dir = B;
     }
+    int bits = Chunk.makeBits(dir,var);
+    if (!c.chunk.setBlockIfEmpty(c.gx,c.gy,c.gz,id,bits)) return false;
+    ExtraRedstone er = new ExtraRedstone(c.gx, c.gy, c.gz);
+    c.chunk.addExtra(er);
+    Static.server.broadcastExtra(c.chunk.dim, c.x, c.y, c.z, er, true);
+    Static.server.broadcastSetBlock(c.chunk.dim,c.x,c.y,c.z,id,bits);
     return true;
   }
   public void activate(Client client, Coords c) {

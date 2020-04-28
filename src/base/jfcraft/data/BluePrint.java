@@ -216,7 +216,7 @@ public class BluePrint implements SerialClass, SerialCreator {
     Static.log("readChunk ?:" + w + "," + h + "," + d);
     Static.log("readChunk s:" + sx + "," + sy + "," + sz);
     Static.log("readChunk d:" + dx + "," + dy + "," + dz);
-    synchronized(chunk.lock) {
+//    synchronized(chunk.lock) {
       for(int y=0;y<h;y++) {
         for(int z=0;z<d;z++) {
           for(int x=0;x<w;x++) {
@@ -245,7 +245,7 @@ public class BluePrint implements SerialClass, SerialCreator {
         //copy entities in range
         int ecnt = chunk.entities.size();
         for(int a=0;a<ecnt;a++) {
-          EntityBase e = chunk.entities.get(a);
+          EntityBase e = (EntityBase)chunk.entities.get(a);
           if (e.id == Entities.PLAYER) continue;
           float x = e.pos.x;
           float y = e.pos.y;
@@ -275,7 +275,7 @@ public class BluePrint implements SerialClass, SerialCreator {
         //copy extras in range
         int xcnt = chunk.extras.size();
         for(int a=0;a<xcnt;a++) {
-          ExtraBase e = chunk.extras.get(a);
+          ExtraBase e = (ExtraBase)chunk.extras.get(a);
           short x = e.x;
           short y = e.y;
           short z = e.z;
@@ -301,7 +301,7 @@ public class BluePrint implements SerialClass, SerialCreator {
           }
         }
       }
-    }
+//    }
   }
 
   public char getID(int x,int y,int z) {
@@ -328,7 +328,7 @@ public class BluePrint implements SerialClass, SerialCreator {
     Static.log("writeChunk ?:" + w + "," + h + "," + d);
     Static.log("writeChunk s:" + sx + "," + sy + "," + sz);
     Static.log("writeChunk d:" + dx + "," + dy + "," + dz);
-    synchronized(chunk.lock) {
+//    synchronized(chunk.lock) {
       for(int y=0;y<h;y++) {
         for(int z=0;z<d;z++) {
           for(int x=0;x<w;x++) {
@@ -422,7 +422,7 @@ public class BluePrint implements SerialClass, SerialCreator {
         }
       }
       chunk.dirty = true;
-    }
+//    }
   }
 
   public static BluePrint read(InputStream is) {

@@ -65,7 +65,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   public static final int Z = 16;
 
   public Chunk N,E,S,W;  //links : north, east, south, west
-  public Object lock = new Object();
+  private static class Lock {};
+  public Lock lock = new Lock();
   public RenderDest dest;
   public GLMatrix mat;
   public int adjCount;  //# of adj chunks to render (0-6)
@@ -78,15 +79,21 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   public static final int buffersCount = 3; //DEST_NORMAL + DEST_ALPHA + DEST_TEXT
 
   public World world;
+  public Chunks chunks;
 
   /** Old Chunk read from file/network. */
   public Chunk(World world) {
     this.world = world;
+    if (world != null) {
+      chunks = world.chunks;
+    }
   }
 
   /** New Chunk created on server side only */
   public Chunk(int dim, int cx, int cz) {
+    this.chunks = chunks;
     this.world = Static.server.world;
+    chunks = world.chunks;
     this.dim = dim;
     this.cx = cx;
     this.cz = cz;
@@ -310,6 +317,33 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     }
   }
 
+  public boolean setBlocksIfEmpty(Coords c1, char id1, int _bits1, Coords c2, char id2, int _bits2) {
+    synchronized(lock) {
+      synchronized(c2.chunk.lock) {
+        if (getID(c1.gx, c1.gy, c1.gz) != 0) return false;
+        if (c2.chunk.getID(c2.gx, c2.gy, c2.gz) != 0) return false;
+        setBlock(c1.gx, c1.gy, c1.gz, id1, _bits1);
+        c2.chunk.setBlock(c2.gx, c2.gy, c2.gz, id2, _bits2);
+      }
+    }
+    return true;
+  }
+
+  public boolean replaceBlock(int x,int y,int z,char id, int _bits, char oldid) {
+    if (x > 15) {return E.replaceBlock(x-16, y, z, id, _bits, oldid);}
+    if (x < 0) {return W.replaceBlock(x+16, y, z, id, _bits, oldid);}
+    if (y > 255) return false;
+    if (y < 0) return false;
+    if (z > 15) {return S.replaceBlock(x, y, z-16, id, _bits, oldid);}
+    if (z < 0) {return N.replaceBlock(x, y, z+16, id, _bits, oldid);}
+    synchronized(lock) {
+      if (getID(x, y, z) != oldid) return false;
+      setBlock(x,y,z,id,_bits);
+    }
+    return false;
+  }
+
+
   /**
    * Clears a block.
    *
@@ -390,13 +424,13 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     }
   }
 
-  public void setBlockIfEmpty(int x,int y,int z,char id, int _bits) {
-    if (x > 15) {E.setBlockIfEmpty(x-16, y, z, id, _bits); return;}
-    if (x < 0) {W.setBlockIfEmpty(x+16, y, z, id, _bits); return;}
-    if (y > 255) return;
-    if (y < 0) return;
-    if (z > 15) {S.setBlockIfEmpty(x, y, z-16, id, _bits); return;}
-    if (z < 0) {N.setBlockIfEmpty(x, y, z+16, id, _bits); return;}
+  public boolean setBlockIfEmpty(int x,int y,int z,char id, int _bits) {
+    if (x > 15) {return E.setBlockIfEmpty(x-16, y, z, id, _bits);}
+    if (x < 0) {return W.setBlockIfEmpty(x+16, y, z, id, _bits);}
+    if (y > 255) return false;
+    if (y < 0) return false;
+    if (z > 15) {return S.setBlockIfEmpty(x, y, z-16, id, _bits);}
+    if (z < 0) {return N.setBlockIfEmpty(x, y, z+16, id, _bits);}
     int p = z * 16 + x;
     BlockBase newBlock = Static.blocks.blocks[id];
     char oldid;
@@ -406,7 +440,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
           blocks2[y] = new char[16*16];
           bits2[y] = new byte[16*16];
         } else {
-          if (blocks2[y][p] != 0) return;
+          if (blocks2[y][p] != 0) return false;
         }
         oldid = blocks2[y][p];
         blocks2[y][p] = id;
@@ -416,7 +450,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
           blocks[y] = new char[16*16];
           bits[y] = new byte[16*16];
         } else {
-          if (blocks[y][p] != 0) return;
+          if (blocks[y][p] != 0) return false;
         }
         if (newBlock.isSolid) {
           if (blocks2[y] != null) {
@@ -428,7 +462,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         blocks[y][p] = id;
         bits[y][p] = (byte)_bits;
       }
-      if (needLights) return;
+      if (needLights) return true;
       needRelight = true;
       dirty = true;
       int xyz[] = getLightCoordsSet(x,y,z, newBlock, Static.blocks.blocks[oldid]);
@@ -438,6 +472,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
       }
     }
+    return true;
   }
 
   /** Sets a block ID (does not update lighting). */
@@ -496,6 +531,21 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     if (z < 0) return N.getBits(x, y, z+16);
     if (bits[y] == null) return 0;
     return bits[y][z * 16 + x] & 0xff;
+  }
+
+  /** Increment var to max.  Returns new value of -1 if not incremented. */
+  public int incVar(int x, int y, int z, int max) {
+    int var;
+    synchronized(lock) {
+      int bits = getBits(x,y,z);
+      var = getVar(bits);
+      if (var >= max) return -1;
+      var++;
+      bits &= 0xf0;
+      bits |= var;
+      setBits(x,y,z,bits);
+    }
+    return var;
   }
 
   public void setBits(int x,int y, int z,int _bits) {
@@ -607,15 +657,13 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     if (y < 0) return;
     if (z > 15) {S.setLights(x, y, z-16, v); return;}
     if (z < 0) {N.setLights(x, y, z+16, v); return;}
-    synchronized(lock) {
-      byte plane[] = lights[y];
-      if (plane == null) {
-        if (v == 0) return;
-        plane = new byte[16*16];
-        lights[y] = plane;
-      }
-      plane[z * 16 + x] = (byte)v;
+    byte plane[] = lights[y];
+    if (plane == null) {
+      if (v == 0) return;
+      plane = new byte[16*16];
+      lights[y] = plane;
     }
+    plane[z * 16 + x] = (byte)v;
   }
 
   public int getSunLight(int x,int y, int z) {
@@ -1004,52 +1052,52 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     }
     return null;
   }
+  public Tick[] getTicks() {
+    synchronized(lock) {
+      return ticks.toArray(new Tick[ticks.size()]);
+    }
+  }
 
   private static Random r = new Random();
 
   public void doTicks() {
     char id;
     BlockBase block;
-    synchronized(lock) {
-      int cnt = ticks.size();
-      if (cnt > 0) {
-        Tick list[] = ticks.toArray(new Tick[cnt]);
-        for(int a=0;a<cnt;a++) {
-          Tick tick = list[a];
-          if (!tick.isBlocks2)
-            id = getID(tick.x,tick.y,tick.z);
-          else
-            id = getID2(tick.x,tick.y,tick.z);
-          if (id != 0) {
-            try {
-              block = Static.blocks.blocks[id];
-              block.tick(this, tick);
-            } catch (Exception e) {
-              Static.log(e);
-            }
-          }
+    Tick list[] = getTicks();
+    for(int a=0;a<list.length;a++) {
+      Tick tick = list[a];
+      if (!tick.isBlocks2)
+        id = getID(tick.x,tick.y,tick.z);
+      else
+        id = getID2(tick.x,tick.y,tick.z);
+      if (id != 0) {
+        try {
+          block = Static.blocks.blocks[id];
+          block.tick(this, tick);
+        } catch (Exception e) {
+          Static.log(e);
         }
       }
-      //do 48 random ticks (3 per 16x16x16 area)
-      if (!Static.debugDisableRandomTicks) {
-        int x,y,z;
-        int p = 0;
-        for(int a=0;a<48;a++) {
-          if (a > 0 && a % 3 == 0) p += 16;
-          x = r.nextInt(16);
-          y = r.nextInt(16) + p;
-          z = r.nextInt(16);
-          //TODO : can snow_cover be replaced here???
-          id = getID(x,y,z);
-          if (id != 0) {
-            block = Static.blocks.blocks[id];
-            block.rtick(this, x,y,z);
-          }
-          id = getID2(x,y,z);
-          if (id != 0) {
-            block = Static.blocks.blocks[id];
-            block.rtick(this, x,y,z);
-          }
+    }
+    //do 48 random ticks (3 per 16x16x16 area)
+    if (!Static.debugDisableRandomTicks) {
+      int x,y,z;
+      int p = 0;
+      for(int a=0;a<48;a++) {
+        if (a > 0 && a % 3 == 0) p += 16;
+        x = r.nextInt(16);
+        y = r.nextInt(16) + p;
+        z = r.nextInt(16);
+        //TODO : can snow_cover be replaced here???
+        id = getID(x,y,z);
+        if (id != 0) {
+          block = Static.blocks.blocks[id];
+          block.rtick(this, x,y,z);
+        }
+        id = getID2(x,y,z);
+        if (id != 0) {
+          block = Static.blocks.blocks[id];
+          block.rtick(this, x,y,z);
         }
       }
     }
@@ -1058,9 +1106,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     for(int a=0;a<es.length;a++) {
       EntityBase e = es[a];
       if (e.offline) continue;
-      synchronized(e.lock) {
-        e.tick();
-      }
+      e.tick();
     }
   }
   public void addEntity(EntityBase e) {
@@ -1365,6 +1411,35 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       removeEntities(x1, y1, z1, x2, y2, z2);
     }
     reduce();
+  }
+
+  public void B2E(int gx, int gy, int gz, float x, float y, float z, int uid) {
+    char id = getID(gx, gy, gz);
+    int bits = getBits(gx, gy, gz);
+    if (id == 0) {
+      Static.log("C:B2E=0:" + cx +"," + cz + ":" + gx + "," + gy + ","+ gz);
+      return;
+    }
+    clearBlock(gx, gy, gz);
+    MovingBlock mb = new MovingBlock();
+    mb.init(Static.client.world);
+    mb.dim = dim;
+    mb.uid = uid;
+    mb.pos.x = x;
+    mb.pos.y = y;
+    mb.pos.z = z;
+    mb.blockid = id;
+    mb.dir = Chunk.getDir(bits);
+    mb.blockvar = Chunk.getVar(bits);
+    world.addEntity(mb);
+    addEntity(mb);
+  }
+
+  public byte[] encodeObject(SerialCoder coder) {
+    synchronized(lock) {
+      dirty = false;
+      return coder.encodeObject(this, true);
+    }
   }
 
   public String toString() {

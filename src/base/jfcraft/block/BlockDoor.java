@@ -108,22 +108,21 @@ public class BlockDoor extends BlockBase {
       Static.log("Door:Can not place:xzdir invalid");
       return false;
     }
-    synchronized(c.chunk.lock) {
-      if (c.chunk.getID(c.gx, c.gy, c.gz) != 0) return false;
-      if (c.chunk.getID(c2.gx, c2.gy, c2.gz) != 0) return false;
-      ExtraRedstone er1 = new ExtraRedstone(c.gx, c.gy, c.gz);
-      c.chunk.addExtra(er1);
-      Static.server.broadcastExtra(c.chunk.dim, c.x, c.y, c.z, er1, true);
-      ExtraRedstone er2 = new ExtraRedstone(c2.gx, c2.gy, c2.gz);
-      c2.chunk.addExtra(er2);
-      Static.server.broadcastExtra(c2.chunk.dim, c2.x, c2.y, c2.z, er2, true);
-      int bits1 = Chunk.makeBits(c.dir_xz,c.var);
-      c.chunk.setBlock(c.gx,c.gy,c.gz,id,bits1);
-      Static.server.broadcastSetBlock(c.chunk.dim,c.x,c.y,c.z,id,bits1);
-      int bits2 = Chunk.makeBits(c.dir_xz,c.var | VAR_UPPER);
-      c2.chunk.setBlock(c2.gx,c2.gy,c2.gz,id,bits2);
-      Static.server.broadcastSetBlock(c2.chunk.dim,c2.x,c2.y,c2.z,id,bits2);
-    }
+    int bits1 = Chunk.makeBits(c.dir_xz,c.var);
+    int bits2 = Chunk.makeBits(c.dir_xz,c.var | VAR_UPPER);
+    boolean placed = c.chunk.setBlocksIfEmpty(c, id, bits1, c2, id, bits2);
+    if (!placed) return false;
+    //BUG : what if door is smashed right away
+    ExtraRedstone er1 = new ExtraRedstone(c.gx, c.gy, c.gz);
+    c.chunk.addExtra(er1);
+    Static.server.broadcastExtra(c.chunk.dim, c.x, c.y, c.z, er1, true);
+    ExtraRedstone er2 = new ExtraRedstone(c2.gx, c2.gy, c2.gz);
+    c2.chunk.addExtra(er2);
+    Static.server.broadcastExtra(c2.chunk.dim, c2.x, c2.y, c2.z, er2, true);
+    c.chunk.setBlock(c.gx,c.gy,c.gz,id,bits1);
+    Static.server.broadcastSetBlock(c.chunk.dim,c.x,c.y,c.z,id,bits1);
+    c2.chunk.setBlock(c2.gx,c2.gy,c2.gz,id,bits2);
+    Static.server.broadcastSetBlock(c2.chunk.dim,c2.x,c2.y,c2.z,id,bits2);
     return true;
   }
   public void destroy(Client client, Coords c, boolean doDrop) {

@@ -30,7 +30,7 @@ public class GeneratorPhase2End implements GeneratorPhase2Base {
   public void generate(Chunk chunk) {
     this.chunk = chunk;
 
-    synchronized(chunk.lock) {
+//    synchronized(chunk.lock) {
       chunk.needPhase2 = false;
       chunk.dirty = true;
 
@@ -48,7 +48,7 @@ public class GeneratorPhase2End implements GeneratorPhase2Base {
           addPillar();
         }
       }
-    }
+//    }
   }
 
   private void setBlock(int x, int y, int z, char id, int bits) {

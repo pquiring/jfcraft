@@ -209,4 +209,27 @@ public class Coords implements Cloneable {
       return null;
     }
   }
+
+  private static ArrayList<Coords> pool = new ArrayList<Coords>();
+  public static int cnt;  //200-300
+  public static Coords alloc() {
+    Coords c;
+    synchronized(pool) {
+      int size = pool.size();
+      if (size == 0) {
+        cnt++;
+        return new Coords();
+      }
+      c = pool.remove(size-1);  //always take from end
+    }
+    return c;
+  }
+  private static void free(Coords c) {
+    synchronized(pool) {
+      pool.add(c);
+    }
+  }
+  public void free() {
+    free(this);
+  }
 }

@@ -28,8 +28,7 @@ public class ChunkKey implements Cloneable {
   public ChunkKey clone() {
     return new ChunkKey(dim,cx,cz);
   }
-  //ChunkKey's are heavy turn over, so use a pool to avoid massive GC usage
-  //this is anti Java style coding but is necessary for performance
+
   private static ArrayList<ChunkKey> pool = new ArrayList<ChunkKey>();
   public static int cnt;  //200-300
   public static ChunkKey alloc(int dim, int cx, int cz) {

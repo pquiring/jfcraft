@@ -29,13 +29,10 @@ public class BlockVine extends BlockFace {
     if (dir == A || dir == B) return;
     if (y == 0) return;
     y--;
-    synchronized(chunk.lock) {
-      if (chunk.isEmpty(x, y, z)) {
-        chunk.setBlock(x, y, z, id, bits);
-        x += chunk.cx * 16;
-        z += chunk.cz * 16;
-        Static.server.broadcastSetBlock(chunk.dim, x, y, z, id, bits);
-      }
+    if (chunk.setBlockIfEmpty(x, y, z, id, bits)) {
+      x += chunk.cx * 16;
+      z += chunk.cz * 16;
+      Static.server.broadcastSetBlock(chunk.dim, x, y, z, id, bits);
     }
   }
 

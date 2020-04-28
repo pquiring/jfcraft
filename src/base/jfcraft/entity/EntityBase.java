@@ -53,7 +53,8 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public float jumpPos, jumpStart;  //for debug only I think (max height of last jump)
   public float attackDmg, attackRange;
   public boolean wasInLiquid;
-  public Object lock;
+  private static class Lock {};
+  private Lock lock;
   public boolean offline;  //player only
   public int attackCount, attackDelay;
   public boolean isBlock;
@@ -79,7 +80,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public void init(World world) {
     //init values
     this.world = world;
-    lock = new Object();
+    lock = new Lock();
     maxAge = -1;
     if (!isStatic) {
       dirty = true;
@@ -106,8 +107,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return Assets.getModel(fn).model;
   }
 
-  private Coords coords = new Coords();
-
   /** Tests all blocks. */
   private boolean hitTest(float dx, float dy, float dz) {
     float px = pos.x + dx - width2;
@@ -122,25 +121,28 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     int iy = Static.ceil(height);
     int iz = Static.ceil(depth);
 
-    synchronized(coords) {
-      for(int x=0;x<=ix;x++) {
-        for(int y=0;y<=iy;y++) {
-          for(int z=0;z<=iz;z++) {
-            float cx = px;
-            if (x > width) cx += width; else cx += x;
-            float cy = py;
-            if (y > height) cy += height; else cy += y;
-            float cz = pz;
-            if (z > depth) cz += depth; else cz += z;
-            world.getBlock(dim,cx,cy,cz,coords);
-            if (coords.block.hitBox(tx, ty, tz, width2, height2, depth2, coords, BlockHitTest.Type.ENTITY)) {
-              return true;
-            }
+    Coords coords = Coords.alloc();
+    boolean hit = false;
+    out:
+    for(int x=0;x<=ix;x++) {
+      for(int y=0;y<=iy;y++) {
+        for(int z=0;z<=iz;z++) {
+          float cx = px;
+          if (x > width) cx += width; else cx += x;
+          float cy = py;
+          if (y > height) cy += height; else cy += y;
+          float cz = pz;
+          if (z > depth) cz += depth; else cz += z;
+          world.getBlock(dim,cx,cy,cz,coords);
+          if (coords.block.hitBox(tx, ty, tz, width2, height2, depth2, coords, BlockHitTest.Type.ENTITY)) {
+            hit = true;
+            break out;
           }
         }
       }
     }
-    return false;
+    coords.free();
+    return hit;
   }
 
   /** Tests if entity is in water/lava/ladder. */
@@ -159,36 +161,36 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     inVines = false;
     inWeb = false;
 
-    synchronized(coords) {
-      for(int x=0;x<=cx;x++) {
-        for(int y=0;y<=cy;y++) {
-          for(int z=0;z<=cz;z++) {
-            float tx = px;
-            if (x > width) tx += width; else tx += x;
-            float ty = py;
-            if (y > height) ty += height; else ty += y;
-            float tz = pz;
-            if (z > depth) tz += depth; else tz += z;
-            world.getBlock(dim,tx,ty,tz,coords);
-            if (coords.block.id == Blocks.WATER) {
-              inWater = true;
-            }
-            if (coords.block.id == Blocks.LAVA) {
-              inLava = true;
-            }
-            if (coords.block.id == Blocks.LADDER) {
-              inLadder = true;
-            }
-            if (coords.block.id == Blocks.VINES) {
-              inVines = true;
-            }
-            if (coords.block.id == Blocks.WEB) {
-              inWeb = true;
-            }
+    Coords coords = Coords.alloc();
+    for(int x=0;x<=cx;x++) {
+      for(int y=0;y<=cy;y++) {
+        for(int z=0;z<=cz;z++) {
+          float tx = px;
+          if (x > width) tx += width; else tx += x;
+          float ty = py;
+          if (y > height) ty += height; else ty += y;
+          float tz = pz;
+          if (z > depth) tz += depth; else tz += z;
+          world.getBlock(dim,tx,ty,tz,coords);
+          if (coords.block.id == Blocks.WATER) {
+            inWater = true;
+          }
+          if (coords.block.id == Blocks.LAVA) {
+            inLava = true;
+          }
+          if (coords.block.id == Blocks.LADDER) {
+            inLadder = true;
+          }
+          if (coords.block.id == Blocks.VINES) {
+            inVines = true;
+          }
+          if (coords.block.id == Blocks.WEB) {
+            inWeb = true;
           }
         }
       }
     }
+    coords.free();
   }
 
   /** Tick all blocks within entity. */
@@ -202,22 +204,22 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     int cy = Static.ceil(height);
     int cz = Static.ceil(depth);
 
-    synchronized(coords) {
-      for(int x=0;x<=cx;x++) {
-        for(int y=0;y<=cy;y++) {
-          for(int z=0;z<=cz;z++) {
-            float tx = px;
-            if (x > width) tx += width; else tx += x;
-            float ty = py;
-            if (y > height) ty += height; else ty += y;
-            float tz = pz;
-            if (z > depth) tz += depth; else tz += z;
-            world.getBlock(dim,tx,ty,tz,coords);
-            coords.block.etick(this, coords);
-          }
+    Coords coords = Coords.alloc();
+    for(int x=0;x<=cx;x++) {
+      for(int y=0;y<=cy;y++) {
+        for(int z=0;z<=cz;z++) {
+          float tx = px;
+          if (x > width) tx += width; else tx += x;
+          float ty = py;
+          if (y > height) ty += height; else ty += y;
+          float tz = pz;
+          if (z > depth) tz += depth; else tz += z;
+          world.getBlock(dim,tx,ty,tz,coords);
+          coords.block.etick(this, coords);
         }
       }
     }
+    coords.free();
   }
 
   public void updateFlags(float dx, float dy, float dz) {
@@ -249,24 +251,32 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     int cy = Static.ceil(height);
     int cz = Static.ceil(depth);
 
-    synchronized(coords) {
-      for(int x=0;x<=cx;x++) {
-        for(int z=0;z<=cz;z++) {
-          float sx = px;
-          if (x > width) sx += width; else sx += x;
-          float sy = py;
-          float sz = pz;
-          if (z > depth) sz += depth; else sz += z;
-          world.getBlock(dim,sx,sy,sz,coords);
-          if (tid == 0) {
-            if (coords.block.hitBox(tx, ty, tz, width2, height2, depth2, coords, BlockHitTest.Type.ENTITY)) return true;
-          } else {
-            if (coords.block.id == tid) return true;
+    Coords coords = Coords.alloc();
+    boolean ground = false;
+    out:
+    for(int x=0;x<=cx;x++) {
+      for(int z=0;z<=cz;z++) {
+        float sx = px;
+        if (x > width) sx += width; else sx += x;
+        float sy = py;
+        float sz = pz;
+        if (z > depth) sz += depth; else sz += z;
+        world.getBlock(dim,sx,sy,sz,coords);
+        if (tid == 0) {
+          if (coords.block.hitBox(tx, ty, tz, width2, height2, depth2, coords, BlockHitTest.Type.ENTITY)) {
+            ground = true;
+            break out;
+          }
+        } else {
+          if (coords.block.id == tid) {
+            ground = true;
+            break out;
           }
         }
       }
     }
-    return false;
+    coords.free();
+    return ground;
   }
 
   public boolean hitHead() {
@@ -282,20 +292,25 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     int cy = Static.ceil(height);
     int cz = Static.ceil(depth);
 
-    synchronized(coords) {
-      for(int x=0;x<=cx;x++) {
-        for(int z=0;z<=cz;z++) {
-          float sx = px;
-          if (x > width) sx += width; else sx += x;
-          float sy = py;
-          float sz = pz;
-          if (z > depth) sz += depth; else sz += z;
-          world.getBlock(dim,sx,sy,sz,coords);
-          if (coords.block.hitBox(tx, ty, tz, width2, height2, depth2, coords, BlockHitTest.Type.ENTITY)) return true;
+    Coords coords = Coords.alloc();
+    boolean hit = false;
+    out:
+    for(int x=0;x<=cx;x++) {
+      for(int z=0;z<=cz;z++) {
+        float sx = px;
+        if (x > width) sx += width; else sx += x;
+        float sy = py;
+        float sz = pz;
+        if (z > depth) sz += depth; else sz += z;
+        world.getBlock(dim,sx,sy,sz,coords);
+        if (coords.block.hitBox(tx, ty, tz, width2, height2, depth2, coords, BlockHitTest.Type.ENTITY)) {
+          hit = true;
+          break out;
         }
       }
     }
-    return false;
+    coords.free();
+    return hit;
   }
 
   private int canStepUp(float dx,float dy,float dz) {

@@ -120,10 +120,10 @@ public class Server {
           initThread = false;
         }
         try {
-          long start = System.nanoTime();
+          long start = System.currentTimeMillis();
           doTick();
-          long stop = System.nanoTime();
-          long diff = (stop - start) / 1000000;
+          long stop = System.currentTimeMillis();
+          long diff = (stop - start);
           if (Static.debugProfile && diff > 50) {
             Static.log("server tick:" + diff + "ms : nChunks=" + nChunks + ",nThings=" + nThings + ",p=" + (p2-p1) + "," + (p3-p2) + "," + (p4-p3) + "," + (p5-p4) + "," + (p6-p5));
           }
@@ -191,10 +191,10 @@ public class Server {
   private void genSpawnArea() {
     initThread("Server generate spawn area", true);
     Static.log("Generating spawn area...");
-    long p1 = System.nanoTime() / 1000000;
+    long p1 = System.currentTimeMillis();
     world.chunks.getChunk2(0, 0, 0, true, true, true);
     world.genSpawnAreaDone = true;
-    long p2 = System.nanoTime() / 1000000;
+    long p2 = System.currentTimeMillis();
     long diff = p2-p1;
     float sec = diff;
     sec /= 1000.0f;
@@ -1198,7 +1198,7 @@ public class Server {
       // /delete all entities in player's chunk (for debugging)
       Chunk chunk = client.player.getChunk();
       while(chunk.entities.size() > 0) {
-        EntityBase e = chunk.entities.get(0);
+        EntityBase e = (EntityBase)chunk.entities.get(0);
         chunk.delEntity(e);
         world.delEntity(e.uid);
         broadcastEntityDespawn(e);

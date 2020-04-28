@@ -29,7 +29,8 @@ public class LightingEarth implements LightingBase {
   private static final int SUN_LIGHT_MASK = 0x0f;
   private static final int BLK_LIGHT_MASK = 0xf0;
 
-  private Object lock = new Object();
+  private static class Lock {}
+  private Lock lock = new Lock();
 
   public LightingEarth() {
     ta = new int[size];
@@ -140,7 +141,7 @@ public class LightingEarth implements LightingBase {
       addSunEdges();
       addBlkInside();
       processQueue();
-      chunk.setLights(chunk.getLights());
+      //chunk.setLights(chunk.getLights());  //???
     }
 
     chunk.needRelight = false;

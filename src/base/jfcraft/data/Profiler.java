@@ -21,7 +21,7 @@ public class Profiler {
   }
 
   public void next() {
-    ts[cnt++] = System.nanoTime() / 1000;
+    ts[cnt++] = System.currentTimeMillis();
   }
 
   public void print() {

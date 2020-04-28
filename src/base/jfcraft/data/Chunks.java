@@ -20,7 +20,8 @@ import jfcraft.entity.*;
 public class Chunks {
   //cache of all chunks
   private HashMap<ChunkKey, Chunk> cache = new HashMap<ChunkKey, Chunk>();
-  private Object lock = new Object();  //lock access to cache
+  private static class Lock {};
+  private Lock lock = new Lock();  //lock access to cache
 
   public World world;
 
@@ -59,17 +60,23 @@ public class Chunks {
       addChunk(chunk);
     }
     if (doPhase2 && chunk.needPhase2) {
-      chunk.getAdjChunks(false, false, false, 8);
-      Static.dims.dims[dim].getGeneratorPhase2().generate(chunk);
+      synchronized(lock) {
+        chunk.getAdjChunks(false, false, false, 8);
+        Static.dims.dims[dim].getGeneratorPhase2().generate(chunk);
+      }
     }
     if (doPhase3 && chunk.needPhase3) {
-      chunk.getAdjChunks(true, false, false, 8);
-      Static.dims.dims[dim].getGeneratorPhase3().generate(chunk);
+      synchronized(lock) {
+        chunk.getAdjChunks(true, false, false, 8);
+        Static.dims.dims[dim].getGeneratorPhase3().generate(chunk);
+      }
       chunk.buildShapes();
     }
     if (doLights && chunk.needLights) {
-      chunk.getAdjChunks(true, true, false, 8);
-      Static.dims.dims[dim].getLightingServer().light(chunk);
+      synchronized(lock) {
+        chunk.getAdjChunks(true, true, false, 8);
+        Static.dims.dims[dim].getLightingServer().light(chunk);
+      }
     }
     return chunk;
   }
@@ -240,25 +247,27 @@ public class Chunks {
     }
     key.free();
   }
+/*
   public void removeChunk(int dim, int cx, int cz) {
     ChunkKey key = ChunkKey.alloc(dim, cx, cz);
     Chunk chunk;
     synchronized(lock) {
       chunk = cache.get(key);
       cache.remove(key);
+      unlinkChunk(chunk);
     }
     key.free();
-    unlinkChunk(chunk);
   }
+*/
   public void removeChunk(Chunk chunk) {
     ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cz);
     synchronized(lock) {
       cache.remove(key);
+      unlinkChunk(chunk);
     }
     key.free();
-    unlinkChunk(chunk);
   }
-  public synchronized void unlinkChunk(Chunk chunk) {
+  private void unlinkChunk(Chunk chunk) {
     //remove all links
     if (chunk.N != null) {chunk.N.S = null; chunk.N.adjCount--; chunk.N = null;}
     if (chunk.E != null) {chunk.E.W = null; chunk.E.adjCount--; chunk.E = null;}
@@ -283,7 +292,7 @@ public class Chunks {
     }
     int cnt = chunk.entities.size();
     for(int a=0;a<cnt;a++) {
-      EntityBase e = chunk.entities.get(a);
+      EntityBase e = (EntityBase)chunk.entities.get(a);
       world.delEntity(e.uid);
     }
   }
@@ -337,11 +346,7 @@ public class Chunks {
   public void saveChunk(Chunk chunk) {
     int ix = chunk.cx >> storeBits;
     int iz = chunk.cz >> storeBits;
-    byte data[];
-    synchronized(chunk.lock) {
-      data = coder.encodeObject(chunk, true);
-      chunk.dirty = false;
-    }
+    byte data[] = chunk.encodeObject(coder);
     synchronized(fileLock) {
       ChunkKey key = ChunkKey.alloc(chunk.dim, ix, iz);
 //      Static.log("saveChunk:" + chunk.dim + "," + chunk.cx + "," + chunk.cz);
