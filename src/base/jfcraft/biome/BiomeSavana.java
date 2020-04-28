@@ -26,7 +26,7 @@ public class BiomeSavana extends BiomeBase {
   public void build(int x,int y,int z, BiomeData data) {
     if (canPlantOn(x, y, z)) {
       if (data.b1 % TREE_ODDS == 0) {
-        getTree(data.b2).plant(x, y+1, z);
+        getTree(data.b2).plant(x, y+1, z, data);
         return;
       }
       if (data.c1 % FLOWER_CHUNK_ODDS == 0) {

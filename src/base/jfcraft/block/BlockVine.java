@@ -47,8 +47,9 @@ public class BlockVine extends BlockFace {
     supportingBlock.adjacentBlock();
     Static.server.world.getBlock(thisBlock.chunk.dim, supportingBlock.x, supportingBlock.y, supportingBlock.z, supportingBlock);
     if (supportingBlock.block.canSupportBlock(thisBlock)) return true;
-    //check if vines above
+    //check if vines above or leaves under
     if (Static.server.world.getID(thisBlock.chunk.dim, thisBlock.x, thisBlock.y+1, thisBlock.z) == id) return true;
+    if (supportingBlock.block.id == Blocks.LEAVES) return true;
     return false;
   }
 

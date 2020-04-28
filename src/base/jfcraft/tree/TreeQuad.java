@@ -4,6 +4,7 @@ package jfcraft.tree;
  * TreeNormal
  */
 
+import jfcraft.biome.BiomeData;
 import jfcraft.data.*;
 import static jfcraft.data.Direction.*;
 
@@ -21,7 +22,7 @@ public class TreeQuad extends TreeBase {
   private int leaves[] = {
     0,0,0,0,0,0,0,1,2,3,3,2,1
   };
-  public void plant(int x,int y, int z) {
+  public void plant(int x, int y, int z, BiomeData data) {
     for(int yy=0;yy<leaves.length;yy++) {
       int wood = leaves.length - 3;
       if (yy < wood) {

@@ -41,7 +41,7 @@ public class BlockFace extends BlockBase {
       case B: list.add(new Box( 0, 0, 0, 16, 1,16)); break;
       case N: list.add(new Box( 0, 0, 0, 16,16, 1)); break;
       case E: list.add(new Box(15, 0, 0, 16,16,16)); break;
-      case S: list.add(new Box( 0,15, 0, 16,16,16)); break;
+      case S: list.add(new Box( 0, 0,15, 16,16,16)); break;
       case W: list.add(new Box( 0, 0, 0,  1,16,16)); break;
     }
     return list;

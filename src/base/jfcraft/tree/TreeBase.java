@@ -4,11 +4,12 @@ package jfcraft.tree;
  * TreeBase
  */
 
+import jfcraft.biome.BiomeData;
 import jfcraft.data.*;
 import static jfcraft.data.Direction.*;
 
 public abstract class TreeBase {
-  public abstract void plant(int x,int y, int z);
+  public abstract void plant(int x, int y, int z, BiomeData data);
   public static Chunk chunk;
   public static void setChunk(Chunk chunk) {
     TreeBase.chunk = chunk;

@@ -4,6 +4,7 @@ package jfcraft.tree;
  * TreeBush
  */
 
+import jfcraft.biome.BiomeData;
 import jfcraft.data.*;
 import static jfcraft.data.Direction.*;
 
@@ -21,7 +22,7 @@ public class TreeBush extends TreeBase {
   private int leaves[] = {
     3,4,3,2
   };
-  public void plant(int x,int y, int z) {
+  public void plant(int x, int y, int z, BiomeData data) {
     for(int yy=0;yy<leaves.length;yy++) {
       if (yy == 0) {
         setBlock(x  ,y+yy,z  ,Blocks.WOOD, 0, var);
