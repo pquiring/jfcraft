@@ -1,3 +1,9 @@
+mouse too sensitive
+
+lighting - water is not blue
+
+jump too high
+
 glViewport() is used to scale the menus into position
   - but if window size is not square items dragged beyond the viewport are clipped.
 
