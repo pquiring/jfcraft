@@ -245,16 +245,20 @@ public class Chunks {
     Chunk chunk;
     synchronized(lock) {
       chunk = cache.get(key);
+      cache.remove(key);
     }
     key.free();
-    removeChunk(chunk);
+    unlinkChunk(chunk);
   }
-  public synchronized void removeChunk(Chunk chunk) {
+  public void removeChunk(Chunk chunk) {
     ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cz);
     synchronized(lock) {
       cache.remove(key);
     }
     key.free();
+    unlinkChunk(chunk);
+  }
+  public synchronized void unlinkChunk(Chunk chunk) {
     //remove all links
     if (chunk.N != null) {chunk.N.S = null; chunk.N.adjCount--; }
     if (chunk.E != null) {chunk.E.W = null; chunk.E.adjCount--; }

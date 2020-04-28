@@ -16,7 +16,7 @@ public class BiomeDesert extends BiomeBase {
   }
 
   private static final int TREE_ODDS = INF;
-  private static final int FLOWER_CHUNK_ODDS = 10;
+  private static final int FLOWER_CHUNK_ODDS = 5;
   private static final int FLOWER_BLOCK_ODDS = 50;
   private static final int TALLGRASS_CHUNK_ODDS = INF;
   private static final int TALLGRASS_BLOCK_ODDS = INF;
