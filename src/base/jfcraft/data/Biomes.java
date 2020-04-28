@@ -53,6 +53,11 @@ public class Biomes {
       case SWAMP: return "SWAMP";
       case JUNGLE: return "JUNGLE";
       case OCEAN: return "OCEAN";
+      case NETHER: return "NETHER";
+      case DARK_FOREST: return "DARK FOREST";
+      case END: return "END";
+      case SAVANA: return "SAVANA";
+      case BADLANDS: return "BAD LANDS";
     }
     return null;
   }
