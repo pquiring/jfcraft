@@ -186,6 +186,8 @@ public class Static {
   public static float webVelocityScale = 5.0f;
   public static float termVelocityLiquid = 5.0f / 20f;
   public static float termVelocityAir = 78.4f / 20f;
+  public static final int SEALEVEL = 64;
+
   public static Noise noises[];
   public static float noiseParams[][] = {
     //octaves, persistence, scale

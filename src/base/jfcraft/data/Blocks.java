@@ -670,7 +670,7 @@ public class Blocks {
     registerBlock(new BlockStairs("STAIRS_BRICK", new String[] {"Stairs"}, new String[] {"bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockStairs("STAIRS_BLOCK", new String[] {"Stairs"}, new String[] {"oak_planks"}));
     registerBlock(new BlockOpaque("MYCELIUM", new String[] {"Mycelium"}, new String[] {"mycelium_top", "mycelium_side", "dirt"}));
-    registerBlock(new BlockFace("LILLYPAD", new String[] {"Lilypad"}, new String[] {"lily_pad"}).setGreenAllSides().setShowAsItem().setHardness(0f, TOOL_NONE, CLS_NONE));
+    registerBlock(new BlockFace("LILLYPAD", new String[] {"Lilypad"}, new String[] {"lily_pad"}).setGreenAllSides().setShowAsItem().setHardness(0f, TOOL_NONE, CLS_NONE).setDrop("AIR"));
     registerBlock(new BlockOpaque("NETHER_BRICK", new String[] {"Nether Brick"}, new String[] {"nether_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("NETHER_FENCE", new String[] {"Nether Fence"}, new String[] {"nether_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockStairs("STAIRS_NETHER", new String[] {"Nether Stairs"}, new String[] {"nether_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));

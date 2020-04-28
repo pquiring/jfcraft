@@ -39,6 +39,13 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
 
   public void getIDs() {}
 
+  //clamp 0.0f - 1.0f
+  private float clamp(float val, float min, float max) {
+    if (val <= min) return 0;
+    if (val >= max) return 1;
+    return (val - min) / (max - min);
+  }
+
   private void generateBiomes() {
     int p = 0;
     for(int z=0;z<16;z++) {
@@ -71,12 +78,18 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         }
 
         float plains = Static.abs(Static.noises[Static.N_ELEV1].noise_2d(wx, wz) * 3.0f);
+        float swamps = 0;
+
+        if (biome == SWAMP) {
+          float scale = 1.0f * clamp(rain, 66.0f, 71.0f) * clamp(temp, 50.0f, 55.f);
+          swamps = Static.abs(Static.noises[Static.N_ELEV4].noise_2d(wx, wz) * 3.0f) * scale;
+        }
 
         float hills = Static.noises[Static.N_ELEV2].noise_2d(wx, wz) * 10.0f;
 
         float extreme = Static.noises[Static.N_ELEV3].noise_2d(wx, wz) * 100.0f;
 
-        chunk.elev[p] = (64 + plains);
+        chunk.elev[p] = (Static.SEALEVEL + plains - swamps);
         if (extreme <= -25.0f) {
           extreme += 25.0f;
           chunk.elev[p] += extreme;
@@ -145,10 +158,10 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         float grass = 1.0f;
 
         if (bt == OCEAN) {
-          if (chunk.elev[p] > 64) {
+          if (chunk.elev[p] >= Static.SEALEVEL) {
             sand = 3.0f + (r.nextFloat() - 0.5f) * 4.0f;  //beach
           } else {
-            float soil = Static.noises[Static.N_SOIL].noise_3d(wx, -64, wz) * 100.0f;
+            float soil = Static.noises[Static.N_SOIL].noise_3d(wx, -Static.SEALEVEL, wz) * 100.0f;
             //add sand/clay deposites
             if (soil <= -50) {
               sand = 1.0f;
@@ -172,9 +185,9 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
             break;
           case SWAMP:
             //TODO : move this to BiomeSwamp
-            if (elev < 64 && r.nextInt() % 2 == 0) {
-              blocks[p + 65 * 256] = Blocks.LILLYPAD;
-              bits[p + 65 * 256] = (byte)Chunk.makeBits(B, 0);
+            if (elev < Static.SEALEVEL && r.nextInt() % 3 == 0) {
+              blocks[p + (Static.SEALEVEL+1) * 256] = Blocks.LILLYPAD;
+              bits[p + (Static.SEALEVEL+1) * 256] = (byte)Chunk.makeBits(B, 0);
             }
             break;
           case OCEAN:
@@ -182,7 +195,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
             break;
         }
 
-        if (elev < 64) grass = 0;
+        if (elev < Static.SEALEVEL) grass = 0;
 
         blocks[p] = Blocks.BEDROCK;
         for(int y=elev;y>0;y--) {
@@ -202,15 +215,15 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
             blocks[p + y * 256] = Blocks.STONE;
           }
         }
-        if (elev < 64) {
-          for(int y=elev+1;y<64;y++) {
+        if (elev < Static.SEALEVEL) {
+          for(int y=elev+1;y<=Static.SEALEVEL;y++) {
             blocks2[p + y * 256] = Blocks.WATER;
           }
           if (temp < 32.0) {
-            blocks[p + 64 * 256] = Blocks.ICEBLOCK;
-            bits[p + 64 * 256] = 0;
+            blocks[p + Static.SEALEVEL * 256] = Blocks.ICEBLOCK;
+            bits[p + Static.SEALEVEL * 256] = 0;
           } else {
-            blocks2[p + 64 * 256] = Blocks.WATER;
+            blocks2[p + Static.SEALEVEL * 256] = Blocks.WATER;
           }
         } else {
           if (temp < 32.0) {
@@ -219,7 +232,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         }
 
         //soil/gravel
-        for(int y=0;y<64;y++) {
+        for(int y=0;y<Static.SEALEVEL;y++) {
           float soil = Static.noises[Static.N_SOIL].noise_3d(wx, y, wz) * 100.0f;
 
           //add soil/gravel deposites
@@ -279,7 +292,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         if (x > 15) x = 15;
         y += r.nextInt(3)-1;
         if (y < 1) y = 1;
-        if (y > 64) y = 64;
+        if (y > Static.SEALEVEL) y = Static.SEALEVEL;
         z += r.nextInt(3)-1;
         if (z < 0) z = 0;
         if (z > 15) z = 15;
