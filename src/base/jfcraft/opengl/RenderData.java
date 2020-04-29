@@ -18,7 +18,7 @@ public class RenderData {
   public int hand;  //LEFT or RIGHT
 
   public boolean isDir, isDirXZ;
-  public boolean isGreen, isRed;
+  public boolean isRed, isGreen, isBlue;
 
   public boolean active;
 

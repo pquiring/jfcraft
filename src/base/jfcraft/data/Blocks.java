@@ -433,7 +433,7 @@ public class Blocks {
       .setFuel(5).setMaterial(MAT_WOOD)
     );
     registerBlock(new BlockOpaque("BEDROCK", new String[] {"Bedrock"}, new String[] {"bedrock"}).setHardness(-1f, TOOL_NONE, CLS_NONE));
-    registerBlock(new BlockLiquid("WATER", new String[] {"Water"}, new String[] {"water_still", "water_flow"}).setFlowRate(1).setRenews(true).setHardness(100f, TOOL_NONE, CLS_NONE));
+    registerBlock(new BlockLiquid("WATER", new String[] {"Water"}, new String[] {"water_still", "water_flow"}).setFlowRate(1).setRenews(true).setHardness(100f, TOOL_NONE, CLS_NONE).setBlue());
     registerBlock(new BlockLiquid("LAVA", new String[] {"Lava"}, new String[] {"lava_still", "lava_flow"}).setFlowRate(3).setRenews(false).setHardness(100f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockFalling("SAND", new String[] {"Sand", "Red Sand"}, new String[] {"sand", "red_sand"})
       .setBake("GLASSBLOCK").setVar().setHardness(0.5f, TOOL_SHOVEL, CLS_NONE)

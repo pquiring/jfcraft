@@ -163,8 +163,10 @@ public class RenderBuffers implements Cloneable {
       float clr[] = {0,0.5f + (data.temp / 200.0f),0};
       addColor(clr);
     } else if (data.isRed) {
-      float v = 1 + data.var[X];
-      float clr[] = {v / 16.0f,0,0};
+      float clr[] = {(1 + data.var[X]) / 16.0f,0,0};
+      addColor(clr);
+    } else if (data.isBlue) {
+      float clr[] = {0,0,0.5f + (data.temp / 200.0f)};
       addColor(clr);
     } else {
       addColor(Static.white);

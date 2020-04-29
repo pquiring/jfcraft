@@ -127,6 +127,7 @@ public class BlockLiquid extends BlockAlpha {
     data.isDirXZ = false;
     data.isGreen = false;
     data.isRed = false;
+    data.isBlue = isBlue;
     data.crack = -1;
     if (depth == 1f) {
       for(int a=0;a<6;a++) {

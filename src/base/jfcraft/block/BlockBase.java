@@ -59,6 +59,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public boolean isGreenTop;  //green color on top only (based on rain/temp)
   public boolean isGreenAllSides;  //green color on all sides (based on rain/temp)
   public boolean isRed;  //red color on top only (based on depth : redstone)
+  public boolean isBlue;  //water
   public boolean isComplex;  //is complex object
   public boolean isPlant;  //need dirt
   public boolean isRedstone;  //is related to redstone
@@ -158,6 +159,10 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     isGreenAllSides = true;
     return this;
   }
+  public BlockBase setBlue() {
+    isBlue = true;
+    return this;
+  }
   public BlockBase setPerf() {
     isPerf = true;
     return this;
@@ -172,6 +177,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     data.isDirXZ = isDirXZ;
     data.isGreen = isGreenAllSides || (isGreenTop && data.side == A);
     data.isRed = isRed;
+    data.isBlue = isBlue;
     buf.addFace(data, st);
   }
 
@@ -684,6 +690,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     data.isDirXZ = isDirXZ;
     data.isGreen = isGreen;
     data.isRed = isRed;
+    data.isBlue = isBlue;
     faces.xyz = xyz;
     faces.rotate(data);
     int off = buf.getVertexCount();

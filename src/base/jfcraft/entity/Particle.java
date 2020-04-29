@@ -81,7 +81,9 @@ public class Particle extends EntityBase {
       u2 = subtexture.x1 + subtexture.width * u2;
       v2 = subtexture.y1 + subtexture.height * v2;
     }
+    data.isRed = false;
     data.isGreen = isGreen;
+    data.isBlue = false;
     buf.addFace(0.5f, 0.5f, 0,   -0.5f, -0.5f, 0,   u1, v1, u2, v2, data);
     needCopyBuffers = true;
   }
