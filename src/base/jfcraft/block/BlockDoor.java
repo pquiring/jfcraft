@@ -112,7 +112,6 @@ public class BlockDoor extends BlockBase {
     int bits2 = Chunk.makeBits(c.dir_xz,c.var | VAR_UPPER);
     boolean placed = c.chunk.setBlocksIfEmpty(c, id, bits1, c2, id, bits2);
     if (!placed) return false;
-    //BUG : what if door is smashed right away
     ExtraRedstone er1 = new ExtraRedstone(c.gx, c.gy, c.gz);
     c.chunk.addExtra(er1);
     Static.server.broadcastExtra(c.chunk.dim, c.x, c.y, c.z, er1, true);

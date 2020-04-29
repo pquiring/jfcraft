@@ -386,6 +386,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     }
   }
 
+  /** Clears a block in the layer 2. */
   public char clearBlock2(int x,int y,int z) {
     if (x > 15) {return E.clearBlock2(x-16, y, z);}
     if (x < 0) {return W.clearBlock2(x+16, y, z);}
@@ -421,6 +422,84 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
       }
       return oldid;
+    }
+  }
+
+  /** Clear block if current id == id */
+  public boolean clearBlockIf(int x,int y,int z, char id) {
+    if (x > 15) {return E.clearBlockIf(x-16, y, z, id);}
+    if (x < 0) {return W.clearBlockIf(x+16, y, z, id);}
+    if (y > 255) return false;
+    if (y < 0) return false;
+    if (z > 15) {return S.clearBlockIf(x, y, z-16, id);}
+    if (z < 0) {return N.clearBlockIf(x, y, z+16, id);}
+    int p = z * 16 + x;
+    char b[] = blocks[y];
+    if (b == null) return false;
+    char oldid;
+    synchronized(lock) {
+      oldid = b[p];
+      if (oldid != id) return false;
+      b[p] = 0;
+      bits[y][p] = 0;
+      boolean empty = true;
+      for(p=0;p<16*16;p++) {
+        if (b[p] != 0) {empty = false; break;}
+      }
+      if (empty) {
+        blocks[y] = null;
+        bits[y] = null;
+      }
+
+      if (needLights) return true;
+      needRelight = true;
+      dirty = true;
+      int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
+      if (world.isClient) {
+        Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
+      } else {
+        Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
+      }
+      return true;
+    }
+  }
+
+  /** Clear block in layer 2 if current id == id */
+  public boolean clearBlockIf2(int x,int y,int z, char id) {
+    if (x > 15) {return E.clearBlockIf2(x-16, y, z, id);}
+    if (x < 0) {return W.clearBlockIf2(x+16, y, z, id);}
+    if (y > 255) return false;
+    if (y < 0) return false;
+    if (z > 15) {return S.clearBlockIf2(x, y, z-16, id);}
+    if (z < 0) {return N.clearBlockIf2(x, y, z+16, id);}
+    int p = z * 16 + x;
+    char b[] = blocks2[y];
+    if (b == null) return false;
+    char oldid;
+    synchronized(lock) {
+      oldid = b[p];
+      if (oldid != id) return false;
+      b[p] = 0;
+      bits2[y][p] = 0;
+      boolean empty = true;
+      for(p=0;p<16*16;p++) {
+        if (b[p] != 0) {empty = false; break;}
+      }
+      if (empty) {
+        blocks2[y] = null;
+        bits2[y] = null;
+      }
+
+      if (needLights) return true;
+      needRelight = true;
+      dirty = true;
+      int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
+      if (world.isClient) {
+        Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
+      } else {
+        Static.server.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
+      }
+      return true;
     }
   }
 

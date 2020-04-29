@@ -554,9 +554,9 @@ public class Items {
         "dark_oak_door",
       }
     ).setFuel(10).setMaterial(MAT_WOOD).setBlockID("WOOD_DOOR").setCanPlace().setDir());
-    registerItem(new ItemBase("BUCKET", new String[]{"Bucket"}, new String[]{"bucket"}));
-    registerItem(new ItemBase("BUCKET_WATER", new String[]{"Bucket Water"}, new String[]{"water_bucket"}));
-    registerItem(new ItemBase("BUCKET_LAVA", new String[]{"Bucket Lava"}, new String[]{"lava_bucket"}).setFuel(1000));
+    registerItem(new ItemBucket("BUCKET", new String[]{"Bucket"}, new String[]{"bucket"}));
+    registerItem(new ItemBucket("BUCKET_WATER", new String[]{"Bucket Water"}, new String[]{"water_bucket"}).setFilled("WATER"));
+    registerItem(new ItemBucket("BUCKET_LAVA", new String[]{"Bucket Lava"}, new String[]{"lava_bucket"}).setFilled("LAVA").setFuel(1000));
     registerItem(new ItemMinecart("MINECART", new String[]{"Minecart"}, new String[]{"minecart"}));
     registerItem(new ItemBase("SADDLE", new String[]{"Saddle"}, new String[]{"saddle"}));
     registerItem(new ItemBase("IRON_DOOR_ITEM", new String[]{"Iron Door"}, new String[]{"iron_door"}).setBlockID("IRON_DOOR").setCanPlace());
