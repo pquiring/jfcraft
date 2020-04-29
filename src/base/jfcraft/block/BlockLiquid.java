@@ -125,8 +125,8 @@ public class BlockLiquid extends BlockAlpha {
     int dir = data.dir2[X];
     data.isDir = false;
     data.isDirXZ = false;
-    data.isGreen = false;
-    data.isRed = false;
+    data.isGreen = isGreen;
+    data.isRed = isRed;
     data.isBlue = isBlue;
     data.crack = -1;
     if (depth == 1f) {

@@ -2,6 +2,7 @@ List of TODOs to make jfCraft as feature full as the real thing:
 
 need list:
 
+pick up water/lava in bucket
 render items in right hand (including shield in left hand) on inventory screen
 render items of other players
 improve world generating algorithms : generate cave rooms, springs, lakes, rivers, items, stuff, castles, etc.

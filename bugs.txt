@@ -1,4 +1,8 @@
-lighting - water is not blue
+attack is too fast
+
+can't place blocks in water/weeds (replace?)
+
+can't pick up water in bucket (or place it)
 
 jump too high
 
