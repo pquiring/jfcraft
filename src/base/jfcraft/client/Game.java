@@ -788,7 +788,7 @@ public class Game extends RenderScreen {
     } else {
       int dx = x - lastx;
       int dy = y - lasty;
-      Static.client.look(dx, dy);
+      Static.client.look(dx, dy, 0.25f);
       lastx = x;
       lasty = y;
     }

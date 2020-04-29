@@ -254,12 +254,12 @@ public class Client {
     }
   }
 
-  public void look(float dx, float dy) {
+  public void look(float dx, float dy, float scale) {
     synchronized(ang) {
-      ang.x += dy * 1.25f;
+      ang.x += dy * scale;
       if (ang.x > 90f) ang.x = 90f;
       if (ang.x < -90f) ang.x = -90f;
-      ang.y += dx * 1.25f;
+      ang.y += dx * scale;
       while (ang.y > 360f) {
         ang.y -= 360f;
       }
