@@ -1,8 +1,12 @@
 attack is too fast
 
-can't place blocks in water/weeds (replace?)
+after sleep mouse doesn't move
 
-can't pick up water in bucket (or place it)
+day/night cycle is offset
+
+items not rendering in hand properly
+
+can't place blocks in water/weeds (replace?)
 
 jump too high
 
