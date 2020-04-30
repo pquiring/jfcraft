@@ -8,5 +8,6 @@ package jfcraft.data;
 import javaforce.media.*;
 
 public class AssetAudio extends Asset {
+  public int idx;
   public Wav wav;
 }

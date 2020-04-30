@@ -5,8 +5,6 @@ package jfcraft.audio;
  * @author pquiring
  */
 
-import java.util.*;
-
 import javaforce.*;
 import javaforce.media.*;
 
@@ -14,39 +12,21 @@ import jfcraft.data.*;
 import static jfcraft.audio.Sounds.*;
 
 public class AudioEngine {
-  private AudioOutput output;
-  private Timer timer;
+  private Music music = new Music();
 
   public void start() {
-    output = new AudioOutput();
-    if (!output.start(1, 44100, 16, 44100 * 2 / 20/* bytes */, null)) {
-      Static.log("Error:Failed to start audio system");
-      return;
-    }
-    //prime the output
-    output.write(buffer);
-    output.write(buffer);
-    timer = new Timer();
-    timer.scheduleAtFixedRate(new TimerTask() {public void run() {
-      process();
-    }}, 50, 50);
+    music.start(50, 4);
   }
 
   public void stop() {
-    if (timer != null) {
-      timer.cancel();
-      timer = null;
-    }
-    if (output != null) {
-      output.stop();
-      output = null;
-    }
+    music.stop();
   }
 
   private AssetAudio sounds[] = new AssetAudio[127];
 
   public void registerSound(int idx, AssetAudio audio) {
     sounds[idx] = audio;
+    audio.idx = music.soundLoad(audio.wav.samples16, -1, -1, -1, -1, 0, 0);
   }
 
   public void registerDefault() {
@@ -68,51 +48,10 @@ public class AudioEngine {
    * @param vol = volume level (0-100)
    */
   public synchronized void addSound(int idx, int freq, int vol) {
-    for(int a=0;a<chs.length;a++) {
-      if (chs[a] == null) {
-        Channel c = new Channel();
-        c.wav = sounds[idx].wav;
-        if (c.wav.samples16.length == 0) {
-          Static.log("AudioEngine:no samples:" + idx);
-          return;
-        }
-        c.freq = freq;
-        c.vol = vol;
-        if (freq < 0) {
-          c.pos = c.wav.samples16.length-1;
-        }
-        chs[a] = c;
-        return;
-      }
-    }
-    Static.log("AudioEngine:Failed to addSound:" + idx);
-  }
-
-  private Channel chs[] = new Channel[16];
-
-  private static final int bufsize = 44100 / 20;
-  private short buffer[] = new short[bufsize];
-
-  //50ms timer
-  private void process() {
-    Arrays.fill(buffer, (short)0);
-    for(int a=0;a<chs.length;a++) {
-      Channel c = chs[a];
-      if (c == null) continue;
-      for(int s=0;s<bufsize;s++) {
-        int sample = c.wav.samples16[c.pos];
-        if (c.vol < 100) {
-          sample *= c.vol;
-          sample /= 100;
-        }
-        buffer[s] += (short)sample;
-        c.pos += c.freq;
-        if ((c.pos < 0) || (c.pos >= c.wav.samples16.length)) {
-          chs[a] = null;
-          break;
-        }
-      }
-    }
-    output.write(buffer);
+    float volL = vol;
+    volL /= 100.0f;
+    float volR = vol;
+    volR /= 100.0f;
+    music.soundPlay(sounds[idx].idx, volL, volR, 0);
   }
 }
