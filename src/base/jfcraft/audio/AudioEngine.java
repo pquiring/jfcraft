@@ -10,6 +10,7 @@ import javaforce.media.*;
 
 import jfcraft.data.*;
 import static jfcraft.audio.Sounds.*;
+import static jfcraft.audio.Songs.*;
 
 public class AudioEngine {
   private Music music = new Music();
@@ -23,6 +24,7 @@ public class AudioEngine {
   }
 
   private AssetAudio sounds[] = new AssetAudio[127];
+  private AssetMusic songs[] = new AssetMusic[127];
 
   public void registerSound(int idx, AssetAudio audio) {
     sounds[idx] = audio;
@@ -39,6 +41,7 @@ public class AudioEngine {
     registerSound(SOUND_PIG, Assets.getAudio("pig"));
     registerSound(SOUND_SHEEP, Assets.getAudio("sheep"));
     registerSound(SOUND_ZOMBIE, Assets.getAudio("zombie"));
+    songs[FUR_ELISE] = Assets.getMusic("FurElise");
   }
 
   /** Add a sound to play
@@ -53,5 +56,14 @@ public class AudioEngine {
     float volR = vol;
     volR /= 100.0f;
     music.soundPlay(sounds[idx].idx, volL, volR, 0);
+  }
+
+  public void playMusic(int idx) {
+    music.load(songs[idx].song);
+    music.playSong(true);
+  }
+
+  public void stopMusic() {
+    music.stopMusic();
   }
 }

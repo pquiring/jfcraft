@@ -18,15 +18,17 @@ public class Assets {
   private static ArrayList<Asset> wavs = new ArrayList<Asset>();
   private static ArrayList<Asset> models = new ArrayList<Asset>();
   private static ArrayList<Asset> prints = new ArrayList<Asset>();
+  private static ArrayList<Asset> songs = new ArrayList<Asset>();
   private static ArrayList<ZipFile> zips = new ArrayList<ZipFile>();
 
-  private enum Type {PNG, WAV, MODEL, BLUEPRINT};
+  private enum Type {PNG, WAV, MODEL, BLUEPRINT, MUSIC};
 
   public static void reset() {
     pngs.clear();
     wavs.clear();
     models.clear();
     prints.clear();
+    songs.clear();
     zips.clear();
   }
 
@@ -61,6 +63,7 @@ public class Assets {
       case WAV: assets = wavs; break;
       case MODEL: assets = models; break;
       case BLUEPRINT: assets = prints; break;
+      case MUSIC: assets = songs; break;
       default: return null;
     }
 
@@ -112,6 +115,10 @@ public class Assets {
           blueprint.name = name;
           blueprint.blueprint = new BluePrint();
           return blueprint;
+        case MUSIC:
+          AssetMusic song = new AssetMusic();
+          song.song = new Music.Song();
+          return song;
       }
       return null;
     }
@@ -157,6 +164,10 @@ public class Assets {
         print.blueprint = BluePrint.read(is);
         assets.add(print);
         return print;
+      case MUSIC:
+        AssetMusic music = new AssetMusic();
+        music.song = Music.load(is);
+        return music;
     }
     //TODO more formats (ie: ogg, mp3, etc.)
     return null;
@@ -187,6 +198,13 @@ public class Assets {
     String filename;
     filename = "assets/minecraft/blueprints/" + name + ".blueprint";
     AssetBluePrint asset = (AssetBluePrint)getAsset(name, Type.BLUEPRINT, filename);
+    return asset;
+  }
+
+  public static AssetMusic getMusic(String name) {
+    String filename;
+    filename = "assets/minecraft/music/" + name + ".mproj";
+    AssetMusic asset = (AssetMusic)getAsset(name, Type.MUSIC, filename);
     return asset;
   }
 }

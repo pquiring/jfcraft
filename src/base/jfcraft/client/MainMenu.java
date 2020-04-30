@@ -10,6 +10,7 @@ package jfcraft.client;
 import javaforce.gl.*;
 import static javaforce.gl.GL.*;
 
+import jfcraft.audio.*;
 import jfcraft.opengl.*;
 import jfcraft.data.*;
 import jfcraft.item.*;
@@ -25,6 +26,11 @@ public class MainMenu extends RenderScreen {
   private void reset() {
     Static.client = null;
     Static.server = null;
+    Static.audio.stopMusic();
+  }
+
+  public void setup() {
+    Static.audio.playMusic(Songs.FUR_ELISE);
   }
 
   public void init() {
