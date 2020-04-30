@@ -209,40 +209,42 @@ public class PacketPos extends Packet {
           }
         } else if (client.s1.entity != null) {
           //attack();
-          client.action[0] = Client.ACTION_ATTACK;
-          client.player.exhaustion += 0.3f;
-          ((CreatureBase)client.s1.entity).takeDmg(client.player.calcDmg(client.player.items[client.player.activeSlot]), client.player);
+          if (client.action[0] == Client.ACTION_IDLE) {
+            client.action[0] = Client.ACTION_ATTACK;
+            client.player.exhaustion += 0.3f;
+            ((CreatureBase)client.s1.entity).takeDmg(client.player.calcDmg(client.player.items[client.player.activeSlot]), client.player);
+          }
         }
       }
     }
     else if (b2) {
       client.player.findBlock(-1, BlockHitTest.Type.SELECTION, client.player.vehicle, client.s1);
       if (client.s1.block != null || client.s1.entity != null) {
-        if (client.s1.block != null && client.s1.block.canUse && !sneak && client.action[1] != Client.ACTION_PLACE) {
+        if (client.s1.block != null && client.s1.block.canUse && !sneak && client.action[1] == Client.ACTION_IDLE) {
           //useBlock();
           client.action[1] = Client.ACTION_USE_BLOCK;
           synchronized(client.lock) {
             client.s1.block.useBlock(client, client.s1);
           }
-        } else if (client.s1.entity != null && client.s1.entity.canUse()) {
+        } else if (client.s1.entity != null && client.s1.entity.canUse() && client.action[1] == Client.ACTION_IDLE) {
           client.action[1] = Client.ACTION_USE_ENTITY;
           client.s1.entity.useEntity(client, sneak);
         } else if (client.action[1] == Client.ACTION_PLACE || client.action[1] == Client.ACTION_IDLE || client.action[1] == Client.ACTION_USE_TOOL) {
           Item item = client.player.items[client.player.activeSlot];
           ItemBase itembase = Static.items.items[item.id];
-          if (itembase.isTool || itembase.isWeapon || itembase.isFood) {
+          if (itembase.isTool || itembase.isWeapon/*bow*/ || itembase.isFood) {
             //useTool();
-            client.action[1] = Client.ACTION_USE_TOOL;
             synchronized(client.lock) {
-              if (client.s1.block != null) {
+              if (client.s1.block != null && client.action[1] == Client.ACTION_IDLE) {
                 used = client.s1.block.useTool(client, client.s1);
-              } else if (client.s1.entity != null) {
+              } else if (client.s1.entity != null && client.action[1] == Client.ACTION_IDLE) {
                 used = client.s1.entity.useTool(client, client.s1);
               }
               if (!used) {
                 used = itembase.useItem(client, client.s1);
               }
             }
+            client.action[1] = Client.ACTION_USE_TOOL;
           } else {
             if (!placeBlock(client, server, item)) {
               itembase = Static.items.items[client.player.items[Player.shield_idx].id];

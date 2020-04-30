@@ -1,5 +1,3 @@
-attack is too fast
-
 after sleep mouse doesn't move
 
 day/night cycle is offset
