@@ -39,6 +39,7 @@ public class Client {
   public int chatTime;
   public int itemTextTime;
   public int bedtime = 0;  //fade screen
+  public boolean leavebed = false;
   public Object lock = new Object();  //lock for inventory/hand
   public boolean loadedSpawnArea;
   public int spawnAreaChunksTodo;

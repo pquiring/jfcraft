@@ -21,7 +21,7 @@ public class PacketMenuLeave extends Packet {
   //process on client side
   public void process(Client client) {
     client.bedtime = 0;
-    Static.game.leaveMenu();
+    client.leavebed = true;
     client.container = null;
   }
 

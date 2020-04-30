@@ -28,6 +28,7 @@ public class BedMenu extends RenderScreen {
   public void setup() {
     setCursor(true);
     Static.inGame = false;
+    Static.client.leavebed = false;
   }
 
   public void render(int width, int height) {
@@ -37,6 +38,9 @@ public class BedMenu extends RenderScreen {
     renderShade();
     setOrtho();
     renderButtons();
+    if (Static.client.leavebed) {
+      leaveMenu();
+    }
   }
 
   public void resize(int width, int height) {

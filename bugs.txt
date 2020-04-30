@@ -1,5 +1,3 @@
-after sleep mouse doesn't move
-
 can't place blocks in water/weeds (replace?)
 
 jump too high
