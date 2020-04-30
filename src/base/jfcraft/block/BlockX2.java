@@ -70,7 +70,7 @@ public class BlockX2 extends BlockBase {
   }
   public void tick(Chunk chunk, Tick tick) {
     //this block can be replaced so check if other half is still there
-
+    super.tick(chunk, tick);
     int y = tick.y;
     int bits = chunk.getBits(tick.x, tick.y, tick.z);
     int var = Chunk.getVar(bits);
