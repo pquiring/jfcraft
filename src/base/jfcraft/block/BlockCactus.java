@@ -11,6 +11,7 @@ import javaforce.gl.*;
 import jfcraft.data.*;
 import jfcraft.client.*;
 import jfcraft.opengl.*;
+import static jfcraft.data.Direction.*;
 
 public class BlockCactus extends BlockBase {
   private static GLModel model;
@@ -58,7 +59,8 @@ public class BlockCactus extends BlockBase {
     super.tick(chunk, tick);
     //is block below still sand or cactus?
     tick.toWorldCoords(chunk, c);
-    int bid = c.chunk.getID(c.gx, c.gy-1, c.gz);
+    c.block = chunk.getBlock(c.gx, c.gy-1, c.gz);
+    int bid = c.block.id;
     if (bid == Blocks.SAND || bid == id) {
       return;
     }
