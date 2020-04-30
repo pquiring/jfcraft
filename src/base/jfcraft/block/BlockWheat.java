@@ -26,6 +26,7 @@ public class BlockWheat extends BlockBase {
     isComplex = true;
     isSolid = false;
     isVar = true;
+    varMask = 0x7;
     resetBoxes(Type.BOTH);
     addBox(0, 0, 0, 16, 4, 16, Type.SELECTION);
     model = Assets.getModel("wheat").model;

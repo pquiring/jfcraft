@@ -14,9 +14,9 @@ public abstract class TreeBase {
   public static void setChunk(Chunk chunk) {
     TreeBase.chunk = chunk;
   }
-  public void setBlock(int x, int y, int z, char id, int dir, int var) {
-    if (y < 1) return;  //do not change bedrock
-    if (y > 255) return;
+  public boolean setBlock(int x, int y, int z, char id, int dir, int var) {
+    if (y < 1) return false;  //do not change bedrock
+    if (y > 255) return false;
     Chunk c = chunk;
     while (x < 0) {
       c = c.W;
@@ -35,8 +35,9 @@ public abstract class TreeBase {
       z -= 16;
     }
     char orgid = c.getBlock(x, y, z).id;
-    if (orgid != Blocks.AIR && orgid != Blocks.SNOW) return;
+    if (orgid != Blocks.AIR && orgid != Blocks.SNOW) return false;
     c.setBlock(x, y, z, id, Chunk.makeBits(dir,var));
+    return true;
   }
   public int getDir(int xx, int zz) {
     if (xx < 0) return E;

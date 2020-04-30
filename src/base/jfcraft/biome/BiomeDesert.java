@@ -15,7 +15,7 @@ public class BiomeDesert extends BiomeBase {
     return DESERT;
   }
 
-  private static final int TREE_ODDS = INF;
+  private static final int TREE_ODDS = 100;
   private static final int FLOWER_CHUNK_ODDS = 5;
   private static final int FLOWER_BLOCK_ODDS = 50;
   private static final int TALLGRASS_CHUNK_ODDS = INF;
@@ -50,8 +50,7 @@ public class BiomeDesert extends BiomeBase {
   }
 
   public TreeBase getTree(int rv) {
-    //TODO : return cactus
-    return null;
+    return Static.trees.trees[Trees.CACTUS];
   }
 
   public int getFlower(int rv) {
