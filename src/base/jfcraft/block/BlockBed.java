@@ -107,7 +107,7 @@ public class BlockBed extends BlockBase {
 
   public void useBlock(Client client, Coords c) {
     int time = Static.server.world.time;
-    if (time > 5000 && time < 21000) {
+    if (time > 5000 && time < 18000) {
       client.serverTransport.sendMsg("Can only sleep at night");
       return;
     }

@@ -1,7 +1,5 @@
 after sleep mouse doesn't move
 
-day/night cycle is offset
-
 can't place blocks in water/weeds (replace?)
 
 jump too high
