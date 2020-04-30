@@ -8,10 +8,7 @@ Uses the Faithful Texture pack.
 Is not compatible with the official game in anyway.
 
 Some parts of the game are complete but much is still left to do.
-See todo.txt for a full list.
-
-I've done other clones of MC using web based interfaces but they all failed.
-This time I wrote it in Java like the original and making much better progress.
+See todo.txt and bugs.txt for a full list.
 
 The controls are like the original.  Plus a few extras for testing:
  c = toggle flying mode

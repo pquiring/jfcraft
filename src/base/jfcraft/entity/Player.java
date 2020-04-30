@@ -65,7 +65,7 @@ public class Player extends HumaniodBase {
     //speeds are blocks per second
     walkSpeed = 4.3f;
     runSpeed = 5.6f;
-    if (System.getProperty("debug") != null) {
+    if (Static.debugTest) {
       runSpeed = 50.0f;
     }
     sneakSpeed = 1.3f;

@@ -90,6 +90,11 @@ public class Main implements GLWindow.KeyEvents, GLWindow.MouseEvents, GLWindow.
   }
 
   public static void main(String[] args) {
+    if (args.length > 0) {
+      if (args[0].equals("-debug")) {
+        Static.debugTest = true;
+      }
+    }
     new Main().run();
   }
 

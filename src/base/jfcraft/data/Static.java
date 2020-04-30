@@ -55,6 +55,7 @@ public class Static {
   public static boolean debugDisableRandomTicks = false;
   public static boolean debugPurgeEntities = false;
   public static boolean debugDisableFog = true;
+  public static boolean debugTest = false;
 
   public static String debugMsg;
 

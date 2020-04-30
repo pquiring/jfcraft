@@ -328,11 +328,13 @@ public class Client {
         }
         if (Static.keys[GLVK.VK_C]) {
           Static.keys[GLVK.VK_C] = false;
-          clientTransport.gamemode();
-          if (player.mode == EntityBase.MODE_FLYING)
-            player.mode = EntityBase.MODE_WALK;
-          else
-            player.mode = EntityBase.MODE_FLYING;
+          if (Static.debugTest) {
+            clientTransport.gamemode();
+            if (player.mode == EntityBase.MODE_FLYING)
+              player.mode = EntityBase.MODE_WALK;
+            else
+              player.mode = EntityBase.MODE_FLYING;
+          }
         }
       }
       if (player.vehicle == null) {
