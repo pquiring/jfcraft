@@ -170,6 +170,12 @@ public class ItemBase implements RenderSource {
     float x2 = 1;
     float y2 = 1;
     obj.addFace2D(x1,y1,x2,y2,tx1,ty1,tx2,ty2,green ? Static.green : Static.white);
+    //add face for viewing in hand
+    x1 = -0.5f;
+    y1 = 1.0f;
+    x2 = 0.5f;
+    y2 = 0.0f;
+    obj.addFace2D(x1,y1,x2,y2,tx1,ty1,tx2,ty2,green ? Static.green : Static.white);
   }
 
   /** Add face for item as WorldItem. */

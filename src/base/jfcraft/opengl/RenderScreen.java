@@ -577,8 +577,6 @@ public abstract class RenderScreen {
     renderText(x,y,txt);
   }
 
-  private Item block_item = new Item();
-
   public void renderItems(Slot slots[]) {
     Item item;
     ItemBase itembase;
@@ -612,7 +610,7 @@ public abstract class RenderScreen {
       if (item == null || item.id == 0) continue;
       if (Static.isBlock(item.id)) {
         blockbase = Static.blocks.blocks[item.id];
-        if (blockbase.renderAsEntity) continue;
+        if (blockbase.renderAsEntity || blockbase.renderAsItem) continue;
         renderItem(item, slots[a].x, slots[a].y);
       }
     }

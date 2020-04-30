@@ -4,8 +4,6 @@ after sleep mouse doesn't move
 
 day/night cycle is offset
 
-items not rendering in hand properly
-
 can't place blocks in water/weeds (replace?)
 
 jump too high
