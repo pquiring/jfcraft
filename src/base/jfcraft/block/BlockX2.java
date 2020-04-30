@@ -68,4 +68,21 @@ public class BlockX2 extends BlockBase {
     c.chunk.clearBlock(c.gx,c.gy,c.gz);
     Static.server.broadcastClearBlock(c.chunk.dim,c.x,c.y,c.z);
   }
+  public void tick(Chunk chunk, Tick tick) {
+    //this block can be replaced so check if other half is still there
+
+    int y = tick.y;
+    int bits = chunk.getBits(tick.x, tick.y, tick.z);
+    int var = Chunk.getVar(bits);
+    if ((var & VAR_UPPER) == VAR_UPPER) {
+      y--;
+    } else {
+      y++;
+    }
+
+    if (chunk.getID(tick.x, y, tick.z) != id) {
+      chunk.clearBlock(tick.x,tick.y,tick.z);
+      Static.server.broadcastClearBlock(chunk.dim,chunk.cx * 16 + tick.x,tick.y,chunk.cz * 16 + tick.z);
+    }
+  }
 }

@@ -473,12 +473,16 @@ public class Blocks {
     registerBlock(new BlockX("FERN"
       , new String[] {"Fern"}
       , new String[] {"fern"}
-      ).setGreenAllSides().setDrop("SEEDS").setSupported().setDropVar(false).addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
+      )
+      .setGreenAllSides().setDrop("SEEDS").setSupported().setDropVar(false).setCanReplace()
+      .addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
     );
     registerBlock(new BlockX("WEEDS"
       , new String[] {"Weeds"}
       , new String[] {"grass"}
-      ).setGreenAllSides().setDrop("SEEDS").setSupported().setDropVar(false).addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
+      )
+      .setGreenAllSides().setDrop("SEEDS").setSupported().setDropVar(false).setCanReplace()
+      .addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
     );
     registerBlock(new BlockX("DEADBUSH"
       , new String[] {"Dead Bush"}
@@ -538,6 +542,7 @@ public class Blocks {
       })
       .resetBoxes(BlockHitTest.Type.SELECTION).addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION)
       .setSupported().setPlant().setShowAsItem().setDrop("SEEDS").setDropVar(false).setGreenAllSides()
+      .setCanReplace()
     );
     registerBlock(new BlockXVar2("TALLPLANT"
       , new String[] {
@@ -810,8 +815,6 @@ public class Blocks {
     registerBlock(new BlockOpaque("TEST_ARROW", new String[] {"test"}, new String[] {"arrow"}).setDir());  //jfasset
 
   }
-
-  public static char x = 0;
 
   private void addSubTexture(BlockBase block, String name) {
     name = "block/" + name;
