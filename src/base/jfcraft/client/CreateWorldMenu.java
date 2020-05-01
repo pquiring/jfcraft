@@ -29,6 +29,7 @@ public class CreateWorldMenu extends RenderScreen {
 
   public void setup() {
     initTxt = "New World";
+    setFocus(world_name);
   }
 
   public void init() {
@@ -45,7 +46,6 @@ public class CreateWorldMenu extends RenderScreen {
     addButton("Cancel", 266, 390, 226, new Runnable() {public void run() {
       Static.video.setScreen(Static.screens.screens[Client.SINGLE]);
     }});
-    setFocus(world_name);
   }
 
   public void render(int width, int height) {

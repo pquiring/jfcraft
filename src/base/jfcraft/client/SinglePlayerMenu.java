@@ -49,12 +49,11 @@ public class SinglePlayerMenu extends RenderScreen {
     addButton("Cancel", 389, 450, 103, new Runnable() {public void run() {
       Static.video.setScreen(Static.screens.screens[Client.MAIN]);
     }});
-    listWorlds();
     sb = addScrollBar(452, 33, 10, 336, worlds.size() * 4 * fontSize);
   }
 
   public void setup() {
-    selectedWorld = -1;
+    listWorlds();
   }
 
   public void render(int width, int height) {
