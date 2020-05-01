@@ -447,9 +447,9 @@ public class NoiseTestPanel extends javax.swing.JPanel {
         for(float y=0;y<128;y+=3) {
           for(float x=0;x<128;x+=3) {
             for(float z=0;z<128;z+=3) {
-              int a = (int)Math.abs(noise.noise_3d(x + _cx,y + _cy, z + _cz) * y_scale + _base);
-              if (a <= _threshold) continue;
-              a &= 0xff;
+              int a = (int)(noise.noise_3d(x + _cx,y + _cy, z + _cz) * y_scale * 2/* + _base*/);
+//              if (Math.abs(a) <= _threshold) continue;
+//              a &= 0xff;
               float _x = x + z;
               float _y = 256 + (-x * _angle) + (z * _angle) - y;
   /*
@@ -464,7 +464,14 @@ public class NoiseTestPanel extends javax.swing.JPanel {
               b = (int)(b * o + a) >> 8;
               clr = r << 16 + g << 8 + b;
   */
-              clr = (a << 16) + (a << 8) + a;
+              if (a < 0) {
+                a *= -1;
+                a &= 0xff;
+                clr = (a << 16);
+              } else {
+                a &= 0xff;
+                clr = (a << 16) + (a << 8) + (a & 0xff);
+              }
               img.putPixel((int)_x, (int)_y, clr);
             }
           }

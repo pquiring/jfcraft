@@ -176,6 +176,9 @@ public class RenderBuffers implements Cloneable {
     lcl.append(rgb);
   }
   public void addSunLight(float lvl) {
+    if (Static.debugLights) {
+      lvl = 1.0f;
+    }
     sll.append(lvl);
   }
   public void addBlockLight(float lvl) {

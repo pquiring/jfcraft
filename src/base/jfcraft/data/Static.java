@@ -51,6 +51,7 @@ public class Static {
   public static boolean debugRotate = false;
   public static boolean debugProfile = false;
   public static boolean debugCaves = false;
+  public static boolean debugLights = false;
   public static boolean debugBug = false;
   public static boolean debugDisableRandomTicks = false;
   public static boolean debugPurgeEntities = false;
@@ -60,6 +61,8 @@ public class Static {
   public static String debugMsg;
 
   public static boolean doSteps = false;
+
+  public static boolean optionMusic = true;
 
   public static ServerInterface iface;
 
@@ -201,7 +204,7 @@ public class Static {
     {5, 0.5f, 0.005f},  //elev1 : plains
     {5, 0.5f, 0.005f},  //elev2 : hills
     {5, 0.5f, 0.003f},  //elev3 : extremes (mountains / oceans)
-    {5, 0.5f, 0.005f},  //elev4 : free
+    {2, 0.5f, 0.015f},  //elev4 : rooms underground
     {5, 0.5f, 0.005f},  //elev5 : free
     {5, 0.5f, 0.005f},  //elev6 : free
 

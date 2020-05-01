@@ -22,6 +22,7 @@ import static jfcraft.data.Direction.*;
 
 public class GeneratorPhase2Earth implements GeneratorPhase2Base {
   private Chunk chunk;
+  private int cx16, cz16;
   private Random r = new Random();
   private BluePrint cabin;
 
@@ -41,25 +42,32 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
       }
     }
     this.chunk = chunk;
+    cx16 = chunk.cx * 16;
+    cz16 = chunk.cz * 16;
 
-//    synchronized(chunk.lock) {
-      chunk.needPhase2 = false;
-      chunk.dirty = true;
+    chunk.needPhase2 = false;
+    chunk.dirty = true;
 
-      r.setSeed(chunk.seed);
+    r.setSeed(chunk.seed);
 
-      if (r.nextInt(100) == 0) {
-        addCaves();
-      }
-      if (r.nextInt(1000) == 0) {
-        addRavine();
-      }
-      if (r.nextInt(10000) == 0 || (chunk.cx == 0 && chunk.cz == -3)) {
-        addCabin();
-      }
-//    }
+    if (r.nextInt(20) == 0) {
+   //   addCaves();
+    }
+    if (r.nextInt(1000) == 0) {
+   //   addRavine();
+    }
+    if (r.nextInt(10) == 0 || (chunk.cx == 0 && chunk.cz == 0)) {
+      addRoom();
+    }
+    if (r.nextInt(10000) == 0 || (chunk.cx == 0 && chunk.cz == -3)) {
+      addCabin();
+    }
   }
   private void setBlock(int x, int y, int z, char id, int bits) {
+    if (id == 0) {
+      clearBlock(x,y,z);
+      return;
+    }
     if (y < 1) return;  //do not change bedrock
     if (y > 255) return;
     Chunk c = chunk;
@@ -139,7 +147,6 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
     dir += 180;
     if (dir > 180) dir -= 360;
     doCave(elev, dir, false);
-    chunk.setBlock(8, (int)elev, 8, Blocks.TORCH, 0);  //test
   }
 
   private void doCave(float elev, float xzdir, boolean fork) {
@@ -158,8 +165,8 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
     float dxzdir = 0, dydir = 0;
     do {
       if (plen == 0) {
-        dxzdir = r.nextFloat() * 3f;
-        dydir = r.nextFloat() * 2f;
+        dxzdir = r.nextFloat() * 2f;
+        dydir = r.nextFloat() * 1f;
         plen = 16 + r.nextInt(32);
       } else {
         plen--;
@@ -222,7 +229,7 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
       y += zy * 0.50f;
       z += zz * 0.50f;
       if (y < 10) y = 10;
-      if (y > 250) y = 250;
+      if (y > 55) y = 55;
 
       xzdir += dxzdir;
       if (xzdir > 180) {
@@ -262,7 +269,6 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
     doRavine(elev, dir, height, width, len);
     dir += 180;
     doRavine(elev, dir, height, width, len);
-    chunk.setBlock(8, (int)elev, 8, Blocks.TORCH, 0);  //test
   }
 
   private void doRavine(float elev, float xzdir, float height, float width, float len) {
@@ -361,6 +367,75 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
       case 1: cabin.rotateY(R270); break;
       case 2: cabin.rotateY(R180); break;
       case 3: cabin.rotateY(R90); break;
+    }
+  }
+
+  private void lineNS(float x, float y, float z, float dz, char id) {
+    int cnt = 0;
+    while (cnt < 120 && Static.noises[Static.N_ELEV4].noise_3d(cx16 + x,y,cz16 + z) > threshold) {
+      if (id != 0) {
+        clearBlock((int)x,(int)y,(int)z);
+      }
+      setBlock((int)x,(int)y,(int)z,id,0);
+      z += dz;
+      cnt++;
+    }
+  }
+
+  private void lineEW(float x, float y, float z, float dx, char id) {
+    int cnt = 0;
+    while (cnt < 120 && Static.noises[Static.N_ELEV4].noise_3d(cx16 + x,y,cz16 + z) > threshold) {
+      if (id != 0) {
+        clearBlock((int)x,(int)y,(int)z);
+      }
+      setBlock((int)x,(int)y,(int)z,id,0);
+      lineNS(x,y,z,1.0f,id);
+      lineNS(x,y,z,-1.0f,id);
+      x += dx;
+      cnt++;
+    }
+  }
+
+  private float threshold = 0.5f;
+
+  public void addRoom() {
+    int x = Static.abs(r.nextInt(16));
+    int z = Static.abs(r.nextInt(16));
+    int y = Static.abs(r.nextInt(50)) + 5;
+    while (y > 5 && Static.noises[Static.N_ELEV4].noise_3d(cx16 + x,y,cz16 + z) < threshold) {
+      y--;
+    }
+    while (y < 55 && Static.noises[Static.N_ELEV4].noise_3d(cx16 + x,y,cz16 + z) < threshold) {
+      y++;
+    }
+    if (y == 55) {
+      return;
+    }
+    //move to the top
+    while (y < 60.0f && Static.noises[Static.N_ELEV4].noise_3d(cx16 + x,y+1,cz16 + z) > threshold) {
+      y++;
+    }
+//    Static.log("room@" + x + "," + y + "," + z + ":" + chunk.cx + "," + chunk.cz);
+    int gap = r.nextInt(3) + 3;
+    char id = Blocks.AIR;
+    char liquid;
+    if (y > 40.0f) {
+      liquid = Blocks.WATER;
+    } else {
+      liquid = Blocks.LAVA;
+    }
+    while (y > 2.0f && Static.noises[Static.N_ELEV4].noise_3d(cx16 + x,y,cz16 + z) > threshold) {
+      //set level
+      lineEW(x,y,z,1.0f,id);
+      lineEW(x,y,z,-1.0f,id);
+      //move down
+      y--;
+      if (gap > 0) {
+        gap--;
+        if (gap == 0) {
+          id = liquid;
+        }
+      }
     }
   }
 }

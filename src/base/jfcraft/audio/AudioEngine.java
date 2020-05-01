@@ -59,6 +59,7 @@ public class AudioEngine {
   }
 
   public void playMusic(int idx) {
+    if (!Static.optionMusic) return;
     music.load(songs[idx].song);
     music.playSong(true);
   }
