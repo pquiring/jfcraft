@@ -24,23 +24,13 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
   private Chunk chunk;
   private int cx16, cz16;
   private Random r = new Random();
-  private BluePrint cabin;
 
   public void getIDs() {}
 
   public void reset() {
-    cabin = null;
   }
 
   public void generate(Chunk chunk) {
-    if (cabin == null) {
-      //BUG : This needs to get reloaded whenever a new world is loaded
-      cabin = Assets.getBluePrint("cabin").blueprint;
-      if (!cabin.convertIDs(Static.server.world)) {
-        JFAWT.showError("Error", "BluePrint.convertIDs() failed, missing:" + cabin.missingID);
-        System.exit(1);
-      }
-    }
     this.chunk = chunk;
     cx16 = chunk.cx * 16;
     cz16 = chunk.cz * 16;
@@ -349,6 +339,7 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
     } while (len > 0);
   }
   private void addCabin() {
+    BluePrint cabin = chunk.world.getBluePrint("cabin");
     int elev = (int)chunk.elev[8 * 16 + 8] + 1;
     if (elev + cabin.Y > 255) return;
     if (chunk.getID(8, elev+1, 8) != 0) return;

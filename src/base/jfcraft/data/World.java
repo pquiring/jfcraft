@@ -43,6 +43,7 @@ public class World implements SerialClass, SerialCreator {
   public ArrayList<String> dimMap = new ArrayList<String>();
   public ArrayList<String> extraMap = new ArrayList<String>();
   //screen sound ??? -> not saved in world
+  public HashMap<String, BluePrint> blueprints = new HashMap<String, BluePrint>();
 
   public Chunks chunks;
 
@@ -597,6 +598,15 @@ public class World implements SerialClass, SerialCreator {
     byte nid = (byte)extraMap.size();
     extraMap.add(name);
     return nid;
+  }
+
+  public BluePrint getBluePrint(String name) {
+    BluePrint blueprint = blueprints.get(name);
+    if (blueprint != null) return blueprint;
+    blueprint = Assets.getBluePrint(name).blueprint;
+    blueprint.convertIDs(this);
+    blueprints.put(name, blueprint);
+    return blueprint;
   }
 
   private RandomAccessFile lockraf; // The file we'll lock

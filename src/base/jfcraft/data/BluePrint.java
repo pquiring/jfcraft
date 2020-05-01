@@ -165,7 +165,21 @@ public class BluePrint implements SerialClass, SerialCreator {
       entity.convertIDs(blockIDs, itemIDs);
     }
 
+    copyMaps(world);
+
     return true;
+  }
+
+  private void copyMaps(World world) {
+    //copy world id mapping
+    blockMap.clear();
+    blockMap.addAll(world.blockMap);
+    itemMap.clear();
+    itemMap.addAll(world.itemMap);
+    entityMap.clear();
+    entityMap.addAll(world.entityMap);
+    extraMap.clear();
+    extraMap.addAll(world.extraMap);
   }
 
   public void readInit(int w,int h,int d, World world) {
@@ -177,11 +191,7 @@ public class BluePrint implements SerialClass, SerialCreator {
     bits = new byte[h][];
     blocks2 = new char[h][];
     bits2 = new byte[h][];
-    //copy world id mapping
-    blockMap.addAll(world.blockMap);
-    itemMap.addAll(world.itemMap);
-    entityMap.addAll(world.entityMap);
-    extraMap.addAll(world.extraMap);
+    copyMaps(world);
   }
 
   public void setID(int x,int y,int z, char id) {
