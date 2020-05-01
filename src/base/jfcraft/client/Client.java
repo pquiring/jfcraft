@@ -58,6 +58,7 @@ public class Client {
   public static int ACTION_USE_ITEM = 4;
   public static int ACTION_USE_ENTITY = 5;
   public static int ACTION_USE_TOOL = 6;
+  public static int ACTION_NONE = 7;
 
   //item in hand angle/pos
   public XYZ handAngle = new XYZ(), handPos = new XYZ();

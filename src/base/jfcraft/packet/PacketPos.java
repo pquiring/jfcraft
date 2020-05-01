@@ -247,10 +247,23 @@ public class PacketPos extends Packet {
                 used = client.s1.entity.useTool(client, client.s1);
               }
               if (!used) {
-                used = itembase.useItem(client, client.s1);
+                if (itembase.isTool && client.action[1] == Client.ACTION_IDLE) {
+                  used = itembase.useItem(client, client.s1);
+                }
+                if (itembase.isWeapon && client.action[1] != Client.ACTION_NONE) {
+                  used = itembase.useItem(client, client.s1);
+                }
+                if (itembase.isFood && client.action[1] != Client.ACTION_NONE) {
+                  used = itembase.useItem(client, client.s1);
+                }
+                if (!used) {
+                  client.action[1] = Client.ACTION_NONE;
+                }
               }
             }
-            client.action[1] = Client.ACTION_USE_TOOL;
+            if (client.action[1] == Client.ACTION_IDLE) {
+              client.action[1] = Client.ACTION_USE_TOOL;
+            }
           } else {
             if (!placeBlock(client, server, item)) {
               itembase = Static.items.items[client.player.items[Player.shield_idx].id];
