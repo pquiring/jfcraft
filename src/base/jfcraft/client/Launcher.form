@@ -172,7 +172,7 @@
             <StringItem index="4" value="4G"/>
           </StringArray>
         </Property>
-        <Property name="selectedIndex" type="int" value="2"/>
+        <Property name="selectedIndex" type="int" value="3"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JPanel" name="jPanel1">

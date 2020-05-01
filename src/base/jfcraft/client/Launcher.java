@@ -124,7 +124,7 @@ public class Launcher extends javax.swing.JFrame {
     jLabel3.setText("Memory:");
 
     memory.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "256M", "512M", "1G", "2G", "4G" }));
-    memory.setSelectedIndex(2);
+    memory.setSelectedIndex(3);
 
     html.setEditable(false);
     html.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
@@ -234,7 +234,7 @@ public class Launcher extends javax.swing.JFrame {
           throw new Exception("Unable to find exe");
         }
         JF.copyAll(src, bin);
-        if (false) {
+        if (true) {
           String dllsrc = java_app_home + "/jfnative64.dll";
           String dlldst = Static.getBasePath() + "/jfnative64.dll";
           JF.copyAll(dllsrc, dlldst);
