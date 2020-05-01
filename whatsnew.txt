@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+May 1, 2020 v0.26 released!
+  - many bugs fixed
+  - terrain/biome generation improved
+
 Mar 20, 2020 : v0.26 released!
   - re-release for recent fixes in javaforce
 

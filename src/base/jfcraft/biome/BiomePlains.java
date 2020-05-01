@@ -17,11 +17,11 @@ public class BiomePlains extends BiomeBase {
 
   private static final int TREE_ODDS = 2000;
   private static final int WEEDS_ODDS = 20;
-  private static final int FLOWER_CHUNK_ODDS = 40;
+  private static final int FLOWER_CHUNK_ODDS = 30;
   private static final int FLOWER_BLOCK_ODDS = 25;
   private static final int TALLGRASS_CHUNK_ODDS = 3;
   private static final int TALLGRASS_BLOCK_ODDS = 25;
-  private static final int ANIMAL_CHUNK_ODDS = 20;
+  private static final int ANIMAL_CHUNK_ODDS = 10;
   private static final int ANIMAL_BLOCK_ODDS = 50;
 
   public void build(int x,int y,int z, BiomeData data) {
