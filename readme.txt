@@ -10,11 +10,7 @@ Is not compatible with the official game in anyway.
 Some parts of the game are complete but much is still left to do.
 See todo.txt and bugs.txt for a full list.
 
-The controls are like the original.  Plus a few extras for testing:
- c = toggle flying mode
- r/f = fly up/down (no clipping)
-
-The server includes a VoIP comm system similar to TeamSpeak.
+The server includes a VoIP communication system.
 Hold in the right CTRL key to talk (PTT).
 
 Commands:
