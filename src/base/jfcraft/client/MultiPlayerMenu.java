@@ -37,6 +37,9 @@ public class MultiPlayerMenu extends RenderScreen {
     addButton("Cancel", 266, 390, 226, new Runnable() {public void run() {
       Static.video.setScreen(Static.screens.screens[Client.MAIN]);
     }});
+  }
+
+  public void setup() {
     setFocus(serverAddress);
   }
 
