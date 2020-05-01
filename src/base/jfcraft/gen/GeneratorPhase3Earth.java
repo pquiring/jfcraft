@@ -33,16 +33,14 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
   public void generate(Chunk chunk) {
     this.chunk = chunk;
 
-//    synchronized(chunk.lock) {
-      chunk.needPhase3 = false;
-      chunk.dirty = true;
+    chunk.needPhase3 = false;
+    chunk.dirty = true;
 
-      r.setSeed(chunk.seed);
+    r.setSeed(chunk.seed);
 
-      if (Static.doSteps) smoothSteps();
+    if (Static.doSteps) smoothSteps();
 
-      addStuff();
-//    }
+    addStuff();
   }
   private void setBlock(int x, int y, int z, char id, int dir, int var) {
     if (y < 1) return;  //do not change bedrock

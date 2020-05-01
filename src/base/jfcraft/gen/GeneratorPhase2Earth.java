@@ -51,10 +51,10 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
     r.setSeed(chunk.seed);
 
     if (r.nextInt(20) == 0) {
-   //   addCaves();
+      addCaves();
     }
     if (r.nextInt(1000) == 0) {
-   //   addRavine();
+      addRavine();
     }
     if (r.nextInt(10) == 0 || (chunk.cx == 0 && chunk.cz == 0)) {
       addRoom();
