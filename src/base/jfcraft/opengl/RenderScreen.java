@@ -56,6 +56,18 @@ public abstract class RenderScreen {
   public ArrayList<TextField> fields = new ArrayList<TextField>();
   public ArrayList<ScrollBar> scrolls = new ArrayList<ScrollBar>();
 
+  public Button getButton(int idx) {
+    return buttons.get(idx);
+  }
+
+  public TextField getField(int idx) {
+    return fields.get(idx);
+  }
+
+  public ScrollBar getScrollBar(int idx) {
+    return scrolls.get(idx);
+  }
+
   public static void initStaticGL() {
     //ortho(left, right, bottom, top, near, far)
     orthoItem.ortho(0, 1, 1, 0, 0, 1);

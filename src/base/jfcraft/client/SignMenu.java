@@ -27,7 +27,7 @@ public class SignMenu extends RenderScreen {
     addButton("Done", 56, 390, 400, new Runnable() {public void run() {
       String txt[] = new String[4];
       for(int a=0;a<4;a++) {
-        txt[a] = fields.get(a).getText();
+        txt[a] = getField(a).getText();
       }
       Static.client.clientTransport.setSign(txt);
       Static.client.clientTransport.leaveMenu();
@@ -42,9 +42,9 @@ public class SignMenu extends RenderScreen {
 
   public void setup() {
     for(int a=0;a<4;a++) {
-      fields.get(a).setText("");
+      getField(a).setText("");
     }
-    setFocus(fields.get(0));
+    setFocus(getField(0));
     setCursor(true);
     Static.inGame = false;
   }
