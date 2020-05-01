@@ -30,6 +30,7 @@ public class CreateWorldMenu extends RenderScreen {
   public void setup() {
     initTxt = "New World";
     setFocus(world_name);
+    randomSeed();
   }
 
   public void init() {
