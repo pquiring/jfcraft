@@ -30,6 +30,7 @@ public class Coords implements Cloneable {
   public BlockBase block;
   public EntityBase entity;
   public Chunk chunk;
+  public float length;
   public void copy(Coords in) {
     x = in.x;
     y = in.y;
@@ -54,6 +55,7 @@ public class Coords implements Cloneable {
     block = in.block;
     entity = in.entity;
     chunk = in.chunk;
+    length = in.length;
   }
   /** Moves to adjacent coords based on 'side'. */
   public void adjacentBlock() {

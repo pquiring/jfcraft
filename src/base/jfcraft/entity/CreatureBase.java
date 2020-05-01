@@ -160,6 +160,7 @@ public abstract class CreatureBase extends EntityBase {
     int cnt = (int)(reach / Static._1_16);
     boolean ok = false;
     for(int a=0;a<cnt;a++) {
+      c.length = ((float)a) * Static._1_16;
       for(int e=0;e<elist.length;e++) {
         EntityBase entity = elist[e];
         if (entity.uid == this.uid) continue;
@@ -174,6 +175,9 @@ public abstract class CreatureBase extends EntityBase {
       }
       world.getBlock(dim,px,py,pz,c);
       if (c.block.id == tid) {
+        ok = true;
+        break;
+      } else if (c.block.isBlocks2 && tid == -2) {
         ok = true;
         break;
       } else if (!c.block.canSelect) {

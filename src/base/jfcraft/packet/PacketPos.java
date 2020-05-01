@@ -219,6 +219,14 @@ public class PacketPos extends Packet {
     }
     else if (b2) {
       client.player.findBlock(-1, BlockHitTest.Type.SELECTION, client.player.vehicle, client.s1);
+      Item item = client.player.items[client.player.activeSlot];
+      ItemBase itembase = Static.items.items[item.id];
+      if (itembase.canUseLiquids) {
+        client.player.findBlock(-2, BlockHitTest.Type.SELECTION, client.player.vehicle, client.s2);
+        if (client.s2.block != null) {
+          client.s1.copy(client.s2);
+        }
+      }
       if (client.s1.block != null || client.s1.entity != null) {
         if (client.s1.block != null && client.s1.block.canUse && !sneak && client.action[1] == Client.ACTION_IDLE) {
           //useBlock();
@@ -230,16 +238,8 @@ public class PacketPos extends Packet {
           client.action[1] = Client.ACTION_USE_ENTITY;
           client.s1.entity.useEntity(client, sneak);
         } else if (client.action[1] == Client.ACTION_PLACE || client.action[1] == Client.ACTION_IDLE || client.action[1] == Client.ACTION_USE_TOOL) {
-          Item item = client.player.items[client.player.activeSlot];
-          ItemBase itembase = Static.items.items[item.id];
-          if (itembase.isTool || itembase.isWeapon/*bow*/ || itembase.isFood) {
+          if (itembase.isTool || itembase.isWeapon || itembase.isFood) {
             //useTool();
-            if (itembase.canUseWater) {
-              client.player.findBlock(Blocks.WATER, BlockHitTest.Type.SELECTION, client.player.vehicle, client.s2);
-              if (client.s2.block != null) {
-                client.s1.copy(client.s2);
-              }
-            }
             synchronized(client.lock) {
               if (client.s1.block != null && client.action[1] == Client.ACTION_IDLE) {
                 used = client.s1.block.useTool(client, client.s1);

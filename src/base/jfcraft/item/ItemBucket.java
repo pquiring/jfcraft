@@ -24,7 +24,7 @@ public class ItemBucket extends ItemBase {
     return this;
   }
   public ItemBucket setCanUseWater() {
-    canUseWater = true;
+    canUseLiquids = true;
     return this;
   }
   public void getIDs(World world) {
@@ -33,6 +33,7 @@ public class ItemBucket extends ItemBase {
     }
   }
   public boolean useItem(Client client, Coords c) {
+    if (c == null) return false;
     byte slot = (byte)client.player.activeSlot;
     if (filledid != Blocks.AIR) {
       c.otherSide();
