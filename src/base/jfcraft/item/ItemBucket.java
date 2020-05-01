@@ -23,6 +23,10 @@ public class ItemBucket extends ItemBase {
     this.filled = filled;
     return this;
   }
+  public ItemBucket setCanUseWater() {
+    canUseWater = true;
+    return this;
+  }
   public void getIDs(World world) {
     if (filled != null) {
       filledid = world.getBlockID(filled);
@@ -30,10 +34,10 @@ public class ItemBucket extends ItemBase {
   }
   public boolean useItem(Client client, Coords c) {
     byte slot = (byte)client.player.activeSlot;
-    c.dir = A;
-    c.adjacentBlock();
-    c.block = c.chunk.getBlock(c.gx, c.gy, c.gz);
     if (filledid != Blocks.AIR) {
+      c.otherSide();
+      c.adjacentBlock();
+      c.block = c.chunk.getBlock(c.gx, c.gy, c.gz);
       //place contents @ coords
       if (c.chunk.setBlockIfEmpty(c.gx, c.gy, c.gz, filledid, 0)) {
         client.player.items[client.player.activeSlot].id = Items.BUCKET;
@@ -43,6 +47,7 @@ public class ItemBucket extends ItemBase {
         return true;
       }
     } else {
+      if (c.block == null) return false;
       if (c.block.id == Blocks.WATER) {
         if (c.chunk.clearBlockIf2(c.gx,c.gy,c.gz,Blocks.WATER)) {
           //replace item with BUCKET_WATER

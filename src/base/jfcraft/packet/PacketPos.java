@@ -234,6 +234,12 @@ public class PacketPos extends Packet {
           ItemBase itembase = Static.items.items[item.id];
           if (itembase.isTool || itembase.isWeapon/*bow*/ || itembase.isFood) {
             //useTool();
+            if (itembase.canUseWater) {
+              client.player.findBlock(Blocks.WATER, BlockHitTest.Type.SELECTION, client.player.vehicle, client.s2);
+              if (client.s2.block != null) {
+                client.s1.copy(client.s2);
+              }
+            }
             synchronized(client.lock) {
               if (client.s1.block != null && client.action[1] == Client.ACTION_IDLE) {
                 used = client.s1.block.useTool(client, client.s1);

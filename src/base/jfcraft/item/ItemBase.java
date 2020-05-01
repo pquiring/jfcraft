@@ -32,6 +32,7 @@ public class ItemBase implements RenderSource {
   public boolean isDamaged, isTool, isArmor, isFood, isVar, isDir, isDirXZ, isDirFace, isWeapon;
   public boolean isFuel, canBake, isSeeds, isGreen;
   public boolean canPlace, canPlaceInWater;
+  public boolean canUseWater;
   public boolean cantGive;  //do not give with /give command
   public int tool, weapon, armor, heat;
   public String bakeName;

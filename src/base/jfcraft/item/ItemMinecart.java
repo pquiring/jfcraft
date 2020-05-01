@@ -14,7 +14,6 @@ public class ItemMinecart extends ItemBase {
   public ItemMinecart(String id, String names[], String texture[]) {
     super(id,names,texture);
     canPlace = true;
-    canPlaceInWater = true;
   }
   public boolean place(Client client, Coords c) {
     Minecart e = new Minecart();
