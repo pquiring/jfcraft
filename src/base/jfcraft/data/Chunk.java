@@ -515,6 +515,13 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     char oldid;
     synchronized(lock) {
       if (newBlock.isBlocks2) {
+        if (blocks[y] != null) {
+          //check if there is solid block in layer 1
+          BlockBase oldBlock = Static.blocks.blocks[blocks[y][p]];
+          if (oldBlock.isSolid) {
+            return false;
+          }
+        }
         if (blocks2[y] == null) {
           blocks2[y] = new char[16*16];
           bits2[y] = new byte[16*16];
