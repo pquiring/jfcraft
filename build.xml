@@ -2,6 +2,7 @@
   <description>jfcraft</description>
   <!-- set global properties for this build -->
   <property name="app" value="jfcraft-client"/>
+  <property name="apptype" value="c"/>
   <property name="home" location="../.."/>
   <property name="ico" value="jfcraft.ico"/>
   <property name="jre" location="${home}/jre_base_desktop"/>
@@ -11,6 +12,7 @@
   <property name="version" value="0.27"/>
 
   <property name="project2" value="build-server"/>
+  <property name="project3" value="build-launcher"/>
 
   <import file="${home}/base.xml"/>
 

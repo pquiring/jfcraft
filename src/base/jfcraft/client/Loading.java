@@ -23,6 +23,7 @@ public class Loading extends RenderScreen {
   }
 
   public void setup() {
+    Static.log("Loading.setup()");
     new Thread() {public void run() {load();}}.start();
   }
 
@@ -73,6 +74,7 @@ public class Loading extends RenderScreen {
   private boolean done = false;
 
   private void load() {
+    Static.initClientThread("Loading", true, false);
     Static.registerAll(true);
     done = true;
   }

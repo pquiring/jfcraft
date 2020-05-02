@@ -33,7 +33,10 @@ public class Assets {
   }
 
   public static boolean addZip(String filename) {
-    if (!new File(filename).exists()) return false;
+    if (!new File(filename).exists()) {
+      Static.log("Plugin not found:" + filename);
+      return false;
+    }
     Static.log("addZIP:" + filename);
     try {
       ZipFile zf = new ZipFile(filename);

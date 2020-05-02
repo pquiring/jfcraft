@@ -58,7 +58,8 @@ public class Main implements GLWindow.KeyEvents, GLWindow.MouseEvents, GLWindow.
   }
 
   private void initGame() {
-    new RenderEngine(new Loading()).init();
+    new RenderEngine().init();
+    Static.video.setScreen(new Loading());
   }
 
   private void loop() {

@@ -221,57 +221,29 @@ public class Launcher extends javax.swing.JFrame {
     Settings.current.player = player.getText();
     Settings.save();
     try {
-      String cfg = Static.getBasePath() + "/jfcraft-client.cfg";
-      String bin;
-      if (JF.isWindows()) {
-        java_app_home = System.getenv("java.app.home");
-        if (java_app_home == null) {
-          java_app_home = System.getProperty("user.dir");
-        }
-        bin = Static.getBasePath() + "/jfcraft-client.exe";
-        String src = java_app_home + "/jfcraft-client.exe";
-        if (!new File(src).exists()) {
-          throw new Exception("Unable to find exe");
-        }
-        JF.copyAll(src, bin);
-        if (true) {
-          String dllsrc = java_app_home + "/jfnative64.dll";
-          String dlldst = Static.getBasePath() + "/jfnative64.dll";
-          JF.copyAll(dllsrc, dlldst);
-        }
-      } else {
-        bin = Static.getBasePath() + "/jfcraft-client";
-        JF.copyAll("/usr/bin/jfcraft-client", bin);
-      }
-      StringBuilder opts = new StringBuilder();
-      opts.append("OPTIONS=-Xmx" + memory.getSelectedItem() + "\r\n");
-      if (JF.isWindows()) {
-        opts.append("JAVA_HOME=" + System.getProperty("java.home") + "\r\n");
-      }
-      StringBuilder cp = new StringBuilder();
-      cp.append(getJar("javaforce.jar"));
-      cp.append(File.pathSeparator);
-      cp.append(getJar("jfcraft.jar"));
+      ArrayList<String> env = new ArrayList<String>();
+      StringBuilder classpath = new StringBuilder();
+      classpath.append("CLASSPATH=");
       int rows = pluginsModel.getRowCount();
+      boolean first = true;
       for(int row=0;row<rows;row++) {
         if ((Boolean)pluginsModel.getValueAt(row,0)) {
-          cp.append(File.pathSeparator + plugins[row][0]);
+          if (first) {
+            first = false;
+          } else {
+            classpath.append(File.pathSeparator);
+          }
+          classpath.append(plugins[row][0]);
         }
       }
-      opts.append("CLASSPATH=" + cp.toString().replaceAll("\\\\", "/") + "\r\n");
-      opts.append("MAINCLASS=jfcraft/client/Main\r\n");
-      FileOutputStream fos = new FileOutputStream(cfg);
-      fos.write(opts.toString().getBytes());
-      fos.close();
-      //patch executable with Java options in .cfg file
-      if (JF.isWindows()) {
-        javaforce.utils.WinPE.main(new String[] {bin, cfg});
-      } else {
-        javaforce.utils.ResourceManager.main(new String[] {bin, cfg});
-        File fbin = new File(bin);
-        fbin.setExecutable(true);
+      String keys[] = System.getenv().keySet().toArray(new String[0]);
+      for(int a=0;a<keys.length;a++) {
+        String key = keys[a];
+        if (key.equals("CLASSPATH")) continue;
+        env.add(key + "=" + System.getenv(key));
       }
-      Runtime.getRuntime().exec(bin, null, new File(System.getProperty("user.dir")));
+      env.add(classpath.toString());
+      Runtime.getRuntime().exec(new String[] {"jfcraft-client"}, env.toArray(new String[env.size()]));
       System.exit(0);
     } catch (Exception e) {
       Static.log(e);

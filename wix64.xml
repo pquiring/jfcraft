@@ -34,6 +34,7 @@
         <File Id="whatsnew.txt" Source="whatsnew.txt"/>
         <File Id="jfcraft_client.exe" Source="jfcraft-client.exe"/>
         <File Id="jfcraft_server.exe" Source="jfcraft-server.exe"/>
+        <File Id="jfcraft_launcher.exe" Source="jfcraft-launcher.exe"/>
         <File Id="title.png" Source="title.png"/>
         <File Id="jfnative64.dll" Source="jfnative64.dll"/>
         <File Id="jfcraft.ico" Source="jfcraft.ico"/>
@@ -53,7 +54,7 @@
 <!-- Change Id to ApplicationProgramsFolder if you want Shortcut in its own folder -->
     <DirectoryRef Id="ProgramMenuFolder">
       <Component Id="ApplicationShortcutClient" Guid="{5C4535A0-6850-4D47-9B9C-C2DB05BC0D12}">
-        <Shortcut Id="ApplicationStartMenuShortcutClient" Name="jfCraft" Description="Java Game" Target="[APPLICATIONROOTDIRECTORY]jfcraft-client.exe"
+        <Shortcut Id="ApplicationStartMenuShortcutClient" Name="jfCraft" Description="Game" Target="[APPLICATIONROOTDIRECTORY]jfcraft-launcher.exe"
           WorkingDirectory="APPLICATIONROOTDIRECTORY"/>
 <!-- Use the following if you want Shortcut in its own folder -->
 <!--        <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/> -->
@@ -65,7 +66,7 @@
 <!-- Change Id to ApplicationProgramsFolder if you want Shortcut in its own folder -->
     <DirectoryRef Id="ProgramMenuFolder">
       <Component Id="ApplicationShortcutServer" Guid="{79DFA284-8E37-479B-924D-D2B55751050E}">
-        <Shortcut Id="ApplicationStartMenuShortcutServer" Name="jfCraft (Server)" Description="Java Game" Target="[APPLICATIONROOTDIRECTORY]jfcraft-server.exe"
+        <Shortcut Id="ApplicationStartMenuShortcutServer" Name="jfCraft (Server)" Description="Game" Target="[APPLICATIONROOTDIRECTORY]jfcraft-server.exe"
           WorkingDirectory="APPLICATIONROOTDIRECTORY"/>
 <!-- Use the following if you want Shortcut in its own folder -->
 <!--        <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/> -->

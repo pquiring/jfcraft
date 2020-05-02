@@ -20,9 +20,13 @@ public class PluginLoader {
 
   /** Load plugins. */
   public static void loadPlugins() {
-    String Dplugins = System.getProperty("java.class.path");
-    if (Dplugins == null) return;
-    String jars[] = Dplugins.split(File.pathSeparator);
+    String classpath = System.getProperty("java.class.path");
+    if (classpath == null) {
+      Static.log("Error:java.class.path==null");
+      System.exit(0);
+    }
+    Static.log("CLASSPATH=" + classpath);
+    String jars[] = classpath.split(File.pathSeparator);
     //load base assets
     if (!Assets.addZip("base.zip")) {  //faithfull texture pack
       JFAWT.showError("Error", "Failed to load base.zip");
@@ -33,13 +37,15 @@ public class PluginLoader {
       System.exit(0);
     }
     for(int a=0;a<jars.length;a++) {
-      if (jars[a].equals("javaforce.jar")) continue;
-      if (jars[a].equals("jfcraft.jar")) continue;
-      if (jars[a].equals("swt.jar")) continue;
-      if (jars[a].equals("lwjgl.jar")) continue;
+      if (jars[a].endsWith("javaforce.jar")) continue;
+      if (jars[a].endsWith("jfcraft.jar")) continue;
       try {
         ZipFile zf = new ZipFile(jars[a]);
         ZipEntry ze = zf.getEntry("plugin.properties");
+        if (ze == null) {
+          Static.log("Plugin missing plugin.properties:" + jars[a]);
+          continue;
+        }
         InputStream is = zf.getInputStream(ze);
         Properties props = new Properties();
         props.load(is);
@@ -56,7 +62,6 @@ public class PluginLoader {
 //        plugin.registerPlugin();
       } catch (Exception e) {
         Static.log(e);
-        continue;
       }
     }
   }

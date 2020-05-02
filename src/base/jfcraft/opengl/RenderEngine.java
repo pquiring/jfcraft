@@ -28,9 +28,7 @@ public class RenderEngine {
 
   public int fragShader, vertexShader, program;
 
-  public RenderEngine(RenderScreen initScreen) {
-    screen = initScreen;
-    screen.setup();
+  public RenderEngine() {
     Static.video = this;
     RenderScreen.initStaticGL();
   }
@@ -56,7 +54,7 @@ public class RenderEngine {
   }
 
   public void init() {
-    Static.initClientThread("init (EDT)", true, false);  //actually EDT
+    Static.initClientThread("EventThread", true, false);  //actually EDT
 
     Static.log("JVM.version=" + System.getProperty("java.version"));
     Static.log("JVM.vendor=" + System.getProperty("java.vendor"));
