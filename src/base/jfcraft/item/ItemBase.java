@@ -304,9 +304,9 @@ public class ItemBase implements RenderSource {
     //action, xAngle, yAngle, zAngle, xPos, yPos, zPos, steps, nextIdx, hold
     {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //idle
     //move forward and tilt forward, then move down a bit and return
-    {ANI_ADD ,-10,0,0 ,0,0,-0.5f ,5,3,0},  //b1
-    {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //b2 (not used)
-    {ANI_ADD ,10,0,0 ,0,0,0.5f ,5,0,0},  //b1 p2
+    {ANI_ADD ,0,0,15 ,0,0,-0.1f ,3,3,0},  //b1
+    {ANI_SET ,0,0,0  ,0,0,0     ,1,0,0},  //b2 (not used)
+    {ANI_ADD ,0,0,15 ,0,0,0     ,3,0,0},  //b1 p2
   };
 
   private static float[][] aniDefend = {
