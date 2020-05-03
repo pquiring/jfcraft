@@ -828,16 +828,29 @@ public class Game extends RenderScreen {
     data.reset();
 
     ItemBase itembase = Static.items.items[item.id];
-
-    itembase.bindTexture();
+    boolean isItem = Static.isItem(itembase.id) && !itembase.renderAsEntity;
+    RenderSource voxel = null;
+    if (isItem) {
+      int var = 0;
+      if (itembase.isVar) {
+        var = item.var;
+      }
+      voxel = itembase.voxel[var];
+      voxel.bindTexture();
+    } else {
+      itembase.bindTexture();
+    }
 
     itembase.setViewMatrixSelf(left, l3);
 
-    data.var[X] = item.var;
-    data.hand = left ? LEFT : RIGHT;
-    itembase.prepRender(data);
-
-    itembase.render();
+    if (isItem) {
+      voxel.render();
+    } else {
+      data.var[X] = item.var;
+      data.hand = left ? LEFT : RIGHT;
+      itembase.prepRender(data);
+      itembase.render();
+    }
   }
 
   private static GLMatrix handMat = new GLMatrix();
@@ -852,7 +865,7 @@ public class Game extends RenderScreen {
     handMat.addRotate4(Static.client.handAngle.z, 0, 0, 1);
     handMat.addTranslate2(-hand.org.x, -hand.org.y, -hand.org.z);
     handMat.addTranslate(-0.5f,-2f,0);
-    handMat.addTranslate(HumaniodBase.rightHandPos.x, HumaniodBase.rightHandPos.y, HumaniodBase.rightHandPos.z);
+    handMat.addTranslate(HumaniodBase.blockRightHandPos.x, HumaniodBase.blockRightHandPos.y, HumaniodBase.blockRightHandPos.z);
     handMat.addTranslate(Static.client.handPos.x, Static.client.handPos.y, Static.client.handPos.z);
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, handMat.m);  //view matrix
     Static.entities.entities[Entities.PLAYER].bindTexture();

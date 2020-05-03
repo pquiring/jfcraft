@@ -23,7 +23,7 @@ public abstract class CreatureBase extends EntityBase {
   public float hunger;  //20 = full
   public float saturation;  //20 = full
   public float exhaustion;  //when >= 4.0 : -1 from saturation or food
-  public int blockCount;
+  public int blockCount;  //raising shield counter
   public boolean blocking;  //blocking with a shield
 
   public VehicleBase vehicle;

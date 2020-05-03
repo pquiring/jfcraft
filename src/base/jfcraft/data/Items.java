@@ -805,15 +805,22 @@ public class Items {
         vars = item.names.length;
       }
       item.bufs = new RenderDest[vars];
-      for(int b=0;b<vars;b++) {
+      item.voxel = new Voxel[vars];
+      for(int var=0;var<vars;var++) {
         try {
-          item.bufs[b] = new RenderDest(Chunk.buffersCount);
-          item.buildBuffers(item.bufs[b], ItemBase.data);
-          item.bufs[b].getBuffers(0).copyBuffers();
+          //create item object for inventory screens
+          item.bufs[var] = new RenderDest(1);
+          item.buildBuffers(item.bufs[var], ItemBase.data);
+          item.bufs[var].getBuffers(0).copyBuffers();
+          //create item object for rendering in world (voxels)
+          item.voxel[var] = new Voxel(item, var);
+          item.voxel[var].buildBuffers(item.voxel[var].dest, ItemBase.data);
+          item.voxel[var].dest.getBuffers(0).copyBuffers();
         } catch (Exception e) {
           e.printStackTrace();
         }
       }
+      ItemBase.data.clr = null;
     }
   }
 }

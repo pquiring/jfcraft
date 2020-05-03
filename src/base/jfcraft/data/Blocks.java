@@ -29,6 +29,7 @@ public class Blocks {
   public Texture stitched;  //main stitched texture (including animated textures and cracks)
   public Texture cracks;  //cracks
   public SubTexture subcracks[];
+  public BlockBase solid;
 
   public boolean valid;
 
@@ -36,8 +37,9 @@ public class Blocks {
     return Static.server.world.getBlockID(name);
   }
 
-  public void registerBlock(BlockBase block) {
+  public BlockBase registerBlock(BlockBase block) {
     regBlocks[blockCount++] = block;
+    return block;
   }
 
   public BlockBase getBlock(int id) {
@@ -773,7 +775,7 @@ public class Blocks {
 
     registerBlock(new BlockSign("SIGN", new String[] {"Sign"}, new String[] {"oak_planks"}).setHardness(1f, TOOL_PICKAXE, CLS_NONE));
 
-    registerBlock(new BlockOpaque("SOLID",  //jfasset
+    solid = registerBlock(new BlockOpaque("SOLID",  //jfasset
       new String[] {
         "Solid Block White",
         "Solid Block Ornage",
@@ -1074,7 +1076,7 @@ public class Blocks {
       }
       block.bufs = new RenderDest[vars];
       for(int b=0;b<vars;b++) {
-        block.bufs[b] = new RenderDest(Chunk.buffersCount);
+        block.bufs[b] = new RenderDest(Chunk.DEST_COUNT);
         if (block.renderAsItem) {
           block.addFaceInvItem(block.bufs[b].getBuffers(0), b, block.isGreen);
           block.bufs[b].preferedIdx = 0;

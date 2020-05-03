@@ -139,13 +139,17 @@ public abstract class HumaniodBase extends CreatureBase {
   }
 
   private static RenderData render_data = new RenderData();
-  private static RenderDest render_dest = new RenderDest(Chunk.buffersCount);
+  private static RenderDest render_dest = new RenderDest(Chunk.DEST_COUNT);
 
-  public static final XYZ rightHandAngle = new XYZ(35.0f, 45.0f, +5f);
-  public static final XYZ rightHandPos = new XYZ(3, -3, -5.0f);
+  public static final XYZ blockRightHandAngle = new XYZ(0.0f, -45.0f, 25f);
+  public static final XYZ blockRightHandPos = new XYZ(3f, -4f, -5.0f);
+  public static final XYZ blockLeftHandAngle = new XYZ(0.0f, -45.0f, -25f);
+  public static final XYZ blockLeftHandPos = new XYZ(-3f, -4f, -5.0f);
 
-  public static final XYZ leftHandAngle = new XYZ(35.0f, 45.0f, -5f);
-  public static final XYZ leftHandPos = new XYZ(6, -11, -5.0f);
+  public static final XYZ itemRightHandAngle = new XYZ(-35.0f, -45.0f, 25f);
+  public static final XYZ itemRightHandPos = new XYZ(3f, -3.5f, -5.0f);
+  public static final XYZ itemLeftHandAngle = new XYZ(90f, -90.0f, 0f);
+  public static final XYZ itemLeftHandPos = new XYZ(6f, -10f, -5.0f);
 
   public void renderItemInHand(Item item, float light, boolean left) {
     if (item == null || item.count == 0) return;

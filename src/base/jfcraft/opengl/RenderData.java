@@ -19,6 +19,7 @@ public class RenderData {
 
   public boolean isDir, isDirXZ;
   public boolean isRed, isGreen, isBlue;
+  public float clr[];  //custom color
 
   public boolean active;
 

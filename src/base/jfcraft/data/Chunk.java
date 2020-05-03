@@ -76,7 +76,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   public static final int DEST_NORMAL = 0;  //stitched block
   public static final int DEST_ALPHA = 1;  //stitched block (ALPHA)
   public static final int DEST_TEXT = 2;  //ASCII text
-  public static final int buffersCount = 3; //DEST_NORMAL + DEST_ALPHA + DEST_TEXT
+  public static final int DEST_COUNT = 3; //DEST_NORMAL + DEST_ALPHA + DEST_TEXT
 
   public World world;
   public Chunks chunks;
@@ -105,7 +105,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
 
   /** Create client side objects. */
   public void createObjects() {
-    dest = new RenderDest(buffersCount);
+    dest = new RenderDest(DEST_COUNT);
     mat = new GLMatrix();
     mat.setIdentity();
     mat.setTranslate(cx * 16.0f, 0, cz * 16.0f);
@@ -113,7 +113,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
 
   public void copyBuffers() {
 //    System.out.println("copyBuffers:" + cx + "," + cz);
-    for(int a=0;a<buffersCount;a++) {
+    for(int a=0;a<DEST_COUNT;a++) {
       if (!dest.exists(a)) continue;
       dest.getBuffers(a).copyBuffers();
     }
@@ -804,7 +804,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       RenderData data = new RenderData();
       data.chunk = this;
       //reset all objects
-      for(int a=0;a<buffersCount;a++) {
+      for(int a=0;a<DEST_COUNT;a++) {
         if (!dest.exists(a)) continue;
         dest.getBuffers(a).reset();
       }

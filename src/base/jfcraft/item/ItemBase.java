@@ -48,6 +48,7 @@ public class ItemBase implements RenderSource {
   public boolean renderAsEntity;
   public int entityID;
   public int varMask = 0xf;
+  public Voxel voxel[];
 
   //armor info
   public Texture armorTextures[];
@@ -172,11 +173,13 @@ public class ItemBase implements RenderSource {
     float y2 = 1;
     obj.addFace2D(x1,y1,x2,y2,tx1,ty1,tx2,ty2,green ? Static.green : Static.white);
     //add face for viewing in hand
+/*
     x1 = -0.5f;
     y1 = 1.0f;
     x2 = 0.5f;
     y2 = 0.0f;
     obj.addFace2D(x1,y1,x2,y2,tx1,ty1,tx2,ty2,green ? Static.green : Static.white);
+*/
   }
 
   /** Add face for item as WorldItem. */
@@ -560,53 +563,69 @@ public class ItemBase implements RenderSource {
 
     if (Static.isBlock(id)) {
       if (left) {
-        itemView.addRotate(HumaniodBase.leftHandAngle.x, 1, 0, 0);
-        itemView.addRotate(HumaniodBase.leftHandAngle.y, 0, 1, 0);
+        itemView.addRotate(HumaniodBase.blockLeftHandAngle.x, 1, 0, 0);
+        itemView.addRotate(HumaniodBase.blockLeftHandAngle.y, 0, 1, 0);
       } else {
-        itemView.addRotate(HumaniodBase.rightHandAngle.x, 1, 0, 0);
-        itemView.addRotate(HumaniodBase.rightHandAngle.y, 0, 1, 0);
+        itemView.addRotate(HumaniodBase.blockRightHandAngle.x, 1, 0, 0);
+        itemView.addRotate(HumaniodBase.blockRightHandAngle.y, 0, 1, 0);
       }
 //      handMat.addRotate(baseHandAngle.z, 0, 0, 1);
       itemView.addTranslate(-0.5f, -0.5f, 0);
     }
     if (left) {
-      itemView.addTranslate(HumaniodBase.leftHandPos.x, HumaniodBase.leftHandPos.y, HumaniodBase.leftHandPos.z);
+      itemView.addTranslate(HumaniodBase.blockLeftHandPos.x, HumaniodBase.blockLeftHandPos.y, HumaniodBase.blockLeftHandPos.z);
     } else {
-      itemView.addTranslate(HumaniodBase.rightHandPos.x, HumaniodBase.rightHandPos.y, HumaniodBase.rightHandPos.z);
+      itemView.addTranslate(HumaniodBase.blockRightHandPos.x, HumaniodBase.blockRightHandPos.y, HumaniodBase.blockRightHandPos.z);
     }
 
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, itemView.m);  //view matrix
   }
 
   public void setViewMatrixSelf(boolean left, GLVector3 l3) {
+    boolean isBlock = Static.isBlock(id);
     itemView.setIdentity();
 
-    if (left) {
-      itemView.addRotate(-90, 0, 1, 0);
-      itemView.addRotate(90, 1, 0, 0);
-      itemView.addScale(10, 10, 10);
-    } else {
-      //TODO : move these into HumaniodBase entity instance (arg) (amimated ang)
-      itemView.addRotate(Static.client.handAngle.x, 1, 0, 0);
-      itemView.addRotate(Static.client.handAngle.y, 0, 1, 0);
-      itemView.addRotate(Static.client.handAngle.z, 0, 0, 1);
+    itemView.addTranslate(-0.5f, -0.5f, -0.5f);  //center block/item at 0,0,0
+    if (!left) {
+      //TODO : move these into HumaniodBase entity instance (animated ang)
+      itemView.addRotate4(Static.client.handAngle.x, 1, 0, 0);
+      itemView.addRotate4(Static.client.handAngle.y, 0, 1, 0);
+      itemView.addRotate4(Static.client.handAngle.z, 0, 0, 1);
     }
 
-    if (Static.isBlock(id)) {
+    if (isBlock) {
+      itemView.addScale(2, 2, 2);
       if (left) {
-        itemView.addRotate(HumaniodBase.leftHandAngle.x, 1, 0, 0);
-        itemView.addRotate(HumaniodBase.leftHandAngle.y, 0, 1, 0);
+        itemView.addRotate4(HumaniodBase.blockLeftHandAngle.x, 1, 0, 0);
+        itemView.addRotate4(HumaniodBase.blockLeftHandAngle.y, 0, 1, 0);
+        itemView.addRotate4(HumaniodBase.blockLeftHandAngle.z, 0, 0, 1);
       } else {
-        itemView.addRotate(HumaniodBase.rightHandAngle.x, 1, 0, 0);
-        itemView.addRotate(HumaniodBase.rightHandAngle.y, 0, 1, 0);
+        itemView.addRotate4(HumaniodBase.blockRightHandAngle.x, 1, 0, 0);
+        itemView.addRotate4(HumaniodBase.blockRightHandAngle.y, 0, 1, 0);
+        itemView.addRotate4(HumaniodBase.blockRightHandAngle.z, 0, 0, 1);
       }
-//      handMat.addRotate(baseHandAngle.z, 0, 0, 1);
-      itemView.addTranslate(-0.5f, -0.5f, 0);
-    }
-    if (left) {
-      itemView.addTranslate(HumaniodBase.leftHandPos.x, HumaniodBase.leftHandPos.y, HumaniodBase.leftHandPos.z);
+      if (left) {
+        itemView.addTranslate(HumaniodBase.blockLeftHandPos.x, HumaniodBase.blockLeftHandPos.y, HumaniodBase.blockLeftHandPos.z);
+      } else {
+        itemView.addTranslate(HumaniodBase.blockRightHandPos.x, HumaniodBase.blockRightHandPos.y, HumaniodBase.blockRightHandPos.z);
+      }
     } else {
-      itemView.addTranslate(HumaniodBase.rightHandPos.x, HumaniodBase.rightHandPos.y, HumaniodBase.rightHandPos.z);
+      if (left) {
+        itemView.addScale(10, 10, 10);
+        itemView.addRotate4(HumaniodBase.itemLeftHandAngle.x, 1, 0, 0);
+        itemView.addRotate4(HumaniodBase.itemLeftHandAngle.y, 0, 1, 0);
+        itemView.addRotate4(HumaniodBase.itemLeftHandAngle.z, 0, 0, 1);
+      } else {
+        itemView.addScale(2, 2, 2);
+        itemView.addRotate4(HumaniodBase.itemRightHandAngle.x, 1, 0, 0);
+        itemView.addRotate4(HumaniodBase.itemRightHandAngle.y, 0, 1, 0);
+        itemView.addRotate4(HumaniodBase.itemRightHandAngle.z, 0, 0, 1);
+      }
+      if (left) {
+        itemView.addTranslate(HumaniodBase.itemLeftHandPos.x, HumaniodBase.itemLeftHandPos.y, HumaniodBase.itemLeftHandPos.z);
+      } else {
+        itemView.addTranslate(HumaniodBase.itemRightHandPos.x, HumaniodBase.itemRightHandPos.y, HumaniodBase.itemRightHandPos.z);
+      }
     }
     //now apply hand animation
     if (left) {

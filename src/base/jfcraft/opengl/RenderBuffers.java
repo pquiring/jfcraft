@@ -169,7 +169,11 @@ public class RenderBuffers implements Cloneable {
       float clr[] = {0,0,0.5f + (data.temp / 200.0f)};
       addColor(clr);
     } else {
-      addColor(Static.white);
+      if (data.clr != null) {
+        addColor(data.clr);
+      } else {
+        addColor(Static.white);
+      }
     }
   }
   public void addColor(float rgb[]) {
