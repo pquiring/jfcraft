@@ -39,7 +39,7 @@ public class ItemSeeds extends ItemBase {
     c.adjacentBlock();
     //place seeds
     c.chunk.setBlockIfEmpty(c.gx,c.gy,c.gz,seedPlantedID,0);
-    Static.server.broadcastSetBlock(c.chunk.dim,c.x,c.y,c.z,id,0);
+    Static.server.broadcastSetBlock(c.chunk.dim,c.x,c.y,c.z,seedPlantedID,0);
     return true;
   }
 }
