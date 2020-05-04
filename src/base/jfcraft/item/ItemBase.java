@@ -286,6 +286,17 @@ public class ItemBase implements RenderSource {
   private static final float ANI_SET = 0f;
   private static final float ANI_ADD = 1f;
 
+  private static final int ANI_ACTION = 0;
+  private static final int ANI_ANG_X = 1;
+  private static final int ANI_ANG_Y = 2;
+  private static final int ANI_ANG_Z = 3;
+  private static final int ANI_POS_X = 4;
+  private static final int ANI_POS_Y = 5;
+  private static final int ANI_POS_Z = 6;
+  private static final int ANI_STEPS = 7;
+  private static final int ANI_NEXT = 8;
+  private static final int ANI_HOLD = 9;
+
   public ItemBase setAniStyle(int b1, int b2) {
     aniStyle1 = b1;
     aniStyle2 = b2;
@@ -314,7 +325,7 @@ public class ItemBase implements RenderSource {
     {ANI_SET ,0,0,0  ,0,0,0 ,1,0,0},  //idle
     //hold in front at 45 deg angle
     {ANI_SET ,0,0,0  ,0,0,0 ,1,0,0},  //b1 (not used)
-    {ANI_SET ,0,0,90 ,0,0,0 ,1,2,1},  //b2 : -1 steps means hold until b2 released
+    {ANI_SET ,0,0,90 ,0,0,0 ,1,2,1},  //b2 : hold until b2 released
   };
 
   private static float[][] aniPlace = {
@@ -332,24 +343,25 @@ public class ItemBase implements RenderSource {
     //move in front and then move up/down quickly
     {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //b1 (not used)
     {ANI_SET ,0,0,0 ,-3f,1f,0 ,1,3,0},  //b2 p1 -> p2
-    {ANI_ADD ,0,0,0 ,0,-0.1f,0 ,5,4,1},  //b2 p2 -> p3
-    {ANI_ADD ,0,0,0 ,0,0.1f,0 ,5,3,1},  //b2 p3 -> p2
+    {ANI_ADD ,0,0,0 ,0,-0.1f,0 ,5,4,0},  //b2 p2 -> p3
+    {ANI_ADD ,0,0,0 ,0,0.1f,0 ,5,3,0},  //b2 p3 -> p2
   };
 
   private static float[][] aniBow = {
     //action, xAngle, yAngle, zAngle, xPos, yPos, zPos, steps, nextIdx, hold
     {ANI_SET ,0,0,0 ,0,0,0 ,1,0,0},  //idle
     //move up to center of screen and stretch
-    {ANI_ADD ,-5,0,0 ,0,0,-0.1f ,10,0,0},  //b1
-    {ANI_ADD ,-5,0,0 ,0,0,-0.1f ,10,0,0},  //b2
+    {ANI_ADD ,0,0,0 ,0,0.05f,0 ,5,0,0},  //b1 (not used)
+    {ANI_ADD ,0,0,0 ,0,0.05f,0 ,5,3,1},  //b2 (hold)
   };
 
-  private int aniIdx, aniStep;
+  private int aniIdx, aniStep, aniButton;
   private float aniData[][];
 
   public void animateReset() {
     aniIdx = 0;
     aniStep = 0;
+    aniButton = 0;
   }
 
   public void animateItem(XYZ handAngle, XYZ handPos, boolean b1, boolean b2, boolean haveTarget, boolean moving) {
@@ -377,6 +389,7 @@ public class ItemBase implements RenderSource {
       if (aniIdx == 0 && b1) {
         aniIdx = 1;
         aniStep = 0;
+        aniButton = 1;
         switch (aniStyle1) {
           case ANI_STYLE_ATTACK: aniData = aniAttack; break;
           case ANI_STYLE_DEFEND: aniData = aniDefend; break;
@@ -388,6 +401,7 @@ public class ItemBase implements RenderSource {
       else if (aniIdx == 0 && b2) {
         aniIdx = 2;
         aniStep = 0;
+        aniButton = 2;
         switch (aniStyle2) {
           case ANI_STYLE_ATTACK: aniData = aniAttack; break;
           case ANI_STYLE_DEFEND: {
@@ -405,6 +419,21 @@ public class ItemBase implements RenderSource {
       }
     } else {
       float ad[] = aniData[aniIdx];
+      float steps = ad[ANI_STEPS];
+      aniStep++;
+      if (aniStep >= steps) {
+        if (ad[ANI_HOLD] == 1f) {
+          //hold until button released
+          switch (aniButton) {
+            case 1: if (!b1) animateReset(); break;
+            case 2: if (!b2) animateReset(); break;
+          }
+          return;
+        } else {
+          aniIdx = (int)ad[ANI_NEXT];
+          aniStep = 0;
+        }
+      }
       float act = ad[0];
       if (act == ANI_SET) {
         itemAngle.x = ad[1];
@@ -420,17 +449,6 @@ public class ItemBase implements RenderSource {
         itemPos.x += ad[4];
         itemPos.y += ad[5];
         itemPos.z += ad[6];
-      }
-      float steps = ad[7];
-      if (ad[9] == 1f && !b2) {
-        aniIdx = 0;
-        aniStep = 0;
-      } else {
-        aniStep++;
-        if (aniStep >= steps) {
-          aniIdx = (int)ad[8];
-          aniStep = 0;
-        }
       }
     }
   }

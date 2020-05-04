@@ -100,6 +100,7 @@ public class Packets implements SerialCreator {
     registerPacket(new PacketEntityArmor(), "ENTITY_ARMOR");
     registerPacket(new PacketWorldItemSetCount(), "WORLDITEM_SET_COUNT");
     registerPacket(new PacketShield(), "SHIELD");
+    registerPacket(new PacketBow(), "BOW");
   }
 
   public static byte RIDING;
@@ -176,6 +177,7 @@ public class Packets implements SerialCreator {
   public static byte SETCRAFT;
   public static byte WORLDITEM_SET_COUNT;
   public static byte SHIELD;
+  public static byte BOW;
 
   public void setID(String name, byte cmd) {
     switch (name) {
@@ -253,6 +255,7 @@ public class Packets implements SerialCreator {
       case "SETCRAFT": SETCRAFT = cmd; break;
       case "WORLDITEM_SET_COUNT": WORLDITEM_SET_COUNT = cmd; break;
       case "SHIELD": SHIELD = cmd; break;
+      case "BOW": BOW = cmd; break;
     }
   }
 

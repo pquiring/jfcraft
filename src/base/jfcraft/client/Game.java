@@ -835,6 +835,11 @@ public class Game extends RenderScreen {
       if (itembase.isVar) {
         var = item.var;
       }
+      if (itembase.id == Items.BOW) {
+        //bowPower max = 40
+        //var max = 4
+        var = Static.client.player.bowPower * (4-1)/ 40;
+      }
       voxel = itembase.voxel[var];
       voxel.bindTexture();
     } else {
