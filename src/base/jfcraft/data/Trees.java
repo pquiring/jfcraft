@@ -19,11 +19,11 @@ public class Trees {
   public static int TREE_JUNGLE = 6;
   public static int TREE_TAIGA = 7;
   public static int CACTUS = 8;
-
   public static int BUSH = 9;
+  public static int KELP = 10;
 
   public Trees() {
-    trees = new TreeBase[10];
+    trees = new TreeBase[11];
     trees[0] = new TreeNormal().setVar(VAR_OAK);
     trees[1] = new TreeNormal().setVar(VAR_SPRUCE);
     trees[2] = new TreeNormal().setVar(VAR_BIRCH);
@@ -34,5 +34,6 @@ public class Trees {
     trees[7] = new TreeNormal().setVar(VAR_OAK).setSnow(true);
     trees[8] = new TreeCactus();
     trees[9] = new TreeBush().setVar(VAR_OAK);
+    trees[10] = new TreeKelp();
   }
 }

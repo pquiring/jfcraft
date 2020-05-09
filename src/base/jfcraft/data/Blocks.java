@@ -206,6 +206,8 @@ public class Blocks {
   public static char RED_STONE;
   public static char WHEAT;
   public static char SOLID;  //solid color block
+  public static char KELPPLANT;
+//  public static char KELPTOP;
 
   public static char TEST_ARROW;
 
@@ -345,6 +347,7 @@ public class Blocks {
     WHEAT = world.getBlockID("WHEAT");
     SOLID = world.getBlockID("SOLID");
     TEST_ARROW = world.getBlockID("TEST_ARROW");
+    KELPPLANT = world.getBlockID("KELPPLANT");
   }
 
   //upper flag (door, tall grass)
@@ -813,6 +816,14 @@ public class Blocks {
         "solid_black"
       }
     ).setVar());
+
+    registerBlock(new BlockKelpPlant("KELPPLANT"
+      , new String[] {"Kelp", "Kelp"}
+      , new String[] {"kelp_plant", "kelp"}
+      )
+      .setGreenAllSides().setDrop("KELP").setDropVar(false)
+      .addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
+    );
 
     registerBlock(new BlockOpaque("TEST_ARROW", new String[] {"test"}, new String[] {"arrow"}).setDir());  //jfasset
 

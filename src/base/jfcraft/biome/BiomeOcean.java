@@ -15,7 +15,7 @@ public class BiomeOcean extends BiomeBase {
     return OCEAN;
   }
 
-  private static final int TREE_ODDS = INF;
+  private static final int TREE_ODDS = 10;
   private static final int FLOWER_CHUNK_ODDS = INF;
   private static final int FLOWER_BLOCK_ODDS = INF;
   private static final int TALLGRASS_CHUNK_ODDS = INF;
@@ -50,8 +50,7 @@ public class BiomeOcean extends BiomeBase {
   }
 
   public TreeBase getTree(int rv) {
-    //TODO : return seaweeds
-    return null;
+    return Static.trees.trees[Trees.KELP];
   }
 
   public int getFlower(int rv) {

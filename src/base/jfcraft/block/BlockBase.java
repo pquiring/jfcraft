@@ -364,7 +364,8 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     if (doDrop) {
       items = drop(c, isVar ? Chunk.getVar(bits) : 0);
     }
-    if (c.block.isBlocks2) {
+    BlockBase block = c.chunk.getBlock(c.gx, c.gy, c.gz);
+    if (block.isBlocks2) {
       c.chunk.clearBlock2(c.gx,c.gy,c.gz);
       Static.server.broadcastClearBlock2(c.chunk.dim,c.x,c.y,c.z);
     } else {
@@ -378,7 +379,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
         WorldItem.create(item, c.chunk.dim, c.x + 0.5f, c.y, c.z + 0.5f, c.chunk, -1);
       }
     }
-    if (c.block != null && c.block.isRedstone) {
+    if (block.isRedstone) {
       c.chunk.delExtra(c, Extras.REDSTONE);
       Static.server.broadcastDelExtra(c.chunk.dim, c.x, c.y, c.z, Extras.REDSTONE, true);
       Static.server.world.powerChanged(c.chunk.dim,c.x,c.y,c.z);

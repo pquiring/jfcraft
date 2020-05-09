@@ -214,6 +214,7 @@ public class Items {
   public static char CHAIN;
   public static char HOPPER_ITEM;
   public static char SHIELD;
+  public static char KELP;
 
   public static void getIDs(World world) {
     IRON_SHOVEL = world.getItemID("iron_shovel");
@@ -378,6 +379,7 @@ public class Items {
     CHAIN = world.getItemID("CHAIN");
     HOPPER_ITEM = world.getItemID("HOPPER_ITEM");
     SHIELD = world.getItemID("SHIELD");
+    KELP = world.getItemID("KELP");
   }
 
   //color (dye) VARs of "COLOR" item (see http://minecraft.gamepedia.com/Dye)
@@ -658,6 +660,7 @@ public class Items {
     registerItem(new ItemBase("HOPPER_ITEM", new String[]{"Hopper"}, new String[]{"hopper"})
       .setCanPlace().setBlockID("HOPPER").setDirFace()
     );
+    registerItem(new ItemKelp("KELP", new String[]{"Kelp"}, new String[]{"kelp"}).setPlant("KELPTOP"));
   }
 
   public Texture getTexture(String name) {
