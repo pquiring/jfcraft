@@ -15,29 +15,24 @@ public class BiomeOcean extends BiomeBase {
     return OCEAN;
   }
 
-  private static final int TREE_ODDS = 10;
-  private static final int FLOWER_CHUNK_ODDS = INF;
-  private static final int FLOWER_BLOCK_ODDS = INF;
-  private static final int TALLGRASS_CHUNK_ODDS = INF;
-  private static final int TALLGRASS_BLOCK_ODDS = INF;
+  private static final int WEEDS_ODDS = 10;
   private static final int ANIMAL_CHUNK_ODDS = INF;
   private static final int ANIMAL_BLOCK_ODDS = INF;
 
   public void build(int x,int y,int z, BiomeData data) {
     if (canPlantOn(x, y, z)) {
-      if (data.b1 % TREE_ODDS == 0) {
-        getTree(data.b2).plant(x, y+1, z, data);
-        return;
-      }
-      if (data.c1 % FLOWER_CHUNK_ODDS == 0) {
-        if (data.b1 % FLOWER_BLOCK_ODDS == 0) {
-          setBlock(x,y+1,z,Blocks.FLOWER,0,getFlower(data.c2));
+      if (data.b1 % WEEDS_ODDS == 0) {
+        int odds = data.b2 % 3;
+        if (odds == 0) {
+          getTree(data.c1).plant(x, y+1, z, data);
           return;
         }
-      }
-      if (data.c2 % TALLGRASS_CHUNK_ODDS == 0) {
-        if (data.b1 % TALLGRASS_BLOCK_ODDS == 0) {
-          setBlock2(x,y+1,z,Blocks.TALLGRASS,0,getTallGrass(data.c1));
+        if (odds == 1 && y <= 63) {
+          setBlock(x,y+1,z,Blocks.SEAWEEDS,0,0);
+          return;
+        }
+        if (odds == 2 && y <= 62) {
+          setBlock2(x,y+1,z,Blocks.TALLSEAWEEDS,0,0);
           return;
         }
       }
@@ -54,11 +49,11 @@ public class BiomeOcean extends BiomeBase {
   }
 
   public int getFlower(int rv) {
-    return -1;
+    return Static.blocks.SEAWEEDS;
   }
 
   public int getTallGrass(int rv) {
-    return -1;
+    return Static.blocks.TALLSEAWEEDS;
   }
 
   public int getAnimal(int rv) {

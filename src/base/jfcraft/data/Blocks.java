@@ -208,6 +208,8 @@ public class Blocks {
   public static char SOLID;  //solid color block
   public static char KELPPLANT;
   public static char TEST_ARROW;
+  public static char SEAWEEDS;
+  public static char TALLSEAWEEDS;
 
   public static void getIDs(World world) {
     AIR = world.getBlockID("AIR");
@@ -346,6 +348,8 @@ public class Blocks {
     SOLID = world.getBlockID("SOLID");
     TEST_ARROW = world.getBlockID("TEST_ARROW");
     KELPPLANT = world.getBlockID("KELPPLANT");
+    SEAWEEDS = world.getBlockID("SEAWEEDS");
+    TALLSEAWEEDS = world.getBlockID("TALLSEAWEEDS");
   }
 
   //upper flag (door, tall grass)
@@ -814,7 +818,6 @@ public class Blocks {
         "solid_black"
       }
     ).setVar());
-
     registerBlock(new BlockKelpPlant("KELPPLANT"
       , new String[] {"Kelp", "Kelp"}
       , new String[] {"kelp_plant", "kelp"}
@@ -822,8 +825,20 @@ public class Blocks {
       .setGreenAllSides().setDrop("KELP").setDropVar(false)
       .addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
     );
-
     registerBlock(new BlockOpaque("TEST_ARROW", new String[] {"test"}, new String[] {"arrow"}).setDir());  //jfasset
+    registerBlock(new BlockX("SEAWEEDS"
+      , new String[] {"Seaweeds"}
+      , new String[] {"seagrass"}
+      )
+      .setDrop("AIR").setSupported().setCanReplace()
+      .addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
+    );
+    registerBlock(new BlockX2("TALLSEAWEEDS"
+      , new String[] {"Tall Seaweeds"}
+      , new String[] {"tall_seagrass_top", "tall_seagrass_bottom"})
+      .setDrop("AIR").setSupported().setCanReplace()
+      .addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
+    );
 
   }
 

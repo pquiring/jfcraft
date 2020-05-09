@@ -66,7 +66,7 @@ public abstract class BiomeBase {
       c = c.S;
       z -= 16;
     }
-    if (c.getBlock(x, y, z).id != Blocks.AIR) return;  //only replace air
+    if (c.getID(x, y, z) != Blocks.AIR) return;
     c.setBlock(x, y, z, id, Chunk.makeBits(dir,var));
   }
   public void setBlock2(int x, int y, int z, char id, int dir, int var) {
