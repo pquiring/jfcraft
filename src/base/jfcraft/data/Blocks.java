@@ -207,8 +207,6 @@ public class Blocks {
   public static char WHEAT;
   public static char SOLID;  //solid color block
   public static char KELPPLANT;
-//  public static char KELPTOP;
-
   public static char TEST_ARROW;
 
   public static void getIDs(World world) {
