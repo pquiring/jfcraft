@@ -18,6 +18,7 @@ public class ItemBucket extends ItemBase {
   public ItemBucket(String name, String names[], String textures[]) {
     super(name,names,textures);
     isTool = true;
+    maxStack = 1;
   }
   public ItemBucket setFilled(String filled) {
     this.filled = filled;
