@@ -37,8 +37,8 @@ public class RenderData {
     public int[] var2 = new int[11];  //from bits2
     public int[] dir2 = new int[11];  //from bits2
 
-  public float sl[] = new float[11];  //sun light levels
-  public float bl[] = new float[11];  //blk light levels
+  public float sl[] = new float[32];  //sun light levels
+  public float bl[] = new float[32];  //blk light levels
   public boolean adjLight;
 
   public boolean[] opaque = new boolean[11];  //is side opaque (therefore do not need to render)

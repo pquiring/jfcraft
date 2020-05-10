@@ -960,12 +960,20 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
               data.var2[Direction.E] = getVar(_bits);
             }
 
+            boolean adjLight = false;
             if (hasBlock) {
               data.adjLight = !block.isComplex;
+              if (data.adjLight) {
+                adjLight = true;
+                getFarCorners(data,x,y,z);
+              }
               block.buildBuffers(dest, data);
             }
             if (hasBlock2) {
               data.adjLight = !block2.isComplex;
+              if (data.adjLight && !adjLight) {
+                getFarCorners(data,x,y,z);
+              }
               block2.buildBuffers(dest, data);
             }
           }
@@ -973,6 +981,78 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       }
       isAllEmpty = dest.allEmpty();
     }
+  }
+
+  private void getFarCorners(RenderData data,int x,int y,int z) {
+    int _ll;
+
+    //A sides
+    _ll = getLights(x,y+1,z-1);
+    data.sl[Direction.AN] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.AN] = ((_ll & 0xf0) >> 4) / 15.0f;
+
+    _ll = getLights(x+1,y+1,z);
+    data.sl[Direction.AE] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.AE] = ((_ll & 0xf0) >> 4) / 15.0f;
+
+    _ll = getLights(x,y+1,z+1);
+    data.sl[Direction.AS] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.AS] = ((_ll & 0xf0) >> 4) / 15.0f;
+
+    _ll = getLights(x-1,y+1,z);
+    data.sl[Direction.AW] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.AW] = ((_ll & 0xf0) >> 4) / 15.0f;
+
+    //A corners
+    _ll = getLights(x-1,y+1,z-1);
+    data.sl[Direction.ANW] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.ANW] = ((_ll & 0xf0) >> 4) / 15.0f;
+
+    _ll = getLights(x+1,y+1,z-1);
+    data.sl[Direction.ANE] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.ANE] = ((_ll & 0xf0) >> 4) / 15.0f;
+
+    _ll = getLights(x+1,y+1,z+1);
+    data.sl[Direction.ASE] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.ASE] = ((_ll & 0xf0) >> 4) / 15.0f;
+
+    _ll = getLights(x-1,y+1,z+1);
+    data.sl[Direction.ASW] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.ASW] = ((_ll & 0xf0) >> 4) / 15.0f;
+
+    //B sides
+    _ll = getLights(x,y-1,z-1);
+    data.sl[Direction.BN] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.BN] = ((_ll & 0xf0) >> 4) / 15.0f;
+
+    _ll = getLights(x+1,y-1,z);
+    data.sl[Direction.BE] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.BE] = ((_ll & 0xf0) >> 4) / 15.0f;
+
+    _ll = getLights(x,y-1,z+1);
+    data.sl[Direction.BS] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.BS] = ((_ll & 0xf0) >> 4) / 15.0f;
+
+    _ll = getLights(x-1,y-1,z);
+    data.sl[Direction.BW] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.BW] = ((_ll & 0xf0) >> 4) / 15.0f;
+
+    //B corners
+    _ll = getLights(x-1,y-1,z-1);
+    data.sl[Direction.BNW] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.BNW] = ((_ll & 0xf0) >> 4) / 15.0f;
+
+    _ll = getLights(x+1,y-1,z-1);
+    data.sl[Direction.BNE] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.BNE] = ((_ll & 0xf0) >> 4) / 15.0f;
+
+    _ll = getLights(x+1,y-1,z+1);
+    data.sl[Direction.BSE] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.BSE] = ((_ll & 0xf0) >> 4) / 15.0f;
+
+    _ll = getLights(x-1,y-1,z+1);
+    data.sl[Direction.BSW] = (_ll & 0x0f) / 15.0f;
+    data.bl[Direction.BSW] = ((_ll & 0xf0) >> 4) / 15.0f;
   }
 
   public boolean canRender() {

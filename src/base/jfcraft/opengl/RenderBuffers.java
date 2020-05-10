@@ -188,56 +188,59 @@ public class RenderBuffers implements Cloneable {
   public void addBlockLight(float lvl) {
     bll.append(lvl);
   }
+  private static float base_light = 70f;
+  private static float adj_light = 10f;  //3 adj block levels
+  //TODO : need lighting from ANE,ANW,etc blocks to better implement this
   private float calcLight(int side, float lvls[], int vertex) {
     //vertex are in CW order starting at top left
-    float lvl = lvls[side] * 90f;
+    float lvl = lvls[side] * base_light;
     switch (side) {
       case N:
         switch (vertex) {
-          case 0: lvl += lvls[E] * 5f; lvl += lvls[A] * 5f; break;
-          case 1: lvl += lvls[A] * 5f; lvl += lvls[W] * 5f; break;
-          case 2: lvl += lvls[W] * 5f; lvl += lvls[B] * 5f; break;
-          case 3: lvl += lvls[B] * 5f; lvl += lvls[E] * 5f; break;
+          case 0: lvl += lvls[NE] * adj_light; lvl += lvls[ANE] * adj_light; lvl += lvls[AN] * adj_light; break;
+          case 1: lvl += lvls[AN] * adj_light; lvl += lvls[ANW] * adj_light; lvl += lvls[NW] * adj_light; break;
+          case 2: lvl += lvls[NW] * adj_light; lvl += lvls[BNW] * adj_light; lvl += lvls[BN] * adj_light; break;
+          case 3: lvl += lvls[BN] * adj_light; lvl += lvls[BNE] * adj_light; lvl += lvls[NE] * adj_light; break;
         }
         break;
       case E:
         switch (vertex) {
-          case 0: lvl += lvls[S] * 5f; lvl += lvls[A] * 5f; break;
-          case 1: lvl += lvls[A] * 5f; lvl += lvls[N] * 5f; break;
-          case 2: lvl += lvls[N] * 5f; lvl += lvls[B] * 5f; break;
-          case 3: lvl += lvls[B] * 5f; lvl += lvls[S] * 5f; break;
+          case 0: lvl += lvls[SE] * adj_light; lvl += lvls[ASE] * adj_light; lvl += lvls[AE] * adj_light; break;
+          case 1: lvl += lvls[AE] * adj_light; lvl += lvls[ANE] * adj_light; lvl += lvls[NE] * adj_light; break;
+          case 2: lvl += lvls[NE] * adj_light; lvl += lvls[BNE] * adj_light; lvl += lvls[BE] * adj_light; break;
+          case 3: lvl += lvls[BE] * adj_light; lvl += lvls[BSE] * adj_light; lvl += lvls[SE] * adj_light; break;
         }
         break;
       case S:
         switch (vertex) {
-          case 0: lvl += lvls[W] * 5f; lvl += lvls[A] * 5f; break;
-          case 1: lvl += lvls[A] * 5f; lvl += lvls[E] * 5f; break;
-          case 2: lvl += lvls[E] * 5f; lvl += lvls[B] * 5f; break;
-          case 3: lvl += lvls[B] * 5f; lvl += lvls[W] * 5f; break;
+          case 0: lvl += lvls[SW] * adj_light; lvl += lvls[ASW] * adj_light; lvl += lvls[AS] * adj_light; break;
+          case 1: lvl += lvls[AS] * adj_light; lvl += lvls[ASE] * adj_light; lvl += lvls[SE] * adj_light; break;
+          case 2: lvl += lvls[SE] * adj_light; lvl += lvls[BSE] * adj_light; lvl += lvls[BS] * adj_light; break;
+          case 3: lvl += lvls[BS] * adj_light; lvl += lvls[BSW] * adj_light; lvl += lvls[SW] * adj_light; break;
         }
         break;
       case W:
         switch (vertex) {
-          case 0: lvl += lvls[N] * 5f; lvl += lvls[A] * 5f; break;
-          case 1: lvl += lvls[A] * 5f; lvl += lvls[S] * 5f; break;
-          case 2: lvl += lvls[S] * 5f; lvl += lvls[B] * 5f; break;
-          case 3: lvl += lvls[B] * 5f; lvl += lvls[N] * 5f; break;
+          case 0: lvl += lvls[NW] * adj_light; lvl += lvls[ANW] * adj_light; lvl += lvls[AW] * adj_light; break;
+          case 1: lvl += lvls[AW] * adj_light; lvl += lvls[ASW] * adj_light; lvl += lvls[SW] * adj_light; break;
+          case 2: lvl += lvls[SW] * adj_light; lvl += lvls[BSW] * adj_light; lvl += lvls[BW] * adj_light; break;
+          case 3: lvl += lvls[BW] * adj_light; lvl += lvls[BSW] * adj_light; lvl += lvls[NW] * adj_light; break;
         }
         break;
       case A:
         switch (vertex) {
-          case 0: lvl += lvls[W] * 5f; lvl += lvls[N] * 5f; break;
-          case 1: lvl += lvls[N] * 5f; lvl += lvls[E] * 5f; break;
-          case 2: lvl += lvls[E] * 5f; lvl += lvls[S] * 5f; break;
-          case 3: lvl += lvls[S] * 5f; lvl += lvls[W] * 5f; break;
+          case 0: lvl += lvls[AW] * adj_light; lvl += lvls[ANE] * adj_light; lvl += lvls[AN] * adj_light; break;
+          case 1: lvl += lvls[AN] * adj_light; lvl += lvls[ANE] * adj_light; lvl += lvls[AE] * adj_light; break;
+          case 2: lvl += lvls[AE] * adj_light; lvl += lvls[ASE] * adj_light; lvl += lvls[AS] * adj_light; break;
+          case 3: lvl += lvls[AS] * adj_light; lvl += lvls[ASW] * adj_light; lvl += lvls[AW] * adj_light; break;
         }
         break;
       case B:
         switch (vertex) {
-          case 0: lvl += lvls[S] * 5f; lvl += lvls[W] * 5f; break;
-          case 1: lvl += lvls[W] * 5f; lvl += lvls[N] * 5f; break;
-          case 2: lvl += lvls[N] * 5f; lvl += lvls[E] * 5f; break;
-          case 3: lvl += lvls[E] * 5f; lvl += lvls[S] * 5f; break;
+          case 0: lvl += lvls[BW] * adj_light; lvl += lvls[BSW] * adj_light; lvl += lvls[BS] * adj_light; break;
+          case 1: lvl += lvls[BS] * adj_light; lvl += lvls[BSE] * adj_light; lvl += lvls[BE] * adj_light; break;
+          case 2: lvl += lvls[BE] * adj_light; lvl += lvls[BNE] * adj_light; lvl += lvls[BN] * adj_light; break;
+          case 3: lvl += lvls[BN] * adj_light; lvl += lvls[BNW] * adj_light; lvl += lvls[BW] * adj_light; break;
         }
         break;
     }
@@ -565,11 +568,14 @@ public class RenderBuffers implements Cloneable {
         return;
     }
 
-    addFace(f, data);
+    if (data.adjLight)
+      addFaceComplexLighting(f, data);
+    else
+      addFace(f, data);
   }
 
-  /** Adds complex face for Blocks. */
-  public void addFace(Face f, RenderData data) {
+  /** Adds face for Blocks w/ complex lighting. */
+  private void addFaceComplexLighting(Face f, RenderData data) {
     f.rotate(data);
 
     if (data.crack != -1) {
@@ -610,6 +616,55 @@ public class RenderBuffers implements Cloneable {
       addColor(data);
       addSunLight(data, a);
       addBlockLight(data, a);
+    }
+    addPoly(new int[] {off+3,off+2,off+1,off+0});
+    if (data.doubleSided) {
+      addPoly(new int[] {off+0,off+1,off+2,off+3});
+    }
+  }
+
+  /** Adds complex face for Blocks/Entities. */
+  public void addFace(Face f, RenderData data) {
+    f.rotate(data);
+
+    if (data.crack != -1) {
+      SubTexture crack = Static.blocks.subcracks[data.crack];
+
+      f.u2[0] = crack.x1;
+      f.v2[0] = crack.y1;
+      f.u2[1] = crack.x2;
+      f.v2[1] = crack.y1;
+      f.u2[2] = crack.x2;
+      f.v2[2] = crack.y2;
+      f.u2[3] = crack.x1;
+      f.v2[3] = crack.y2;
+    } else {
+      f.u2[0] = 0;
+      f.v2[0] = 0;
+      f.u2[1] = 0;
+      f.v2[1] = 0;
+      f.u2[2] = 0;
+      f.v2[2] = 0;
+      f.u2[3] = 0;
+      f.v2[3] = 0;
+    }
+
+    for(int a=0;a<4;a++) {
+      f.x[a] += data.x;
+      f.y[a] += data.y;
+      f.z[a] += data.z;
+    }
+
+    int off = getVertexCount();
+    addVertex(new float[] {f.x[0],f.y[0],f.z[0]}, new float[] {f.u1[0],f.v1[0]}, new float[] {f.u2[0],f.v2[0]});
+    addVertex(new float[] {f.x[1],f.y[1],f.z[1]}, new float[] {f.u1[1],f.v1[1]}, new float[] {f.u2[1],f.v2[1]});
+    addVertex(new float[] {f.x[2],f.y[2],f.z[2]}, new float[] {f.u1[2],f.v1[2]}, new float[] {f.u2[2],f.v2[2]});
+    addVertex(new float[] {f.x[3],f.y[3],f.z[3]}, new float[] {f.u1[3],f.v1[3]}, new float[] {f.u2[3],f.v2[3]});
+
+    for(int a=0;a<4;a++) {
+      addColor(data);
+      addSunLight(data.sl[X]);
+      addBlockLight(data.bl[X]);
     }
     addPoly(new int[] {off+3,off+2,off+1,off+0});
     if (data.doubleSided) {

@@ -27,7 +27,26 @@ public class Direction {
   public static final int SE2 = 14;
 
   public static final int _15 = 15;  //reserved
-  
+
+  //full 3x3 coords (used in lighting)
+  public static final int AN = 16;
+  public static final int AE = 17;
+  public static final int AS = 18;
+  public static final int AW = 19;
+  public static final int ANW = 20;
+  public static final int ANE = 21;
+  public static final int ASW = 22;
+  public static final int ASE = 23;
+
+  public static final int BN = 24;
+  public static final int BE = 25;
+  public static final int BS = 26;
+  public static final int BW = 27;
+  public static final int BNW = 28;
+  public static final int BNE = 29;
+  public static final int BSW = 30;
+  public static final int BSE = 31;
+
   //left/right hand
   public static final int LEFT = 1;
   public static final int RIGHT = 2;
