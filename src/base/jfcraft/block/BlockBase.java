@@ -658,8 +658,8 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
       entity.ang.y = 180;
       entity.setScale(1.0f);
     } else if (renderAsItem) {
+      //voxel ???
       buffersIdx = 0;
-      addFaceWorldItem(dest.getBuffers(0), data.var[X], isGreen);
     } else {
       buffersIdx = textures[0].buffersIdx;  //BUG : zero?
 

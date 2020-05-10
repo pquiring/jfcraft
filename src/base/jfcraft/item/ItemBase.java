@@ -182,25 +182,6 @@ public class ItemBase implements RenderSource {
 */
   }
 
-  /** Add face for item as WorldItem. */
-  public void addFaceWorldItem(RenderBuffers obj, int var, boolean green) {
-    float tx1, ty1, tx2, ty2;
-    if (!isVar) var = 0;
-    tx1 = textures[var].x1;
-    ty1 = textures[var].y1;
-    tx2 = textures[var].x2;
-    ty2 = textures[var].y2;
-    float x1 = -0.5f;
-    float y1 = 1.0f;
-    float x2 = 0.5f;
-    float y2 = 0.0f;
-    obj.addFace2D(x1,y1,x2,y2,tx1,ty1,tx2,ty2,green ? Static.green : Static.white);
-    //swap x and redo for other side
-    x1 = x2;
-    x2 = -0.5f;
-    obj.addFace2D(x1,y1,x2,y2,tx1,ty1,tx2,ty2,green ? Static.green : Static.white);
-  }
-
   public String getName() {
     return name;
   }

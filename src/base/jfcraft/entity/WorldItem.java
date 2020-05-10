@@ -19,11 +19,12 @@ import static jfcraft.data.Direction.*;
 public class WorldItem extends EntityBase {
   public Item item;
 
-  public RenderDest obj;
-  public int buffersIdx;
-  public Texture texture;
   public EntityBase entity;
+  public Voxel voxel;
+  public BlockBase block;
   private boolean isItem;
+
+  private static RenderData data = new RenderData();
 
   public WorldItem() {
     id = Entities.WORLDITEM;
@@ -55,46 +56,26 @@ public class WorldItem extends EntityBase {
   public void initInstance() {
     super.initInstance();
     if (item == null) return;
-    obj = new RenderDest(2);  //DEST_...
     if (Static.isBlock(item.id)) {
       isItem = false;
-      BlockBase block = Static.blocks.blocks[item.id];
+      block = Static.blocks.blocks[item.id];
       if (block.renderAsEntity) {
         entity = Static.entities.entities[block.entityID];
       } else if (block.renderAsItem) {
-        buffersIdx = 0;
-        block.addFaceWorldItem(obj.getBuffers(0), item.var, block.isGreen);
-        texture = block.textures[0].texture;
-      } else {
-        RenderData data = new RenderData();
-        data.x = -0.5f;
-        data.y = 0f;
-        data.z = -0.5f;
-        data.sl[X] = 1.0f;
-        data.bl[X] = 0.0f;
-        data.crack = -1;
-        if (block.isVar) {
-          data.var[X] = item.var;
-        }
-        block.buildBuffers(obj, data);
-        buffersIdx = block.buffersIdx;
-        texture = block.textures[0].texture;
+        voxel = Static.items.items[item.id].voxel[item.var];
       }
     } else {
       isItem = true;
-      buffersIdx = 0;
-      ItemBase baseitem = Static.items.items[item.id];
-      baseitem.addFaceWorldItem(obj.getBuffers(0), item.var, baseitem.isGreen);
-      texture = baseitem.textures[0].texture;
+      voxel = Static.items.items[item.id].voxel[item.var];
     }
-    RenderBuffers buf = obj.getBuffers(buffersIdx);
-    buf.copyBuffers();
   }
   public void bindTexture() {
-    if (texture != null) {
-      texture.bind();
-    } else if (entity != null) {
+    if (entity != null) {
       entity.bindTexture();
+    } else if (voxel != null) {
+      voxel.bindTexture();
+    } else {
+      block.bindTexture();
     }
   }
   public void render() {
@@ -112,25 +93,35 @@ public class WorldItem extends EntityBase {
       }
     } else {
       mat.setIdentity();
-      mat.addTranslate(pos.x, pos.y, pos.z);
-      mat.addRotate2(ang.y, 0, 1, 0);
       float scale = 0.25f;
       mat.addScale(scale, scale, scale);
+      mat.addRotate(ang.y, 0, 1, 0);
+      mat.addTranslate2(-0.5f, 0, -0.5f);
+      mat.addTranslate(pos.x, pos.y, pos.z);
       glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);
-      RenderBuffers buf = obj.getBuffers(buffersIdx);
-      buf.bindBuffers();
-      buf.render();
+      if (voxel != null) {
+        voxel.render();
+      } else {
+        data.var[X] = item.var;
+        block.prepRender(data);
+        block.render();
+      }
       if (item.count > 1) {
         mat.setIdentity();
-        mat.addTranslate2(pos.x, pos.y, pos.z);
-        mat.addRotate2(ang.y, 0, 1, 0);
-        if (isItem)
-          mat.addTranslate2(0, 0, 0.05f);
-        else
-          mat.addTranslate2(0.05f, 0.05f, 0.05f);
         mat.addScale(scale, scale, scale);
+        mat.addRotate(ang.y, 0, 1, 0);
+        mat.addTranslate2(-0.5f, 0, -0.5f);
+        if (isItem)
+          mat.addTranslate2(0, 0, 0.5f);
+        else
+          mat.addTranslate2(0.25f, 0.25f, 0.25f);
+        mat.addTranslate(pos.x, pos.y, pos.z);
         glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);
-        buf.render();
+        if (voxel != null) {
+          voxel.render();
+        } else {
+          block.render();
+        }
       }
     }
   }
