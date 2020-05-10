@@ -95,6 +95,7 @@ public class Main implements GLWindow.KeyEvents, GLWindow.MouseEvents, GLWindow.
       String arg = args[a];
       if (arg.equals("-debug")) {
         Static.debugTest = true;
+        Static.debugLights = true;
       }
       if (arg.equals("-music=false")) {
         Static.optionMusic = false;

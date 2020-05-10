@@ -188,6 +188,121 @@ public class RenderBuffers implements Cloneable {
   public void addBlockLight(float lvl) {
     bll.append(lvl);
   }
+  private float calcLight(int side, float lvls[], int vertex) {
+    //vertex are in CW order starting at top left
+    float lvl = lvls[side] * 90f;
+    switch (side) {
+      case N:
+        switch (vertex) {
+          case 0: lvl += lvls[E] * 5f; lvl += lvls[A] * 5f; break;
+          case 1: lvl += lvls[A] * 5f; lvl += lvls[W] * 5f; break;
+          case 2: lvl += lvls[W] * 5f; lvl += lvls[B] * 5f; break;
+          case 3: lvl += lvls[B] * 5f; lvl += lvls[E] * 5f; break;
+        }
+        break;
+      case E:
+        switch (vertex) {
+          case 0: lvl += lvls[S] * 5f; lvl += lvls[A] * 5f; break;
+          case 1: lvl += lvls[A] * 5f; lvl += lvls[N] * 5f; break;
+          case 2: lvl += lvls[N] * 5f; lvl += lvls[B] * 5f; break;
+          case 3: lvl += lvls[B] * 5f; lvl += lvls[S] * 5f; break;
+        }
+        break;
+      case S:
+        switch (vertex) {
+          case 0: lvl += lvls[W] * 5f; lvl += lvls[A] * 5f; break;
+          case 1: lvl += lvls[A] * 5f; lvl += lvls[E] * 5f; break;
+          case 2: lvl += lvls[E] * 5f; lvl += lvls[B] * 5f; break;
+          case 3: lvl += lvls[B] * 5f; lvl += lvls[W] * 5f; break;
+        }
+        break;
+      case W:
+        switch (vertex) {
+          case 0: lvl += lvls[N] * 5f; lvl += lvls[A] * 5f; break;
+          case 1: lvl += lvls[A] * 5f; lvl += lvls[S] * 5f; break;
+          case 2: lvl += lvls[S] * 5f; lvl += lvls[B] * 5f; break;
+          case 3: lvl += lvls[B] * 5f; lvl += lvls[N] * 5f; break;
+        }
+        break;
+      case A:
+        switch (vertex) {
+          case 0: lvl += lvls[W] * 5f; lvl += lvls[N] * 5f; break;
+          case 1: lvl += lvls[N] * 5f; lvl += lvls[E] * 5f; break;
+          case 2: lvl += lvls[E] * 5f; lvl += lvls[S] * 5f; break;
+          case 3: lvl += lvls[S] * 5f; lvl += lvls[W] * 5f; break;
+        }
+        break;
+      case B:
+        switch (vertex) {
+          case 0: lvl += lvls[S] * 5f; lvl += lvls[W] * 5f; break;
+          case 1: lvl += lvls[W] * 5f; lvl += lvls[N] * 5f; break;
+          case 2: lvl += lvls[N] * 5f; lvl += lvls[E] * 5f; break;
+          case 3: lvl += lvls[E] * 5f; lvl += lvls[S] * 5f; break;
+        }
+        break;
+    }
+    return lvl / 100.0f;
+  }
+  public void addSunLight(RenderData data, int vertex) {
+    float lvl;
+    if (data.adjLight) {
+      //complex adj lighting
+      lvl = calcLight(data.dirSide, data.sl, vertex);
+    } else {
+      //simple X lighting
+      lvl = data.sl[X];
+    }
+    //dim lights on the sides and bottom
+    switch (data.dirSide) {
+//      case A:
+//        break;
+      case N:
+      case S:
+        if (lvl > 0) lvl -= Static._0_5_15;
+        break;
+      case E:
+      case W:
+        if (lvl > 0) lvl -= Static._0_25_15;
+        break;
+      case B:
+        if (lvl > 0) lvl -= Static._0_75_15;
+        break;
+    }
+    if (Static.debugLights) {
+      lvl = 1.0f;
+    }
+    sll.append(lvl);
+  }
+  public void addBlockLight(RenderData data, int vertex) {
+    float lvl;
+    if (data.adjLight) {
+      //complex adj lighting
+      lvl = calcLight(data.dirSide, data.bl, vertex);
+    } else {
+      //simple X lighting
+      lvl = data.bl[X];
+    }
+    //dim lights on the sides and bottom
+    switch (data.dirSide) {
+//      case A:
+//        break;
+      case N:
+      case S:
+        if (lvl > 0) lvl -= Static._0_5_15;
+        break;
+      case E:
+      case W:
+        if (lvl > 0) lvl -= Static._0_25_15;
+        break;
+      case B:
+        if (lvl > 0) lvl -= Static._0_75_15;
+        break;
+    }
+    if (Static.debugLights) {
+      lvl = 1.0f;
+    }
+    bll.append(lvl);
+  }
   public float sunLight = 1.0f;
   public float blkLight = 0.0f;
   public void addDefault() {
@@ -491,31 +606,10 @@ public class RenderBuffers implements Cloneable {
     addVertex(new float[] {f.x[2],f.y[2],f.z[2]}, new float[] {f.u1[2],f.v1[2]}, new float[] {f.u2[2],f.v2[2]});
     addVertex(new float[] {f.x[3],f.y[3],f.z[3]}, new float[] {f.u1[3],f.v1[3]}, new float[] {f.u2[3],f.v2[3]});
 
-    float sl = data.sl[data.adjLight ? data.dirSide : X];
-    float bl = data.bl[data.adjLight ? data.dirSide : X];
-    //fade the light slightly on sides and bottom
-    switch (data.side) {
-//      case A:
-//        break;
-      case N:
-      case S:
-        if (sl > 0) sl -= Static._0_5_15;
-        if (bl > 0) bl -= Static._0_5_15;
-        break;
-      case E:
-      case W:
-        if (sl > 0) sl -= Static._0_25_15;
-        if (bl > 0) bl -= Static._0_25_15;
-        break;
-      case B:
-        if (sl > 0) sl -= Static._0_75_15;
-        if (bl > 0) bl -= Static._0_75_15;
-        break;
-    }
     for(int a=0;a<4;a++) {
       addColor(data);
-      addSunLight(sl);
-      addBlockLight(bl);
+      addSunLight(data, a);
+      addBlockLight(data, a);
     }
     addPoly(new int[] {off+3,off+2,off+1,off+0});
     if (data.doubleSided) {
