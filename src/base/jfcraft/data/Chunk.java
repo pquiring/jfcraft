@@ -817,14 +817,6 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             data.x = x;
 //            data.temp = biome.temp[z * 16 + x];
 //            data.rain = biome.rain[z * 16 + x];
-            ExtraCrack c = getCrack(x,y,z);
-            if (c != null) {
-              crack = (int)(c.dmg / 10.0f);
-              if (crack > 9) crack = 9;
-            } else {
-              crack = -1;
-            }
-            data.crack = crack;
             id = getID(x,y,z);
             id2 = getID2(x,y,z);
             boolean hasBlock = id != 0;
@@ -838,6 +830,14 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
               data.var[Direction.X] = getVar(_bits);
               block = Static.blocks.blocks[id];
               data.opaque[Direction.X] = block.isOpaque;
+              ExtraCrack c = getCrack(x,y,z);
+              if (c != null) {
+                crack = (int)(c.dmg / 10.0f);
+                if (crack > 9) crack = 9;
+              } else {
+                crack = -1;
+              }
+              data.crack = crack;
             }
             if (hasBlock2) {
               _bits = getBits2(x,y,z);
