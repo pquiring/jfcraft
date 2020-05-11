@@ -859,6 +859,7 @@ public class Items {
       }
       item.bufs = new RenderDest[vars];
       item.voxel = new Voxel[vars];
+      ItemBase.data.bl[X] = 0;  //entities only use sunlight
       for(int var=0;var<vars;var++) {
         try {
           //create item object for inventory screens

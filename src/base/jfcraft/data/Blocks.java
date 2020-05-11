@@ -1109,7 +1109,7 @@ public class Blocks {
           data.y = 0;
           data.z = 0;
           data.sl[X] = 1.0f;
-          data.bl[X] = 1.0f;
+          data.bl[X] = 0.0f;
           data.crack = -1;
           data.dir[X] = block.getPreferredDir();
           if (block.isVar) {

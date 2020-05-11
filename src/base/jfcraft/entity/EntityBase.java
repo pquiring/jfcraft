@@ -21,6 +21,7 @@ import jfcraft.data.*;
 import jfcraft.item.*;
 import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
+import static javaforce.gl.GL.*;
 
 public abstract class EntityBase implements EntityHitTest, RenderSource, SerialClass {
   public XYZ pos = new XYZ();  //position
@@ -1128,13 +1129,12 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return false;
   }
 
-  public float getLight(float sunLight) {
+  public void setLight(float sunLight) {
     float bl = ((float)world.getBlockLight(dim, pos.x, pos.y + height2, pos.z)) / 15.0f;
     float sl = ((float)world.getSunLight(dim, pos.x, pos.y + height2, pos.z)) / 15.0f * sunLight;
-    if (sl > bl)
-      return sl;
-    else
-      return bl;
+    float lvl;
+    if (sl > bl) lvl = sl; else lvl = bl;
+    glUniform1f(Static.uniformSunLight, lvl);
   }
 
   /** Returns items entity drops on death. */

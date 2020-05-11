@@ -807,24 +807,23 @@ public class Game extends RenderScreen {
     glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, perspective.m);  //perspective matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
 
-    float elight = Static.client.player.getLight(sunLight);
+    Static.client.player.setLight(sunLight);
 
     Item item = Static.client.player.items[Static.client.player.activeSlot];
-    glUniform1f(Static.uniformSunLight, elight);
     if (item.id == 0) {
       renderHand();
     } else {
-      renderItemInHand(item, elight, false);
+      renderItemInHand(item, false);
     }
     item = Static.client.player.items[Player.shield_idx];
     if (item.id == Items.SHIELD) {
-      renderItemInHand(item, elight, true);
+      renderItemInHand(item, true);
     }
   }
 
   private static RenderData data = new RenderData();
 
-  private void renderItemInHand(Item item, float light, boolean left) {
+  private void renderItemInHand(Item item, boolean left) {
     data.reset();
 
     ItemBase itembase = Static.items.items[item.id];
@@ -895,8 +894,7 @@ public class Game extends RenderScreen {
       }
     }
     try {
-      float elight = entity.getLight(sunLight);
-      glUniform1f(Static.uniformSunLight, elight);
+      entity.setLight(sunLight);
       entity.bindTexture();
       entity.render();
     } catch (Exception e) {
