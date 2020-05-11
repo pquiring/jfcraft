@@ -135,6 +135,7 @@ public class BlockLiquid extends BlockAlpha {
         if (data.id2[a] == id) continue;
         data.side = a;
         data.dirSide = a;
+        if (data.id[a] == Blocks.ICEBLOCK) continue;
         addFace(buf,data,st);
       }
     } else {
