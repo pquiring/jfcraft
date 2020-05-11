@@ -264,8 +264,18 @@ public abstract class RenderScreen {
   public void setViewportBox(int x, int y, int w, int h) {
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
-    glViewport((int)(offsetX + ((float)x) * Static.scale), (int)(offsetY + (gui_height - y) * Static.scale)
-      , (int)(w * Static.scale), (int)(h * Static.scale));
+    float vpy = 0;
+    switch (gui_position) {
+      case TOP: vpy = (Static.height - gui_height) - y; break;
+      case CENTER: vpy = (offsetY + (gui_height - y) * Static.scale); break;
+      case BOTTOM: vpy = ((gui_height - y) * Static.scale); break;
+    }
+    glViewport(
+      (int)(offsetX + ((float)x) * Static.scale),
+      (int)vpy,
+      (int)(w * Static.scale),
+      (int)(h * Static.scale)
+    );
   }
 
   /** Sets a standard 0,0-1,1 ortho matrix for block. */
@@ -283,7 +293,12 @@ public abstract class RenderScreen {
       case CENTER: vpy = (offsetY + (gui_height - y) * Static.scale); break;
       case BOTTOM: vpy = ((gui_height - y) * Static.scale); break;
     }
-    glViewport((int)(offsetX + ((float)x) * Static.scale), (int)vpy, (int)(36 * Static.scale), (int)(36 * Static.scale));
+    glViewport(
+      (int)(offsetX + ((float)x) * Static.scale),
+      (int)vpy,
+      (int)(36 * Static.scale),
+      (int)(36 * Static.scale)
+    );
   }
 
   /** Sets an ortho matrix to display player in inventory menu */
