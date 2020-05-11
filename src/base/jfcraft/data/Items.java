@@ -406,12 +406,20 @@ public class Items {
 
   public void registerDefault() {
     //register items
-    registerItem(new ItemBase("IRON_SHOVEL", new String[]{"Iron Shovel"}, new String[]{"iron_shovel"}).setTool(TOOL_SHOVEL).setMaterial(MAT_IRON).setDmg(4));
-    registerItem(new ItemBase("IRON_PICKAXE", new String[]{"Iron Pickaxe"}, new String[]{"iron_pickaxe"}).setTool(TOOL_PICKAXE).setMaterial(MAT_IRON).setDmg(5));
-    registerItem(new ItemBase("IRON_AXE", new String[]{"Iron Axe"}, new String[]{"iron_axe"}).setTool(TOOL_AXE).setMaterial(MAT_IRON).setDmg(6));
+    registerItem(new ItemBase("IRON_SHOVEL", new String[]{"Iron Shovel"}, new String[]{"iron_shovel"})
+      .setTool(TOOL_SHOVEL).setMaterial(MAT_IRON).setDmg(4).setDurability(251)
+    );
+    registerItem(new ItemBase("IRON_PICKAXE", new String[]{"Iron Pickaxe"}, new String[]{"iron_pickaxe"})
+      .setTool(TOOL_PICKAXE).setMaterial(MAT_IRON).setDmg(5).setDurability(250)
+    );
+    registerItem(new ItemBase("IRON_AXE", new String[]{"Iron Axe"}, new String[]{"iron_axe"})
+      .setTool(TOOL_AXE).setMaterial(MAT_IRON).setDmg(6).setDurability(250)
+    );
     registerItem(new ItemFlintSteel("FLINT_STEEL", new String[]{"Flint and Steel"}, new String[]{"flint_and_steel"}).setTool(TOOL_FLINT_STEEL));
     registerItem(new ItemBase("APPLE", new String[]{"Apple"}, new String[]{"apple"}).setFood(4f, 24.f));
-    registerItem(new ItemBow("BOW", new String[]{"Bow", "Bow", "Bow", "Bow"}, new String[]{"bow", "bow_pulling_0", "bow_pulling_1", "bow_pulling_2"}).setWeapon(WEAPON_BOW).setMaterial(MAT_WOOD));
+    registerItem(new ItemBow("BOW", new String[]{"Bow", "Bow", "Bow", "Bow"}, new String[]{"bow", "bow_pulling_0", "bow_pulling_1", "bow_pulling_2"})
+      .setWeapon(WEAPON_BOW).setMaterial(MAT_WOOD).setDurability(384)
+    );
     registerItem(new ItemBase("ARROW", new String[]{"Arrow"}, new String[]{"arrow"}).setMaterial(MAT_WOOD));
     registerItem(new ItemBase("COAL", new String[]{"Coal", "Charcoal"}, new String[] {"coal", "charcoal"}).setVar().setFuel(80));
     registerItem(new ItemBase("DIAMOND", new String[]{"Diamond"}, new String[]{"diamond"}));
@@ -419,38 +427,74 @@ public class Items {
     registerItem(new ItemBase("GOLD_INGOT", new String[]{"Gold Ingot"}, new String[]{"gold_ingot"}));
     registerItem(new ItemBase("IRON_SWORD", new String[]{"Iron Sword"}, new String[]{"iron_sword"}).setWeapon(WEAPON_SWORD).setDmg(7).setTool(TOOL_SWORD).setMaterial(MAT_IRON));
     registerItem(new ItemBase("WOOD_SWORD", new String[]{"Wood Sword"}, new String[]{"wooden_sword"}).setWeapon(WEAPON_SWORD).setFuel(10).setMaterial(MAT_WOOD).setDmg(5).setTool(TOOL_SWORD));
-    registerItem(new ItemBase("WOOD_SHOVEL", new String[]{"Wood Shovel"}, new String[]{"wooden_shovel"}).setTool(TOOL_SHOVEL).setFuel(10).setMaterial(MAT_WOOD).setDmg(2));
-    registerItem(new ItemBase("WOOD_PICKAXE", new String[]{"Wood Pickaxe"}, new String[]{"wooden_pickaxe"}).setTool(TOOL_PICKAXE).setFuel(10).setMaterial(MAT_WOOD).setDmg(3));
-    registerItem(new ItemBase("WOOD_AXE", new String[]{"Wood Axe"}, new String[]{"wooden_axe"}).setTool(TOOL_AXE).setFuel(10).setMaterial(MAT_WOOD).setDmg(4));
+    registerItem(new ItemBase("WOOD_SHOVEL", new String[]{"Wood Shovel"}, new String[]{"wooden_shovel"})
+      .setTool(TOOL_SHOVEL).setFuel(10).setMaterial(MAT_WOOD).setDmg(2).setDurability(60)
+    );
+    registerItem(new ItemBase("WOOD_PICKAXE", new String[]{"Wood Pickaxe"}, new String[]{"wooden_pickaxe"})
+      .setTool(TOOL_PICKAXE).setFuel(10).setMaterial(MAT_WOOD).setDmg(3).setDurability(59)
+    );
+    registerItem(new ItemBase("WOOD_AXE", new String[]{"Wood Axe"}, new String[]{"wooden_axe"})
+      .setTool(TOOL_AXE).setFuel(10).setMaterial(MAT_WOOD).setDmg(4).setDurability(59)
+    );
     registerItem(new ItemBase("STONE_SWORD", new String[]{"Stone Sword"}, new String[]{"stone_sword"}).setWeapon(WEAPON_SWORD).setDmg(6).setTool(TOOL_SWORD).setMaterial(MAT_STONE));
-    registerItem(new ItemBase("STONE_SHOVEL", new String[]{"Stone Shovel"}, new String[]{"stone_shovel"}).setTool(TOOL_SHOVEL).setMaterial(MAT_STONE).setDmg(3));
-    registerItem(new ItemBase("STONE_PICKAXE", new String[]{"Stone Pickaxe"}, new String[]{"stone_pickaxe"}).setTool(TOOL_PICKAXE).setMaterial(MAT_STONE).setDmg(4));
-    registerItem(new ItemBase("STONE_AXE", new String[]{"Stone Axe"}, new String[]{"stone_axe"}).setTool(TOOL_AXE).setMaterial(MAT_STONE).setDmg(5));
+    registerItem(new ItemBase("STONE_SHOVEL", new String[]{"Stone Shovel"}, new String[]{"stone_shovel"})
+      .setTool(TOOL_SHOVEL).setMaterial(MAT_STONE).setDmg(3).setDurability(131)
+    );
+    registerItem(new ItemBase("STONE_PICKAXE", new String[]{"Stone Pickaxe"}, new String[]{"stone_pickaxe"})
+      .setTool(TOOL_PICKAXE).setMaterial(MAT_STONE).setDmg(4).setDurability(131)
+    );
+    registerItem(new ItemBase("STONE_AXE", new String[]{"Stone Axe"}, new String[]{"stone_axe"})
+      .setTool(TOOL_AXE).setMaterial(MAT_STONE).setDmg(5).setDurability(131)
+    );
     registerItem(new ItemBase("DIAMOND_SWORD", new String[]{"Diamond Sword"}, new String[]{"diamond_sword"}).setWeapon(WEAPON_SWORD).setDmg(8).setTool(TOOL_SWORD).setMaterial(MAT_DIAMOND));
-    registerItem(new ItemBase("DIAMOND_SHOVEL", new String[]{"Diamond Shovel"}, new String[]{"diamond_shovel"}).setTool(TOOL_SHOVEL).setMaterial(MAT_DIAMOND).setDmg(5));
-    registerItem(new ItemBase("DIAMOND_PICKAXE", new String[]{"Diamond Pickaxe"}, new String[]{"diamond_pickaxe"}).setTool(TOOL_PICKAXE).setMaterial(MAT_DIAMOND).setDmg(6));
-    registerItem(new ItemBase("DIAMOND_AXE", new String[]{"Diamond Axe"}, new String[]{"diamond_axe"}).setTool(TOOL_AXE).setMaterial(MAT_DIAMOND).setDmg(7));
+    registerItem(new ItemBase("DIAMOND_SHOVEL", new String[]{"Diamond Shovel"}, new String[]{"diamond_shovel"})
+      .setTool(TOOL_SHOVEL).setMaterial(MAT_DIAMOND).setDmg(5).setDurability(1561)
+    );
+    registerItem(new ItemBase("DIAMOND_PICKAXE", new String[]{"Diamond Pickaxe"}, new String[]{"diamond_pickaxe"})
+      .setTool(TOOL_PICKAXE).setMaterial(MAT_DIAMOND).setDmg(6).setDurability(1561)
+    );
+    registerItem(new ItemBase("DIAMOND_AXE", new String[]{"Diamond Axe"}, new String[]{"diamond_axe"})
+      .setTool(TOOL_AXE).setMaterial(MAT_DIAMOND).setDmg(7).setDurability(1561)
+    );
     registerItem(new ItemBase("STICK", new String[]{"Stick"}, new String[]{"stick"}).setFuel(5).setMaterial(MAT_WOOD));
     registerItem(new ItemBase("BOWL", new String[]{"Bowl"}, new String[]{"bowl"}).setFuel(5).setMaterial(MAT_WOOD));
     registerItem(new ItemBase("MUSHROOM_STEW", new String[]{"Mushroom Stew"}, new String[]{"mushroom_stew"}).setFood(6,7.2f));
     registerItem(new ItemBase("GOLD_SWORD", new String[]{"Gold Sword"}, new String[]{"golden_sword"}).setWeapon(WEAPON_SWORD).setDmg(5).setTool(TOOL_SWORD).setMaterial(MAT_GOLD));
-    registerItem(new ItemBase("GOLD_SHOVEL", new String[]{"Gold Shovel"}, new String[]{"golden_shovel"}).setTool(TOOL_SHOVEL).setDmg(2).setMaterial(MAT_GOLD));
-    registerItem(new ItemBase("GOLD_PICKAXE", new String[]{"Gold Pickaxe"}, new String[]{"golden_pickaxe"}).setTool(TOOL_PICKAXE).setDmg(3).setMaterial(MAT_GOLD));
-    registerItem(new ItemBase("GOLD_AXE", new String[]{"Gold Axe"}, new String[]{"golden_axe"}).setTool(TOOL_AXE).setDmg(4).setMaterial(MAT_GOLD));
+    registerItem(new ItemBase("GOLD_SHOVEL", new String[]{"Gold Shovel"}, new String[]{"golden_shovel"})
+      .setTool(TOOL_SHOVEL).setDmg(2).setMaterial(MAT_GOLD).setDurability(32)
+    );
+    registerItem(new ItemBase("GOLD_PICKAXE", new String[]{"Gold Pickaxe"}, new String[]{"golden_pickaxe"})
+      .setTool(TOOL_PICKAXE).setDmg(3).setMaterial(MAT_GOLD).setDurability(32)
+    );
+    registerItem(new ItemBase("GOLD_AXE", new String[]{"Gold Axe"}, new String[]{"golden_axe"})
+      .setTool(TOOL_AXE).setDmg(4).setMaterial(MAT_GOLD).setDurability(32)
+    );
     registerItem(new ItemBase("STRING", new String[]{"String"}, new String[]{"string"}));
     registerItem(new ItemBase("FEATHER", new String[]{"Feather"}, new String[]{"feather"}));
     registerItem(new ItemBase("GUN_POWDER", new String[]{"Gun Powder"}, new String[]{"gunpowder"}));
-    registerItem(new ItemBase("WOOD_HOE", new String[]{"Wood Hoe"}, new String[]{"wooden_hoe"}).setTool(TOOL_HOE).setFuel(10).setMaterial(MAT_WOOD));
-    registerItem(new ItemBase("STONE_HOE", new String[]{"Stone Hoe"}, new String[]{"stone_hoe"}).setTool(TOOL_HOE).setMaterial(MAT_STONE));
-    registerItem(new ItemBase("IRON_HOE", new String[]{"Iron Hoe"}, new String[]{"iron_hoe"}).setTool(TOOL_HOE).setMaterial(MAT_IRON));
-    registerItem(new ItemBase("DIAMOND_HOE", new String[]{"Diamond Hoe"}, new String[]{"diamond_hoe"}).setTool(TOOL_HOE).setMaterial(MAT_DIAMOND));
-    registerItem(new ItemBase("GOLD_HOE", new String[]{"Gold Hoe"}, new String[]{"golden_hoe"}).setTool(TOOL_HOE).setMaterial(MAT_GOLD));
+    registerItem(new ItemBase("WOOD_HOE", new String[]{"Wood Hoe"}, new String[]{"wooden_hoe"})
+      .setTool(TOOL_HOE).setFuel(10).setMaterial(MAT_WOOD).setDurability(59)
+    );
+    registerItem(new ItemBase("STONE_HOE", new String[]{"Stone Hoe"}, new String[]{"stone_hoe"})
+      .setTool(TOOL_HOE).setMaterial(MAT_STONE).setDurability(131)
+    );
+    registerItem(new ItemBase("IRON_HOE", new String[]{"Iron Hoe"}, new String[]{"iron_hoe"})
+      .setTool(TOOL_HOE).setMaterial(MAT_IRON).setDurability(250)
+    );
+    registerItem(new ItemBase("DIAMOND_HOE", new String[]{"Diamond Hoe"}, new String[]{"diamond_hoe"})
+      .setTool(TOOL_HOE).setMaterial(MAT_DIAMOND).setDurability(1561)
+    );
+    registerItem(new ItemBase("GOLD_HOE", new String[]{"Gold Hoe"}, new String[]{"golden_hoe"})
+      .setTool(TOOL_HOE).setMaterial(MAT_GOLD).setDurability(32)
+    );
     registerItem(new ItemSeeds("SEEDS", new String[]{"Seeds"}, new String[]{"wheat_seeds"}).setSeeds("WHEAT"));
     registerItem(new ItemBase("WHEAT_ITEM", new String[]{"Wheat"}, new String[]{"wheat"}));
     registerItem(new ItemBase("BREAD", new String[]{"Bread"}, new String[]{"bread"}).setFood(5, 6));
     registerItem(new ItemBase("CHAIN", new String[]{"Chainmail"}, new String[]{"chainmail"}));
 
-    registerItem(new ItemShield("SHIELD", new String[]{"Shield"}, new String[]{"shield"}));
+    registerItem(new ItemShield("SHIELD", new String[]{"Shield"}, new String[]{"shield"})
+      .setDurability(337)
+    );
 
     registerItem(new ItemBase("LEATHER_CAP", new String[]{"Leather Cap"}, new String[]{"leather_helmet"}).setArmor(ARMOR_HEAD)
       .setArmorTextures(new String[] {"models/armor/leather_layer_1", "models/armor/leather_layer_2"}
@@ -584,7 +628,9 @@ public class Items {
     registerItem(new ItemBase("MINECART_FURNACE", new String[]{"Minecart Furnace"}, new String[]{"furnace_minecart"}));
     registerItem(new ItemBase("EGG", new String[]{"Egg"}, new String[]{"egg"}));
     registerItem(new ItemCompass("COMPASS", new String[]{"Compass"}, new String[]{"compass_00"}));
-    registerItem(new ItemBase("FISHING_ROD", new String[]{"Fishing Rod"}, new String[]{"fishing_rod"}).setFuel(10).setMaterial(MAT_WOOD));
+    registerItem(new ItemBase("FISHING_ROD", new String[]{"Fishing Rod"}, new String[]{"fishing_rod"})
+      .setFuel(10).setMaterial(MAT_WOOD).setDurability(64)
+    );
     registerItem(new ItemClock("CLOCK", new String[]{"Clock"}, new String[]{"clock_00"}));
     registerItem(new ItemBase("GLOWSTONE_DUST", new String[]{"Glowstone Dust"}, new String[]{"glowstone_dust"}));
     registerItem(new ItemBase("FISH_RAW", new String[]{"Fish Raw"}, new String[]{"cod"}).setFood(2,0.4f));  //variations
@@ -601,7 +647,9 @@ public class Items {
     registerItem(new ItemBase("REDSTONE_REPEATER_ITEM", new String[]{"Redstone Repeater"}, new String[]{"repeater"}).setBlockID("REDSTONE_REPEATER").setCanPlace().setDir());
     registerItem(new ItemBase("COOKIE", new String[]{"Cookie"}, new String[]{"cookie"}).setFood(2,0.4f));
     registerItem(new ItemBase("MAP_USED", new String[]{"Map"}, new String[]{"filled_map"}));
-    registerItem(new ItemBase("SHEARS", new String[]{"Shears"}, new String[]{"shears"}).setTool(TOOL_SHEARS));
+    registerItem(new ItemBase("SHEARS", new String[]{"Shears"}, new String[]{"shears"})
+      .setTool(TOOL_SHEARS).setDurability(238)
+    );
     registerItem(new ItemBase("WATER_MELON", new String[]{"Watermelon"}, new String[]{"melon_slice"}).setFood(2,1.2f));
     registerItem(new ItemSeeds("WATER_MELON_SEEDS", new String[]{"Watermelon Seeds"}, new String[]{"melon_seeds"}).setSeeds("WATER_MELON"));
     registerItem(new ItemSeeds("PUMPKIN_SEEDS", new String[]{"Pumpkin Seeds"}, new String[]{"pumpkin_seeds"}).setSeeds("PUMPKIN"));
@@ -640,7 +688,9 @@ public class Items {
     registerItem(new ItemBase("MAP_EMPTY", new String[]{"Map"}, new String[]{"map"}));
     registerItem(new ItemBase("CARROT_GOLDEN", new String[]{"Golden Carrot"}, new String[]{"golden_carrot"}).setFood(6,14.4f));
 //    registerItem(new ItemBase("HEAD", new String[]{"Head"}, new String[]{"skull_steve"}));
-    registerItem(new ItemBase("FISHING_ROD_CARROT", new String[]{"Carrot on a stick"}, new String[]{"carrot_on_a_stick"}));
+    registerItem(new ItemBase("FISHING_ROD_CARROT", new String[]{"Carrot on a stick"}, new String[]{"carrot_on_a_stick"})
+      .setFuel(10).setMaterial(MAT_WOOD).setDurability(25)
+    );
     registerItem(new ItemBase("NETHER_STAR", new String[]{"Nether Star"}, new String[]{"nether_star"}));
     registerItem(new ItemBase("PUMPKIN_PIE", new String[]{"Pumpkin Pie"}, new String[]{"pumpkin_pie"}).setFood(8,4.8f));
     registerItem(new ItemBase("FIREWORKS", new String[]{"Fireworks"}, new String[]{"firework_rocket"}));

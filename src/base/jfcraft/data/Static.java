@@ -162,7 +162,7 @@ public class Static {
   public static final float red4[] = new float[] {1,0,0,1};
   public static final float green4[] = new float[] {0,1,0,1};
   public static final float blue4[] = new float[] {0,0,1,1};
-  public static final float yellow4[] = new float[] {0.07f,0.20f,0.33f,1};
+  public static final float yellow4[] = new float[] {1,1,0.5f,1};
   public static final float skyblue4[] = new float[] {0.2f,0.2f,0.6f,1};
 
   public static final float _1_8 = 1.0f/8.0f;

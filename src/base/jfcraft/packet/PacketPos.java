@@ -202,6 +202,7 @@ public class PacketPos extends Packet {
               client.s1.block.destroy(client, client.s1, true);
               //??? might need broadcastDelCrack() if destroy() does not call broadcastSetBlock() ???
               server.broadcastSound(client.player.dim, client.player.pos.x, client.player.pos.y, client.player.pos.z, Sounds.SOUND_BREAK, 1);
+              client.player.useItem(client);
             } else {
               server.broadcastAddCrack(client.s1.chunk.dim, client.s1.x, client.s1.y, client.s1.z, client.crack.dmg);
               client.crackTicks = 2;
@@ -213,6 +214,7 @@ public class PacketPos extends Packet {
             client.action[0] = Client.ACTION_ATTACK;
             client.player.exhaustion += 0.3f;
             ((CreatureBase)client.s1.entity).takeDmg(client.player.calcDmg(client.player.items[client.player.activeSlot]), client.player);
+            client.player.useItem(client);
           }
         }
       }

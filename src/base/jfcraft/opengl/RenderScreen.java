@@ -486,6 +486,7 @@ public abstract class RenderScreen {
     } else if (dmg > 0.3f) {
       clr = Static.yellow4;
     }
+    o_box.bindBuffers();
     glUniform1i(Static.uniformEnableTint, 1);
     setViewportBox(x,y,36,2);
     glUniform4fv(Static.uniformTintColor, 1, Static.grey4);

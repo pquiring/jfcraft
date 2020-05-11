@@ -47,6 +47,7 @@ public class ItemBase implements RenderSource {
   public RenderDest bufs[];  //inventory (vars)
   public boolean renderAsEntity;
   public int entityID;
+  public float durability = 0.01f;  //good for 100 uses
   public int varMask = 0xf;
   public Voxel voxel[];
 
@@ -444,6 +445,11 @@ public class ItemBase implements RenderSource {
   }
   public ItemBase setCantGive() {
     cantGive = true;
+    return this;
+  }
+
+  public ItemBase setDurability(float uses) {
+    durability = 1.0f / uses;
     return this;
   }
 

@@ -10,9 +10,11 @@ import javaforce.gl.*;
 import static javaforce.gl.GL.*;
 
 import jfcraft.data.*;
+import jfcraft.client.*;
 import jfcraft.item.*;
 import jfcraft.block.*;
 import jfcraft.opengl.*;
+import jfcraft.packet.*;
 import static jfcraft.data.Direction.*;
 
 public abstract class HumaniodBase extends CreatureBase {
@@ -272,5 +274,20 @@ public abstract class HumaniodBase extends CreatureBase {
 
   public boolean hasShieldEquiped() {
     return items[items.length-1].id == Items.SHIELD;
+  }
+
+  public void useItem(Client client) {
+    //dmg item and destroy if dmg == 0.0f
+    Item item = items[activeSlot];
+    if (item.id == 0) return;  //no item
+    ItemBase itembase = Static.items.items[item.id];
+    if (!itembase.isDamaged) return;  //not useable item
+    item.dmg -= itembase.durability;
+    if (item.dmg <= 0.0f) {
+      item.clear();
+      client.serverTransport.setInvItem((byte)client.player.activeSlot, item);
+    } else {
+      client.serverTransport.addUpdate(new PacketSetInvDmg(Packets.SETINVDMG, item.dmg));
+    }
   }
 }
