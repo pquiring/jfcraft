@@ -40,6 +40,7 @@ public class CreateWorldMenu extends RenderScreen {
     super.init();
     world_name = addTextField("New World", 5, 32, 512-10, Static.black4, 64, false, 1);
     seed = addTextField(Long.toString(r.nextLong()), 5, 79, 512-10, Static.black4, 64, false, 1);
+    seed.setNumbersOnly();
     addButton("Random", 20, 79+32, 226, new Runnable() {public void run() {
       randomSeed();
     }});

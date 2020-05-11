@@ -774,7 +774,11 @@ public abstract class RenderScreen {
     int max;
     float back[];
     boolean center;
+    boolean numbersOnly;
     int scale;
+    public void setNumbersOnly() {
+      numbersOnly = true;
+    }
     public String getText() {
       return txt.toString();
     }
@@ -788,6 +792,15 @@ public abstract class RenderScreen {
 //      Static.log("key=" + (int)ch);
       if (ch < 32) return;
       if (txt.length() == max) return;
+      if (numbersOnly) {
+        boolean ok = false;
+        if ((ch == '-' || ch == '+') && cpos == 0) {
+          ok = true;
+        } else if (ch >= '0' && ch <= '9') {
+          ok = true;
+        }
+        if (!ok) return;
+      }
       txt.insert(cpos, ch);
       cpos++;
     }
@@ -984,7 +997,7 @@ public abstract class RenderScreen {
       }
       t_text.bind();
       for(int p=field.dpos;p<field.txt.length();p++) {
-        renderChar(x,y,field.txt.charAt(p),Static.white4, field.scale);
+        renderChar(x+1,y+1,field.txt.charAt(p),Static.white4, field.scale);
         x += fontSize * field.scale;
       }
       if (showCursor && focus == field) {
