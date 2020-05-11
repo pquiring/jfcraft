@@ -60,8 +60,6 @@ public class Static {
 
   public static String debugMsg;
 
-  public static boolean doSteps = false;
-
   public static boolean optionMusic = true;
 
   public static ServerInterface iface;
@@ -234,7 +232,7 @@ public class Static {
     int cnt = noiseParams.length;
     noises = new Noise[cnt];
     Random r = new Random();
-    r.setSeed(world.seed);
+    r.setSeed(world.options.seed);
     for(int a=0;a<cnt;a++) {
       noises[a] = new Noise();
       noises[a].init(r, (int)noiseParams[a][0], noiseParams[a][1], noiseParams[a][2]);

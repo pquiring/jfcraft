@@ -38,7 +38,7 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
 
     r.setSeed(chunk.seed);
 
-    if (Static.doSteps) smoothSteps();
+    if (Static.server.world.options.doSteps) smoothSteps();
 
     addStuff();
   }

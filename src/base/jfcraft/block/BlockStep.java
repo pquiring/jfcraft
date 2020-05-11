@@ -24,7 +24,7 @@ public class BlockStep extends BlockBase {
     isSolid = false;
     isDir = true;
     isDirXZ = true;
-    isVar = true;
+//    isVar = true;
     varMask = 0x7;  //remove VAR_UPPER
 //    setGreenTop();  //test
 //    dropBlock = "AIR";

@@ -22,6 +22,7 @@ public class CreateWorldMenu extends RenderScreen {
   private TextField world_name;
   private TextField seed;
   private String initTxt;
+  private CheckBox steps;
 
   public CreateWorldMenu() {
     id = Client.CREATEWORLD;
@@ -31,6 +32,7 @@ public class CreateWorldMenu extends RenderScreen {
     initTxt = "New World";
     setFocus(world_name);
     randomSeed();
+    steps.setSelected(false);
   }
 
   public void init() {
@@ -47,6 +49,10 @@ public class CreateWorldMenu extends RenderScreen {
     addButton("Cancel", 266, 390, 226, new Runnable() {public void run() {
       Static.video.setScreen(Static.screens.screens[Client.SINGLE]);
     }});
+    addButton("Add Steps", 20, 79+32+40+16, 226, new Runnable() {public void run() {
+      steps.setSelected(!steps.isSelected());
+    }});
+    steps = addCheckBox(20+226+16, 79+32+40+16+5);
   }
 
   public void render(int width, int height) {
@@ -79,6 +85,7 @@ public class CreateWorldMenu extends RenderScreen {
     o_menu.render();
 
     renderButtons();
+    renderCheckBoxes();
     renderFields();
   }
 
@@ -109,7 +116,10 @@ public class CreateWorldMenu extends RenderScreen {
     } catch (Exception e) {
       seedValue = 0;
     }
-    if (!server.createWorld(name, seedValue)) {
+    WorldOptions opts = new WorldOptions();
+    opts.seed = seedValue;
+    opts.doSteps = steps.isSelected();
+    if (!server.createWorld(name, opts)) {
       MessageMenu message = (MessageMenu)Static.screens.screens[Client.MESSAGE];
       message.setup("Error", server.errmsg, Static.screens.screens[Client.MAIN]);
       Static.video.setScreen(message);

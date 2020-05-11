@@ -38,6 +38,7 @@ public class DialogCreateWorld extends javax.swing.JDialog {
     jLabel2 = new javax.swing.JLabel();
     seed = new javax.swing.JTextField();
     random = new javax.swing.JButton();
+    doSteps = new javax.swing.JCheckBox();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     setTitle("Create New World");
@@ -71,6 +72,8 @@ public class DialogCreateWorld extends javax.swing.JDialog {
       }
     });
 
+    doSteps.setText("Smooth Steps");
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
@@ -92,7 +95,10 @@ public class DialogCreateWorld extends javax.swing.JDialog {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(seed, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(random)))
+            .addComponent(random))
+          .addGroup(layout.createSequentialGroup()
+            .addComponent(doSteps)
+            .addGap(0, 0, Short.MAX_VALUE)))
         .addContainerGap())
     );
     layout.setVerticalGroup(
@@ -107,6 +113,8 @@ public class DialogCreateWorld extends javax.swing.JDialog {
           .addComponent(jLabel2)
           .addComponent(seed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(random))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(doSteps)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(ok)
@@ -131,6 +139,7 @@ public class DialogCreateWorld extends javax.swing.JDialog {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton cancel;
+  private javax.swing.JCheckBox doSteps;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JTextField name;
@@ -151,7 +160,8 @@ public class DialogCreateWorld extends javax.swing.JDialog {
     world.chunks = new Chunks(world);
     world.name = worldName;
     world.type = "default";
-    world.seed = Long.valueOf(seed.getText());
+    world.options.seed = Long.valueOf(seed.getText());
+    world.options.doSteps = doSteps.isSelected();
     String folderName = world.createFolderName(worldName);
     new File(folderName).mkdirs();
     world.save(folderName + "/world.dat");

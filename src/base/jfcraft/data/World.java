@@ -23,17 +23,18 @@ import jfcraft.plugin.PluginLoader;
 public class World implements SerialClass, SerialCreator {
   public String name;  //may differ from folderName
   public String type;  //default, flat, custom...
-  public long seed;
   public XYZ spawn = new XYZ(8.5f, 65f, 8.5f);
   public int time = 6000;  //time of day (in ticks) (24000 = full day)
   public int day;
   public boolean genSpawnAreaDone;
+  public WorldOptions options;
 
   public boolean isClient, isServer;
 
   public World(boolean isServer) {
     this.isServer = isServer;
     this.isClient = !isServer;
+    options = new WorldOptions();
   }
 
   //id mapping
@@ -715,7 +716,7 @@ public class World implements SerialClass, SerialCreator {
     byte typeBytes[] = type.getBytes();
     buffer.writeInt(typeBytes.length);
     buffer.writeBytes(typeBytes);
-    buffer.writeLong(seed);
+    options.write(buffer, file);
     buffer.writeFloat(spawn.x);
     buffer.writeFloat(spawn.y);
     buffer.writeFloat(spawn.z);
@@ -803,7 +804,8 @@ public class World implements SerialClass, SerialCreator {
     buffer.readBytes(typeBytes);
     type = new String(typeBytes);
 
-    seed = buffer.readLong();
+    options.read(buffer, file);
+
     spawn.x = buffer.readFloat();
     spawn.y = buffer.readFloat();
     spawn.z = buffer.readFloat();
@@ -903,7 +905,7 @@ public class World implements SerialClass, SerialCreator {
       return false;
     }
 
-    Static.log("Loaded world:" + this.name + "," + type + "," + seed);
+    Static.log("Loaded world:" + this.name + "," + type + "," + options.seed);
     return true;
   }
 

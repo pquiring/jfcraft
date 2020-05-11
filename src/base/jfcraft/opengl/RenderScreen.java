@@ -53,6 +53,7 @@ public abstract class RenderScreen {
   public byte id;
   private TextField focus;
   public ArrayList<Button> buttons = new ArrayList<Button>();
+  public ArrayList<CheckBox> checkboxes = new ArrayList<CheckBox>();
   public ArrayList<TextField> fields = new ArrayList<TextField>();
   public ArrayList<ScrollBar> scrolls = new ArrayList<ScrollBar>();
 
@@ -123,6 +124,14 @@ public abstract class RenderScreen {
       if (x >= button.x1 && x <= button.x2 && y >= button.y1 && y <= button.y2) {
         focus = null;
         button.r.run();
+        return;
+      }
+    }
+    for(int a=0;a<checkboxes.size();a++) {
+      CheckBox checkbox = checkboxes.get(a);
+      if (x >= checkbox.x1 && x <= checkbox.x2 && y >= checkbox.y1 && y <= checkbox.y2) {
+        focus = null;
+        checkbox.setSelected(!checkbox.isSelected());
         return;
       }
     }
@@ -743,6 +752,18 @@ public abstract class RenderScreen {
     }
   }
 
+  public static class CheckBox {
+    int x1,y1,x2,y2;
+    RenderBuffers on, off;
+    boolean selected;
+    public boolean isSelected() {
+      return selected;
+    }
+    public void setSelected(boolean selected) {
+      this.selected = selected;
+    }
+  }
+
   public class TextField {
     StringBuffer txt;
     int dpos;  //display position
@@ -893,6 +914,36 @@ public abstract class RenderScreen {
     for(int a=0;a<buttons.size();a++) {
       Button button = buttons.get(a);
       renderText(button.tx, button.ty, button.txt, button.clr);
+    }
+  }
+
+  public CheckBox addCheckBox(int x1,int y1) {
+    CheckBox checkbox = new CheckBox();
+    int width = 29;
+    int height = 29;
+    checkbox.x1 = x1;
+    checkbox.y1 = y1;
+    checkbox.x2 = x1 + width - 1;
+    checkbox.y2 = y1 + height - 1;
+    checkbox.on = createMenu(x1, y1, 416, 0, width, height, width, height);
+    checkbox.off = createMenu(x1, y1, 384, 0, width, height, width, height);
+    checkboxes.add(checkbox);
+    return checkbox;
+  }
+
+  public void renderCheckBoxes() {
+    setOrtho();
+    setViewportMenu();
+    t_widgets.bind();
+    for(int a=0;a<checkboxes.size();a++) {
+      CheckBox checkbox = checkboxes.get(a);
+      if (checkbox.isSelected()) {
+        checkbox.on.bindBuffers();
+        checkbox.on.render();
+      } else {
+        checkbox.off.bindBuffers();
+        checkbox.off.render();
+      }
     }
   }
 
