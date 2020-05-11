@@ -222,8 +222,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
           if (temp < 32.0) {
             blocks[p + Static.SEALEVEL * 256] = Blocks.ICEBLOCK;
             bits[p + Static.SEALEVEL * 256] = 0;
-          } else {
-            blocks2[p + Static.SEALEVEL * 256] = Blocks.WATER;
+            blocks2[p + Static.SEALEVEL * 256] = Blocks.AIR;
           }
         } else {
           if (temp < 32.0) {
