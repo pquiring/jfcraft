@@ -815,8 +815,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
           data.z = z;
           for(int x=0;x<16;x++) {  //+ - 1
             data.x = x;
-//            data.temp = biome.temp[z * 16 + x];
-//            data.rain = biome.rain[z * 16 + x];
+            data.temp = temp[z * 16 + x];
+            data.rain = rain[z * 16 + x];
             id = getID(x,y,z);
             id2 = getID2(x,y,z);
             boolean hasBlock = id != 0;
