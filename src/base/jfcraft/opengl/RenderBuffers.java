@@ -196,6 +196,7 @@ public class RenderBuffers implements Cloneable {
     float lvl = lvls[side] * base_light;
     switch (side) {
       case N:
+        vertex = 3 - vertex;
         switch (vertex) {
           case 0: lvl += lvls[NE] * adj_light; lvl += lvls[ANE] * adj_light; lvl += lvls[AN] * adj_light; break;
           case 1: lvl += lvls[AN] * adj_light; lvl += lvls[ANW] * adj_light; lvl += lvls[NW] * adj_light; break;
@@ -204,6 +205,7 @@ public class RenderBuffers implements Cloneable {
         }
         break;
       case E:
+        vertex = 3 - vertex;
         switch (vertex) {
           case 0: lvl += lvls[SE] * adj_light; lvl += lvls[ASE] * adj_light; lvl += lvls[AE] * adj_light; break;
           case 1: lvl += lvls[AE] * adj_light; lvl += lvls[ANE] * adj_light; lvl += lvls[NE] * adj_light; break;
@@ -212,6 +214,7 @@ public class RenderBuffers implements Cloneable {
         }
         break;
       case S:
+        vertex = 3 - vertex;
         switch (vertex) {
           case 0: lvl += lvls[SW] * adj_light; lvl += lvls[ASW] * adj_light; lvl += lvls[AS] * adj_light; break;
           case 1: lvl += lvls[AS] * adj_light; lvl += lvls[ASE] * adj_light; lvl += lvls[SE] * adj_light; break;
@@ -220,6 +223,7 @@ public class RenderBuffers implements Cloneable {
         }
         break;
       case W:
+        vertex = 3 - vertex;
         switch (vertex) {
           case 0: lvl += lvls[NW] * adj_light; lvl += lvls[ANW] * adj_light; lvl += lvls[AW] * adj_light; break;
           case 1: lvl += lvls[AW] * adj_light; lvl += lvls[ASW] * adj_light; lvl += lvls[SW] * adj_light; break;
