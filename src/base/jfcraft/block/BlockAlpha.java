@@ -28,6 +28,8 @@ public class BlockAlpha extends BlockBase {
       if (data.id[a] == id) continue;
       data.side = a;
       data.dirSide = a;
+      data.isDir = isDir;
+      data.isDirXZ = isDirXZ;
       addFace(buf,data,st);
     }
   }

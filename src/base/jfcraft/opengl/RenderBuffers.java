@@ -188,15 +188,16 @@ public class RenderBuffers implements Cloneable {
   public void addBlockLight(float lvl) {
     bll.append(lvl);
   }
-  private static float base_light = 70f;
-  private static float adj_light = 10f;  //3 adj block levels
+  private static float base_light = 70f;  //(use 10f to debug)
+  private static float adj_light = 10f;  //3 adj block levels  (use 30f to debug)
   //TODO : need lighting from ANE,ANW,etc blocks to better implement this
-  private float calcLight(int side, float lvls[], int vertex) {
-    //vertex are in CW order starting at top left
-    float lvl = lvls[side] * base_light;
-    switch (side) {
+  private float calcLight(Face f, RenderData data, float lvls[], int vertex) {
+    //vertex are in CW order starting at top left (but Face.rotate() rotates them)
+    //A/B faces are viewed from player perspective
+    float lvl = lvls[data.dirSide] * base_light;
+    vertex = f.rotateVertex(data, vertex);
+    switch (data.dirSide) {
       case N:
-        vertex = 3 - vertex;
         switch (vertex) {
           case 0: lvl += lvls[NE] * adj_light; lvl += lvls[ANE] * adj_light; lvl += lvls[AN] * adj_light; break;
           case 1: lvl += lvls[AN] * adj_light; lvl += lvls[ANW] * adj_light; lvl += lvls[NW] * adj_light; break;
@@ -205,7 +206,6 @@ public class RenderBuffers implements Cloneable {
         }
         break;
       case E:
-        vertex = 3 - vertex;
         switch (vertex) {
           case 0: lvl += lvls[SE] * adj_light; lvl += lvls[ASE] * adj_light; lvl += lvls[AE] * adj_light; break;
           case 1: lvl += lvls[AE] * adj_light; lvl += lvls[ANE] * adj_light; lvl += lvls[NE] * adj_light; break;
@@ -214,7 +214,6 @@ public class RenderBuffers implements Cloneable {
         }
         break;
       case S:
-        vertex = 3 - vertex;
         switch (vertex) {
           case 0: lvl += lvls[SW] * adj_light; lvl += lvls[ASW] * adj_light; lvl += lvls[AS] * adj_light; break;
           case 1: lvl += lvls[AS] * adj_light; lvl += lvls[ASE] * adj_light; lvl += lvls[SE] * adj_light; break;
@@ -223,17 +222,16 @@ public class RenderBuffers implements Cloneable {
         }
         break;
       case W:
-        vertex = 3 - vertex;
         switch (vertex) {
           case 0: lvl += lvls[NW] * adj_light; lvl += lvls[ANW] * adj_light; lvl += lvls[AW] * adj_light; break;
           case 1: lvl += lvls[AW] * adj_light; lvl += lvls[ASW] * adj_light; lvl += lvls[SW] * adj_light; break;
           case 2: lvl += lvls[SW] * adj_light; lvl += lvls[BSW] * adj_light; lvl += lvls[BW] * adj_light; break;
-          case 3: lvl += lvls[BW] * adj_light; lvl += lvls[BSW] * adj_light; lvl += lvls[NW] * adj_light; break;
+          case 3: lvl += lvls[BW] * adj_light; lvl += lvls[BNW] * adj_light; lvl += lvls[NW] * adj_light; break;
         }
         break;
       case A:
         switch (vertex) {
-          case 0: lvl += lvls[AW] * adj_light; lvl += lvls[ANE] * adj_light; lvl += lvls[AN] * adj_light; break;
+          case 0: lvl += lvls[AW] * adj_light; lvl += lvls[ANW] * adj_light; lvl += lvls[AN] * adj_light; break;
           case 1: lvl += lvls[AN] * adj_light; lvl += lvls[ANE] * adj_light; lvl += lvls[AE] * adj_light; break;
           case 2: lvl += lvls[AE] * adj_light; lvl += lvls[ASE] * adj_light; lvl += lvls[AS] * adj_light; break;
           case 3: lvl += lvls[AS] * adj_light; lvl += lvls[ASW] * adj_light; lvl += lvls[AW] * adj_light; break;
@@ -250,11 +248,11 @@ public class RenderBuffers implements Cloneable {
     }
     return lvl / 100.0f;
   }
-  public void addSunLight(RenderData data, int vertex) {
+  public void addSunLight(RenderData data, Face f, int vertex) {
     float lvl;
     if (data.adjLight) {
       //complex adj lighting
-      lvl = calcLight(data.dirSide, data.sl, vertex);
+      lvl = calcLight(f, data, data.sl, vertex);
     } else {
       //simple X lighting
       lvl = data.sl[X];
@@ -280,11 +278,11 @@ public class RenderBuffers implements Cloneable {
     }
     sll.append(lvl);
   }
-  public void addBlockLight(RenderData data, int vertex) {
+  public void addBlockLight(RenderData data, Face f, int vertex) {
     float lvl;
     if (data.adjLight) {
       //complex adj lighting
-      lvl = calcLight(data.dirSide, data.bl, vertex);
+      lvl = calcLight(f, data, data.bl, vertex);
     } else {
       //simple X lighting
       lvl = data.bl[X];
@@ -618,8 +616,8 @@ public class RenderBuffers implements Cloneable {
 
     for(int a=0;a<4;a++) {
       addColor(data);
-      addSunLight(data, a);
-      addBlockLight(data, a);
+      addSunLight(data, f, a);
+      addBlockLight(data, f, a);
     }
     addPoly(new int[] {off+3,off+2,off+1,off+0});
     if (data.doubleSided) {

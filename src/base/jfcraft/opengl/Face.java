@@ -152,4 +152,162 @@ public class Face {
     //y-90 N -> W
     rotate(0, -90, 0, true);
   }
+
+  //isDirXZ (dirSide __ dir[X])
+  //A :
+  private static int[] vA__A = {-1,-1,-1,-1};  //error
+  private static int[] vA__B = {-1,-1,-1,-1};  //error
+  private static int[] vA__N = {0,1,2,3};
+  private static int[] vA__E = {1,2,3,0};
+  private static int[] vA__S = {3,0,1,2};
+  private static int[] vA__W = {2,3,0,1};
+
+  //B :
+  private static int[] vB__A = {-1,-1,-1,-1};  //error
+  private static int[] vB__B = {-1,-1,-1,-1};  //error
+  private static int[] vB__N = {0,1,2,3};
+  private static int[] vB__E = {3,0,1,2};
+  private static int[] vB__S = {2,3,0,1};
+  private static int[] vB__W = {2,3,0,1};
+
+  //isDir : full rotation
+  //NOTE : rotation : look towards zero, rotation is CW
+  //A : no rotation
+  private static int[] vA_A = {0,1,2,3};
+  private static int[] vA_B = {0,1,2,3};
+  private static int[] vA_N = {0,1,2,3};
+  private static int[] vA_E = {0,1,2,3};
+  private static int[] vA_S = {0,1,2,3};
+  private static int[] vA_W = {0,1,2,3};
+
+  //B : 0,0,180
+  private static int[] vB_A = {2,3,0,1};
+  private static int[] vB_B = {2,3,0,1};
+  private static int[] vB_N = {2,3,0,1};
+  private static int[] vB_E = {2,3,0,1};
+  private static int[] vB_S = {2,3,0,1};
+  private static int[] vB_W = {2,3,0,1};
+
+  //N : 90,0,180
+  private static int[] vN_A = {0,1,2,3};
+  private static int[] vN_B = {2,3,0,1};
+  private static int[] vN_N = {0,1,2,3};
+  private static int[] vN_E = {1,2,3,0};
+  private static int[] vN_S = {2,3,0,1};
+  private static int[] vN_W = {3,0,1,2};
+
+  //E : 0,-90,90
+  private static int[] vE_A = {1,2,3,0};
+  private static int[] vE_B = {1,2,3,0};
+  private static int[] vE_N = {3,0,1,2};
+  private static int[] vE_E = {0,1,2,3};
+  private static int[] vE_S = {1,2,3,0};
+  private static int[] vE_W = {2,3,0,1};
+
+  //S : -90,0,0
+  private static int[] vS_A = {2,3,0,1};
+  private static int[] vS_B = {0,1,2,3};
+  private static int[] vS_N = {2,3,0,1};
+  private static int[] vS_E = {3,0,1,2};
+  private static int[] vS_S = {0,1,2,3};
+  private static int[] vS_W = {1,2,3,0};
+
+  //W : 0,90,-90
+  private static int[] vW_A = {3,0,1,2};
+  private static int[] vW_B = {3,0,1,2};
+  private static int[] vW_N = {1,3,2,0};
+  private static int[] vW_E = {2,3,0,1};
+  private static int[] vW_S = {3,0,1,2};
+  private static int[] vW_W = {0,1,2,3};
+
+  /** Rotates a vertex when a Face is rotated.
+   Effectively the order of the vertex is changed.
+   */
+  public int rotateVertex(RenderData data, int vertex) {
+    if (data.isDirXZ) {
+      switch (data.dirSide) {
+        case A:
+          switch (data.dir[X]) {
+            case A: return vA__A[vertex];
+            case B: return vA__B[vertex];
+            case N: return vA__N[vertex];
+            case E: return vA__E[vertex];
+            case S: return vA__S[vertex];
+            case W: return vA__W[vertex];
+          }
+          break;
+        case B:
+          switch (data.dir[X]) {
+            case A: return vB__A[vertex];
+            case B: return vB__B[vertex];
+            case N: return vB__N[vertex];
+            case E: return vB__E[vertex];
+            case S: return vB__S[vertex];
+            case W: return vB__W[vertex];
+          }
+          break;
+        default:
+          return vertex;
+      }
+    } else if (data.isDir) {
+      switch (data.dir[X]) {
+        case A:
+          switch (data.dirSide) {
+            case A: return vA_A[vertex];
+            case B: return vA_B[vertex];
+            case N: return vA_N[vertex];
+            case E: return vA_E[vertex];
+            case S: return vA_S[vertex];
+            case W: return vA_W[vertex];
+          }
+          break;
+        case B:
+          switch (data.dirSide) {
+            case A: return vB_A[vertex];
+            case B: return vB_B[vertex];
+            case N: return vB_N[vertex];
+            case E: return vB_E[vertex];
+            case S: return vB_S[vertex];
+            case W: return vB_W[vertex];
+          }
+        case N:
+          switch (data.dirSide) {
+            case A: return vN_A[vertex];
+            case B: return vN_B[vertex];
+            case N: return vN_N[vertex];
+            case E: return vN_E[vertex];
+            case S: return vN_S[vertex];
+            case W: return vN_W[vertex];
+          }
+        case E:
+          switch (data.dirSide) {
+            case A: return vE_A[vertex];
+            case B: return vE_B[vertex];
+            case N: return vE_N[vertex];
+            case E: return vE_E[vertex];
+            case S: return vE_S[vertex];
+            case W: return vE_W[vertex];
+          }
+        case S:
+          switch (data.dirSide) {
+            case A: return vS_A[vertex];
+            case B: return vS_B[vertex];
+            case N: return vS_N[vertex];
+            case E: return vS_E[vertex];
+            case S: return vS_S[vertex];
+            case W: return vS_W[vertex];
+          }
+        case W:
+          switch (data.dirSide) {
+            case A: return vW_A[vertex];
+            case B: return vW_B[vertex];
+            case N: return vW_N[vertex];
+            case E: return vW_E[vertex];
+            case S: return vW_S[vertex];
+            case W: return vW_W[vertex];
+          }
+      }
+    }
+    return vertex;
+  }
 }

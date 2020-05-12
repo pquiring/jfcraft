@@ -135,6 +135,8 @@ public class BlockLiquid extends BlockAlpha {
         if (data.id2[a] == id) continue;
         data.side = a;
         data.dirSide = a;
+        data.isDir = isDir;
+        data.isDirXZ = isDirXZ;
         if (data.id[a] == Blocks.ICEBLOCK) continue;
         addFace(buf,data,st);
       }
@@ -251,6 +253,8 @@ wxe
       if ((!data.opaque[B]) && (data.id2[B] != id)) {
         data.side = B;
         data.dirSide = B;
+        data.isDir = isDir;
+        data.isDirXZ = isDirXZ;
         addFace(buf,data,st);
       }
       st = textures[1];  //sides are always flowing down (should never see it though)

@@ -31,6 +31,8 @@ public class BlockTrans extends BlockBase {
       if (data.id[a] == id) continue;
       data.side = a;
       data.dirSide = a;
+      data.isDir = isDir;
+      data.isDirXZ = isDirXZ;
       addFace(buf,data);
     }
   }

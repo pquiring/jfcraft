@@ -175,7 +175,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public void addFace(RenderBuffers buf, RenderData data, SubTexture st) {
     data.isDir = isDir;
     data.isDirXZ = isDirXZ;
-    data.isGreen = isGreenAllSides || (isGreenTop && data.side == A);
+    data.isGreen = isGreenAllSides || (isGreenTop && data.dirSide == A);
     data.isRed = isRed;
     data.isBlue = isBlue;
     buf.addFace(data, st);
@@ -676,6 +676,8 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
         data.dirSide = side;
         if (data.opaque[side]) continue;
         data.side = a;
+        data.isDir = isDir;
+        data.isDirXZ = isDirXZ;
         addFace(buf, data, getTexture(data));
       }
     }

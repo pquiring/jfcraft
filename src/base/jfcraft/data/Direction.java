@@ -7,8 +7,8 @@ package jfcraft.data;
 
 public class Direction {
   //sides (Z+=toward viewer : Y+=up : X+=right)
-  public static final int B = 0;  //Below (default)
-  public static final int A = 1;  //Above
+  public static final int A = 0;  //Above (default)
+  public static final int B = 1;  //Below
   public static final int N = 2;  //North : must NOT be zero (see BlockRail)
   public static final int E = 3;  //East
   public static final int S = 4;  //South
