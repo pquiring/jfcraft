@@ -1674,6 +1674,25 @@ public class Server {
       queue.process();
       broadcastChunk(chunk);
       client.serverTransport.sendMsg("Chunk " + cx + "," + cz + " relight");
+    }
+    else if (p[0].equals("/set")) {
+      if (p.length != 5) {
+        client.serverTransport.sendMsg("/set x y z id");
+        return;
+      }
+      int x = Integer.valueOf(p[1]);
+      int y = Integer.valueOf(p[2]);
+      int z = Integer.valueOf(p[3]);
+      Item item = findItem(p[4], 1);
+      if (item == null) {
+        client.serverTransport.sendMsg("Error:Item not found:" + p[4]);
+        return;
+      }
+      if (Static.isItem(item.id)) {
+        client.serverTransport.sendMsg("Error:Can not place item");
+        return;
+      }
+      world.setBlock(client.player.dim, x, y, z, item.id, 0);
     } else {
       client.serverTransport.sendMsg("Unknown command");
     }
