@@ -75,6 +75,7 @@ public class Blocks {
   public static char AIR;  //will be zero
   public static char DIRT;
   public static char GRASS;
+  public static char GRASSBANK;
   public static char WEEDS;
   public static char SNOW;
   public static char WATER;
@@ -215,6 +216,7 @@ public class Blocks {
     AIR = world.getBlockID("AIR");
     DIRT = world.getBlockID("DIRT");
     GRASS = world.getBlockID("GRASS");
+    GRASSBANK = world.getBlockID("GRASSBANK");
     WEEDS = world.getBlockID("WEEDS");
     SNOW = world.getBlockID("SNOW");
     WATER = world.getBlockID("WATER");
@@ -415,7 +417,9 @@ public class Blocks {
     registerBlock(new BlockAir("AIR"));
     registerBlock(new BlockOpaque("STONE", new String[] {"Stone"}, new String[] {"stone"})
       .setDrop("COBBLESTONE").setSmooth("STEP").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockGrass("GRASS", new String[] {"Grass"}, new String[] {"grass_block_top", "grass_block_side", "dirt"})
+    registerBlock(new BlockGrass("GRASS", new String[] {"Grass"}, new String[] {"grass_block_top", "grass_block_top", "dirt"})
+      .setGreenTopSide().setSupportsPlant().setSmooth("STEP").setDrop("DIRT").setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
+    registerBlock(new BlockGrass("GRASSBANK", new String[] {"Grass"}, new String[] {"grass_block_top", "grass_block_side", "dirt"})
       .setGreenTop().setSupportsPlant().setSmooth("STEP").setDrop("DIRT").setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
     registerBlock(new BlockCarpet("SNOW", new String[] {"Snow"}, new String[] {"snow"})
       .setDrop("AIR").setSupported().setBlocks2().setCanReplace().setHardness(0.2f, TOOL_SHOVEL, CLS_NONE)

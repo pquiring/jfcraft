@@ -56,7 +56,8 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public boolean isSolid;  //is solid full block
   public boolean isAlpha;  //has alpha blending
   public boolean isPerf;  //has transparent/opaque versions (performance)
-  public boolean isGreenTop;  //green color on top only (based on rain/temp)
+  public boolean isGreenTop;  //green color on top (based on rain/temp)
+  public boolean isGreenSide;  //green color on side (based on rain/temp)
   public boolean isGreenAllSides;  //green color on all sides (based on rain/temp)
   public boolean isRed;  //red color on top only (based on depth : redstone)
   public boolean isBlue;  //water
@@ -154,6 +155,12 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     isGreenTop = true;
     return this;
   }
+  public BlockBase setGreenTopSide() {
+    isGreen = true;
+    isGreenTop = true;
+    isGreenSide = true;
+    return this;
+  }
   public BlockBase setGreenAllSides() {
     isGreen = true;
     isGreenAllSides = true;
@@ -175,7 +182,9 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public void addFace(RenderBuffers buf, RenderData data, SubTexture st) {
     data.isDir = isDir;
     data.isDirXZ = isDirXZ;
-    data.isGreen = isGreenAllSides || (isGreenTop && data.dirSide == A);
+    data.isGreen = isGreenAllSides
+      || (isGreenTop && data.dirSide == A)
+      || (isGreenSide && data.dirSide >= N && data.dirSide <= W);
     data.isRed = isRed;
     data.isBlue = isBlue;
     buf.addFace(data, st);
