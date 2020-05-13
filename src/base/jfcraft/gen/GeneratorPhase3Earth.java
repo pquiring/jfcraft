@@ -63,8 +63,14 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
       c = c.S;
       z -= 16;
     }
-    if (c.getBlock(x, y, z).id != Blocks.AIR) return;  //only replace air
+//    if (c.getBlock(x, y, z).id != Blocks.AIR) return;  //only replace air
     c.setBlock(x, y, z, id, Chunk.makeBits(dir,var));
+  }
+  private char getID(int x,int y,int z) {
+    return chunk.getID(x,y,z);
+  }
+  private char getID2(int x,int y,int z) {
+    return chunk.getID2(x,y,z);
   }
   private BlockBase getBlock(int x, int y, int z) {
     if (y < 0) return null;
@@ -89,76 +95,108 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
     return Static.blocks.blocks[c.getID(x,y,z)];
   }
 
+  private void addStep(int x,int y,int z, int dy, char sid, boolean upper) {
+    boolean n = getBlock(x, y, z-1).isSolid;
+    boolean e = getBlock(x+1, y, z).isSolid;
+    boolean s = getBlock(x, y, z+1).isSolid;
+    boolean w = getBlock(x-1, y, z).isSolid;
+    char id = Static.blocks.blocks[sid].stepID;
+    if (id == 0) return;
+    char bid = chunk.getID(x,y+dy,z);
+    int var = BlockStep.getVar(bid);
+    if (var == -1) return;
+    if (upper) var |= VAR_UPPER;
+    if (n) {
+      if (e)
+        setBlock(x, y, z, id, NE, var);
+      else if (w)
+        setBlock(x, y, z, id, NW, var);
+      else
+        setBlock(x, y, z, id, N, var);
+    } else if (s) {
+      if (e)
+        setBlock(x, y, z, id, SE, var);
+      else if (w)
+        setBlock(x, y, z, id, SW, var);
+      else
+        setBlock(x, y, z, id, S, var);
+    } else if (e) {
+      setBlock(x, y, z, id, E, var);
+    } else if (w) {
+      setBlock(x, y, z, id, W, var);
+    }
+  }
+
+  private void addStep2(int x,int y,int z, int dy, char sid, boolean upper) {
+    boolean n = getBlock(x, y, z-1).isSolid;
+    boolean e = getBlock(x+1, y, z).isSolid;
+    boolean s = getBlock(x, y, z+1).isSolid;
+    boolean w = getBlock(x-1, y, z).isSolid;
+    char id = Static.blocks.blocks[sid].stepID;
+    if (id == 0) {
+      Static.log("Error:stepID==0");
+      return;
+    }
+    char bid = chunk.getID2(x,y+dy,z);
+    int var = BlockStep.getVar(bid);
+    if (var == -1) {
+      Static.log("Error:var==-1:");
+      return;
+    }
+    if (upper) var |= VAR_UPPER;
+    if (n) {
+      if (e)
+        setBlock(x, y, z, id, NE, var);
+      else if (w)
+        setBlock(x, y, z, id, NW, var);
+      else
+        setBlock(x, y, z, id, N, var);
+    } else if (s) {
+      if (e)
+        setBlock(x, y, z, id, SE, var);
+      else if (w)
+        setBlock(x, y, z, id, SW, var);
+      else
+        setBlock(x, y, z, id, S, var);
+    } else if (e) {
+      setBlock(x, y, z, id, E, var);
+    } else if (w) {
+      setBlock(x, y, z, id, W, var);
+    }
+  }
+
   public void smoothSteps() {
     for(int x=0;x<16;x++) {
       for(int z=0;z<16;z++) {
         if (Settings.current.doSteps) {
           //smooth out terrain with steps
           char lastId = chunk.getID(x, 0, z);
+          char lastId2 = chunk.getID2(x, 0, z);
           for(int y=1;y<255;y++) {
             char id = chunk.getID(x, y, z);
+            char id2 = chunk.getID2(x, y, z);
             if (lastId != 0 && id == 0 && Static.blocks.blocks[lastId].canSmooth) {
               //on top
-              boolean n = getBlock(x, y, z-1).isSolid;
-              boolean e = getBlock(x+1, y, z).isSolid;
-              boolean s = getBlock(x, y, z+1).isSolid;
-              boolean w = getBlock(x-1, y, z).isSolid;
-              id = Static.blocks.blocks[lastId].stepID;
-              char bid = chunk.getID(x,y-1,z);
-              int var = BlockStep.getVar(bid);
-              if (n) {
-                if (e)
-                  setBlock(x, y, z, id, NE, var);
-                else if (w)
-                  setBlock(x, y, z, id, NW, var);
-                else
-                  setBlock(x, y, z, id, N, var);
-              } else if (s) {
-                if (e)
-                  setBlock(x, y, z, id, SE, var);
-                else if (w)
-                  setBlock(x, y, z, id, SW, var);
-                else
-                  setBlock(x, y, z, id, S, var);
-              } else if (e) {
-                setBlock(x, y, z, id, E, var);
-              } else if (w) {
-                setBlock(x, y, z, id, W, var);
-              }
+              addStep(x,y,z,-1,lastId,false);
             }
             else if (lastId == 0 && id != 0 && Static.blocks.blocks[id].canSmooth) {
               //underneath
-              y--;
-              boolean n = getBlock(x, y, z-1).isSolid;
-              boolean e = getBlock(x+1, y, z).isSolid;
-              boolean s = getBlock(x, y, z+1).isSolid;
-              boolean w = getBlock(x-1, y, z).isSolid;
-              id = Static.blocks.blocks[id].stepID;
-              char bid = chunk.getID(x,y-1,z);
-              int var = BlockStep.getVar(bid);
-              var |= VAR_UPPER;
-              if (n) {
-                if (e)
-                  setBlock(x, y, z, id, NE, var);
-                else if (w)
-                  setBlock(x, y, z, id, NW, var);
-                else
-                  setBlock(x, y, z, id, N, var);
-              } else if (s) {
-                if (e)
-                  setBlock(x, y, z, id, SE, var);
-                else if (w)
-                  setBlock(x, y, z, id, SW, var);
-                else
-                  setBlock(x, y, z, id, S, var);
-              } else if (e) {
-                setBlock(x, y, z, id, E, var);
-              } else if (w) {
-                setBlock(x, y, z, id, W, var);
+              addStep(x,y,z,+1,id,true);
+            }
+            if (lastId2 != 0 && id2 == 0 && Static.blocks.blocks[lastId2].canSmooth) {
+              //on top
+              if (chunk.getID(x,y,z) == 0) {
+                addStep2(x,y-1,z,0,lastId2,false);
               }
-              y++;
+            }
+            else if (lastId2 == 0 && id2 != 0 && Static.blocks.blocks[id2].canSmooth) {
+              //underneath
+              if (chunk.getID(x,y,z) == 0) {
+                addStep2(x,y,z,0,id2,true);
+              }
             }
             lastId = id;
+            lastId2 = id2;
           }
         }
       }

@@ -33,6 +33,7 @@ public class BlockStep extends BlockBase {
   public static final int VAR_DIRT = 1;
   public static final int VAR_STONE = 2;
   public static final int VAR_SAND = 3;
+  public static final int VAR_SNOW = 4;
   public static final int VAR_UPPER = 8;
 
   public static int getVar(char bid) {
@@ -44,8 +45,10 @@ public class BlockStep extends BlockBase {
       return VAR_STONE;
     } else if (bid == Blocks.SAND) {
       return VAR_SAND;
+    } else if (bid == Blocks.SNOW) {
+      return VAR_SNOW;
     } else {
-      return VAR_GRASS;
+      return -1;
     }
   }
 
