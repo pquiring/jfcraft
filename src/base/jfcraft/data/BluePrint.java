@@ -796,7 +796,7 @@ public class BluePrint implements SerialClass, SerialCreator {
               block = Static.blocks.blocks[id];
               bitsDst[d] = block.rotateBits(bitsSrc[s], R270);
             }
-            d -= newZ;
+            d -= newX;
             s++;
           }
         }
@@ -819,7 +819,7 @@ public class BluePrint implements SerialClass, SerialCreator {
               block = Static.blocks.blocks[id];
               bitsDst[d] = block.rotateBits(bitsSrc[s], R270);
             }
-            d -= newZ;
+            d -= newX;
             s++;
           }
         }
