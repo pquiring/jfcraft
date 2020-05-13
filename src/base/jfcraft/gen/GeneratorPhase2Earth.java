@@ -50,7 +50,11 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
       addRoom();
     }
     if (r.nextInt(10000) == 0 || (chunk.cx == 0 && chunk.cz == -3)) {
-      addCabin();
+      if (chunk.biome[0] == Biomes.OCEAN) {
+        addShipwreck();
+      } else {
+        addCabin();
+      }
     }
   }
   private void setBlock(int x, int y, int z, char id, int bits) {
@@ -358,6 +362,28 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
       case 1: cabin.rotateY(R270); break;
       case 2: cabin.rotateY(R180); break;
       case 3: cabin.rotateY(R90); break;
+    }
+  }
+  private void addShipwreck() {
+    BluePrint ship = chunk.world.getBluePrint("shipwreck");
+    int elev = (int)chunk.elev[8 * 16 + 8] + 1;
+    if (elev + ship.Y > 255) return;
+    if (chunk.getID(8, elev+1, 8) != 0) return;
+    int ang = r.nextInt(4);
+    ang = 3;  //test
+    switch (ang) {
+      case 0: break;  //no change
+      case 1: ship.rotateY(R90); break;
+      case 2: ship.rotateY(R180); break;
+      case 3: ship.rotateY(R270); break;
+    }
+    ship.writeChunk(chunk, 0, 0, 0, 0, elev, 0, ship.X, ship.Y, ship.Z);
+    //rotate back if needed
+    switch (ang) {
+      case 0: break;  //no change
+      case 1: ship.rotateY(R270); break;
+      case 2: ship.rotateY(R180); break;
+      case 3: ship.rotateY(R90); break;
     }
   }
 
