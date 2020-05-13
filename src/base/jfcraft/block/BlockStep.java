@@ -24,13 +24,30 @@ public class BlockStep extends BlockBase {
     isSolid = false;
     isDir = true;
     isDirXZ = true;
-//    isVar = true;
+    isVar = true;
     varMask = 0x7;  //remove VAR_UPPER
-//    setGreenTop();  //test
-//    dropBlock = "AIR";
+    dropBlock = "AIR";
   }
 
+  public static final int VAR_GRASS = 0;
+  public static final int VAR_DIRT = 1;
+  public static final int VAR_STONE = 2;
+  public static final int VAR_SAND = 3;
   public static final int VAR_UPPER = 8;
+
+  public static int getVar(char bid) {
+    if (bid == Blocks.GRASS) {
+      return VAR_GRASS;
+    } else if (bid == Blocks.DIRT) {
+      return VAR_DIRT;
+    } else if (bid == Blocks.STONE) {
+      return VAR_STONE;
+    } else if (bid == Blocks.SAND) {
+      return VAR_SAND;
+    } else {
+      return VAR_GRASS;
+    }
+  }
 
   public void buildBuffers(RenderDest dest, RenderData data) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
@@ -46,7 +63,7 @@ public class BlockStep extends BlockBase {
       +z
     */
     boolean q[] = null;
-    if (data.var[X] == VAR_UPPER) {
+    if ((data.var[X] & VAR_UPPER) == VAR_UPPER) {
       switch (data.dir[X]) {
         default:
           Static.log("BlockStep with invalid dir:" + data.dir[X]);
@@ -132,7 +149,11 @@ public class BlockStep extends BlockBase {
     }
     data.isDir = false;  //do not allow rotation
     data.dir[X] = N;  //do not allow rotation
+    isGreen = (data.var[X] & varMask) == VAR_GRASS;
     SubTexture st = getTexture(data);
+    if (st == null) {
+      Static.log("missing texture ???");
+    }
     for(int a=0;a<8;a++) {
       if (q[a]) {
         addQuad(buf, data, a, st);
@@ -251,7 +272,7 @@ public class BlockStep extends BlockBase {
   public ArrayList<Box> getBoxes(Coords c, Type type) {
     ArrayList<Box> list = new ArrayList<Box>();
     int y1, y2;
-    if (Chunk.getVar(c.bits) == VAR_UPPER) {
+    if ((Chunk.getVar(c.bits) & VAR_UPPER) == VAR_UPPER) {
       y1 = 8;
       y2 = 16;
     } else {
@@ -292,6 +313,7 @@ public class BlockStep extends BlockBase {
 //    Static.log("dir=" + c.dir + "," + c.xzdir + "," + c.ydir);
     c.otherSide();
     if (c.dir_y == A) {
+      //TODO : var ???
       c.var = VAR_UPPER;
     }
     if (!super.place(client, c)) return false;

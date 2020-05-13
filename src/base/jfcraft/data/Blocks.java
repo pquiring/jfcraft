@@ -428,7 +428,7 @@ public class Blocks {
       })
       .setSupportsPlant().setSmooth("STEP").setVar().setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
     registerBlock(new BlockOpaque("COBBLESTONE", new String[] {"Cobble Stone"}, new String[] {"cobblestone"})
-      .setSmooth("STEP").setHardness(2.0f, TOOL_PICKAXE, CLS_NONE));
+      .setHardness(2.0f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaqueVar("PLANKS"
       , new String[] {"Oak Wood Planks", "Spruce Wood Planks", "Birch Wood Planks", "Jungle Wood Planks", "Acacia Wood Planks", "Dark Oak Wood Planks"}
       , new String[] {"oak_planks", "spruce_planks", "birch_planks", "jungle_planks", "acacia_planks", "dark_oak_planks"})
@@ -444,6 +444,7 @@ public class Blocks {
     registerBlock(new BlockLiquid("LAVA", new String[] {"Lava"}, new String[] {"lava_still", "lava_flow"}).setFlowRate(3).setRenews(false).setHardness(100f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockFalling("SAND", new String[] {"Sand", "Red Sand"}, new String[] {"sand", "red_sand"})
       .setBake("GLASSBLOCK").setVar().setHardness(0.5f, TOOL_SHOVEL, CLS_NONE)
+      .setSmooth("STEP")
     );
     registerBlock(new BlockFalling("GRAVEL", new String[] {"Gravel"}, new String[] {"gravel"}).setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
     registerBlock(new BlockOpaque("GOLDORE", new String[] {"Gold Ore"}, new String[] {"gold_ore"}).setBake("GOLD_INGOT").setHardness(3f, TOOL_PICKAXE, CLS_IRON));
@@ -747,7 +748,7 @@ public class Blocks {
     registerBlock(new BlockOpaque("COAL_BLOCK", new String[] {"Coal Block"}, new String[] {"coal_block"}).setFuel(800).setHardness(5f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("SNOW_PACKED", new String[] {"Packed Snow"}, new String[] {"snow"}));
 
-    registerBlock(new BlockStep("STEP", new String[] {"Step"}, new String[] {/*"grass_top", "grass_side",*/ "dirt"}));
+    registerBlock(new BlockStep("STEP", new String[] {"Step", "Step", "Step", "Step"}, new String[] {"grass_block_top", "dirt", "stone", "sand"}));
     registerBlock(new BlockBed("BED", new String[] {"Bed"}, new String[] {"oak_planks", "bed_feet_end", "bed_head_end", "bed_feet_side", "bed_head_side", "bed_feet_top", "bed_head_top"})
       .setHardness(0.2f, TOOL_NONE, CLS_NONE)
     );

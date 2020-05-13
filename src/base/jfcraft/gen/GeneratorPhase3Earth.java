@@ -16,9 +16,10 @@ import jfcraft.data.*;
 import jfcraft.biome.*;
 import jfcraft.block.*;
 import jfcraft.entity.*;
+import jfcraft.tree.TreeBase;
 import static jfcraft.data.Direction.*;
 import static jfcraft.data.Biomes.*;
-import jfcraft.tree.TreeBase;
+import static jfcraft.block.BlockStep.*;
 
 public class GeneratorPhase3Earth implements GeneratorPhase3Base {
   private Chunk chunk;
@@ -103,24 +104,26 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
               boolean s = getBlock(x, y, z+1).isSolid;
               boolean w = getBlock(x-1, y, z).isSolid;
               id = Static.blocks.blocks[lastId].stepID;
+              char bid = chunk.getID(x,y-1,z);
+              int var = BlockStep.getVar(bid);
               if (n) {
                 if (e)
-                  setBlock(x, y, z, id, NE, 0);
+                  setBlock(x, y, z, id, NE, var);
                 else if (w)
-                  setBlock(x, y, z, id, NW, 0);
+                  setBlock(x, y, z, id, NW, var);
                 else
-                  setBlock(x, y, z, id, N, 0);
+                  setBlock(x, y, z, id, N, var);
               } else if (s) {
                 if (e)
-                  setBlock(x, y, z, id, SE, 0);
+                  setBlock(x, y, z, id, SE, var);
                 else if (w)
-                  setBlock(x, y, z, id, SW, 0);
+                  setBlock(x, y, z, id, SW, var);
                 else
-                  setBlock(x, y, z, id, S, 0);
+                  setBlock(x, y, z, id, S, var);
               } else if (e) {
-                setBlock(x, y, z, id, E, 0);
+                setBlock(x, y, z, id, E, var);
               } else if (w) {
-                setBlock(x, y, z, id, W, 0);
+                setBlock(x, y, z, id, W, var);
               }
             }
             else if (lastId == 0 && id != 0 && Static.blocks.blocks[id].canSmooth) {
@@ -131,24 +134,27 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
               boolean s = getBlock(x, y, z+1).isSolid;
               boolean w = getBlock(x-1, y, z).isSolid;
               id = Static.blocks.blocks[id].stepID;
+              char bid = chunk.getID(x,y-1,z);
+              int var = BlockStep.getVar(bid);
+              var |= VAR_UPPER;
               if (n) {
                 if (e)
-                  setBlock(x, y, z, id, NE, 1);
+                  setBlock(x, y, z, id, NE, var);
                 else if (w)
-                  setBlock(x, y, z, id, NW, 1);
+                  setBlock(x, y, z, id, NW, var);
                 else
-                  setBlock(x, y, z, id, N, 1);
+                  setBlock(x, y, z, id, N, var);
               } else if (s) {
                 if (e)
-                  setBlock(x, y, z, id, SE, 1);
+                  setBlock(x, y, z, id, SE, var);
                 else if (w)
-                  setBlock(x, y, z, id, SW, 1);
+                  setBlock(x, y, z, id, SW, var);
                 else
-                  setBlock(x, y, z, id, S, 1);
+                  setBlock(x, y, z, id, S, var);
               } else if (e) {
-                setBlock(x, y, z, id, E, 1);
+                setBlock(x, y, z, id, E, var);
               } else if (w) {
-                setBlock(x, y, z, id, W, 1);
+                setBlock(x, y, z, id, W, var);
               }
               y++;
             }
