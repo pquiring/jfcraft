@@ -46,13 +46,14 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
         if (biome == Biomes.DESERT || biome == Biomes.OCEAN) continue;
         int elev = (int)Math.ceil(chunk.elev[p]);
         if (chunk.getID(x,elev,z) != Blocks.GRASS) continue;
-        out:
         for(int y=elev-1;y>Static.SEALEVEL;y--) {
+          char id = chunk.getID(x,y,z);
+          if (id == 0) break;
           boolean n = chunk.getID(x  ,y,z-1) != 0;
           boolean e = chunk.getID(x+1,y,z  ) != 0;
           boolean s = chunk.getID(x  ,y,z+1) != 0;
           boolean w = chunk.getID(x-1,y,z  ) != 0;
-          if (n && e && s && w) break out;
+          if (n && e && s && w) break;
           chunk.setBlock(x, y, z, Blocks.GRASS, 0);
         }
       }
