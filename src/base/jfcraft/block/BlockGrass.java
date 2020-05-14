@@ -10,8 +10,8 @@ public class BlockGrass extends BlockDirt {
   public BlockGrass(String id, String names[], String images[]) {
     super(id, names, images);
   }
-/*
   public void rtick(Chunk chunk, int gx,int gy,int gz) {
+/*
     int x = chunk.cx * 16 + gx;
     int y = gy;
     int z = chunk.cz * 16 + gz;
@@ -23,6 +23,6 @@ public class BlockGrass extends BlockDirt {
       chunk.setBlock(gx, gy, gz, Blocks.DIRT, 0);
       Static.server.broadcastSetBlock(chunk.dim, x, y, z, Blocks.DIRT, 0);
     }
-  }
 */
+  }
 }

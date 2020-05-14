@@ -191,9 +191,6 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
               bits[p + (Static.SEALEVEL+1) * 256] = (byte)Chunk.makeBits(B, 0);
             }
             break;
-          case OCEAN:
-            grass = 0.0f;
-            break;
         }
 
         if (elev < Static.SEALEVEL) grass = 0;
@@ -207,7 +204,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
             blocks[p + y * 256] = Blocks.SAND;
             sand -= 1.0f;
           } else if (grass > 0.0f) {
-            blocks[p + y * 256] = Blocks.GRASS;
+            blocks[p + y * 256] = y == Static.SEALEVEL ? Blocks.GRASSBANK : Blocks.GRASS;
             grass -= 1.0f;
           } else if (dirt > 0.0f) {
             blocks[p + y * 256] = Blocks.DIRT;
