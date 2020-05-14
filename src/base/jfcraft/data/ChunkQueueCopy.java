@@ -63,7 +63,7 @@ public class ChunkQueueCopy {
       pos++;
       if (pos == BUFSIZ) pos = 0;
       if (pos == tail) {
-        Static.log("ERROR:Client Chunk processing queue overflow!!!");
+        Static.log("ERROR:Client Chunk Copy processing queue overflow!!!");
         return;
       }
       head2 = pos;

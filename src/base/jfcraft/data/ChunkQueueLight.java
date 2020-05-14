@@ -132,7 +132,7 @@ public class ChunkQueueLight {
       pos++;
       if (pos == BUFSIZ) pos = 0;
       if (pos == tail) {
-        Static.log("ERROR:Client Chunk processing queue overflow!!!");
+        Static.log("ERROR:Client Chunk Light processing queue overflow!!!");
         return;
       }
       head2 = pos;
