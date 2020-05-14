@@ -27,6 +27,8 @@ public class RenderData {
 
   public int crack;
 
+  public int bits;
+
   public char id[] = new char[11];  //IDs of adjacent sides
 //  public int bits[] = new int[11];
     public int var[] = new int[11];  //from bits

@@ -131,6 +131,7 @@ public class Game extends RenderScreen {
   }
   private float v2[] = new float[2];
   private int boxPoly[] = new int[] {0,1, 2,3, 0,2, 1,3, 4,5, 6,7, 4,6, 5,7, 0,4, 1,5, 2,6, 3,7};
+  private int boxPolys[] = new int[24];
 
   public void process() {
     if (advanceAnimation) {
@@ -321,6 +322,7 @@ public class Game extends RenderScreen {
       o_box.reset();
       ArrayList<Box> boxes = Static.client.selection.block.getBoxes(Static.client.selection, BlockHitTest.Type.SELECTION);
       int boxcnt = boxes.size();
+      int offset = 0;
       for(int a=0;a<boxcnt;a++) {
         Box box = boxes.get(a);
         o_box.addVertex(setv3(box.x1,box.y1,box.z1));
@@ -336,7 +338,11 @@ public class Game extends RenderScreen {
           o_box.addDefault(Static.black);
         }
         //add 12 lines
-        o_box.addPoly(boxPoly);
+        for(int p=0;p<24;p++) {
+          boxPolys[p] = boxPoly[p] + offset;
+        }
+        o_box.addPoly(boxPolys);
+        offset += 8;
       }
       o_box.copyBuffers();
       o_box.mat.setTranslate(Static.client.selection.x, Static.client.selection.y, Static.client.selection.z);

@@ -826,6 +826,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             }
             if (hasBlock) {
               _bits = getBits(x,y,z);
+              data.bits = _bits;
               data.dir[Direction.X] = getDir(_bits);
               data.var[Direction.X] = getVar(_bits);
               block = Static.blocks.blocks[id];

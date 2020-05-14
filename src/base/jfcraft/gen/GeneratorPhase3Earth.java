@@ -95,74 +95,60 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
     return Static.blocks.blocks[c.getID(x,y,z)];
   }
 
-  private void addStep(int x,int y,int z, int dy, char sid, boolean upper) {
-    boolean n = getBlock(x, y, z-1).isSolid;
-    boolean e = getBlock(x+1, y, z).isSolid;
-    boolean s = getBlock(x, y, z+1).isSolid;
-    boolean w = getBlock(x-1, y, z).isSolid;
-    char id = Static.blocks.blocks[sid].stepID;
-    if (id == 0) return;
-    char bid = chunk.getID(x,y+dy,z);
-    int var = BlockStep.getVar(bid);
-    if (var == -1) return;
-    if (upper) var |= VAR_UPPER;
-    if (n) {
-      if (e)
-        setBlock(x, y, z, id, NE, var);
-      else if (w)
-        setBlock(x, y, z, id, NW, var);
-      else
-        setBlock(x, y, z, id, N, var);
-    } else if (s) {
-      if (e)
-        setBlock(x, y, z, id, SE, var);
-      else if (w)
-        setBlock(x, y, z, id, SW, var);
-      else
-        setBlock(x, y, z, id, S, var);
-    } else if (e) {
-      setBlock(x, y, z, id, E, var);
-    } else if (w) {
-      setBlock(x, y, z, id, W, var);
-    }
+  public void setBlock(int x,int y,int z,char id,int bits) {
+    chunk.setBlock(x, y, z, id, bits);
   }
 
-  private void addStep2(int x,int y,int z, int dy, char sid, boolean upper) {
-    boolean n = getBlock(x, y, z-1).isSolid;
-    boolean e = getBlock(x+1, y, z).isSolid;
-    boolean s = getBlock(x, y, z+1).isSolid;
-    boolean w = getBlock(x-1, y, z).isSolid;
+  private void addStepLower(int x,int y,int z, char sid) {
+    boolean n = getBlock(x  , y, z-1).isSolid;
+    boolean e = getBlock(x+1, y, z  ).isSolid;
+    boolean s = getBlock(x  , y, z+1).isSolid;
+    boolean w = getBlock(x-1, y, z  ).isSolid;
     char id = Static.blocks.blocks[sid].stepID;
-    if (id == 0) {
-      Static.log("Error:stepID==0");
-      return;
-    }
-    char bid = chunk.getID2(x,y+dy,z);
-    int var = BlockStep.getVar(bid);
-    if (var == -1) {
-      Static.log("Error:var==-1:");
-      return;
-    }
-    if (upper) var |= VAR_UPPER;
-    if (n) {
-      if (e)
-        setBlock(x, y, z, id, NE, var);
-      else if (w)
-        setBlock(x, y, z, id, NW, var);
-      else
-        setBlock(x, y, z, id, N, var);
-    } else if (s) {
-      if (e)
-        setBlock(x, y, z, id, SE, var);
-      else if (w)
-        setBlock(x, y, z, id, SW, var);
-      else
-        setBlock(x, y, z, id, S, var);
-    } else if (e) {
-      setBlock(x, y, z, id, E, var);
-    } else if (w) {
-      setBlock(x, y, z, id, W, var);
-    }
+    if (id == 0) return;
+    int bits = 0;
+    if (n) bits |= QLNE | QLNW;
+    if (e) bits |= QLNE | QLSE;
+    if (s) bits |= QLSE | QLSW;
+    if (w) bits |= QLNW | QLSW;
+    if (bits == 0) return;
+    setBlock(x, y, z, id, bits);
+  }
+
+  private void addStepUpper(int x,int y,int z, char sid) {
+    boolean n = getBlock(x  , y, z-1).isSolid;
+    boolean e = getBlock(x+1, y, z  ).isSolid;
+    boolean s = getBlock(x  , y, z+1).isSolid;
+    boolean w = getBlock(x-1, y, z  ).isSolid;
+    char id = Static.blocks.blocks[sid].stepID;
+    if (id == 0) return;
+    int bits = 0;
+    if (n) bits |= QUNE | QUNW;
+    if (e) bits |= QUNE | QUSE;
+    if (s) bits |= QUSE | QUSW;
+    if (w) bits |= QUNW | QUSW;
+    if (bits == 0) return;
+    setBlock(x, y, z, id, bits);
+  }
+
+  private void addStepSnow(int x, int y, int z) {
+    char id2;
+    id2 = getID2(x  ,y+1,z-1);
+    boolean n = getBlock(x  , y, z-1).isSolid && (id2 == Blocks.SNOW || id2 == Blocks.STEPSNOW);
+    id2 = getID2(x+1,y+1,z  );
+    boolean e = getBlock(x+1, y, z  ).isSolid && (id2 == Blocks.SNOW || id2 == Blocks.STEPSNOW);
+    id2 = getID2(x  ,y+1,z+1);
+    boolean s = getBlock(x  , y, z+1).isSolid && (id2 == Blocks.SNOW || id2 == Blocks.STEPSNOW);
+    id2 = getID2(x-1,y+1,z-1);
+    boolean w = getBlock(x-1, y, z  ).isSolid && (id2 == Blocks.SNOW || id2 == Blocks.STEPSNOW);
+    if (!n && !e && !s && !w) return;
+    chunk.clearBlock2(x, y, z);  //remove snow carpet
+    int bits = QLNW | QLNE | QLSE | QLSW;
+    if (n) bits |= QUNW | QUNE;
+    if (e) bits |= QUNE | QUSE;
+    if (s) bits |= QUSE | QUSW;
+    if (w) bits |= QUSW | QUNW;
+    setBlock(x,y,z,Blocks.STEPSNOW, bits);
   }
 
   public void smoothSteps() {
@@ -171,32 +157,18 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
         if (Settings.current.doSteps) {
           //smooth out terrain with steps
           char lastId = chunk.getID(x, 0, z);
-          char lastId2 = chunk.getID2(x, 0, z);
           for(int y=1;y<255;y++) {
             char id = chunk.getID(x, y, z);
-            char id2 = chunk.getID2(x, y, z);
-            if (lastId != 0 && id == 0 && Static.blocks.blocks[lastId].canSmooth) {
-              //on top
-              addStep(x,y,z,-1,lastId,false);
+            if (chunk.getID2(x,y,z) == Blocks.SNOW) {
+              addStepSnow(x,y,z);
+            }
+            else if (lastId != 0 && id == 0 && Static.blocks.blocks[lastId].canSmooth) {
+              addStepLower(x,y,z,lastId);
             }
             else if (lastId == 0 && id != 0 && Static.blocks.blocks[id].canSmooth) {
-              //underneath
-              addStep(x,y,z,+1,id,true);
-            }
-            if (lastId2 != 0 && id2 == 0 && Static.blocks.blocks[lastId2].canSmooth) {
-              //on top
-              if (chunk.getID(x,y,z) == 0) {
-                addStep2(x,y-1,z,0,lastId2,false);
-              }
-            }
-            else if (lastId2 == 0 && id2 != 0 && Static.blocks.blocks[id2].canSmooth) {
-              //underneath
-              if (chunk.getID(x,y,z) == 0) {
-                addStep2(x,y,z,0,id2,true);
-              }
+              addStepUpper(x,y,z,id);
             }
             lastId = id;
-            lastId2 = id2;
           }
         }
       }

@@ -47,6 +47,18 @@ public class Direction {
   public static final int BSW = 30;
   public static final int BSE = 31;
 
+  //quad upper
+  public static final int QUNW = 1;
+  public static final int QUNE = 2;
+  public static final int QUSW = 4;
+  public static final int QUSE = 8;
+
+  //quad lower
+  public static final int QLNW = 0x10;
+  public static final int QLNE = 0x20;
+  public static final int QLSW = 0x40;
+  public static final int QLSE = 0x80;
+
   //left/right hand
   public static final int LEFT = 1;
   public static final int RIGHT = 2;

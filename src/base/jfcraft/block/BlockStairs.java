@@ -14,6 +14,7 @@ import jfcraft.data.*;
 import jfcraft.opengl.*;
 
 public class BlockStairs extends BlockStep {
+  public static int VAR_UPPER = 8;
   public BlockStairs(String id, String names[], String images[]) {
     super(id, names, images);
   }
