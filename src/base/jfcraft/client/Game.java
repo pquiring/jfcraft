@@ -519,9 +519,9 @@ public class Game extends RenderScreen {
         if (Static.client.player.pos.z < 0 && gz != 0) gz = 16 + gz;
         int dx = 0;
         int dy = fontSize;
-        renderText(dx,dy,"Pos:" + Static.client.player.pos.x + "," + Static.client.player.pos.y + "," + Static.client.player.pos.z);
+        renderText(dx,dy,String.format("Pos:%.1f,%.1f,%.1f", Static.client.player.pos.x, Static.client.player.pos.y, Static.client.player.pos.z));
         dy += fontSize;
-        renderText(dx,dy,"Ang:" + Static.client.player.ang.x + "," + Static.client.player.ang.y + "," + Static.client.player.ang.z);
+        renderText(dx,dy,String.format("Ang:%.1f,%.1f,%.1f", Static.client.player.ang.x, Static.client.player.ang.y, Static.client.player.ang.z));
         dy += fontSize;
         renderText(dx,dy,"Chunk:" + cx + "," + cz + " Block:" + gx + "," + gy + "," + gz);
         dy += fontSize;
@@ -538,11 +538,11 @@ public class Game extends RenderScreen {
           int gp = (gz << 4) + gx;
           renderText(dx,dy,"Biome:" + Biomes.getBiomeName(chunk.biome[gp]));
           dy += fontSize;
-          renderText(dx,dy," Elev:" + chunk.elev[gp]);
+          renderText(dx,dy,String.format(" Elev: %.1f", chunk.elev[gp]));
           dy += fontSize;
-          renderText(dx,dy," Temp:" + chunk.temp[gp]);
+          renderText(dx,dy,String.format(" Temp: %.1f", chunk.temp[gp]));
           dy += fontSize;
-          renderText(dx,dy," Rain:" + chunk.rain[gp]);
+          renderText(dx,dy,String.format(" Rain: %.1f", chunk.rain[gp]));
           dy += fontSize;
         }
 
