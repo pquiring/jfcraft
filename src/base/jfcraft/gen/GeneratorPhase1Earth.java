@@ -148,6 +148,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
 
         float temp = chunk.temp[p];
         float rain = chunk.rain[p];
+        int biome = chunk.biome[p];
         int elev = (int)Math.ceil(chunk.elev[p]);
         int bt = chunk.biome[p];
         bt &= 0x7;

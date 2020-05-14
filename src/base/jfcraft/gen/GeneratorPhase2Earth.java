@@ -38,6 +38,25 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
     chunk.needPhase2 = false;
     chunk.dirty = true;
 
+    //extend grass down if dirt is visible
+    for(int x=0;x<16;x++) {
+      for(int z=0;z<16;z++) {
+        int p = x + z * 16;
+        int biome = chunk.biome[p];
+        if (biome == Biomes.DESERT || biome == Biomes.OCEAN) continue;
+        int elev = (int)Math.ceil(chunk.elev[p]);
+        out:
+        for(int y=elev-1;y>Static.SEALEVEL;y--) {
+          boolean n = chunk.getID(x  ,y,z-1) != 0;
+          boolean e = chunk.getID(x+1,y,z  ) != 0;
+          boolean s = chunk.getID(x  ,y,z+1) != 0;
+          boolean w = chunk.getID(x-1,y,z  ) != 0;
+          if (n && e && s && w) break out;
+          chunk.setBlock(x, y, z, Blocks.GRASS, 0);
+        }
+      }
+    }
+
     r.setSeed(chunk.seed);
 
     if (r.nextInt(20) == 0) {
