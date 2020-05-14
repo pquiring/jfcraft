@@ -547,9 +547,13 @@ public class Game extends RenderScreen {
         }
 
         if (Static.client.clientTransport instanceof LocalClientTransport) {
-          renderText(dx,dy,"Queue:S=" + Static.client.clientTransport.getServerQueueSize() + ",C=" + Static.client.clientTransport.getClientQueueSize());
+          renderText(dx,dy,"MsgQueue:S=" + Static.client.clientTransport.getServerQueueSize() + ",C=" + Static.client.clientTransport.getClientQueueSize());
           dy += fontSize;
         }
+        renderText(dx,dy,"ChunkQueue:L=" + Static.client.chunkLighter.getSize() + ",B=" + Static.client.chunkBuilder.getSize() + ",C=" + Static.client.chunkCopier.getSize());
+        dy += fontSize;
+        renderText(dx,dy,"L=" + Static.client.chunkLighter.tail + "," + Static.client.chunkLighter.head1 + "," + Static.client.chunkLighter.head2);
+        dy += fontSize;
         renderText(dx,dy,"Tick:" + Static.tick);
         dy += fontSize;
         renderText(dx,dy,"Time:" + world.time);

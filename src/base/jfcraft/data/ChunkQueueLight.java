@@ -18,7 +18,7 @@ public class ChunkQueueLight {
   private int x2s[] = new int[BUFSIZ];
   private int y2s[] = new int[BUFSIZ];
   private int z2s[] = new int[BUFSIZ];
-  private int tail, head1, head2;
+  public int tail, head1, head2;
   private ChunkQueueBuild next;
   private boolean isClient;
   private int max = 3;
@@ -99,7 +99,7 @@ public class ChunkQueueLight {
       pos++;
       if (pos == BUFSIZ) pos = 0;
     }
-    return list.toArray(new Chunk[0]);
+    return list.toArray(new Chunk[list.size()]);
   }
 
   public void add(Chunk chunk,int x1,int y1,int z1,int x2, int y2, int z2) {
@@ -142,6 +142,14 @@ public class ChunkQueueLight {
   public void signal() {
     synchronized(lock) {
       head1 = head2;
+    }
+  }
+
+  public int getSize() {
+    if (tail > head2) {
+      return BUFSIZ - tail + head2;
+    } else {
+      return head2 - tail;
     }
   }
 }

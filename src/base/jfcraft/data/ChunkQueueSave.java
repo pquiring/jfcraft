@@ -64,4 +64,12 @@ public class ChunkQueueSave {
       head1 = head2;
     }
   }
+
+  public int getSize() {
+    if (tail > head2) {
+      return BUFSIZ - tail + head2;
+    } else {
+      return head2 - tail;
+    }
+  }
 }
