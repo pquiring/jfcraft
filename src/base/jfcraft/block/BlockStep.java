@@ -23,6 +23,7 @@ public class BlockStep extends BlockBase {
     isSolid = false;
     dropBlock = "AIR";
     canPlace = false;  //too complex
+    isSupported = true;
   }
 
   private static boolean q[] = new boolean[8];

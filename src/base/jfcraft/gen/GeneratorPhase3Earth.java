@@ -132,15 +132,20 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
   }
 
   private void addStepSnow(int x, int y, int z) {
+    char id1;
     char id2;
+    id1 = getID (x  ,y+1,z-1);
     id2 = getID2(x  ,y+1,z-1);
-    boolean n = getBlock(x  , y, z-1).isSolid && (id2 == Blocks.SNOW || id2 == Blocks.STEPSNOW);
+    boolean n = getBlock(x  , y, z-1).isSolid && (id2 == Blocks.SNOW || id1 == Blocks.STEPSNOW);
+    id1 = getID (x+1,y+1,z  );
     id2 = getID2(x+1,y+1,z  );
-    boolean e = getBlock(x+1, y, z  ).isSolid && (id2 == Blocks.SNOW || id2 == Blocks.STEPSNOW);
+    boolean e = getBlock(x+1, y, z  ).isSolid && (id2 == Blocks.SNOW || id1 == Blocks.STEPSNOW);
+    id1 = getID (x  ,y+1,z+1);
     id2 = getID2(x  ,y+1,z+1);
-    boolean s = getBlock(x  , y, z+1).isSolid && (id2 == Blocks.SNOW || id2 == Blocks.STEPSNOW);
-    id2 = getID2(x-1,y+1,z-1);
-    boolean w = getBlock(x-1, y, z  ).isSolid && (id2 == Blocks.SNOW || id2 == Blocks.STEPSNOW);
+    boolean s = getBlock(x  , y, z+1).isSolid && (id2 == Blocks.SNOW || id1 == Blocks.STEPSNOW);
+    id1 = getID (x-1,y+1,z  );
+    id2 = getID2(x-1,y+1,z  );
+    boolean w = getBlock(x-1, y, z  ).isSolid && (id2 == Blocks.SNOW || id1 == Blocks.STEPSNOW);
     if (!n && !e && !s && !w) return;
     chunk.clearBlock2(x, y, z);  //remove snow carpet
     int bits = QLNW | QLNE | QLSE | QLSW;
