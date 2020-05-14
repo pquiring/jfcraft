@@ -18,7 +18,7 @@ public class ChunkQueueLight {
   private int x2s[] = new int[BUFSIZ];
   private int y2s[] = new int[BUFSIZ];
   private int z2s[] = new int[BUFSIZ];
-  public int tail, head1, head2;
+  private int tail, head1, head2;
   private ChunkQueueBuild next;
   private boolean isClient;
   private int max = 3;
