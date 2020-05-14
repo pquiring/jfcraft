@@ -831,14 +831,6 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
               data.var[Direction.X] = getVar(_bits);
               block = Static.blocks.blocks[id];
               data.opaque[Direction.X] = block.isOpaque;
-              ExtraCrack c = getCrack(x,y,z);
-              if (c != null) {
-                crack = (int)(c.dmg / 10.0f);
-                if (crack > 9) crack = 9;
-              } else {
-                crack = -1;
-              }
-              data.crack = crack;
             }
             if (hasBlock2) {
               _bits = getBits2(x,y,z);
@@ -850,6 +842,14 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             _ll = getLights(x,y,z);
             data.sl[Direction.X] = (_ll & 0x0f) / 15.0f;
             data.bl[Direction.X] = ((_ll & 0xf0) >> 4) / 15.0f;
+            ExtraCrack c = getCrack(x,y,z);
+            if (c != null) {
+              crack = (int)(c.dmg / 10.0f);
+              if (crack > 9) crack = 9;
+            } else {
+              crack = -1;
+            }
+            data.crack = crack;
 
             if (y > 0) {
               data.id[Direction.B] = getID(x,y-1,z);
