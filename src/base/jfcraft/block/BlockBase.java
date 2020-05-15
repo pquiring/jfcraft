@@ -879,6 +879,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   }
 
   public SubTexture getDestroyTexture(int var) {
+    if (textures.length == 0) return null;
     if (isVar)
       return textures[var & varMask];
     else
