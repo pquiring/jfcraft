@@ -32,8 +32,8 @@ public class BiomeSwamp extends BiomeBase {
       }
       if (data.c1 % FLOWER_CHUNK_ODDS == 0) {
         if (data.b1 % FLOWER_BLOCK_ODDS == 0) {
-          if (chunk.elev[z*16 + x] < Static.SEALEVEL) {
-            chunk.setBlock(0,Static.SEALEVEL+1,0,Blocks.LILLYPAD,Chunk.makeBits(B, 0));
+          if (chunk.getElev(x,z) < Static.SEALEVEL) {
+            chunk.setBlock(x,Static.SEALEVEL+1,z,Blocks.LILLYPAD,Chunk.makeBits(B, 0));
           } else {
             //setBlock(x,y+1,z,Blocks.FLOWER,0,getFlower(data.c2));
           }

@@ -122,7 +122,7 @@ public class River {
       fx += vec.v[0];
       fz += vec.v[2];
       if (!nearOcean) {
-        dir += (r.nextFloat() - 0.5f) * 5f;
+        dir += (r.nextFloat() - 0.5f) * 15f;
       }
     }
   }
