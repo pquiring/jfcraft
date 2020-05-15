@@ -250,6 +250,8 @@ public class Static {
   public static int floor( float x ) { return (int)Math.floor(x); }
   public static int ceil( float x ) { return (int)Math.ceil(x); }
   public static float abs( float x ) { return x >= 0.0f ? x : -x; }
+  public static float min(float a, float b) { return a < b ? a : b; }
+  public static float max(float a, float b) { return a > b ? a : b; }
   public static int abs(int x) { return x >= 0 ? x : -x; }
   public static int min(int a, int b) { return a < b ? a : b; }
   public static int max(int a, int b) { return a > b ? a : b; }

@@ -54,6 +54,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         int wz = chunk.cz * 16 + z;
         float temp = Static.noises[Static.N_TEMP].noise_2d(wx, wz) * 50.0f + 50.0f;  //0 - 100
         float rain = Static.noises[Static.N_RAIN].noise_2d(wx, wz) * 50.0f + 50.0f;  //0 - 100
+        float elev;
 
         //determine biome type (Biome....)
         byte biome = -1;
@@ -85,28 +86,37 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
           swamps = Static.abs(Static.noises[Static.N_ELEV4].noise_2d(wx, wz) * 3.0f) * scale;
         }
 
-        float hills = Static.noises[Static.N_ELEV2].noise_2d(wx, wz) * 10.0f;
+        float hills = Static.noises[Static.N_ELEV2].noise_2d(wx, wz) * 15.0f;
 
-        float extreme = Static.noises[Static.N_ELEV3].noise_2d(wx, wz) * 100.0f;
+        float extreme = Static.noises[Static.N_ELEV3].noise_2d(wx, wz) * 75.0f;
 
-        chunk.elev[p] = (Static.SEALEVEL + plains - swamps);
+        elev = (Static.SEALEVEL + plains - swamps);
         if (extreme <= -25.0f) {
           extreme += 25.0f;
-          chunk.elev[p] += extreme;
+          elev += extreme;
           biome = OCEAN;
         }
         else if (extreme >= 25.0f) {
           extreme -= 25.0f;
-          chunk.elev[p] += extreme;
+          elev += extreme;
         }
 
-        if (hills > 0.0f) {
-          chunk.elev[p] += hills;
+        if (hills > 5.0f) {
+          hills -= 5.0f;
+          elev += hills;
+        }
+
+        //fill in stone
+        blocks[p] = Blocks.BEDROCK;
+        int ielev = Static.ceil(elev);
+        for(int y=1;y<=ielev;y++) {
+          blocks[p + y * 256] = Blocks.STONE;
         }
 
         chunk.temp[p] = temp;
         chunk.rain[p] = rain;
         chunk.biome[p] = biome;
+        chunk.elev[p] = elev;
         p++;
       }
     }
@@ -120,9 +130,9 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
 
     getSeed();
 
-    generateBiomes();
-
     fill();
+
+    generateBiomes();
 
     if (world.type.equals("default")) {
       generate_default();
@@ -140,110 +150,6 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
   }
 
   public void generate_default() {
-    for(int x=0;x<16;x++) {
-      for(int z=0;z<16;z++) {
-        int p = x + z * 16;
-        int wx = chunk.cx * 16 + x;
-        int wz = chunk.cz * 16 + z;
-
-        float temp = chunk.temp[p];
-        float rain = chunk.rain[p];
-        int biome = chunk.biome[p];
-        int elev = (int)Math.ceil(chunk.elev[p]);
-        int bt = chunk.biome[p];
-        bt &= 0x7;
-
-        float sand = 0.0f;
-        float dirt = 5.0f + (r.nextFloat() - 0.5f) * 6.0f;
-        float clay = 0.0f;
-        float grass = 1.0f;
-
-        if (bt == OCEAN) {
-          if (chunk.elev[p] >= Static.SEALEVEL) {
-            sand = 3.0f + (r.nextFloat() - 0.5f) * 4.0f;  //beach
-          } else {
-            float soil = Static.noises[Static.N_SOIL].noise_3d(wx, -Static.SEALEVEL, wz) * 100.0f;
-            //add sand/clay deposites
-            if (soil <= -50) {
-              sand = 1.0f;
-            } else if (soil >= 50) {
-              clay = 1.0f;
-            }
-          }
-        }
-
-        switch (bt) {
-          case DESERT:
-            grass = 0.0f;
-            sand = 5.0f + (r.nextFloat() - 0.5f) * 4.0f;
-            dirt = 0.0f;
-            break;
-          case PLAINS:
-            break;
-          case TAIGA:
-            break;
-          case FOREST:
-            break;
-          case SWAMP:
-            //TODO : move this to BiomeSwamp
-            if (elev < Static.SEALEVEL && r.nextInt() % 3 == 0) {
-              blocks[p + (Static.SEALEVEL+1) * 256] = Blocks.LILLYPAD;
-              bits[p + (Static.SEALEVEL+1) * 256] = (byte)Chunk.makeBits(B, 0);
-            }
-            break;
-        }
-
-        if (elev < Static.SEALEVEL) grass = 0;
-
-        blocks[p] = Blocks.BEDROCK;
-        for(int y=elev;y>0;y--) {
-          if (clay > 0.0f) {
-            blocks[p + y * 256] = Blocks.CLAY;
-            clay -= 1.0f;
-          } else if (sand > 0.0f) {
-            blocks[p + y * 256] = Blocks.SAND;
-            sand -= 1.0f;
-          } else if (grass > 0.0f) {
-            blocks[p + y * 256] = y == Static.SEALEVEL ? Blocks.GRASSBANK : Blocks.GRASS;
-            grass -= 1.0f;
-          } else if (dirt > 0.0f) {
-            blocks[p + y * 256] = Blocks.DIRT;
-            dirt -= 1.0f;
-          } else {
-            blocks[p + y * 256] = Blocks.STONE;
-          }
-        }
-        if (elev < Static.SEALEVEL) {
-          for(int y=elev+1;y<=Static.SEALEVEL;y++) {
-            blocks2[p + y * 256] = Blocks.WATER;
-          }
-          if (temp < 32.0) {
-            blocks[p + Static.SEALEVEL * 256] = Blocks.ICEBLOCK;
-            bits[p + Static.SEALEVEL * 256] = 0;
-            blocks2[p + Static.SEALEVEL * 256] = Blocks.AIR;
-          }
-        } else {
-          if (temp < 32.0) {
-            blocks2[p + (elev+1) * 256] = Blocks.SNOW;
-          }
-        }
-
-        //soil/gravel
-        for(int y=0;y<Static.SEALEVEL;y++) {
-          float soil = Static.noises[Static.N_SOIL].noise_3d(wx, y, wz) * 100.0f;
-
-          //add soil/gravel deposites
-          if (soil <= -50) {
-            //dirt
-            if (blocks[p + y * 256] == Blocks.STONE) blocks[p + y * 256] = Blocks.DIRT;
-          } else if (soil >= 50) {
-            //gravel
-            if (blocks[p + y * 256] == Blocks.STONE) blocks[p + y * 256] = Blocks.GRAVEL;
-          }
-        }
-      }  //for z
-    }  //for x
-    //now add clusters of minerals in ground
     /*
     mineral  amt/chunk  levels
     -------  ---------  ------

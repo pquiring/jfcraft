@@ -31,6 +31,7 @@ public class TreeNormal extends TreeBase {
     return (data.b1 | x | z) % max;
   }
   public void plant(int x, int y, int z, BiomeData data) {
+    if (y <= Static.SEALEVEL) return;
     int vinesSize = 0;
     int vinesYY = 0;
     for(int yy=0;yy<leafProfile.length;yy++) {

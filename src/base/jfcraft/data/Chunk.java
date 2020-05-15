@@ -619,6 +619,22 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     return bits[y][z * 16 + x] & 0xff;
   }
 
+  public byte getBiome(int x, int z) {
+    if (x > 15) return E.getBiome(x-16, z);
+    if (x < 0) return W.getBiome(x+16, z);
+    if (z > 15) return S.getBiome(x, z-16);
+    if (z < 0) return N.getBiome(x, z+16);
+    return biome[z * 16 + x];
+  }
+
+  public float getElev(int x, int z) {
+    if (x > 15) return E.getElev(x-16, z);
+    if (x < 0) return W.getElev(x+16, z);
+    if (z > 15) return S.getElev(x, z-16);
+    if (z < 0) return N.getElev(x, z+16);
+    return elev[z * 16 + x];
+  }
+
   /** Increment var to max.  Returns new value of -1 if not incremented. */
   public int incVar(int x, int y, int z, int max) {
     int var;

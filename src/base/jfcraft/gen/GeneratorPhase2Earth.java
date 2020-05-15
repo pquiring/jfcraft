@@ -19,6 +19,7 @@ import jfcraft.data.*;
 import jfcraft.block.*;
 import jfcraft.entity.*;
 import static jfcraft.data.Direction.*;
+import static jfcraft.data.Biomes.*;
 
 public class GeneratorPhase2Earth implements GeneratorPhase2Base {
   private Chunk chunk;
@@ -38,39 +39,128 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
     chunk.needPhase2 = false;
     chunk.dirty = true;
 
-    //extend grass down if dirt is visible
-    for(int x=0;x<16;x++) {
-      for(int z=0;z<16;z++) {
-        int p = x + z * 16;
+    r.setSeed(chunk.seed);
+
+    if (r.nextInt(234) == 0 || (chunk.cx == 0 && chunk.cz == 0)) {
+      addRiver();
+    }
+
+    //add grass/dirt/sand/snow/etc.
+    int p = 0;
+    for(int z=0;z<16;z++) {
+      for(int x=0;x<16;x++) {
+        int wx = chunk.cx * 16 + x;
+        int wz = chunk.cz * 16 + z;
+        float dirt = 5.0f + (r.nextFloat() - 0.5f) * 6.0f;
+        float temp = chunk.temp[p];
+        float rain = chunk.rain[p];
         int biome = chunk.biome[p];
-        if (biome == Biomes.DESERT || biome == Biomes.OCEAN) continue;
-        int elev = (int)Math.ceil(chunk.elev[p]);
-        if (chunk.getID(x,elev,z) != Blocks.GRASS) continue;
-        for(int y=elev-1;y>Static.SEALEVEL;y--) {
+        int elev = Static.ceil(chunk.elev[p]);
+
+        //river may have lowered elev
+        while (elev > 1 && chunk.getID(x, elev, z) == 0) {
+          elev--;
+        }
+        chunk.elev[p] = elev;
+
+        float sand = 0f;
+        float clay = 0f;
+
+        if (biome == OCEAN) {
+          if (elev >= Static.SEALEVEL) {
+            sand = 3.0f + (r.nextFloat() - 0.5f) * 4.0f;  //beach
+          } else {
+            float soil = Static.noises[Static.N_SOIL].noise_3d(wx, -Static.SEALEVEL, wz) * 100.0f;
+            //add sand/clay deposites
+            if (soil <= -50) {
+              sand = 1.0f;
+            } else if (soil >= 50) {
+              clay = 1.0f;
+            }
+          }
+        }
+
+        switch (biome) {
+          case DESERT:
+            sand = 5.0f + (r.nextFloat() - 0.5f) * 4.0f;
+            dirt = 0.0f;
+            break;
+          case PLAINS:
+            break;
+          case TAIGA:
+            break;
+          case FOREST:
+            break;
+          case SWAMP:
+            break;
+        }
+
+        for(int y=elev;y>0;y--) {
+          if (clay > 0.0f) {
+            chunk.setBlock(x,y,z,Blocks.CLAY,0);
+            clay -= 1.0f;
+          } else if (sand > 0.0f) {
+            chunk.setBlock(x,y,z,Blocks.SAND,0);
+            sand -= 1.0f;
+          } else if (dirt > 0.0f) {
+            chunk.setBlock(x,y,z,Blocks.DIRT,0);
+            dirt -= 1.0f;
+          }
+        }
+        if (elev < Static.SEALEVEL) {
+          for(int y=elev+1;y<=Static.SEALEVEL;y++) {
+            chunk.setBlock(x,y,z,Blocks.WATER,0);
+          }
+          if (temp < 32.0) {
+            chunk.clearBlock(x, Static.SEALEVEL, z);
+            chunk.setBlock(x, Static.SEALEVEL, z, Blocks.ICEBLOCK, 0);
+          }
+        } else {
+          if (temp < 32.0) {
+            chunk.setBlock(x, elev+1, z, Blocks.SNOW, 0);
+          }
+        }
+
+        //soil/gravel 3d deposits
+        for(int y=0;y<Static.SEALEVEL;y++) {
+          float soil = Static.noises[Static.N_SOIL].noise_3d(wx, y, wz) * 100.0f;
+
+          //add soil/gravel deposites
+          if (soil <= -50) {
+            //dirt
+            if (chunk.getID(x,y,z) == Blocks.STONE) chunk.setBlock(x, y, z, Blocks.DIRT, 0);
+          } else if (soil >= 50) {
+            //gravel
+            if (chunk.getID(x,y,z) == Blocks.STONE) chunk.setBlock(x, y, z, Blocks.GRAVEL, 0);
+          }
+        }
+
+        for(int y=elev;y>=Static.SEALEVEL;y--) {
           char id = chunk.getID(x,y,z);
-          if (id == 0) break;
+          if (id != Blocks.DIRT) break;
+          chunk.setBlock(x, y, z, y == Static.SEALEVEL ? Blocks.GRASSBANK : Blocks.GRASS, 0);
           boolean n = chunk.getID(x  ,y,z-1) != 0;
           boolean e = chunk.getID(x+1,y,z  ) != 0;
           boolean s = chunk.getID(x  ,y,z+1) != 0;
           boolean w = chunk.getID(x-1,y,z  ) != 0;
           if (n && e && s && w) break;
-          chunk.setBlock(x, y, z, Blocks.GRASS, 0);
         }
+
+        p++;
       }
     }
 
-    r.setSeed(chunk.seed);
-
-    if (r.nextInt(20) == 0) {
+    if (r.nextInt(22) == 0) {
       addCaves();
     }
-    if (r.nextInt(1000) == 0) {
+    if (r.nextInt(1003) == 0) {
       addRavine();
     }
-    if (r.nextInt(10) == 0 || (chunk.cx == 0 && chunk.cz == 0)) {
+    if (r.nextInt(14) == 0 || (chunk.cx == 0 && chunk.cz == 0)) {
       addRoom();
     }
-    if (r.nextInt(10000) == 0 || (chunk.cx == 0 && chunk.cz == -3)) {
+
+    if (r.nextInt(10005) == 0 || (chunk.cx == 0 && chunk.cz == -3)) {
       if (chunk.biome[0] == Biomes.OCEAN) {
         addShipwreck();
       } else {
@@ -475,5 +565,11 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
         }
       }
     }
+  }
+
+  public void addRiver() {
+    Static.log("River?" + (chunk.cx * 16) + "," + (chunk.cz * 16));
+    River river = new River();
+    river.build(chunk, r);
   }
 }

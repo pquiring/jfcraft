@@ -8,6 +8,7 @@ import jfcraft.data.*;
 import jfcraft.tree.*;
 import static jfcraft.data.Blocks.*;
 import static jfcraft.data.Biomes.*;
+import static jfcraft.data.Direction.*;
 
 public class BiomeSwamp extends BiomeBase {
 
@@ -16,8 +17,8 @@ public class BiomeSwamp extends BiomeBase {
   }
 
   private static final int TREE_ODDS = 150;
-  private static final int FLOWER_CHUNK_ODDS = INF;
-  private static final int FLOWER_BLOCK_ODDS = INF;
+  private static final int FLOWER_CHUNK_ODDS = 1;
+  private static final int FLOWER_BLOCK_ODDS = 3;
   private static final int TALLGRASS_CHUNK_ODDS = INF;
   private static final int TALLGRASS_BLOCK_ODDS = INF;
   private static final int ANIMAL_CHUNK_ODDS = 100;
@@ -31,7 +32,11 @@ public class BiomeSwamp extends BiomeBase {
       }
       if (data.c1 % FLOWER_CHUNK_ODDS == 0) {
         if (data.b1 % FLOWER_BLOCK_ODDS == 0) {
-          setBlock(x,y+1,z,Blocks.FLOWER,0,getFlower(data.c2));
+          if (chunk.elev[z*16 + x] < Static.SEALEVEL) {
+            chunk.setBlock(0,Static.SEALEVEL+1,0,Blocks.LILLYPAD,Chunk.makeBits(B, 0));
+          } else {
+            //setBlock(x,y+1,z,Blocks.FLOWER,0,getFlower(data.c2));
+          }
           return;
         }
       }

@@ -23,6 +23,7 @@ public class TreeQuad extends TreeBase {
     0,0,0,0,0,0,0,1,2,3,3,2,1
   };
   public void plant(int x, int y, int z, BiomeData data) {
+    if (y <= Static.SEALEVEL) return;
     for(int yy=0;yy<leaves.length;yy++) {
       int wood = leaves.length - 3;
       if (yy < wood) {
