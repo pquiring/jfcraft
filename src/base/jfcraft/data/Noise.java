@@ -440,11 +440,20 @@ public class Noise {
     this.scale = scale;
     //the perm (permutation) table is a table of random 0-255 values
     //the same values must be repeated twice or the maps do not line up at the origin
-    //this means there are 2^(256*8) different maps that can be generated - far greater than the 64bit seed used for the random generator
+    //this means there are 2^(256*8) different maps that can be generated
+    //  far greater than the 64bit seed used for the random generator
     for(int a=0;a<256;a++) {
       int val = r.nextInt() & 0xff;
       perm[a] = val;
       perm[a+256] = val;
     }
+  }
+
+  public void printTable() {
+    for(int a=0;a<256;a++) {
+      System.out.print(Integer.toString(perm[a]));
+      if (a > 0 && a % 32 == 0) System.out.println(""); else System.out.print(" ");
+    }
+    System.out.println("");
   }
 }

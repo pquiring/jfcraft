@@ -57,7 +57,6 @@ public class NoiseTestPanel extends javax.swing.JPanel {
     jLabel12 = new javax.swing.JLabel();
     jLabel13 = new javax.swing.JLabel();
     jLabel14 = new javax.swing.JLabel();
-    seed = new javax.swing.JTextField();
     jLabel15 = new javax.swing.JLabel();
     jLabel16 = new javax.swing.JLabel();
     base = new javax.swing.JSpinner();
@@ -66,6 +65,7 @@ public class NoiseTestPanel extends javax.swing.JPanel {
     angle = new javax.swing.JSlider();
     jLabel17 = new javax.swing.JLabel();
     threshold = new javax.swing.JSpinner();
+    seed = new javax.swing.JSpinner();
 
     mode.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2D", "3D", "Caves" }));
     mode.addItemListener(new java.awt.event.ItemListener() {
@@ -149,8 +149,6 @@ public class NoiseTestPanel extends javax.swing.JPanel {
 
     jLabel14.setText("seed");
 
-    seed.setText("0");
-
     jLabel15.setText("base");
 
     jLabel16.setText("y scale");
@@ -192,6 +190,13 @@ public class NoiseTestPanel extends javax.swing.JPanel {
     threshold.addChangeListener(new javax.swing.event.ChangeListener() {
       public void stateChanged(javax.swing.event.ChangeEvent evt) {
         thresholdStateChanged(evt);
+      }
+    });
+
+    seed.setModel(new javax.swing.SpinnerNumberModel(1L, null, null, 1L));
+    seed.addChangeListener(new javax.swing.event.ChangeListener() {
+      public void stateChanged(javax.swing.event.ChangeEvent evt) {
+        seedStateChanged(evt);
       }
     });
 
@@ -294,8 +299,8 @@ public class NoiseTestPanel extends javax.swing.JPanel {
                   .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                  .addComponent(seed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                  .addComponent(jLabel14))
+                  .addComponent(jLabel14)
+                  .addComponent(seed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                   .addComponent(jLabel15)
@@ -365,6 +370,10 @@ public class NoiseTestPanel extends javax.swing.JPanel {
     generate();
   }//GEN-LAST:event_thresholdStateChanged
 
+  private void seedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_seedStateChanged
+    generate();
+  }//GEN-LAST:event_seedStateChanged
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JSlider angle;
@@ -395,7 +404,7 @@ public class NoiseTestPanel extends javax.swing.JPanel {
   private javax.swing.JSpinner octaves;
   private javax.swing.JSpinner persist;
   private javax.swing.JSpinner scale;
-  private javax.swing.JTextField seed;
+  private javax.swing.JSpinner seed;
   private javax.swing.JSpinner threshold;
   private javax.swing.JSpinner yscale;
   // End of variables declaration//GEN-END:variables
@@ -405,10 +414,11 @@ public class NoiseTestPanel extends javax.swing.JPanel {
   public void generate() {
     Noise noise = new Noise();
     Random rand = new Random();
-    rand.setSeed(JF.atoi(seed.getText()));
+    rand.setSeed((Long)seed.getValue());
     noise.init(rand, (Integer)octaves.getValue(), (Float)persist.getValue(), (Float)scale.getValue());
     img.fill(0, 0, 256, 384, 0xff000000, true);
     int clr = Color.gray.getRGB();
+    int red = Color.red.getRGB();
     img.line(0, 128, 128, 0, clr);
     img.line(0, 128, 128, 255, clr);
     img.line(128, 0, 255, 128, clr);
@@ -432,11 +442,13 @@ public class NoiseTestPanel extends javax.swing.JPanel {
         //2d
         for(float x=0;x<128;x++) {
           for(float z=0;z<128;z++) {
-            float y = (noise.noise_2d(x + _cx,z + _cz) * y_scale + _base) / 2.0f;
+            float nx = x + _cx;
+            float nz = z + _cz;
+            float y = (noise.noise_2d(nx,nz) * y_scale + _base) / 2.0f;
             float _x = x + z;
             float _y2 = -x * _angle + z * _angle + 256;
             float _y1 = _y2 - y;
-            img.putPixel((int)_x, (int)_y1, clr);
+            img.putPixel((int)_x, (int)_y1, nx == 0 && nz == 0 ? red : clr);
           }
         }
         break;

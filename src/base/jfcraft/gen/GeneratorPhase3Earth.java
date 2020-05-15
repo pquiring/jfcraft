@@ -23,7 +23,6 @@ import static jfcraft.block.BlockStep.*;
 
 public class GeneratorPhase3Earth implements GeneratorPhase3Base {
   private Chunk chunk;
-  private Random r = new Random();
   private BiomeData data = new BiomeData();
 
   public void getIDs() {
@@ -36,8 +35,6 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
 
     chunk.needPhase3 = false;
     chunk.dirty = true;
-
-    r.setSeed(chunk.seed);
 
     if (Static.server.world.options.doSteps) smoothSteps();
 
@@ -180,27 +177,17 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
     }
   }
 
-  //random values must be 1 thru <MAXINT
-  public int nextInt() {
-    //Random.nextInt(int value) returns 0 thru value-1
-    return r.nextInt(Integer.MAX_VALUE - 1) + 1;
-  }
-
   public void addStuff() {
     BiomeBase.setChunk(chunk);
     TreeBase.setChunk(chunk);
-    data.c1 = nextInt();
-    data.c2 = nextInt();
-    data.c3 = nextInt();
+    data.setChunk(chunk);
     for(int x=0;x<16;x++) {
       for(int z=0;z<16;z++) {
         int p = z * 16 + x;
         int y = (int)Math.ceil(chunk.elev[p]);
         data.temp = chunk.temp[p];
         data.rain = chunk.rain[p];
-        data.b1 = nextInt();
-        data.b2 = nextInt();
-        data.b3 = nextInt();
+        data.setBlock(x, z);
         BiomeBase biome = Static.biomes.biomes[chunk.biome[p]];
         biome.build(x, y, z, data);
       }

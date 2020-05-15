@@ -9,6 +9,7 @@ import java.util.*;
 import javaforce.gl.*;
 
 import jfcraft.data.*;
+import jfcraft.biome.*;
 import static jfcraft.data.Direction.*;
 
 public class River {
@@ -23,15 +24,15 @@ public class River {
   private float di[];  //depth init (2d)
   private float dc[];  //depth current (2d)
   private Chunk c;
-  private Random r;
+  private Random r = new Random();
 
   private float fx, fz;  //center position
   private float dir;
   private float min, max;
 
-  public void build(Chunk c, Random r) {
+  public void build(Chunk c, BiomeData data) {
     this.c = c;
-    this.r = r;
+    r.setSeed(data.c1);
 
     if (c.getBiome(8, 8) == Biomes.OCEAN) return;
 
@@ -74,7 +75,6 @@ public class River {
     min = dir - 90f;
     max = dir + 90f;
     if (!avoidMountains()) return;
-    Static.log("River@" + (c.cx * 16) + "," + (c.cz * 16) + ":" + d1 + "," + d2);
     carveLine();
 
     //carve out second half of river

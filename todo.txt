@@ -4,7 +4,7 @@ need list:
 
 render items in right hand (including shield in left hand) on inventory screen
 render items of other players
-improve world generating algorithms : generate cave rooms, springs, lakes, rivers, items, stuff, castles, etc.
+create more buildings (villages, etc.)
 create complex AI logic for each mob (currently they are all passive but attack if attacked and all animals run if attacked)
 fishing
 money (silver, gold)

@@ -10,6 +10,7 @@ package jfcraft.gen;
 import java.util.*;
 
 import jfcraft.data.*;
+import jfcraft.biome.*;
 import static jfcraft.data.Chunk.*;
 import static jfcraft.data.Direction.*;
 import static jfcraft.data.Biomes.*;
@@ -17,7 +18,8 @@ import static jfcraft.data.Biomes.*;
 public class GeneratorPhase1Earth implements GeneratorPhase1Base {
   public World world;
   public Chunk chunk;
-  private Random r = new Random();
+//  public BiomeData data = new BiomeData();
+
   private char blocks[] = new char[16*256*16];
   private byte bits[] = new byte[16*256*16];
   private char blocks2[] = new char[16*256*16];
@@ -26,15 +28,14 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
   public void reset() {}
 
   private void getSeed() {
-    float _r1 = Static.noises[Static.N_RANDOM1].noise_2d(chunk.cx, chunk.cz);  //-1,1
-    float _r2 = Static.noises[Static.N_RANDOM2].noise_2d(chunk.cx, chunk.cz);  //-1,1
+    float _r1 = Static.noiseFloat(Static.N_RANDOM1, chunk.cx, chunk.cz);  //-1,1
+    float _r2 = Static.noiseFloat(Static.N_RANDOM2, chunk.cx, chunk.cz);  //-1,1
     int _i1 = Float.floatToRawIntBits(_r1);
     int _i2 = Float.floatToRawIntBits(_r2);
     long seed = _i1;
     seed <<= 32;
     seed |= _i2;
     chunk.seed = seed;
-    r.setSeed(seed);
   }
 
   public void getIDs() {}
@@ -52,8 +53,8 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       for(int x=0;x<16;x++) {
         int wx = chunk.cx * 16 + x;
         int wz = chunk.cz * 16 + z;
-        float temp = Static.noises[Static.N_TEMP].noise_2d(wx, wz) * 50.0f + 50.0f;  //0 - 100
-        float rain = Static.noises[Static.N_RAIN].noise_2d(wx, wz) * 50.0f + 50.0f;  //0 - 100
+        float temp = Static.noiseFloat(Static.N_TEMP,wx, wz) * 50.0f + 50.0f;  //0 - 100
+        float rain = Static.noiseFloat(Static.N_RAIN,wx, wz) * 50.0f + 50.0f;  //0 - 100
         float elev;
 
         //determine biome type (Biome....)
@@ -78,17 +79,17 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
           }
         }
 
-        float plains = Static.abs(Static.noises[Static.N_ELEV1].noise_2d(wx, wz) * 3.0f);
+        float plains = Static.abs(Static.noiseFloat(Static.N_ELEV1,wx, wz) * 3.0f);
         float swamps = 0;
 
         if (biome == SWAMP) {
           float scale = 1.0f * clamp(rain, 66.0f, 71.0f) * clamp(temp, 50.0f, 55.f);
-          swamps = Static.abs(Static.noises[Static.N_ELEV4].noise_2d(wx, wz) * 3.0f) * scale;
+          swamps = Static.abs(Static.noiseFloat(Static.N_ELEV4,wx, wz) * 3.0f) * scale;
         }
 
-        float hills = Static.noises[Static.N_ELEV2].noise_2d(wx, wz) * 15.0f;
+        float hills = Static.noiseFloat(Static.N_ELEV2,wx, wz) * 15.0f;
 
-        float extreme = Static.noises[Static.N_ELEV3].noise_2d(wx, wz) * 75.0f;
+        float extreme = Static.noiseFloat(Static.N_ELEV3,wx, wz) * 75.0f;
 
         elev = (Static.SEALEVEL + plains - swamps);
         if (extreme <= -25.0f) {
@@ -127,6 +128,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       world = Static.server.world;
     }
     chunk = new Chunk(dim,cx,cz);
+//    data.setChunk(chunk);
 
     getSeed();
 
@@ -160,6 +162,8 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
     emerald  3-8        1-32    (mountain biome only)
     redstone 24.8       1-16
     */
+    Random r = new Random();
+    r.setSeed(chunk.seed);
     int x,y,z,c,p;
     //coal
     for(int a=0;a<32;a++) {
