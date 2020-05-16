@@ -43,34 +43,35 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
 
     if ((data.c1 ^ data.c3) % 10000 == 0) {
       if (chunk.biome[0] == Biomes.OCEAN) {
-        addBlueprint("shipwreck");
+        addBlueprint("shipwreck", 32, Static.SEALEVEL - 8);
       } else {
-        addBlueprint("cabin");
+        addBlueprint("cabin", Static.SEALEVEL, 255);
       }
     }
 
     addStuff();
   }
 
-  private void addBlueprint(String name) {
-    BluePrint cabin = chunk.world.getBluePrint(name);
+  private void addBlueprint(String name, int elevMin, int elevMax) {
+    BluePrint print = chunk.world.getBluePrint(name);
     int elev = (int)chunk.elev[8 * 16 + 8] + 1;
-    if (elev + cabin.Y > 255) return;
+    if (elev + print.Y > elevMax) return;
+    if (elev < elevMin) return;
     if (chunk.getID(8, elev+1, 8) != 0) return;
     int ang = data.c1 % 4;
     switch (ang) {
       case 0: break;  //no change
-      case 1: cabin.rotateY(R90); break;
-      case 2: cabin.rotateY(R180); break;
-      case 3: cabin.rotateY(R270); break;
+      case 1: print.rotateY(R90); break;
+      case 2: print.rotateY(R180); break;
+      case 3: print.rotateY(R270); break;
     }
-    cabin.writeChunk(chunk, 0, 0, 0, 0, elev, 0, cabin.X, cabin.Y, cabin.Z);
+    print.writeChunk(chunk, 0, 0, 0, 0, elev, 0, print.X, print.Y, print.Z);
     //rotate back
     switch (ang) {
       case 0: break;  //no change
-      case 1: cabin.rotateY(R270); break;
-      case 2: cabin.rotateY(R180); break;
-      case 3: cabin.rotateY(R90); break;
+      case 1: print.rotateY(R270); break;
+      case 2: print.rotateY(R180); break;
+      case 3: print.rotateY(R90); break;
     }
   }
 
