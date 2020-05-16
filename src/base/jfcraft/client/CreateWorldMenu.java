@@ -44,6 +44,9 @@ public class CreateWorldMenu extends RenderScreen {
     addButton("Random", 20, 79+32, 226, new Runnable() {public void run() {
       randomSeed();
     }});
+    addButton("Clear", 266, 79+32, 226, new Runnable() {public void run() {
+      clearSeed();
+    }});
     addButton("Start", 20, 390, 226, new Runnable() {public void run() {
       createWorld();
     }});
@@ -146,5 +149,9 @@ public class CreateWorldMenu extends RenderScreen {
     Random r = new Random();
     long seedValue = r.nextLong();
     seed.setText(Long.toString(seedValue));
+  }
+
+  private void clearSeed() {
+    seed.setText("");
   }
 }

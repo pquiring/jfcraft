@@ -12,76 +12,97 @@ import jfcraft.data.*;
 import jfcraft.biome.*;
 import static jfcraft.data.Direction.*;
 
-public class River {
-  private int W;  //width (odd)
-  private int W2;  //width / 2 (round down)
-
+public class River extends Eraser {
   private int x1, x2;
   private int z1, z2;
 
   private float dx[];  //depth x (1d)
   private float dz[];  //depth z (1d)
-  private float di[];  //depth init (2d)
-  private float dc[];  //depth current (2d)
-  private Chunk c;
+  private float profile[];  //depth profile (2d)
+  private int profileSize;
   private Random r = new Random();
 
-  private float fx, fz;  //center position
-  private float dir;
-  private float min, max;
+  private float d1, d2;  //directions
+  private float dir;  //current direction
+  private float min, max;  //direction min/max
 
-  public void build(Chunk c, BiomeData data) {
-    this.c = c;
+  private static final int length = 110;  //128 is real max (but have to subtract 1/2 size of shape + trimAbove())
+  private int count;  //current length
+  private boolean taper;  //taper off end
+  private float factor;  //factor to taper off end
+  private GLMatrix mat = new GLMatrix();
+  private GLVector3 vec = new GLVector3();
+
+  private boolean setupRiver() {
     r.setSeed(data.c1);
 
-    if (c.getBiome(8, 8) == Biomes.OCEAN) return;
+    if (chunk.getBiome(8, 8) == Biomes.OCEAN) return false;
+
+//    Static.log("River @ " + wx + "," + wz);
 
     //calc river width
-    W = r.nextInt(9) + 5;  //5-13
-    if ((W & 1) == 0) W++;  //W must be odd
-    W2 = W / 2;
+    profileSize = r.nextInt(9) + 5;  //5-13
+    if ((profileSize & 1) == 0) profileSize++;  //dim must be odd
+    int half = profileSize / 2;
+    setSize(profileSize);
+    setPos(8,Static.SEALEVEL,8);
+    setCenter(half, profileSize-1, half);  //y offset is at top of shape
+
+    setFill(Blocks.WATER, Static.SEALEVEL);
+    setClearAbove(true);
 
     //build pyramid x,z profiles
-    fx=0;
-    fz=0;
-    dx = new float[W];
-    dz = new float[W];
-    for(int p=0;p<W2;p++) {
-      fx += r.nextFloat() * 0.6f;
-      fz += r.nextFloat() * 0.6f;
+    float fx=0;
+    float fz=0;
+    dx = new float[profileSize];
+    dz = new float[profileSize];
+    for(int p=0;p<half;p++) {
+      fx += r.nextFloat() * 1.5f;
+      fz += r.nextFloat() * 1.5f;
       dx[p] = fx;
       dz[p] = fz;
-      dx[W-p-1] = fx;
-      dz[W-p-1] = fx;
+      dx[profileSize-p-1] = fx;
+      dz[profileSize-p-1] = fx;
     }
-    dx[W2] = fx;
-    dz[W2] = fz;
+    dx[half] = fx;
+    dz[half] = fz;
 
     //now create an upside down 3d pyramid
+    profile = new float[profileSize * profileSize];
     int p = 0;
-    di = new float[W*W];
-    dc = new float[W*W];
-    for(int z=0;z<W;z++) {
-      for(int x=0;x<W;x++) {
-        di[p] = Static.min(dx[x], dz[z]);
+    for(int z=0;z<profileSize;z++) {
+      for(int x=0;x<profileSize;x++) {
+        profile[p] = Static.min(dx[x], dz[z]);
         p++;
       }
     }
 
-    float d1 = 90f + r.nextFloat() * 360f;
-    float d2 = d1 + 180f;
+    //calc directions
+    d1 = 90f + r.nextFloat() * 360f;
+    d2 = d1 + 180f;
 
     dir = d1;
     min = dir - 90f;
     max = dir + 90f;
-    if (!avoidMountains()) return;
-    carveLine();
 
-    //carve out second half of river
+    count = 0;
+    taper = false;
+    factor = 1.0f;
+
+    return true;
+  }
+
+  private void flipDirection() {
     dir = d2;
     min = dir - 90f;
     max = dir + 90f;
-    carveLine();
+    int half = profileSize / 2;
+    setSize(profileSize);
+    setPos(8,Static.SEALEVEL,8);
+    setCenter(half, profileSize-1, half);  //y offset is at top of shape
+    count = 0;
+    taper = false;
+    factor = 1.0f;
   }
 
   /** Clamps angle 0-360 degrees. */
@@ -91,46 +112,30 @@ public class River {
     return ang;
   }
 
-  private static final int length = 100;
-
-  private void carveLine() {
-    fx = 8f;
-    fz = 8f;
-    GLMatrix mat = new GLMatrix();
-    GLVector3 vec = new GLVector3();
-    boolean taper = false;
-    float factor = 1.0f;
-    boolean nearOcean = false;
-    for(int a=0;a<length;a++) {
-      if (a > length - 16) taper = true;  //taper end of river
-      if (c.getBiome((int)fx, (int)fz) == Biomes.OCEAN) break;  //stop once we hit ocean in center of pyramid
-      if (!taper && !avoidMountains()) taper = true;  //taper once we hit mountain
-      nearOcean = moveTowardOcean();
-      if (taper) factor -= Static._1_16;
-      if (factor <= 0f) break;
-      copyValues();
-      carvePoint((int)fx, (int)fz, factor);
-      if (!nearOcean) {
-        //min/max prevents river from turning back on itself
-        if (dir < min) dir = min;
-        if (dir > max) dir = max;
-      }
-      mat.setIdentity();
-      mat.addRotate(clamp(dir), 0, 1, 0);
-      vec.set(0, 0, -1);  //0 deg = north
-      mat.mult(vec);
-      fx += vec.v[0];
-      fz += vec.v[2];
-      if (!nearOcean) {
-        dir += (r.nextFloat() - 0.5f) * 15f;
-      }
+  private void buildShape() {
+    resetShape();
+    if (factor < 1.0f) {
+      int newSize = (int)(profileSize * factor);
+      if (newSize < 3) newSize = 3;
+      if ((newSize & 1) == 0) newSize++;
+      int half = newSize / 2;
+      setSize(newSize);
+      setCenter(half, newSize-2, half);
     }
-  }
-
-  private void copyValues() {
-    int cnt = W * W;
-    for(int i=0;i<cnt;i++) {
-      dc[i] = di[i] + r.nextFloat() * 0.2f;
+    int size = getSize();
+    int off = (profileSize - size) / 2;
+    size -= off * 2;
+    for(int z=0;z<size;z++) {
+      for(int x=0;x<size;x++) {
+        int depth = (int)((profile[(z + off) * profileSize + (x + off)] + (r.nextFloat() * 0.3f)) * factor);
+        if (depth > size) depth = size;
+        int y = size-1;
+        while (depth > 0) {
+          setShape(x,y,z);
+          y--;
+          depth--;
+        }
+      }
     }
   }
 
@@ -140,17 +145,17 @@ public class River {
 
   /** Get elevations at corners of pyramid. */
   private void getElevs() {
-    int x = (int)fx;
-    int z = (int)fz;
-    //TODO : use factor
-    x1 = x - W2;
-    x2 = x + W2;
-    z1 = z - W2;
-    z2 = z + W2;
-    nw = c.getElev(x1,z1);
-    ne = c.getElev(x2,z1);
-    se = c.getElev(x2,z2);
-    sw = c.getElev(x1,z2);
+    int x = getX();
+    int z = getZ();
+    int half = getSize() / 2;
+    x1 = x - half;
+    x2 = x + half;
+    z1 = z - half;
+    z2 = z + half;
+    nw = chunk.getElev(x1,z1);
+    ne = chunk.getElev(x2,z1);
+    se = chunk.getElev(x2,z2);
+    sw = chunk.getElev(x1,z2);
   }
 
   private boolean avoidMountains() {
@@ -161,71 +166,106 @@ public class River {
 
     float cdir = clamp(dir);
 
-    if (nw > maxelev) {
+    boolean _nw = nw > maxelev;
+    boolean _ne = ne > maxelev;
+    boolean _se = se > maxelev;
+    boolean _sw = sw > maxelev;
+
+    if (_nw && _ne) {
+      //move s
+      addZ(1.0f);
+      if (cdir < 180f) {
+        cdir += 10f;
+      } else {
+        cdir -= 10f;
+      }
+    } else if (_ne && _se) {
+      //move w
+      addX(-1.0f);
+      if (cdir > 270f || cdir < 90f) {
+        dir -= 10f;
+      } else {
+        dir += 10f;
+      }
+    } else if (_se && _sw) {
+      //move n
+      addZ(-1.0f);
+      if (cdir > 180f) {
+        dir -= 10f;
+      } else {
+        dir += 10f;
+      }
+    } else if (_sw && _nw) {
+      //move e
+      addX(1.0f);
+      if (cdir > 270f || cdir < 90f) {
+        dir += 10f;
+      } else {
+        dir -= 10f;
+      }
+    } else if (_nw) {
       if (cdir > 315f) {
         //move e
-        fx += 1.0f;
+        addX(1.0f);
         dir += 10f;
       } else {
         //move s
-        fz += 1.0f;
+        addZ(1.0f);
         dir -= 10f;
       }
-    } else if (ne > maxelev) {
+    } else if (_ne) {
       if (cdir < 45f) {
         //move w
-        fx -= 1.0f;
+        addX(-1.0f);
         dir -= 10f;
       } else {
         //move s
-        fz += 1.0f;
+        addZ(1.0f);
         dir += 10f;
       }
-    } else if (sw > maxelev) {
+    } else if (_sw) {
       if (cdir < 225f) {
         //move e
-        fx += 1.0f;
+        addX(1.0f);
         dir -= 10f;
       } else {
         //move n
-        fz -= 1.0f;
+        addZ(-1.0f);
         dir += 10f;
       }
-    } else if (se > maxelev) {
+    } else if (_se) {
       if (cdir > 135f) {
         //move w
-        fx -= 1.0f;
+        addX(-1.0f);
         dir += 10f;
       } else {
         //move n
-        fz -= 1.0f;
+        addZ(-1.0f);
         dir -= 10f;
       }
     }
 
-    getElevs();
-
-    return nw < maxelev && ne < maxelev && se < maxelev && sw < maxelev;
+    return _nw || _ne || _se || _sw;
   }
 
    private byte bnw,bne,bsw,bse;  //biomes
 
   /** Get biomes at corners of pyramid. */
   private void getBiomes() {
-    int x = (int)fx;
-    int z = (int)fz;
-    //TODO : use factor
-    x1 = x - W2;
-    x2 = x + W2;
-    z1 = z - W2;
-    z2 = z + W2;
-    bnw = c.getBiome(x1,z1);
-    bne = c.getBiome(x2,z1);
-    bse = c.getBiome(x2,z2);
-    bsw = c.getBiome(x1,z2);
+    int x = getX();
+    int z = getZ();
+    int half = getSize() / 2;
+    x1 = x - half;
+    x2 = x + half;
+    z1 = z - half;
+    z2 = z + half;
+    bnw = chunk.getBiome(x1,z1);
+    bne = chunk.getBiome(x2,z1);
+    bse = chunk.getBiome(x2,z2);
+    bsw = chunk.getBiome(x1,z2);
   }
 
-  /** Moves river towards ocean if detected on cornders.
+  /** Steers river towards ocean if detected on corners.
    * @return true if ocean detected.
    */
   private boolean moveTowardOcean() {
@@ -254,45 +294,22 @@ public class River {
     return false;
   }
 
-  private void carvePoint(int ix, int iz, float factor) {
-    int px, pz;
-    //carve out pyramid
-    int w = (int)(W * factor);
-    if ((w & 1) == 0) w++;
-    int w2 = w / 2;
-    int shrink = W2 - w2;
-    px = shrink;
-    pz = shrink;
-    for(int z=-w2;z<=w2;z++) {
-      for(int x=-w2;x<=w2;x++) {
-        int y = Static.SEALEVEL - (int)(dc[pz * W + px] * factor);
-        while (y <= Static.SEALEVEL || c.getID(ix+x, y, iz+z) != 0) {
-          c.clearBlock(ix+x, y, iz+z);
-          if (y <= Static.SEALEVEL) {
-            c.setBlock(ix+x, y, iz+z, Blocks.WATER, 0);
-          }
-          y++;
-        }
-        px++;
-      }
-      px = shrink;
-      pz++;
-    }
-
-    //carve out slope (one ring at a time)
+  /** Carve out slope (one ring at a time).  Could trim up to 10 blocks away. */
+  private void clearAbove(int ix, int iz) {
     int cnt;
-    int nx1 = ix - w2 - 1;
-    int nx2 = ix + w2 + 1;
-    int nz = iz - w2 - 1;
-    int sx1 = ix - w2 - 1;
-    int sx2 = ix + w2 + 1;
-    int sz = iz + w2 + 1;
-    int ez1 = iz - w2 - 1;
-    int ez2 = iz + w2 + 1;
-    int ex = ix + w2 + 1;
-    int wz1 = iz - w2 - 1;
-    int wz2 = iz + w2 + 1;
-    int wx = ix - w2 - 1;
+    int half = getSize() / 2;
+    int nx1 = ix - half - 1;
+    int nx2 = ix + half + 1;
+    int nz = iz - half - 1;
+    int sx1 = ix - half - 1;
+    int sx2 = ix + half + 1;
+    int sz = iz + half + 1;
+    int ez1 = iz - half - 1;
+    int ez2 = iz + half + 1;
+    int ex = ix + half + 1;
+    int wz1 = iz - half - 1;
+    int wz2 = iz + half + 1;
+    int wx = ix - half - 1;
     char id;
     int ys = Static.SEALEVEL + 1;
     do {
@@ -301,9 +318,9 @@ public class River {
       for(int nx = nx1; nx <= nx2; nx++) {
         int y = ys;
         do {
-          id = c.getID(nx,y,nz);
+          id = chunk.getID(nx,y,nz);
           if (id != 0) {
-            c.clearBlock(nx, y, nz);
+            chunk.clearBlock(nx, y, nz);
             cnt++;
           }
           y++;
@@ -313,9 +330,9 @@ public class River {
       for(int ez = ez1; ez <= ez2; ez++) {
         int y = ys;
         do {
-          id = c.getID(ex,y,ez);
+          id = chunk.getID(ex,y,ez);
           if (id != 0) {
-            c.clearBlock(ex, y, ez);
+            chunk.clearBlock(ex, y, ez);
             cnt++;
           }
           y++;
@@ -325,9 +342,9 @@ public class River {
       for(int sx = sx1; sx <= sx2; sx++) {
         int y = ys;
         do {
-          id = c.getID(sx,y,sz);
+          id = chunk.getID(sx,y,sz);
           if (id != 0) {
-            c.clearBlock(sx, y, sz);
+            chunk.clearBlock(sx, y, sz);
             cnt++;
           }
           y++;
@@ -337,9 +354,9 @@ public class River {
       for(int wz = wz1; wz <= wz2; wz++) {
         int y = ys;
         do {
-          id = c.getID(wx,y,wz);
+          id = chunk.getID(wx,y,wz);
           if (id != 0) {
-            c.clearBlock(wx, y, wz);
+            chunk.clearBlock(wx, y, wz);
             cnt++;
           }
           y++;
@@ -363,4 +380,57 @@ public class River {
       }
     } while (cnt > 0);
   }
+
+  /** Setup Eraser, call setSize() and fill in shape. */
+  public boolean setup() {
+    return setupRiver();
+  }
+
+  /** Move center position by one block. */
+  public void move() {
+    mat.setIdentity();
+    mat.addRotate(clamp(dir), 0, 1, 0);
+    vec.set(0, 0, -1);  //0 deg = north
+    mat.mult(vec);
+    addX(vec.v[0]);
+    addZ(vec.v[2]);
+    dir += (r.nextFloat() - 0.5f) * 15f;
+    //min/max prevents river from turning back on itself
+    if (dir < min) dir = min;
+    if (dir > max) dir = max;
+    count++;
+  }
+
+  /** Check if we are done. */
+  public boolean endPath() {
+    if (count > length - 16) taper = true;  //taper end of river
+    if (chunk.getBiome(getX(), getZ()) == Biomes.OCEAN) {
+      //stop once we hit ocean in center of pyramid
+      return true;
+    }
+    while (avoidMountains()) {
+      count++;
+      if (count >= length) break;
+    }
+    moveTowardOcean();
+    if (taper) factor -= Static._1_16;
+    return ((count > length) || (factor <= 0f));
+  }
+
+  /** Flip position to erase other half of path. */
+  public boolean flip() {
+    flipDirection();
+    return true;
+  }
+
+  /** Called before erasing a point. */
+  public void preErase() {
+    buildShape();
+  }
+
+  /** Called after erasing a point. */
+  public void postErase() {
+    clearAbove(getX(), getZ());
+  }
+
 }

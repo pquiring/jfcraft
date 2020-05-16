@@ -44,7 +44,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public float width, width2, height, height2, depth, depth2;
   public float legLength;  //for when in vehicle
   public float eyeHeight, jumpVelocity, reach;
-  public float walkSpeed, runSpeed, sneakSpeed, swimSpeed;
+  public float walkSpeed, runSpeed, sneakSpeed, swimSpeed, fastSwimSpeed;
   public float yDrag, xzDrag;
   public boolean inWater, inLava;  //whole body
   public boolean inLadder, inVines, inWeb;

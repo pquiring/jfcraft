@@ -76,7 +76,7 @@ public class Player extends HumaniodBase {
     legLength = 0.625f;
     if (Static.debugTest) {
       runSpeed = 25.0f;
-      swimSpeed = 25.0f;
+      fastSwimSpeed = 25.0f;
     }
   }
 
