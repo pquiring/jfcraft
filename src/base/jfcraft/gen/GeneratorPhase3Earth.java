@@ -41,7 +41,7 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
 
     if (Static.server.world.options.doSteps) smoothSteps();
 
-    if ((data.c1 ^ data.c3) % 10000 == 0) {
+    if ((data.c1 ^ data.c3) % 10033 == 0) {
       if (chunk.biome[0] == Biomes.OCEAN) {
         addBlueprint("shipwreck", 32, Static.SEALEVEL - 8);
       } else {

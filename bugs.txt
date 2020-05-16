@@ -1,5 +1,7 @@
 jump too high
 
+starting position sometimes in blocks/water
+
 If a world is created in dedicated server, the leaves are dark (no light).
   Does not happen in single player mode.
 

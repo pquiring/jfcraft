@@ -32,7 +32,7 @@ public class CreateWorldMenu extends RenderScreen {
     initTxt = "New World";
     setFocus(world_name);
     randomSeed();
-    steps.setSelected(false);
+    steps.setSelected(true);
   }
 
   public void init() {
