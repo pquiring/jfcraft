@@ -21,48 +21,15 @@ public class Cavern {
     }
     if (y < 1) return;  //do not change bedrock
     if (y > 255) return;
-    Chunk c = chunk;
-    while (x < 0) {
-      c = c.W;
-      x += 16;
-    }
-    while (x > 15) {
-      c = c.E;
-      x -= 16;
-    }
-    while (z < 0) {
-      c = c.N;
-      z += 16;
-    }
-    while (z > 15) {
-      c = c.S;
-      z -= 16;
-    }
-    c.setBlock(x, y, z, id, bits);
+    chunk.setBlock(x, y, z, id, bits);
   }
   private void clearBlock(int x, int y, int z) {
     if (y < 1) return;  //do not change bedrock
     if (y > 255) return;
-    Chunk c = chunk;
-    while (x < 0) {
-      c = c.W;
-      x += 16;
-    }
-    while (x > 15) {
-      c = c.E;
-      x -= 16;
-    }
-    while (z < 0) {
-      c = c.N;
-      z += 16;
-    }
-    while (z > 15) {
-      c = c.S;
-      z -= 16;
-    }
-    c.clearBlock(x, y, z);
+    chunk.clearBlock(x, y, z);
+    chunk.clearBlock2(x, y, z);
     if (y < 10) {
-      c.setBlock(x, y, z, Blocks.LAVA, 0);
+      chunk.setBlock(x, y, z, Blocks.LAVA, 0);
     }
   }
 

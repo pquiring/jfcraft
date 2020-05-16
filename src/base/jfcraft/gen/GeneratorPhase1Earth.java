@@ -132,26 +132,18 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
 
     getSeed();
 
-    fill();
+    clear();
 
     generateBiomes();
 
-    if (world.type.equals("default")) {
-      generate_default();
-    } else {
-      generate_custom();
-    }
+    addDeposits();
 
     copy();
 
     return chunk;
   }
 
-  public void generate_custom() {
-    //TODO
-  }
-
-  public void generate_default() {
+  public void addDeposits() {
     /*
     mineral  amt/chunk  levels
     -------  ---------  ------
@@ -165,6 +157,26 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
     Random r = new Random();
     r.setSeed(chunk.seed);
     int x,y,z,c,p;
+    int wx = chunk.cx * 16;
+    int wz = chunk.cz * 16;
+    //soil/gravel 3d deposits
+    for(z=0;z<16;z++) {
+      for(x=0;x<16;x++) {
+        for(y=0;y<Static.SEALEVEL;y++) {
+          p = x + y * 256 + z * 16;
+          float soil = Static.noises[Static.N_SOIL].noise_3d(wx, y, wz) * 100.0f;
+
+          //add soil/gravel deposites
+          if (soil <= -50) {
+            //dirt
+            if (chunk.getID(x,y,z) == Blocks.STONE) setBlock(p, Blocks.DIRT);
+          } else if (soil >= 50) {
+            //gravel
+            if (chunk.getID(x,y,z) == Blocks.STONE) setBlock(p, Blocks.GRAVEL);
+          }
+        }
+      }
+    }
     //coal
     for(int a=0;a<32;a++) {
       x = r.nextInt(16);
@@ -173,7 +185,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       c = r.nextInt(5) + 5;
       for(int b=0;b<c;b++) {
         p = x + y * 256 + z * 16;
-        if (blocks[p] == Blocks.STONE) blocks[p] = Blocks.COALORE;
+        setBlock(p, Blocks.COALORE);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -193,7 +205,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       c = r.nextInt(2) + 4;
       for(int b=0;b<c;b++) {
         p = x + y * 256 + z * 16;
-        if (blocks[p] == Blocks.STONE) blocks[p] = Blocks.IRONORE;
+        setBlock(p, Blocks.IRONORE);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -213,7 +225,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       c = r.nextInt(2) + 2;
       for(int b=0;b<c;b++) {
         p = x + y * 256 + z * 16;
-        if (blocks[p] == Blocks.STONE) blocks[p] = Blocks.GOLDORE;
+        setBlock(p, Blocks.GOLDORE);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -233,7 +245,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       c = r.nextInt(2) + 1;
       for(int b=0;b<c;b++) {
         p = x + y * 256 + z * 16;
-        if (blocks[p] == Blocks.STONE) blocks[p] = Blocks.DIAMOND_ORE;
+        setBlock(p, Blocks.DIAMOND_ORE);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -253,9 +265,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       c = r.nextInt(2) + 1;
       for(int b=0;b<c;b++) {
         p = x + y * 256 + z * 16;
-        if ((blocks[p] == Blocks.STONE) && (chunk.elev[x + z * 16] > 30)) {
-          blocks[p] = Blocks.EMERALD_ORE;
-        }
+        setBlock(p, Blocks.EMERALD_ORE);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -275,7 +285,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       c = r.nextInt(2) + 1;
       for(int b=0;b<c;b++) {
         p = x + y * 256 + z * 16;
-        if (blocks[p] == Blocks.STONE) blocks[p] = Blocks.REDSTONE_ORE;
+        setBlock(p, Blocks.REDSTONE_ORE);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -289,14 +299,13 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
     }
   }
 
-  private void setBlock(int x,int y,int z,char id, int _bits) {
-    int p = y * 256 + z * 16 + x;
-    if (blocks[p] != 0) return;
+  private void setBlock(int p, char id) {
+    if (blocks[p] != Blocks.STONE) return;
+    if (blocks[p + 256] == 0) return;  //do not set top level blocks
     blocks[p] = id;
-    bits[p] = (byte)_bits;
   }
 
-  private void fill() {
+  private void clear() {
     Arrays.fill(blocks, (char)0);
     Arrays.fill(bits, (byte)0);
     Arrays.fill(blocks2, (char)0);
