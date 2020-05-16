@@ -196,13 +196,14 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
           char lastId = chunk.getID(x, 0, z);
           for(int y=1;y<255;y++) {
             char id = chunk.getID(x, y, z);
-            if (chunk.getID2(x,y,z) == Blocks.SNOW) {
+            char id2 = chunk.getID2(x, y, z);
+            if (id2 == Blocks.SNOW) {
               addStepSnow(x,y,z);
             }
-            else if (lastId != 0 && id == 0 && Static.blocks.blocks[lastId].canSmooth) {
+            else if (lastId != 0 && id == 0 && Static.blocks.blocks[lastId].canSmooth && id2 == 0) {
               addStepLower(x,y,z,lastId);
             }
-            else if (lastId == 0 && id != 0 && Static.blocks.blocks[id].canSmooth) {
+            else if (lastId == 0 && id != 0 && Static.blocks.blocks[id].canSmooth && id2 == 0) {
               addStepUpper(x,y,z,id);
             }
             lastId = id;
