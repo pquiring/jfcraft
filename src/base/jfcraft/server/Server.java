@@ -998,13 +998,13 @@ public class Server {
   }
 
   public void spawnPlayer(EntityBase player) {
-    //TODO : random position a little
     player.dim = 0;
     player.pos.x = world.spawn.x;
     player.pos.y = world.spawn.y;
     player.pos.z = world.spawn.z;
-    //TODO : if in water keep moving north until we hit land
-    //  or create a small island
+    if (player instanceof Player) {
+      ((Player)player).adjustSpawnPosition();
+    }
     int cx, cz;
     do {
       cx = Static.floor(player.pos.x / 16.0f);

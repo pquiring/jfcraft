@@ -26,6 +26,7 @@ public class PacketRespawnRequest extends Packet {
     client.player.pos.x = server.world.spawn.x;
     client.player.pos.y = server.world.spawn.y;
     client.player.pos.z = server.world.spawn.z;
+    client.player.adjustSpawnPosition();
     client.player.health = 20;
     client.player.hunger = 20;
     client.player.saturation = 20;

@@ -246,6 +246,13 @@ public class Player extends HumaniodBase {
     dest.copyBuffers();
   }
 
+  public void adjustSpawnPosition() {
+    Chunk chunk = getChunk();
+    if (chunk == null) return;
+    //TODO : move to safe location
+    pos.y = chunk.elev[8 * 8 + 8];
+  }
+
   private static final byte ver = 0;
 
   @Override
