@@ -16,6 +16,7 @@ import jfcraft.data.*;
 import jfcraft.biome.*;
 import jfcraft.block.*;
 import jfcraft.entity.*;
+import jfcraft.feature.*;
 import jfcraft.tree.TreeBase;
 import static jfcraft.data.Direction.*;
 import static jfcraft.data.Biomes.*;

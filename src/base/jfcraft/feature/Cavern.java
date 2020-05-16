@@ -1,4 +1,4 @@
-package jfcraft.gen;
+package jfcraft.feature;
 
 /**
  * Cavern (under ground room)

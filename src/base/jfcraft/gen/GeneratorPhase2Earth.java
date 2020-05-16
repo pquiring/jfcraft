@@ -15,6 +15,7 @@ import javaforce.gl.*;
 
 import jfcraft.data.*;
 import jfcraft.biome.*;
+import jfcraft.feature.*;
 import jfcraft.block.*;
 import jfcraft.entity.*;
 import static jfcraft.data.Direction.*;
