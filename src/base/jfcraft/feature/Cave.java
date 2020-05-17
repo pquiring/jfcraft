@@ -4,10 +4,7 @@ package jfcraft.feature;
  * Cave
  */
 
-import java.util.*;
-
 import javaforce.gl.*;
-import jfcraft.biome.*;
 import jfcraft.data.*;
 import static jfcraft.data.Static.*;
 

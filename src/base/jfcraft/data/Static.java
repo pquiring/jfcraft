@@ -193,11 +193,8 @@ public class Static {
   public static Noise noises[];
   public static float noiseParams[][] = {
     //octaves, persistence, scale
-    {1, 0.0f, 0.002f},  //temp : low octave for smooth changes
-    {1, 0.0f, 0.002f},  //rain : low octave for smooth changes
-    {3, 0.7f, 1f},  //random1 : high octave for greater complexity
-    {3, 0.7f, 1f},  //random2 : high octave for greater complexity
-    {3, 0.7f, 1f},  //random3 : high octave for greater complexity
+    {1, 0.0f, 0.0005f},  //temp : low octave for smooth changes
+    {1, 0.0f, 0.0005f},  //rain : low octave for smooth changes
 
     //elevations
     {5, 0.5f, 0.005f},  //elev1 : plains
@@ -213,22 +210,32 @@ public class Static {
     {1, 0.0f, 0.007f},  //nether
     {2, 0.5f, 0.005f},  //end_top
     {2, 0.5f, 0.005f},  //end_bottom
+
+    {3, 0.7f, 1f},  //random1 : high octave for greater complexity
+    {3, 0.7f, 1f},  //random2 : high octave for greater complexity
+    {3, 0.7f, 1f},  //random3 : high octave for greater complexity
+    {3, 0.7f, 1f},  //random4 : high octave for greater complexity
+    {3, 0.7f, 1f},  //random5 : high octave for greater complexity
+    {3, 0.7f, 1f},  //random6 : high octave for greater complexity
   };
   public static int N_TEMP = 0;
   public static int N_RAIN = 1;
-  public static int N_RANDOM1 = 2;
-  public static int N_RANDOM2 = 3;
-  public static int N_RANDOM3 = 4;
-  public static int N_ELEV1 = 5;
-  public static int N_ELEV2 = 6;
-  public static int N_ELEV3 = 7;
-  public static int N_ELEV4 = 8;
-  public static int N_ELEV5 = 9;
-  public static int N_ELEV6 = 10;
-  public static int N_SOIL = 11;
-  public static int N_NETHER = 12;
-  public static int N_END_1 = 13;
-  public static int N_END_2 = 14;
+  public static int N_ELEV1 = 2;
+  public static int N_ELEV2 = 3;
+  public static int N_ELEV3 = 4;
+  public static int N_ELEV4 = 5;
+  public static int N_ELEV5 = 6;
+  public static int N_ELEV6 = 7;
+  public static int N_SOIL = 8;
+  public static int N_NETHER = 9;
+  public static int N_END_1 = 10;
+  public static int N_END_2 = 11;
+  public static int N_RANDOM1 = 12;
+  public static int N_RANDOM2 = 13;
+  public static int N_RANDOM3 = 14;
+  public static int N_RANDOM4 = 14;
+  public static int N_RANDOM5 = 14;
+  public static int N_RANDOM6 = 15;
   //...
   public static void initNoises(World world) {
     int cnt = noiseParams.length;
