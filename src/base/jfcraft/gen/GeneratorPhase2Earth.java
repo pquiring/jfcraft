@@ -42,8 +42,8 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
       new River().build(chunk, data);
     }
 
-    if (data.c2 % 100 == 0) {
-      new Cave().addCaves(chunk, data);
+    if (data.c2 % 50 == 0) {
+      new Cave().build(chunk, data);
     }
 
     if (data.c3 % 1000 == 0) {

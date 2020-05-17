@@ -41,7 +41,7 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
 
     if (Static.server.world.options.doSteps) smoothSteps();
 
-    if ((data.c1 ^ data.c3) % 10033 == 0) {
+    if ((chunk.cx !=0 && chunk.cz !=0) && (data.c1 ^ data.c3) % 10033 == 0) {
       if (chunk.biome[0] == Biomes.OCEAN) {
         addBlueprint("shipwreck", 32, Static.SEALEVEL - 8);
       } else {
@@ -49,7 +49,7 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
       }
     }
 
-    addStuff();
+    addBiomeFeatures();
   }
 
   private void addBlueprint(String name, int elevMin, int elevMax) {
@@ -213,7 +213,7 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
     }
   }
 
-  public void addStuff() {
+  private void addBiomeFeatures() {
     BiomeBase.setChunk(chunk);
     TreeBase.setChunk(chunk);
     data.setChunk(chunk);
