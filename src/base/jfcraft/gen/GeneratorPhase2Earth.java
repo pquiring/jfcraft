@@ -47,7 +47,7 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
     }
 
     if (data.c3 % 1000 == 0) {
-      new Ravine().addRavine(chunk, data);
+      new Ravine().build(chunk, data);
     }
 
     if ((data.c1 ^ data.c2) % 1000 == 0) {

@@ -203,9 +203,10 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
             else if (lastId != 0 && id == 0 && Static.blocks.blocks[lastId].canSmooth && id2 == 0) {
               addStepLower(x,y,z,lastId);
             }
-            else if (lastId == 0 && id != 0 && Static.blocks.blocks[id].canSmooth && id2 == 0) {
-              addStepUpper(x,y,z,id);
-            }
+// not properly supported ???
+//            else if (lastId == 0 && id != 0 && Static.blocks.blocks[id].canSmooth && id2 == 0) {
+//              addStepUpper(x,y,z,id);
+//            }
             lastId = id;
           }
         }

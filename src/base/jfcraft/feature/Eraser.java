@@ -148,6 +148,7 @@ public abstract class Eraser {
             int xx = ix + x;
             int yy = iy + y;
             int zz = iz + z;
+            if (yy == 0) continue;  //do not remove bedrock
             chunk.clearBlock(xx, yy, zz);
             if (fill != 0 && yy <= fillElev) {
               chunk.setBlock(xx, yy, zz, fill, 0);

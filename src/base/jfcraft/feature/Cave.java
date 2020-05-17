@@ -95,6 +95,9 @@ public class Cave extends Eraser {
     int x = wx + getX();
     int y = getY();
     int z = wz + getZ();
+    if (y < 5) {
+      addY(1f);
+    }
     dir += Static.noiseFloat(N_RANDOM1, x, y, z) * 15f;
     ydir += Static.noiseFloat(N_RANDOM1, x, -y, z) * 5f;
   }
