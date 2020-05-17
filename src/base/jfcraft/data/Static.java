@@ -233,9 +233,9 @@ public class Static {
   public static int N_RANDOM1 = 12;
   public static int N_RANDOM2 = 13;
   public static int N_RANDOM3 = 14;
-  public static int N_RANDOM4 = 14;
-  public static int N_RANDOM5 = 14;
-  public static int N_RANDOM6 = 15;
+  public static int N_RANDOM4 = 15;
+  public static int N_RANDOM5 = 16;
+  public static int N_RANDOM6 = 17;
   //...
   public static void initNoises(World world) {
     int cnt = noiseParams.length;
@@ -248,17 +248,17 @@ public class Static {
     }
   }
 
-  /** Returns random value -1 thru +1 from 2d noise map. */
+  /** Returns random map value -1 thru +1 from 2d noise map. */
   public static float noiseFloat(int noise, int x, int z) {
     return Static.noises[noise].noise_2d(x, z);
   }
 
-  /** Returns random value -1 thru +1 from 3d noise map. */
+  /** Returns random map value -1 thru +1 from 3d noise map. */
   public static float noiseFloat(int noise, int x, int y, int z) {
     return Static.noises[noise].noise_3d(x, y, z);
   }
 
-  /** Returns random value 0 thru mod-1 from 2d noise map. */
+  /** Returns pure random value 0 thru mod-1. */
   public static int noiseInt(int noise, int mod, int x, int z) {
     //float = sign(1) | exp(8) | mantissa(23)
     float f1 = Static.noises[noise].noise_3d(x, 50, z);
@@ -268,7 +268,7 @@ public class Static {
     return (((i1 & 0x7fff) << 16) | (i2 & 0xffff)) % mod;
   }
 
-  /** Returns random value 0 thru mod-1 from 3d noise map. */
+  /** Returns pure random value 0 thru mod-1. */
   public static int noiseInt(int noise, int mod, int x, int y, int z) {
     //float = sign(1) | exp(8) | mantissa(23)
     float f1 = Static.noises[noise].noise_3d(x, y, z);
