@@ -1,49 +1,148 @@
 package jfcraft.feature;
 
 /**
- * Cave
+ *  Cave
+ *
+ *  Each cave is connected to two of the four sides of the chunk.
+ *  The connection point on the E,S walls is defined by the current chunk.
+ *  The N,W walls are defined from the adjacent chunks.
+ *  A Bezier curve is used to connect points.
+ *
+ *  There are 3 levels, each level has 2 caves:
+ *
+ *  64 = SEALEVEL
+ *  60 (4) = gap
+ *  44 (16) = level 1
+ *  40 (4) = gap
+ *  24 (16) = level 2
+ *  20 (4) = gap
+ *  4 (16) = level 3
+ *  0 (4) = gap (BEDROCK)
+ *
+ *  TODO :
+ *   - replace with mines / underground fortresses in random areas.
+ *   - create an elevator shaft to connect levels (ladder)
+ *
+ *  This creates a true Perlin noise generated cave instead of fragments.
+ *
  */
 
+import java.awt.geom.*;
+import java.awt.*;
+
 import javaforce.gl.*;
+import javaforce.*;
+
 import jfcraft.data.*;
 import static jfcraft.data.Static.*;
+import static jfcraft.data.Direction.*;
 
 public class Cave extends Eraser {
-  private float dir, d1, d2;
-  private float elev;
-  private int len;
-  private boolean taper;
-  private float factor;
-  private float ydir;
   private float profiles[][] = new float[4][8];
+  private static JFImage imgXZ = new JFImage(16,16);
+  private static JFImage imgY = new JFImage(16,256);
+  private int dir, dir1, dir2;
+  private int path;
+  private int level;
 
-  private GLMatrix mat = new GLMatrix();
-  private GLVector3 vec = new GLVector3();
+  private int nx, ny, nz;
+  private int ex, ey, ez;
+  private int sx, sy, sz;
+  private int wx, wy, wz;
+  private int nsy, wey, nwy, ney, swy, sey;  //mid-point elevations
+
+  private boolean eop;  //end of path
+  private static final int levelBase[] = new int[] {0, 44, 24, 4};
 
   private void setupCaves() {
-    elev = data.c1 % chunk.getElev(8, 8);
-    d1 = data.cf1 * 180f;
-    d2 = d1 + 180f;
-    dir = d1;
-    len = 100;
-    factor = 1f;
-    ydir = 0f;
+    int _wx = chunk.cx * 16 + level;
+    int _wz = chunk.cz * 16 + level;
+
+    sx = Static.noiseInt(N_RANDOM1, 8, _wx, _wz) + 4;
+    sz = 15;
+    sy = Static.noiseInt(N_RANDOM3, 16, _wx, _wz);
+    sy += levelBase[level];
+
+    ex = 15;
+    ez = Static.noiseInt(N_RANDOM5, 8, _wx, _wz) + 4;
+    ey = Static.noiseInt(N_RANDOM6, 16, _wx, _wz);
+    ey += levelBase[level];
+
+    boolean connect = false;
+
+    switch (Static.noiseInt(N_RANDOM7, 3, _wx, _wz)) {  //N -> W/S/E
+      case 0: dir = NW; dir2 = SE; connect = false; break;
+      case 1: dir = NS; dir2 = WE; connect = Static.noiseInt(N_RANDOM8, 2, _wx, _wz) == 0; break;
+      case 2: dir = NE; dir2 = SW; connect = false; break;
+    }
+
+    _wz -= 16;
+
+    nx = Static.noiseInt(N_RANDOM1, 8, _wx, _wz) + 4;
+    nz = -1;
+    ny = Static.noiseInt(N_RANDOM3, 16, _wx, _wz);
+    ny += levelBase[level];
+
+    _wz += 16;
+    _wx -= 16;
+
+    wx = -1;
+    wz = Static.noiseInt(N_RANDOM5, 8, _wx, _wz) + 4;
+    wy = Static.noiseInt(N_RANDOM6, 16, _wx, _wz);
+    wy += levelBase[level];
+
+    _wx += 16;
+
+    //calc mid-point y
+    if (connect) {
+      nsy = (ny + sy) / 2;
+      wey = (wy + ey) / 2;
+      nwy = (ny + wy) / 2;
+      ney = (ny + ey) / 2;
+      swy = (sy + wy) / 2;
+      sey = (sy + ey) / 2;
+    } else {
+      nsy = levelBase[level];
+      wey = levelBase[level];
+      nwy = levelBase[level];
+      ney = levelBase[level];
+      swy = levelBase[level];
+      sey = levelBase[level];
+      //avoid connections
+      switch (dir1) {
+        case NW: swy += 12; break;
+        case NS: wey += 12; break;
+        case NE: swy += 12; break;
+      }
+    }
+
+    nsy += Static.noiseInt(N_RANDOM1, 3, _wx, _wz) - 1;
+    wey += Static.noiseInt(N_RANDOM2, 3, _wx, _wz) - 1;
+    nwy += Static.noiseInt(N_RANDOM3, 3, _wx, _wz) - 1;
+    ney += Static.noiseInt(N_RANDOM4, 3, _wx, _wz) - 1;
+    swy += Static.noiseInt(N_RANDOM5, 3, _wx, _wz) - 1;
+    sey += Static.noiseInt(N_RANDOM6, 3, _wx, _wz) - 1;
+
     setSize(8);
-    setPos(8,elev,8);
-    setFill(Blocks.LAVA, 10);
+    setPos(nx,ny,nz);
+    setCenter(4,0,4);  //center bottom
+    setFill(Blocks.LAVA, 10);  //fill with LAVA when y <= 10
+    buildPath();
     buildProfiles();
+    path = 1;
+    eop = false;
   }
 
   private void buildProfiles() {
     int wx = chunk.cx * 16;
     int wz = chunk.cz * 16;
     for(int side=0;side<4;side++) {
-      float e = 1f;  //test
+      float e = 2f;
       float f = 0.5f;
       for(int pos=2;pos<4;pos++) {
-        e += Static.abs(Static.noiseFloat(N_RANDOM2, wx + side,wz + pos)) * f;
+        e += Static.abs(Static.noiseFloat(N_RANDOM2, wx + side, wz + pos)) * f;
         f += 1.5f;
-        if (e >= 4f) e = 4f;
+        if (e >= 6f) e = 6f;
         profiles[side][pos] = e;
         profiles[side][7-pos] = e;
       }
@@ -74,42 +173,116 @@ public class Cave extends Eraser {
     }
   }
 
+  private static final int black = 0x00000000;
+  private static final int white = 0x00ffffff;
+  private static final int red   = 0x00ff0000;
+
+  private void buildPath() {
+    //draw bezier curves
+    imgXZ.fill(0, 0, 16, 16, white);
+    imgXZ.getGraphics2D().setColor(Color.black);
+    imgY.fill(0, 0, 16, 256, white);
+    imgY.getGraphics2D().setColor(Color.black);
+    switch (dir) {
+      case NS:  //N->S
+        imgXZ.getGraphics2D().draw(new CubicCurve2D.Float(nx, nz, 8, 8, 8, 8, sx, sz));
+        imgY.getGraphics2D().draw(new CubicCurve2D.Float(0, ny, 8, nsy, 8, nsy, 15, sy));
+        break;
+      case NW:  //N->W
+        imgXZ.getGraphics2D().draw(new CubicCurve2D.Float(nx, nz, 8, 8, 8, 8, wx, wz));
+        imgY.getGraphics2D().draw(new CubicCurve2D.Float(0, ny, 8, nwy, 8, nwy, 15, wy));
+        break;
+      case NE:  //N->E
+        imgXZ.getGraphics2D().draw(new CubicCurve2D.Float(nx, nz, 8, 8, 8, 8, ex, ez));
+        imgY.getGraphics2D().draw(new CubicCurve2D.Float(0, ny, 8, ney, 8, ney, 15, ey));
+        break;
+      case WE:  //W->E
+        imgXZ.getGraphics2D().draw(new CubicCurve2D.Float(wx, wz, 8, 8, 8, 8, ex, ez));
+        imgY.getGraphics2D().draw(new CubicCurve2D.Float(0, wy, 8, wey, 8, wey, 15, ey));
+        break;
+      case SW:  //S->W
+        imgXZ.getGraphics2D().draw(new CubicCurve2D.Float(sx, sz, 8, 8, 8, 8, wx, wz));
+        imgY.getGraphics2D().draw(new CubicCurve2D.Float(0, sy, 8, swy, 8, swy, 15, wy));
+        break;
+      case SE:  //S->E
+        imgXZ.getGraphics2D().draw(new CubicCurve2D.Float(sx, sz, 8, 8, 8, 8, ex, ez));
+        imgY.getGraphics2D().draw(new CubicCurve2D.Float(0, sy, 8, sey, 8, sey, 15, ey));
+        break;
+    }
+    //imgXZ.putPixel(nx, nz, red);  //off-image
+    imgY.putPixel(0, ny, red);
+  }
+
   public boolean setup() {
+    level = 1;
     setupCaves();
     return true;
   }
 
   public void move() {
-    len--;
-    mat.setIdentity();
-    mat.addRotate(dir, 0, 1, 0);
-    mat.addRotate3(ydir, 1, 0, 0);
-    vec.set(0, 0, -1);  //north
-    mat.mult(vec);
-    addX(vec.v[0]);
-    addY(vec.v[1]);
-    addZ(vec.v[2]);
-    int x = wx + getX();
+    //move using image (bezier curved path)
+    int x = getX();
     int y = getY();
-    int z = wz + getZ();
-    if (y < 5) {
-      addY(1f);
+    int z = getZ();
+    boolean moved = false;
+    int xz = 0;
+    outY:
+    for(xz=0;xz<16;xz++) {
+      for(int dy=-1;dy<=1;dy++) {
+        int new_y = y + dy;
+        if (new_y < 0 || new_y > 255) continue;
+        if (imgY.getPixel(xz, y + dy) == black) {
+          //xz value ignored
+          y = new_y;
+          imgY.putPixel(xz, y, red);
+          moved = true;
+          break outY;
+        }
+      }
     }
-    dir += Static.noiseFloat(N_RANDOM1, x, y, z) * 15f;
-    ydir += Static.noiseFloat(N_RANDOM1, x, -y, z) * 5f;
+    outXZ:
+    for(int dx=-1;dx<=1;dx++) {
+      for(int dz=-1;dz<=1;dz++) {
+        int new_x = x + dx;
+        int new_z = z + dz;
+        if (new_x < 0 || new_x > 15) continue;
+        if (new_z < 0 || new_z > 15) continue;
+        if (imgXZ.getPixel(new_x, new_z) == black) {
+          x = new_x;
+          z = new_z;
+          imgXZ.putPixel(x, z, red);
+          moved = true;
+          break outXZ;
+        }
+      }
+    }
+
+    setPos(x,y,z);
+    eop = !moved;
   }
 
   public boolean endPath() {
-    return len == 0;
+    return eop;
   }
 
-  public boolean flip() {
-    dir = d2;
-    setPos(8, elev, 8);
-    len = 100;
-    factor = 1f;
-    ydir = 0f;
-    return true;
+  public boolean nextPath() {
+    if (path == 2) {
+      level++;
+      if (level > 3) return false;
+      setupCaves();
+      return true;
+    } else {
+      dir = dir2;
+      switch (dir) {
+        case SE: setPos(sx, sy, sz); break;
+        case WE: setPos(wx, wy, wz); break;
+        case SW: setPos(sx, sy, sz); break;
+      }
+      buildPath();
+      eop = false;
+      path++;
+      return true;
+    }
   }
 
   public void preErase() {

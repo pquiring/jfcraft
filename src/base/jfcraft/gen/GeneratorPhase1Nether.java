@@ -17,12 +17,8 @@ import static jfcraft.data.Biomes.*;
 
 public class GeneratorPhase1Nether implements GeneratorPhase1Base {
   public World world;
-  public Chunk chunk;
+  public GeneratorChunk chunk;
   private Random r = new Random();
-  private char blocks[] = new char[16*256*16];
-  private byte bits[] = new byte[16*256*16];
-  private char blocks2[] = new char[16*256*16];
-  private byte bits2[] = new byte[16*256*16];
 
   public void getIDs() {}
 
@@ -57,19 +53,16 @@ public class GeneratorPhase1Nether implements GeneratorPhase1Base {
     if (world == null) {
       world = Static.server.world;
     }
-    chunk = new Chunk(dim,cx,cz);
+
+    chunk.clear();
 
     getSeed();
 
     generateBiomes();
 
-    fill();
-
     generate_default();
 
-    copy();
-
-    return chunk;
+    return chunk.toChunk();
   }
 
   public void generate_default() {
@@ -82,10 +75,10 @@ public class GeneratorPhase1Nether implements GeneratorPhase1Base {
       for(int z=0;z<16;z++) {
         for(int x=0;x<16;x++) {
           if (y == 0 || y == 127) {
-            blocks[p] = Blocks.BEDROCK;
+            chunk.setBlock(x,y,z, Blocks.BEDROCK, 0);
           } else {
             if (noise.noise_3d(wx + x, y, wz + z) > 0) {
-              blocks[p] = Blocks.NETHER_RACK;
+              chunk.setBlock(x,y,z, Blocks.NETHER_RACK, 0);
             }
           }
           p++;
@@ -102,7 +95,9 @@ public class GeneratorPhase1Nether implements GeneratorPhase1Base {
       c = r.nextInt(5) + 5;
       for(int b=0;b<c;b++) {
         p = x + y * 256 + z * 16;
-        if (blocks[p] == Blocks.NETHER_RACK) blocks[p] = Blocks.QUARTZ_ORE;
+        if (chunk.getBlock(x,y,z) == Blocks.NETHER_RACK) {
+          chunk.setBlock(x,y,z, Blocks.QUARTZ_ORE, 0);
+        }
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -112,44 +107,6 @@ public class GeneratorPhase1Nether implements GeneratorPhase1Base {
         z += r.nextInt(3)-1;
         if (z < 0) z = 0;
         if (z > 15) z = 15;
-      }
-    }
-  }
-
-  private void fill() {
-    Arrays.fill(blocks, (char)0);
-    Arrays.fill(bits, (byte)0);
-    Arrays.fill(blocks2, (char)0);
-    Arrays.fill(bits2, (byte)0);
-  }
-
-  private void copy() {
-    int p, cnt;
-    boolean empty;
-    for(int y=0;y<256;y++) {
-      empty = true;
-      for(p=y*256,cnt=0;cnt<16*16;cnt++,p++) {
-        if (blocks[p] != 0) {
-          empty = false;
-          break;
-        }
-      }
-      if (!empty) {
-        chunk.setPlane(y,
-          Arrays.copyOfRange(blocks, y*256, y*256+256),
-          Arrays.copyOfRange(bits, y*256, y*256+256));
-      }
-      empty = true;
-      for(p=y*256,cnt=0;cnt<16*16;cnt++,p++) {
-        if (blocks2[p] != 0) {
-          empty = false;
-          break;
-        }
-      }
-      if (!empty) {
-        chunk.setPlane2(y,
-          Arrays.copyOfRange(blocks2, y*256, y*256+256),
-          Arrays.copyOfRange(bits2, y*256, y*256+256));
       }
     }
   }

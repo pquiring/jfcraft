@@ -3,12 +3,13 @@ package jfcraft.feature;
 /**
  * Eraser
  *
- * Clears rock in a path using a shape.  Used to create rivers, caves, etc.
+ * Clears stone thru multiple paths using a shape.
  */
 
 import java.util.*;
 
 import jfcraft.data.*;
+import jfcraft.gen.*;
 import jfcraft.biome.*;
 import static jfcraft.data.Direction.*;
 
@@ -19,48 +20,43 @@ public abstract class Eraser {
   private int dd;     //dim * dim
   private int half;   //dim/2
   private boolean clearAbove;
+  private boolean start;
 
-  public Chunk chunk;
+  public GeneratorChunk chunk;
   public BiomeData data;
 
   private float px,py,pz;  //center position
   private float ox,oy,oz;  //old position
-  public int wx, wz;
+  public int w_x, w_z;  //world x/y coords of chunk
   private int offx, offy, offz;  //offset to center of shape
   private char fill;
   private int fillElev;
 
-  public void build(Chunk chunk, BiomeData data) {
+  public void build(GeneratorChunk chunk, BiomeData data) {
     this.chunk = chunk;
     this.data = data;
-    wx = chunk.cx * 16;
-    wz = chunk.cz * 16;
+    w_x = chunk.cx * 16;
+    w_z = chunk.cz * 16;
     px = 8;
     py = 0;
     pz = 8;
     if (!setup()) return;
-    if (endPath()) return;
-    preErase();
-    eraseShape(shape);
-    postErase();
-    followPath();
-    if (!flip()) return;
-    followPath();
+    do {
+      start = true;
+      followPath();
+    } while (nextPath());
   }
 
   private void followPath() {
     do {
+      preErase();
+      erase();
+      postErase();
       ox = px;
       oy = py;
       oz = pz;
       move();
-      if (endPath()) {
-        break;
-      }
-      preErase();
-      eraseEdges();
-      postErase();
-    } while (true);
+    } while (!endPath());
   }
 
   /** Setup Eraser, call setSize() and fill in shape. */
@@ -69,8 +65,8 @@ public abstract class Eraser {
   public abstract void move();
   /** Check if at end of path. */
   public abstract boolean endPath();
-  /** Flip position to erase other half of path. */
-  public abstract boolean flip();
+  /** Starts next path to erase. */
+  public abstract boolean nextPath();
   /** Called before erasing a point. */
   public abstract void preErase();
   /** Called after erasing a point. */
@@ -131,7 +127,7 @@ public abstract class Eraser {
     shape[y * dd + z * size + x] = false;
   }
 
-  /** Replace rock with fill id below or at elevation. */
+  /** Replace rock with fill id below or at elevation (WATER or LAVA only). */
   public void setFill(char id, int elev) {
     fill = id;
     fillElev = elev;
@@ -151,12 +147,12 @@ public abstract class Eraser {
             if (yy == 0) continue;  //do not remove bedrock
             chunk.clearBlock(xx, yy, zz);
             if (fill != 0 && yy <= fillElev) {
-              chunk.setBlock(xx, yy, zz, fill, 0);
+              chunk.setBlock2(xx, yy, zz, fill, 0);
             }
             if (yy == size-1 && clearAbove) {
               while (yy < 256) {
                 yy++;
-                if (chunk.getID(xx, yy, zz) == 0) break;
+                if (chunk.getBlock(xx, yy, zz) == 0) break;
                 chunk.clearBlock(xx, yy, zz);
               }
             }
@@ -166,16 +162,22 @@ public abstract class Eraser {
     }
   }
 
-  private void eraseEdges() {
-    //calc edge bits
-    clearEdges();
-    if (px < ox) setEdge(W);
-    if (px > ox) setEdge(E);
-    if (pz < oz) setEdge(N);
-    if (pz > oz) setEdge(S);
-    if (py < oy) setEdge(B);
-    if (py > oy) setEdge(A);
-    eraseShape(edges);
+  private void erase() {
+    if (start) {
+      //erase full shape
+      eraseShape(shape);
+      start = false;
+    } else {
+      //calc edge bits
+      clearEdges();
+      if (px < ox) setEdge(W);
+      if (px > ox) setEdge(E);
+      if (pz < oz) setEdge(N);
+      if (pz > oz) setEdge(S);
+      if (py < oy) setEdge(B);
+      if (py > oy) setEdge(A);
+      eraseShape(edges);
+    }
   }
 
   private void clearEdges() {

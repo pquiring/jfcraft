@@ -5,6 +5,7 @@ package jfcraft.biome;
  */
 
 import jfcraft.data.*;
+import jfcraft.gen.*;
 import static jfcraft.data.Static.*;
 
 public class BiomeData {
@@ -27,19 +28,35 @@ public class BiomeData {
   public float temp;  //0-100
   public float rain;  //0-100
 
+  public int cx, cz;
   public int wx, wz;
 
   public void setChunk(Chunk chunk) {
+    cx = chunk.cx;
+    cz = chunk.cz;
     wx = chunk.cx * 16;
     wz = chunk.cz * 16;
 
-    c1 = Static.noiseInt(N_RANDOM1, Integer.MAX_VALUE, chunk.cx, chunk.cz);
-    c2 = Static.noiseInt(N_RANDOM2, Integer.MAX_VALUE, chunk.cx, chunk.cz);
-    c3 = Static.noiseInt(N_RANDOM3, Integer.MAX_VALUE, chunk.cx, chunk.cz);
+    generateChunkValues();
+  }
 
-    cf1 = Static.noiseFloat(N_RANDOM1, Integer.MAX_VALUE, chunk.cx, chunk.cz);
-    cf2 = Static.noiseFloat(N_RANDOM2, Integer.MAX_VALUE, chunk.cx, chunk.cz);
-    cf3 = Static.noiseFloat(N_RANDOM3, Integer.MAX_VALUE, chunk.cx, chunk.cz);
+  public void setChunk(GeneratorChunk chunk) {
+    cx = chunk.cx;
+    cz = chunk.cz;
+    wx = chunk.cx * 16;
+    wz = chunk.cz * 16;
+
+    generateChunkValues();
+  }
+
+  private void generateChunkValues() {
+    c1 = Static.noiseInt(N_RANDOM1, Integer.MAX_VALUE, cx, cz);
+    c2 = Static.noiseInt(N_RANDOM2, Integer.MAX_VALUE, cx, cz);
+    c3 = Static.noiseInt(N_RANDOM3, Integer.MAX_VALUE, cx, cz);
+
+    cf1 = Static.noiseFloat(N_RANDOM1, Integer.MAX_VALUE, cx, cz);
+    cf2 = Static.noiseFloat(N_RANDOM2, Integer.MAX_VALUE, cx, cz);
+    cf3 = Static.noiseFloat(N_RANDOM3, Integer.MAX_VALUE, cx, cz);
   }
 
   public void setBlock(int x, int z) {

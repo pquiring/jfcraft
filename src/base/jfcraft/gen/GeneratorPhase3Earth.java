@@ -1,6 +1,6 @@
 package jfcraft.gen;
 
-/** Chunk generator phase 3 : final touches
+/** Chunk generator phase 3 : add Biome Features
  *
  * @author pquiring
  *
@@ -37,42 +37,9 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
     chunk.needPhase3 = false;
     chunk.dirty = true;
 
-    new TopSoil().build(chunk, data);
-
     if (Static.server.world.options.doSteps) smoothSteps();
 
-    if ((chunk.cx !=0 && chunk.cz !=0) && (data.c1 ^ data.c3) % 10033 == 0) {
-      if (chunk.biome[0] == Biomes.OCEAN) {
-        addBlueprint("shipwreck", 32, Static.SEALEVEL - 8);
-      } else {
-        addBlueprint("cabin", Static.SEALEVEL, 255);
-      }
-    }
-
     addBiomeFeatures();
-  }
-
-  private void addBlueprint(String name, int elevMin, int elevMax) {
-    BluePrint print = chunk.world.getBluePrint(name);
-    int elev = (int)chunk.elev[8 * 16 + 8] + 1;
-    if (elev + print.Y > elevMax) return;
-    if (elev < elevMin) return;
-    if (chunk.getID(8, elev+1, 8) != 0) return;
-    int ang = data.c1 % 4;
-    switch (ang) {
-      case 0: break;  //no change
-      case 1: print.rotateY(R90); break;
-      case 2: print.rotateY(R180); break;
-      case 3: print.rotateY(R270); break;
-    }
-    print.writeChunk(chunk, 0, 0, 0, 0, elev, 0, print.X, print.Y, print.Z);
-    //rotate back
-    switch (ang) {
-      case 0: break;  //no change
-      case 1: print.rotateY(R270); break;
-      case 2: print.rotateY(R180); break;
-      case 3: print.rotateY(R90); break;
-    }
   }
 
   private void setBlock(int x, int y, int z, char id, int dir, int var) {

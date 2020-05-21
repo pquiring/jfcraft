@@ -47,6 +47,12 @@ public class Direction {
   public static final int BSW = 30;
   public static final int BSE = 31;
 
+  //used in path selection
+  public static final int NS = 32;  //N->S
+  public static final int SN = 33;  //S->N
+  public static final int WE = 34;  //W->E
+  public static final int EW = 34;  //E->W
+
   //quad upper
   public static final int QUNW = 1;
   public static final int QUNE = 2;

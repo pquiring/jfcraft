@@ -11,23 +11,47 @@ import java.util.*;
 
 import jfcraft.data.*;
 import jfcraft.biome.*;
+import jfcraft.feature.*;
 import static jfcraft.data.Chunk.*;
 import static jfcraft.data.Direction.*;
 import static jfcraft.data.Biomes.*;
+import static jfcraft.data.Static.*;
 
 public class GeneratorPhase1Earth implements GeneratorPhase1Base {
-  public World world;
-  public Chunk chunk;
-//  public BiomeData data = new BiomeData();
-
-  private char blocks[] = new char[16*256*16];
-  private byte bits[] = new byte[16*256*16];
-  private char blocks2[] = new char[16*256*16];
-  private byte bits2[] = new byte[16*256*16];
+  private GeneratorChunk chunk = new GeneratorChunk();
+  private BiomeData data = new BiomeData();
 
   public void reset() {}
 
-  private void getSeed() {
+  public Chunk generate(int dim, int cx, int cz) {
+    chunk.clear();
+    chunk.seed = getSeed();
+    chunk.dim = dim;
+    chunk.cx = cx;
+    chunk.cz = cz;
+
+    data.setChunk(chunk);
+
+    generateBiomes();
+
+    fillStone();
+
+    //TODO : randomize caves/mineshaft/fortress
+
+    new Cave().build(chunk, data);
+
+    //TODO : mineshafts
+
+    //TODO : fortresses
+
+    new TopSoil().build(chunk, data);
+
+    addDeposits();
+
+    return chunk.toChunk();
+  }
+
+  private long getSeed() {
     float _r1 = Static.noiseFloat(Static.N_RANDOM1, chunk.cx, chunk.cz);  //-1,1
     float _r2 = Static.noiseFloat(Static.N_RANDOM2, chunk.cx, chunk.cz);  //-1,1
     int _i1 = Float.floatToRawIntBits(_r1);
@@ -35,7 +59,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
     long seed = _i1;
     seed <<= 32;
     seed |= _i2;
-    chunk.seed = seed;
+    return seed;
   }
 
   public void getIDs() {}
@@ -79,17 +103,37 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
           }
         }
 
+        /** Plains map defined the base elevation. */
         float plains = Static.abs(Static.noiseFloat(Static.N_ELEV1,wx, wz) * 3.0f);
+
         float swamps = 0;
 
         if (biome == SWAMP) {
+          /** If biome == SWAMP than the elevation is lowered to create swamps. */
           float scale = 1.0f * clamp(rain, 66.0f, 71.0f) * clamp(temp, 50.0f, 55.f);
           swamps = Static.abs(Static.noiseFloat(Static.N_ELEV4,wx, wz) * 3.0f) * scale;
         }
 
+        /** Hills map.  Creates small hills in elevation.
+         * Range : -15 to +15
+         * Hills : +10 to +15
+         * No change : -15 to 10
+         */
         float hills = Static.noiseFloat(Static.N_ELEV2,wx, wz) * 15.0f;
 
-        float extreme = Static.noiseFloat(Static.N_ELEV3,wx, wz) * 75.0f;
+        /** Extreme range defines mountains and oceans.
+         * Range : -75 to +75
+         * Mountains : +25 to +75
+         * No change : -25 to +25
+         * Oceans : -75 to -25
+         */
+        float extreme = Static.noiseFloat(Static.N_ELEV3, wx, wz) * 75.0f;
+
+        /** When rivers map intersects with extreme map it creates a river.
+         *  The river map does NOT extend into ranges that cause mountains or oceans.
+         *  Range : -20 to 20
+         */
+        float rivers = Static.noiseFloat(Static.N_ELEV6, wx, wz) * 20.0f;
 
         elev = (Static.SEALEVEL + plains - swamps);
         if (extreme <= -25.0f) {
@@ -107,11 +151,14 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
           elev += hills;
         }
 
-        //fill in stone
-        blocks[p] = Blocks.BEDROCK;
-        int ielev = Static.ceil(elev);
-        for(int y=1;y<=ielev;y++) {
-          blocks[p + y * 256] = Blocks.STONE;
+        float riverElev = Static.abs(extreme - rivers);
+        if (riverElev <= 5f) {
+          riverElev = 5f - riverElev;  //inverse level
+          elev -= riverElev * 0.7f;
+          if (riverElev > 2) {
+            //add clay later
+            chunk.river[p] = true;
+          }
         }
 
         chunk.temp[p] = temp;
@@ -123,27 +170,23 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
     }
   }
 
-  public Chunk generate(int dim, int cx, int cz) {
-    if (world == null) {
-      world = Static.server.world;
+  private void fillStone() {
+    int p = 0;
+    for(int z=0;z<16;z++) {
+      for(int x=0;x<16;x++) {
+        float elev = chunk.elev[p];
+        //fill in stone
+        chunk.setBlock(x,0,z, Blocks.BEDROCK, 0);
+        int ielev = Static.ceil(elev);
+        for(int y=1;y<=ielev;y++) {
+          chunk.setBlock(x,y,z, Blocks.STONE, 0);
+        }
+        p++;
+      }
     }
-    chunk = new Chunk(dim,cx,cz);
-//    data.setChunk(chunk);
-
-    getSeed();
-
-    clear();
-
-    generateBiomes();
-
-    addDeposits();
-
-    copy();
-
-    return chunk;
   }
 
-  public void addDeposits() {
+  private void addDeposits() {
     /*
     mineral  amt/chunk  levels
     -------  ---------  ------
@@ -156,27 +199,39 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
     */
     Random r = new Random();
     r.setSeed(chunk.seed);
-    int x,y,z,c,p;
+    int x,y,z,c;
     int wx = chunk.cx * 16;
     int wz = chunk.cz * 16;
-    //soil/gravel 3d deposits
+    //3d deposits
     for(z=0;z<16;z++) {
       for(x=0;x<16;x++) {
         for(y=0;y<Static.SEALEVEL;y++) {
-          p = x + y * 256 + z * 16;
-          float soil = Static.noises[Static.N_SOIL].noise_3d(wx, y, wz) * 100.0f;
+          float soil = Static.noises[Static.N_SOIL].noise_3d(wx + x, y, wz + z) * 100.0f;
 
           //add soil/gravel deposites
           if (soil <= -50) {
             //dirt
-            if (chunk.getID(x,y,z) == Blocks.STONE) setBlock(p, Blocks.DIRT);
+            if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.DIRT, 0);
           } else if (soil >= 50) {
             //gravel
-            if (chunk.getID(x,y,z) == Blocks.STONE) setBlock(p, Blocks.GRAVEL);
+            if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.GRAVEL, 0);
+          }
+
+          float cavern = Static.noises[Static.N_CAVERNS].noise_3d(wx, y, wz) * 100.0f;
+
+//this is too much
+          if (cavern <= -90) {
+            //empty cavern
+//            if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.clearBlock(x,y,z);
+          } else if (cavern > 90) {
+            //water/lava cavern
+            //TODO : could put water above lava ???
+//            if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z,y < 10 ? Blocks.LAVA : Blocks.WATER,0);
           }
         }
       }
     }
+
     //coal
     for(int a=0;a<32;a++) {
       x = r.nextInt(16);
@@ -184,8 +239,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       z = r.nextInt(16);
       c = r.nextInt(5) + 5;
       for(int b=0;b<c;b++) {
-        p = x + y * 256 + z * 16;
-        setBlock(p, Blocks.COALORE);
+        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.COALORE, 0);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -197,6 +251,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         if (z > 15) z = 15;
       }
     }
+
     //iron
     for(int a=0;a<16;a++) {
       x = r.nextInt(16);
@@ -204,8 +259,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       z = r.nextInt(16);
       c = r.nextInt(2) + 4;
       for(int b=0;b<c;b++) {
-        p = x + y * 256 + z * 16;
-        setBlock(p, Blocks.IRONORE);
+        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.IRONORE, 0);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -217,6 +271,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         if (z > 15) z = 15;
       }
     }
+
     //gold
     for(int a=0;a<2;a++) {
       x = r.nextInt(16);
@@ -224,8 +279,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       z = r.nextInt(16);
       c = r.nextInt(2) + 2;
       for(int b=0;b<c;b++) {
-        p = x + y * 256 + z * 16;
-        setBlock(p, Blocks.GOLDORE);
+        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.GOLDORE, 0);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -237,6 +291,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         if (z > 15) z = 15;
       }
     }
+
     //diamond
     for(int a=0;a<1;a++) {
       x = r.nextInt(16);
@@ -244,8 +299,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       z = r.nextInt(16);
       c = r.nextInt(2) + 1;
       for(int b=0;b<c;b++) {
-        p = x + y * 256 + z * 16;
-        setBlock(p, Blocks.DIAMOND_ORE);
+        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.DIAMOND_ORE, 0);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -257,6 +311,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         if (z > 15) z = 15;
       }
     }
+
     //emerald
     for(int a=0;a<1;a++) {
       x = r.nextInt(16);
@@ -264,8 +319,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       z = r.nextInt(16);
       c = r.nextInt(2) + 1;
       for(int b=0;b<c;b++) {
-        p = x + y * 256 + z * 16;
-        setBlock(p, Blocks.EMERALD_ORE);
+        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.EMERALD_ORE, 0);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -277,6 +331,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         if (z > 15) z = 15;
       }
     }
+
     //redstone
     for(int a=0;a<4;a++) {
       x = r.nextInt(16);
@@ -284,8 +339,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       z = r.nextInt(16);
       c = r.nextInt(2) + 1;
       for(int b=0;b<c;b++) {
-        p = x + y * 256 + z * 16;
-        setBlock(p, Blocks.REDSTONE_ORE);
+        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.REDSTONE_ORE, 0);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -295,50 +349,6 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         z += r.nextInt(3)-1;
         if (z < 0) z = 0;
         if (z > 15) z = 15;
-      }
-    }
-  }
-
-  private void setBlock(int p, char id) {
-    if (blocks[p] != Blocks.STONE) return;
-    if (blocks[p + 256] == 0) return;  //do not set top level blocks
-    blocks[p] = id;
-  }
-
-  private void clear() {
-    Arrays.fill(blocks, (char)0);
-    Arrays.fill(bits, (byte)0);
-    Arrays.fill(blocks2, (char)0);
-    Arrays.fill(bits2, (byte)0);
-  }
-
-  private void copy() {
-    int p, cnt;
-    boolean empty;
-    for(int y=0;y<256;y++) {
-      empty = true;
-      for(p=y*256,cnt=0;cnt<16*16;cnt++,p++) {
-        if (blocks[p] != 0) {
-          empty = false;
-          break;
-        }
-      }
-      if (!empty) {
-        chunk.setPlane(y,
-          Arrays.copyOfRange(blocks, y*256, y*256+256),
-          Arrays.copyOfRange(bits, y*256, y*256+256));
-      }
-      empty = true;
-      for(p=y*256,cnt=0;cnt<16*16;cnt++,p++) {
-        if (blocks2[p] != 0) {
-          empty = false;
-          break;
-        }
-      }
-      if (!empty) {
-        chunk.setPlane2(y,
-          Arrays.copyOfRange(blocks2, y*256, y*256+256),
-          Arrays.copyOfRange(bits2, y*256, y*256+256));
       }
     }
   }

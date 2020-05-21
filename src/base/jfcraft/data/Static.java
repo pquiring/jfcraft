@@ -199,13 +199,14 @@ public class Static {
     //elevations
     {5, 0.5f, 0.005f},  //elev1 : plains
     {5, 0.5f, 0.005f},  //elev2 : hills
-    {5, 0.5f, 0.003f},  //elev3 : extremes (mountains / oceans)
-    {2, 0.5f, 0.015f},  //elev4 : rooms underground
-    {5, 0.5f, 0.005f},  //elev5 : free
-    {5, 0.5f, 0.005f},  //elev6 : free
+    {3, 0.5f, 0.003f},  //elev3 : extremes (mountains / oceans)
+    {2, 0.5f, 0.015f},  //elev4 : swamps
+    {2, 0.5f, 0.015f},  //elev5 : underground caverns
+    {3, 0.5f, 0.003f},  //elev6 : river check (should match elev3)
+    {1, 0.0f, 0.0005f}, //elev7 : river depth
 
-    //soil/gravel deposites (3d)
-    {1, 0.0f, 0.1f},   //soil : 3d
+    {1, 0.0f, 0.1f},   //underground caverns (3d)
+    {1, 0.0f, 0.1f},   //soil/gravel : 3d
 
     {1, 0.0f, 0.007f},  //nether
     {2, 0.5f, 0.005f},  //end_top
@@ -217,6 +218,9 @@ public class Static {
     {3, 0.7f, 1f},  //random4 : high octave for greater complexity
     {3, 0.7f, 1f},  //random5 : high octave for greater complexity
     {3, 0.7f, 1f},  //random6 : high octave for greater complexity
+    {3, 0.7f, 1f},  //random7 : high octave for greater complexity
+    {3, 0.7f, 1f},  //random8 : high octave for greater complexity
+    {3, 0.7f, 1f},  //random9 : high octave for greater complexity
   };
   public static int N_TEMP = 0;
   public static int N_RAIN = 1;
@@ -226,16 +230,21 @@ public class Static {
   public static int N_ELEV4 = 5;
   public static int N_ELEV5 = 6;
   public static int N_ELEV6 = 7;
-  public static int N_SOIL = 8;
-  public static int N_NETHER = 9;
-  public static int N_END_1 = 10;
-  public static int N_END_2 = 11;
-  public static int N_RANDOM1 = 12;
-  public static int N_RANDOM2 = 13;
-  public static int N_RANDOM3 = 14;
-  public static int N_RANDOM4 = 15;
-  public static int N_RANDOM5 = 16;
-  public static int N_RANDOM6 = 17;
+  public static int N_ELEV7 = 8;
+  public static int N_CAVERNS = 9;
+  public static int N_SOIL = 10;
+  public static int N_NETHER = 11;
+  public static int N_END_1 = 12;
+  public static int N_END_2 = 13;
+  public static int N_RANDOM1 = 14;
+  public static int N_RANDOM2 = 15;
+  public static int N_RANDOM3 = 16;
+  public static int N_RANDOM4 = 17;
+  public static int N_RANDOM5 = 18;
+  public static int N_RANDOM6 = 19;
+  public static int N_RANDOM7 = 20;
+  public static int N_RANDOM8 = 21;
+  public static int N_RANDOM9 = 22;
   //...
   public static void initNoises(World world) {
     int cnt = noiseParams.length;

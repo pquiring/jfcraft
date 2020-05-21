@@ -17,12 +17,8 @@ import static jfcraft.data.Biomes.*;
 
 public class GeneratorPhase1End implements GeneratorPhase1Base {
   public World world;
-  public Chunk chunk;
+  public GeneratorChunk chunk;
   private Random r = new Random();
-  private char blocks[] = new char[16*256*16];
-  private byte bits[] = new byte[16*256*16];
-  private char blocks2[] = new char[16*256*16];
-  private byte bits2[] = new byte[16*256*16];
 
   public void getIDs() {}
 
@@ -61,19 +57,16 @@ public class GeneratorPhase1End implements GeneratorPhase1Base {
     if (world == null) {
       world = Static.server.world;
     }
-    chunk = new Chunk(dim,cx,cz);
+
+    chunk.clear();
 
     getSeed();
 
     generateBiomes();
 
-    fill();
-
     generate_default();
 
-    copy();
-
-    return chunk;
+    return chunk.toChunk();
   }
 
   public void generate_default() {
@@ -89,47 +82,9 @@ public class GeneratorPhase1End implements GeneratorPhase1Base {
         int y1 = y2 - (int)chunk.depth[p];
         p += y1 * 256;
         for(int y=y1;y<y2;y++) {
-          blocks[p] = Blocks.END_STONE;
+          chunk.setBlock(x,y,z, Blocks.END_STONE, 0);
           p+=256;
         }
-      }
-    }
-  }
-
-  private void fill() {
-    Arrays.fill(blocks, (char)0);
-    Arrays.fill(bits, (byte)0);
-    Arrays.fill(blocks2, (char)0);
-    Arrays.fill(bits2, (byte)0);
-  }
-
-  private void copy() {
-    int p, cnt;
-    boolean empty;
-    for(int y=0;y<256;y++) {
-      empty = true;
-      for(p=y*256,cnt=0;cnt<16*16;cnt++,p++) {
-        if (blocks[p] != 0) {
-          empty = false;
-          break;
-        }
-      }
-      if (!empty) {
-        chunk.setPlane(y,
-          Arrays.copyOfRange(blocks, y*256, y*256+256),
-          Arrays.copyOfRange(bits, y*256, y*256+256));
-      }
-      empty = true;
-      for(p=y*256,cnt=0;cnt<16*16;cnt++,p++) {
-        if (blocks2[p] != 0) {
-          empty = false;
-          break;
-        }
-      }
-      if (!empty) {
-        chunk.setPlane2(y,
-          Arrays.copyOfRange(blocks2, y*256, y*256+256),
-          Arrays.copyOfRange(bits2, y*256, y*256+256));
       }
     }
   }

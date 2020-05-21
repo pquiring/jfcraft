@@ -741,7 +741,7 @@ public class NoiseTestPanel extends javax.swing.JPanel {
                 clr = (a << 16);
               } else {
                 a &= 0xff;
-                clr = (a << 16) + (a << 8) + (a & 0xff);
+                clr = (a << 16) | (a << 8) | (a);
               }
               img.putPixel((int)_x, (int)_y, clr);
             }

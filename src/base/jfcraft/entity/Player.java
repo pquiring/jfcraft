@@ -250,7 +250,7 @@ public class Player extends HumaniodBase {
     Chunk chunk = getChunk();
     if (chunk == null) return;
     //TODO : move to safe location
-    pos.y = chunk.elev[8 * 8 + 8];
+    pos.y = chunk.elev[8 * 16 + 8];
   }
 
   private static final byte ver = 0;

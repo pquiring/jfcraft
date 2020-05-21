@@ -51,7 +51,6 @@ public class Chunks {
         //if not on disk then generate from scratch
         chunk = Static.dims.dims[dim].getGeneratorPhase1().generate(dim,cx,cz);
       } else {
-        //test - delete all entities from disk
         if (Static.debugPurgeEntities && chunk.entities.size() > 0) {
           chunk.entities.clear();
           chunk.dirty = true;
@@ -61,20 +60,20 @@ public class Chunks {
     }
     if (doPhase2 && chunk.needPhase2) {
       synchronized(lock) {
-        chunk.getAdjChunks(false, false, false, 8);
+        chunk.getAdjChunks(false, false, false, 1);
         Static.dims.dims[dim].getGeneratorPhase2().generate(chunk);
       }
     }
     if (doPhase3 && chunk.needPhase3) {
       synchronized(lock) {
-        chunk.getAdjChunks(true, false, false, 8);
+        chunk.getAdjChunks(true, false, false, 1);
         Static.dims.dims[dim].getGeneratorPhase3().generate(chunk);
       }
       chunk.buildShapes();
     }
     if (doLights && chunk.needLights) {
       synchronized(lock) {
-        chunk.getAdjChunks(true, true, false, 8);
+        chunk.getAdjChunks(true, true, false, 1);
         Static.dims.dims[dim].getLightingServer().light(chunk);
       }
     }
