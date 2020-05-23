@@ -36,13 +36,17 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
 
     fillStone();
 
-    //TODO : randomize caves/mineshaft/fortress
+    if (!hasOcean()) {
+      float features = Static.noiseFloat(Static.N_ELEV3, cx*16, cz*16) * 100.0f;
 
-    new Cave().build(chunk, data);
-
-    //TODO : mineshafts
-
-    //TODO : fortresses
+      if (features > 50f) {
+        //new Fortress().build(chunk, data);  //TODO
+      } else if (features < -50f) {
+        new MineShaft().build(chunk, data);
+      } else {
+        new Cave().build(chunk, data);
+      }
+    }
 
     new TopSoil().build(chunk, data);
 
@@ -222,11 +226,11 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
 //this is too much
           if (cavern <= -90) {
             //empty cavern
-//            if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.clearBlock(x,y,z);
+//            if (chunk.getBlockType(x,y,z) == Blocks.STONE) chunk.clearBlock(x,y,z);
           } else if (cavern > 90) {
             //water/lava cavern
             //TODO : could put water above lava ???
-//            if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z,y < 10 ? Blocks.LAVA : Blocks.WATER,0);
+//            if (chunk.getBlockType(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z,y < 10 ? Blocks.LAVA : Blocks.WATER,0);
           }
         }
       }
@@ -351,5 +355,12 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         if (z > 15) z = 15;
       }
     }
+  }
+
+  public boolean hasOcean() {
+    for(int p=0;p<16*16;p++) {
+      if (chunk.biome[p] == Biomes.OCEAN) return true;
+    }
+    return false;
   }
 }

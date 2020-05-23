@@ -46,7 +46,7 @@ public class BlockLiquid extends BlockAlpha {
     if (x > 15) return isStatic(chunk.E,x-16,y,z);
     if (z < 0) return isStatic(chunk.N ,x,y,z+16);
     if (z > 15) return isStatic(chunk.S,x,y,z-16);
-    if (chunk.getID2(x,y,z) != id) return false;
+    if (chunk.getBlock2(x,y,z) != id) return false;
     return chunk.getBits2(x, y, z) == 0;  //dir == 0 && var == 0(full)
   }
   /** Returns depth of liquid */
@@ -55,13 +55,13 @@ public class BlockLiquid extends BlockAlpha {
     if (x > 15) return getDepth(chunk.E,x-16,y,z);
     if (z < 0) return getDepth(chunk.N ,x,y,z+16);
     if (z > 15) return getDepth(chunk.S,x,y,z-16);
-    char adj_id = chunk.getID2(x,y,z);
+    char adj_id = chunk.getBlock2(x,y,z);
     if (adj_id != id) return 0f;
     return var2depth(Chunk.getVar(chunk.getBits2(x,y,z)));
   }
   private boolean canFill(Chunk chunk, int x, int y,int z) {
-    BlockBase base1 = chunk.getBlock1(x, y, z);
-    char id2 = chunk.getID2(x, y, z);
+    BlockBase base1 = chunk.getBlockType1(x, y, z);
+    char id2 = chunk.getBlock2(x, y, z);
     return base1.isComplex && id2 == 0;
   }
   private int getDir(Chunk chunk, int x,int y,int z) {
@@ -69,7 +69,7 @@ public class BlockLiquid extends BlockAlpha {
     if (x > 15) return getDir(chunk.E,x-16,y,z);
     if (z < 0) return getDir(chunk.N ,x,y,z+16);
     if (z > 15) return getDir(chunk.S,x,y,z-16);
-    char adj_id = chunk.getID2(x,y,z);
+    char adj_id = chunk.getBlock2(x,y,z);
     if (adj_id != id) return 0;
     return Chunk.getDir(chunk.getBits(x, y, z));
   }
@@ -387,7 +387,7 @@ wxe
       return;
     }
     if (y > 0) {
-      if (Static.blocks.blocks[chunk.getID(x, y-1, z)].isSolid) {
+      if (Static.blocks.blocks[chunk.getBlock(x, y-1, z)].isSolid) {
         if (dn < depth && canFill(chunk,x,y,z-1)) {
           int xbits = Chunk.makeBits(getDesiredDir(chunk, x, y, z-1), depth2var(depth));
           chunk.setBlock(x, y, z-1, id, xbits);

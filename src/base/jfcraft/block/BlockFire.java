@@ -72,7 +72,7 @@ public class BlockFire extends BlockBase {
         case S: dz = 1; break;
         case W: dx = -1; break;
       }
-      if (chunk.getBlock(gx + dx, gy + dy, gz + dz).material == MAT_WOOD) {
+      if (chunk.getBlockType(gx + dx, gy + dy, gz + dz).material == MAT_WOOD) {
         int xbits = Chunk.makeBits(B, 0);
         chunk.clearBlock(gx + dx, gy + dy, gz + dz);
         Static.server.broadcastClearBlock(chunk.dim, x + dx, y + dy, z + dz);
@@ -90,7 +90,7 @@ public class BlockFire extends BlockBase {
     }
     if (dir == B) {
       //check this block too
-      if (chunk.getBlock(gx, gy, gz).material == MAT_WOOD) {
+      if (chunk.getBlockType(gx, gy, gz).material == MAT_WOOD) {
         int xbits = Chunk.makeBits(B, 0);
         chunk.clearBlock(gx, gy, gz);
         Static.server.broadcastClearBlock(chunk.dim, x, y, z);
@@ -99,7 +99,7 @@ public class BlockFire extends BlockBase {
       }
     }
     //set block in direction to fire (if material == wood)
-    if (chunk.getBlock(gx + dx, gy + dy, gz + dz).material == MAT_WOOD) {
+    if (chunk.getBlockType(gx + dx, gy + dy, gz + dz).material == MAT_WOOD) {
       int xbits = Chunk.makeBits(B, 0);
       chunk.clearBlock(gx + dx, gy + dy, gz + dz);
       Static.server.broadcastClearBlock(chunk.dim, x + dx, y + dy, z + dz);

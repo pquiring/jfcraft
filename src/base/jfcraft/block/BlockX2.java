@@ -80,7 +80,7 @@ public class BlockX2 extends BlockBase {
       y++;
     }
 
-    if (chunk.getID(tick.x, y, tick.z) != id) {
+    if (chunk.getBlock(tick.x, y, tick.z) != id) {
       chunk.clearBlock(tick.x,tick.y,tick.z);
       Static.server.broadcastClearBlock(chunk.dim,chunk.cx * 16 + tick.x,tick.y,chunk.cz * 16 + tick.z);
     }

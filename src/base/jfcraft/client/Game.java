@@ -566,7 +566,7 @@ public class Game extends RenderScreen {
             + ":sl=" + world.getSunLight(c.chunk.dim, c.x, c.y, c.z)
             + ":pl=" + world.getPowerLevel(c.chunk.dim, c.x, c.y, c.z, c));
           dy += fontSize;
-          int id2 = c.chunk.getID2(c.gx, c.gy, c.gz);
+          int id2 = c.chunk.getBlock2(c.gx, c.gy, c.gz);
           if (id2 > 0 && id2 != c.block.id) {
             int bits2 = c.chunk.getBits2(c.gx, c.gy, c.gz);
 //            int dir2 = Chunk.getDir(bits2);

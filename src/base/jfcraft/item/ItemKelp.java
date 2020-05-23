@@ -25,7 +25,7 @@ public class ItemKelp extends ItemBase {
       return false;
     }
     //check if under water
-    if (c.chunk.getID2(c.gx,c.gy + 1,c.gz) != Blocks.WATER) {
+    if (c.chunk.getBlock2(c.gx,c.gy + 1,c.gz) != Blocks.WATER) {
       return false;
     }
     //place kelp

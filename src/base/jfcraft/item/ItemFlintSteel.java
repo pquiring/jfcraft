@@ -20,10 +20,10 @@ public class ItemFlintSteel extends ItemBase {
     //set it on fire
     Coords f = c.clone();
     boolean onSide = false;
-    if (f.chunk.getBlock(f.gx, f.gy, f.gz).isSolid) {
+    if (f.chunk.getBlockType(f.gx, f.gy, f.gz).isSolid) {
       f.otherSide();
       f.adjacentBlock();
-      if (f.chunk.getBlock(f.gx, f.gy, f.gz).isSolid) return false;  //can not place fire here
+      if (f.chunk.getBlockType(f.gx, f.gy, f.gz).isSolid) return false;  //can not place fire here
       f.otherSide();
       onSide = true;
     }

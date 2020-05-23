@@ -50,7 +50,7 @@ public class BlockKelpPlant extends BlockBase {
       }
       return;
     }
-    BlockBase supporting = chunk.getBlock(tick.x, tick.y-1, tick.z);
+    BlockBase supporting = chunk.getBlockType(tick.x, tick.y-1, tick.z);
     char support_id = supporting.id;
     if (support_id != Blocks.KELPPLANT && support_id != Blocks.DIRT && support_id != Blocks.SAND && support_id != Blocks.CLAY) {
       tick.t1 = 1;
@@ -58,7 +58,7 @@ public class BlockKelpPlant extends BlockBase {
       int bits = chunk.getBits(tick.x, tick.y, tick.z);
       int var = Chunk.getVar(bits);
       if (var == 0) {
-        BlockBase above = chunk.getBlock(tick.x, tick.y+1, tick.z);
+        BlockBase above = chunk.getBlockType(tick.x, tick.y+1, tick.z);
         char above_id = above.id;
         if (above_id != Blocks.KELPPLANT) {
           //this is now top

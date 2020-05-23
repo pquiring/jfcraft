@@ -1824,7 +1824,7 @@ public class Server {
         e.dim = 0;
       e.teleportTimer = 20;  //do not teleport again
       //find other portal, create if needed
-      char id = c.chunk.getID(c.gx, c.gy, c.gz);
+      char id = c.chunk.getBlock(c.gx, c.gy, c.gz);
       BlockBase block = Static.blocks.blocks[id];
       block.teleport(e,c);
       if (e.id == Entities.PLAYER) {

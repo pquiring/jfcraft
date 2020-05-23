@@ -62,14 +62,14 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
       c = c.S;
       z -= 16;
     }
-//    if (c.getBlock(x, y, z).id != Blocks.AIR) return;  //only replace air
+//    if (c.getBlockType(x, y, z).id != Blocks.AIR) return;  //only replace air
     c.setBlock(x, y, z, id, Chunk.makeBits(dir,var));
   }
   private char getID(int x,int y,int z) {
-    return chunk.getID(x,y,z);
+    return chunk.getBlock(x,y,z);
   }
   private char getID2(int x,int y,int z) {
-    return chunk.getID2(x,y,z);
+    return chunk.getBlock2(x,y,z);
   }
   private BlockBase getBlock(int x, int y, int z) {
     if (y < 0) return null;
@@ -91,7 +91,7 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
       c = c.S;
       z -= 16;
     }
-    return Static.blocks.blocks[c.getID(x,y,z)];
+    return Static.blocks.blocks[c.getBlock(x,y,z)];
   }
 
   public void setBlock(int x,int y,int z,char id,int bits) {
@@ -160,10 +160,10 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
       for(int z=0;z<16;z++) {
         if (Settings.current.doSteps) {
           //smooth out terrain with steps
-          char lastId = chunk.getID(x, 0, z);
+          char lastId = chunk.getBlock(x, 0, z);
           for(int y=1;y<255;y++) {
-            char id = chunk.getID(x, y, z);
-            char id2 = chunk.getID2(x, y, z);
+            char id = chunk.getBlock(x, y, z);
+            char id2 = chunk.getBlock2(x, y, z);
             if (id2 == Blocks.SNOW) {
               addStepSnow(x,y,z);
             }

@@ -95,12 +95,12 @@ public class MovingBlock extends EntityBase {
       if (pos.z < 0 && gz != 0) gz = 16 + gz;
       //see if we can stop moving here
       synchronized(chunk2) {
-        if (type == PUSH || (type == FALL && (chunk2.getID(gx, gy-1, gz) != 0))) {
+        if (type == PUSH || (type == FALL && (chunk2.getBlock(gx, gy-1, gz) != 0))) {
           //convert back to block
           chunk2.delEntity(this);
           Static.server.world.delEntity(uid);
           chunk2.setBlock(gx, gy, gz, blockid, Chunk.makeBits(dir, blockvar));
-          if (chunk2.getID2(gx, gy-1, gz) != 0) {
+          if (chunk2.getBlock2(gx, gy-1, gz) != 0) {
             //replace water, etc.
             chunk2.clearBlock(gx, gy, gz);
           }

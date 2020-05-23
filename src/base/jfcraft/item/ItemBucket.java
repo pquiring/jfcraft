@@ -39,7 +39,7 @@ public class ItemBucket extends ItemBase {
     if (filledid != Blocks.AIR) {
       c.otherSide();
       c.adjacentBlock();
-      c.block = c.chunk.getBlock(c.gx, c.gy, c.gz);
+      c.block = c.chunk.getBlockType(c.gx, c.gy, c.gz);
       //place contents @ coords
       if (c.chunk.setBlockIfEmpty(c.gx, c.gy, c.gz, filledid, 0)) {
         client.player.items[client.player.activeSlot].id = Items.BUCKET;

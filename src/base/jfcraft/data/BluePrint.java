@@ -230,12 +230,12 @@ public class BluePrint implements SerialClass, SerialCreator {
       for(int y=0;y<h;y++) {
         for(int z=0;z<d;z++) {
           for(int x=0;x<w;x++) {
-            char id = chunk.getID(x+sx,y+sy,z+sz);
+            char id = chunk.getBlock(x+sx,y+sy,z+sz);
             if (id != 0) {
               setID(x+dx,y+dy,z+dz, id);
               setBits(x+dx,y+dy,z+dz, chunk.getBits(x+sx,y+sy,z+sz));
             }
-            char id2 = chunk.getID2(x+sx,y+sy,z+sz);
+            char id2 = chunk.getBlock2(x+sx,y+sy,z+sz);
             if (id2 != 0) {
               setID2(x+dx,y+dy,z+dz, id2);
               setBits2(x+dx,y+dy,z+dz, chunk.getBits2(x+sx,y+sy,z+sz));

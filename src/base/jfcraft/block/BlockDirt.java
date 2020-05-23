@@ -64,7 +64,7 @@ public class BlockDirt extends BlockOpaque {
         for(int dx=-4;dx<=4;dx++) {
           for(int dy=-1;dy<=1;dy++) {
             for(int dz=-4;dz<=4;dz++) {
-              if (chunk.getID2(dx + gx, dy + gy, dz + gz) == Blocks.WATER) {
+              if (chunk.getBlock2(dx + gx, dy + gy, dz + gz) == Blocks.WATER) {
                 chunk.setBlock(gx,gy,gz,id,Chunk.makeBits(0,VAR_FARM_WET));
                 Static.server.broadcastSetBlock(chunk.dim,x,y,z,id,Chunk.makeBits(0,VAR_FARM_WET));
                 return;
@@ -76,15 +76,15 @@ public class BlockDirt extends BlockOpaque {
       }
       case VAR_DIRT: {
         //grow grass
-        if (chunk.getID(gx, gy+1, gz) != 0) {
-          if (chunk.getBlock(gx, gy+1, gz).isSolid) return;
+        if (chunk.getBlock(gx, gy+1, gz) != 0) {
+          if (chunk.getBlockType(gx, gy+1, gz).isSolid) return;
         }
-        if (chunk.getID2(gx, gy+1, gz) != 0) return;
+        if (chunk.getBlock2(gx, gy+1, gz) != 0) return;
         if (chunk.getSunLight(gx, gy+1, gz) == 0) return;
         for(int dx=-1;dx<=1;dx++) {
           for(int dy=-1;dy<=1;dy++) {
             for(int dz=-1;dz<=1;dz++) {
-              if (chunk.getID(dx + gx, dy + gy, dz + gz) == Blocks.GRASS) {
+              if (chunk.getBlock(dx + gx, dy + gy, dz + gz) == Blocks.GRASS) {
                 chunk.setBlock(gx, gy, gz, Blocks.GRASS, 0);
                 Static.server.broadcastSetBlock(chunk.dim, x, y, z, Blocks.GRASS, 0);
                 return;

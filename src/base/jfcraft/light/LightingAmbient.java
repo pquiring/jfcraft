@@ -51,7 +51,7 @@ public class LightingAmbient implements LightingBase {
     for(int y=0;y<256;y++) {
       for(int z=0;z<16;z++) {
         for(int x=0;x<16;x++) {
-          char id = chunk.getID(x,y,z);
+          char id = chunk.getBlock(x,y,z);
           lvl = Static.blocks.blocks[id].emitLight << 4;
           chunk.setLights(x,y,z,lvl | ambientLvl);
         }
@@ -124,7 +124,7 @@ public class LightingAmbient implements LightingBase {
     for(int y=y1;y<=y2;y++) {
       for(int z=z1;z<=z2;z++) {
         for(int x=x1;x<=x2;x++) {
-          char id = chunk.getID(x,y,z);
+          char id = chunk.getBlock(x,y,z);
           lvl = Static.blocks.blocks[id].emitLight << 4;
           chunk.setLights(x,y,z,lvl | ambientLvl);
         }
@@ -310,11 +310,11 @@ public class LightingAmbient implements LightingBase {
   }
 
   private BlockBase getBlock(int x, int y, int z) {
-    return Static.blocks.blocks[chunk.getID(x,y,z)];
+    return Static.blocks.blocks[chunk.getBlock(x,y,z)];
   }
 
   private BlockBase getBlock2(int x, int y, int z) {
-    return Static.blocks.blocks[chunk.getID2(x,y,z)];
+    return Static.blocks.blocks[chunk.getBlock2(x,y,z)];
   }
 
   private void setBlkLight(int x, int y, int z, int lvl) {

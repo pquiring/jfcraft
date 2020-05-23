@@ -50,8 +50,8 @@ public class BlockSlab extends BlockBase {
   }
 
   public boolean canPlace(Coords c) {
-    BlockBase block1 = Static.blocks.blocks[c.chunk.getID(c.gx,c.gy,c.gz)];
-    BlockBase block2 = Static.blocks.blocks[c.chunk.getID2(c.gx,c.gy,c.gz)];
+    BlockBase block1 = Static.blocks.blocks[c.chunk.getBlock(c.gx,c.gy,c.gz)];
+    BlockBase block2 = Static.blocks.blocks[c.chunk.getBlock2(c.gx,c.gy,c.gz)];
     if (block1.id == id) {
       //can place on itself???
       int dir = Chunk.getDir(c.chunk.getBits(c.gx, c.gy, c.gz));

@@ -19,10 +19,6 @@ package jfcraft.feature;
  *  4 (16) = level 3
  *  0 (4) = gap (BEDROCK)
  *
- *  TODO :
- *   - replace with mines / underground fortresses in random areas.
- *   - create an elevator shaft to connect levels (ladder)
- *
  *  This creates a true Perlin noise generated cave instead of fragments.
  *
  */
@@ -52,7 +48,8 @@ public class Cave extends Eraser {
   private int nsy, wey, nwy, ney, swy, sey;  //mid-point elevations
 
   private boolean eop;  //end of path
-  private static final int levelBase[] = new int[] {0, 44, 24, 4};
+  private static final int levelBase[] = new int[] {0, 4, 24, 44};
+  private boolean connected[] = new boolean[4];
 
   private void setupCaves() {
     int _wx = chunk.cx * 16 + level;
@@ -113,6 +110,13 @@ public class Cave extends Eraser {
         case NW: swy += 12; break;
         case NS: wey += 12; break;
         case NE: swy += 12; break;
+      }
+    }
+    connected[level] = connect;
+    if (level > 1) {
+      if (connect && connected[level-1]) {
+        //connect to lower level
+        new CaveElevator().build(chunk, data, levelBase[level] - 16 - 4 - 15, levelBase[level]);
       }
     }
 

@@ -81,7 +81,7 @@ public class GeneratorPhase3Nether implements GeneratorPhase3Base {
       c = c.S;
       z -= 16;
     }
-    return Static.blocks.blocks[c.getID(x,y,z)];
+    return Static.blocks.blocks[c.getBlock(x,y,z)];
   }
   private static final char AIR = 0;
 
@@ -90,9 +90,9 @@ public class GeneratorPhase3Nether implements GeneratorPhase3Base {
       for(int z=0;z<16;z++) {
         if (Settings.current.doSteps) {
           //smooth out terrain with steps
-          char lastId = chunk.getID(x, 0, z);
+          char lastId = chunk.getBlock(x, 0, z);
           for(int y=1;y<255;y++) {
-            char id = chunk.getID(x, y, z);
+            char id = chunk.getBlock(x, y, z);
             if (lastId != 0 && id == 0 && Static.blocks.blocks[lastId].canSmooth) {
               //on top
               boolean n = getBlock(x, y, z-1).isSolid;

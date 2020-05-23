@@ -1001,7 +1001,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     int gz = Static.floor(pos.z % 16.0f);
     if (pos.z < 0 && gz != 0) gz = 16 + gz;
 
-    char id = chunk.getID(gx, gy, gz);
+    char id = chunk.getBlock(gx, gy, gz);
     return Static.blocks.blocks[id];
   }
 
@@ -1014,7 +1014,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     int gz = Static.floor(pos.z % 16.0f);
     if (pos.z < 0 && gz != 0) gz = 16 + gz;
 
-    char id = chunk.getID2(gx, gy, gz);
+    char id = chunk.getBlock2(gx, gy, gz);
     return Static.blocks.blocks[id];
   }
 

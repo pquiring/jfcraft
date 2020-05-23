@@ -205,8 +205,8 @@ public class ItemBase implements RenderSource {
 
   public boolean canPlace(Coords c) {
     if (!canPlace) return false;
-    BlockBase block1 = Static.blocks.blocks[c.chunk.getID(c.gx,c.gy,c.gz)];
-    BlockBase block2 = Static.blocks.blocks[c.chunk.getID2(c.gx,c.gy,c.gz)];
+    BlockBase block1 = Static.blocks.blocks[c.chunk.getBlock(c.gx,c.gy,c.gz)];
+    BlockBase block2 = Static.blocks.blocks[c.chunk.getBlock2(c.gx,c.gy,c.gz)];
     return block1.canReplace && block2.canReplace;
   }
 

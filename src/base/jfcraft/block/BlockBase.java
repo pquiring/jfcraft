@@ -373,7 +373,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     if (doDrop) {
       items = drop(c, isVar ? Chunk.getVar(bits) : 0);
     }
-    BlockBase block = c.chunk.getBlock(c.gx, c.gy, c.gz);
+    BlockBase block = c.chunk.getBlockType(c.gx, c.gy, c.gz);
     if (block.isBlocks2) {
       c.chunk.clearBlock2(c.gx,c.gy,c.gz);
       Static.server.broadcastClearBlock2(c.chunk.dim,c.x,c.y,c.z);

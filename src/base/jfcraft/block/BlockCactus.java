@@ -37,13 +37,13 @@ public class BlockCactus extends BlockBase {
     //can only place on sand or another cactus
     //if placing on sand - make sure no other cactus is near
     if (c.gy == 0) return false;
-    int bid = c.chunk.getID(c.gx, c.gy-1, c.gz);
+    int bid = c.chunk.getBlock(c.gx, c.gy-1, c.gz);
     if (bid == Blocks.SAND) {
       //check if cactus near by
-      if (c.chunk.getID(c.gx+1, c.gy, c.gz) == id) return false;
-      if (c.chunk.getID(c.gx-1, c.gy, c.gz) == id) return false;
-      if (c.chunk.getID(c.gx, c.gy, c.gz+1) == id) return false;
-      if (c.chunk.getID(c.gx, c.gy, c.gz-1) == id) return false;
+      if (c.chunk.getBlock(c.gx+1, c.gy, c.gz) == id) return false;
+      if (c.chunk.getBlock(c.gx-1, c.gy, c.gz) == id) return false;
+      if (c.chunk.getBlock(c.gx, c.gy, c.gz+1) == id) return false;
+      if (c.chunk.getBlock(c.gx, c.gy, c.gz-1) == id) return false;
     } else if (bid == id) {
       //ok
     } else {
@@ -59,7 +59,7 @@ public class BlockCactus extends BlockBase {
     super.tick(chunk, tick);
     //is block below still sand or cactus?
     tick.toWorldCoords(chunk, c);
-    c.block = chunk.getBlock(c.gx, c.gy-1, c.gz);
+    c.block = chunk.getBlockType(c.gx, c.gy-1, c.gz);
     int bid = c.block.id;
     if (bid == Blocks.SAND || bid == id) {
       return;

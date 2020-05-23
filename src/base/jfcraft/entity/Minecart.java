@@ -238,7 +238,7 @@ public class Minecart extends VehicleBase {
     int gz = Static.floor(pos.z % 16.0f);
     if (pos.z < 0 && gz != 0) gz = 16 + gz;
 
-    char rid = chunk1.getID(gx, gy, gz);
+    char rid = chunk1.getBlock(gx, gy, gz);
     if (!BlockRail.isRail(rid)) {
       if (onRail) {
         offRail();
@@ -544,7 +544,7 @@ public class Minecart extends VehicleBase {
         }
         if (up || dn) {
           //check if rail levels off
-          rid = chunk1.getID(gx, gy, gz);
+          rid = chunk1.getBlock(gx, gy, gz);
           if (BlockRail.isRail(rid)) {
             if (up) {
               pos.y -= Static._1_16;
@@ -555,7 +555,7 @@ public class Minecart extends VehicleBase {
         } else {
           //check if next rail slopes down
           if (gy > 0) {
-            rid = chunk1.getID(gx, gy-1, gz);
+            rid = chunk1.getBlock(gx, gy-1, gz);
             if (BlockRail.isRail(rid)) {
               pos.y -= Static._1_16;
             }

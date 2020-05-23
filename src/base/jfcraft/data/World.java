@@ -125,7 +125,7 @@ public class World implements SerialClass, SerialCreator {
     Coords c = new Coords();
     c.setPos(x, y, z);
     Chunk chunk = chunks.getChunk(dim,c.cx,c.cz);
-    BlockBase bb = chunk.getBlock(c.gx, c.gy, c.gz);
+    BlockBase bb = chunk.getBlockType(c.gx, c.gy, c.gz);
     c.chunk = chunk;
     bb.destroy(null, c, doDrop);
   }
@@ -203,7 +203,7 @@ public class World implements SerialClass, SerialCreator {
     int gy = Static.floor(y);
     int gz = Static.floor(z % 16.0f);
     if (z < 0 && gz != 0) gz = 16 + gz;
-    return chunk.getID(gx,gy,gz) == id;
+    return chunk.getBlock(gx,gy,gz) == id;
   }
   public boolean hasExtra(int dim, float x, float y, float z, char id) {
     int cx = Static.floor(x / 16.0f);
@@ -215,7 +215,7 @@ public class World implements SerialClass, SerialCreator {
     int gy = Static.floor(y);
     int gz = Static.floor(z % 16.0f);
     if (z < 0 && gz != 0) gz = 16 + gz;
-    return chunk.getID2(gx,gy,gz) == id;
+    return chunk.getBlock2(gx,gy,gz) == id;
   }
   public boolean isEmpty(int dim, float x, float y, float z) {
     int cx = Static.floor(x / 16.0f);
@@ -262,9 +262,9 @@ public class World implements SerialClass, SerialCreator {
       gz = 16 + gz;
     }
     try {
-      id = chunk.getID(gx,gy,gz);
+      id = chunk.getBlock(gx,gy,gz);
       if (id == 0) {
-        id = chunk.getID2(gx,gy,gz);
+        id = chunk.getBlock2(gx,gy,gz);
         if (id == 0) {
           //return AIR
           c.block = Static.blocks.blocks[0];
@@ -309,7 +309,7 @@ public class World implements SerialClass, SerialCreator {
       gz = 16 + gz;
     }
     try {
-      return chunk.getID(gx,gy,gz);
+      return chunk.getBlock(gx,gy,gz);
     } catch (Exception e) {
       Static.log(e);
       return Blocks.STONE;
@@ -357,7 +357,7 @@ public class World implements SerialClass, SerialCreator {
       gz = 16 + gz;
     }
     try {
-      return chunk.getID2(gx,gy,gz);
+      return chunk.getBlock2(gx,gy,gz);
     } catch (Exception e) {
       Static.log(e);
       return Blocks.STONE;

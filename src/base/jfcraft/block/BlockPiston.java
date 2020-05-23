@@ -82,7 +82,7 @@ public class BlockPiston extends BlockBase {
     int bits = c.chunk.getBits(c.gx, c.gy, c.gz);
     n.dir = Chunk.getDir(bits);
     n.adjacentBlock();
-    char id1 = n.chunk.getID(n.gx, n.gy, n.gz);
+    char id1 = n.chunk.getBlock(n.gx, n.gy, n.gz);
     if (id1 == Blocks.BARRIER) {
       n.chunk.clearBlock(n.gx, n.gy, n.gz);
       Static.server.broadcastClearBlock(n.chunk.dim, n.x, n.y, n.z);
@@ -185,7 +185,7 @@ public class BlockPiston extends BlockBase {
     {
       Coords n = c.clone();
       n.adjacentBlock();
-      char id1 = n.chunk.getID(n.gx, n.gy, n.gz);
+      char id1 = n.chunk.getBlock(n.gx, n.gy, n.gz);
       if (id1 == Blocks.BARRIER) {
         n.chunk.clearBlock(n.gx, n.gy, n.gz);
         Static.server.broadcastClearBlock(n.chunk.dim, n.x, n.y, n.z);
@@ -197,8 +197,8 @@ public class BlockPiston extends BlockBase {
       Coords n = c.clone();
       n.adjacentBlock();
       n.adjacentBlock();
-      char id1 = n.chunk.getID(n.gx, n.gy, n.gz);
-      char id2 = n.chunk.getID2(n.gx, n.gy, n.gz);
+      char id1 = n.chunk.getBlock(n.gx, n.gy, n.gz);
+      char id2 = n.chunk.getBlock2(n.gx, n.gy, n.gz);
       if (id1 == Blocks.AIR || id2 != Blocks.AIR) {
         Static.log("BlockPiston:Sticky:Nothing to pull back");
         return;

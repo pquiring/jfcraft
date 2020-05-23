@@ -130,8 +130,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     int ll = -1, la = -1, lb = -1, ln = -1, le = -1, ls = -1, lw = -1; //light levels around block
     BlockBase base1, base2;
     if (y < 255) {
-      base1 = Static.blocks.blocks[getID(x,y+1,z)];
-      base2 = Static.blocks.blocks[getID2(x,y+1,z)];
+      base1 = Static.blocks.blocks[getBlock(x,y+1,z)];
+      base2 = Static.blocks.blocks[getBlock2(x,y+1,z)];
       if (!base1.isOpaque && !base2.isOpaque) {
         la = getLights(x, y+1, z);
         if (ll != -1 && ll != la) {
@@ -141,8 +141,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       }
     }
     if (y > 0) {
-      base1 = Static.blocks.blocks[getID(x,y-1,z)];
-      base2 = Static.blocks.blocks[getID2(x,y-1,z)];
+      base1 = Static.blocks.blocks[getBlock(x,y-1,z)];
+      base2 = Static.blocks.blocks[getBlock2(x,y-1,z)];
       if (!base1.isOpaque && !base2.isOpaque) {
         lb = getLights(x, y-1, z);
         if (ll != -1 && ll != lb) {
@@ -151,8 +151,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         ll = lb;
       }
     }
-    base1 = Static.blocks.blocks[getID(x,y,z-1)];
-    base2 = Static.blocks.blocks[getID2(x,y,z-1)];
+    base1 = Static.blocks.blocks[getBlock(x,y,z-1)];
+    base2 = Static.blocks.blocks[getBlock2(x,y,z-1)];
     if (!base1.isOpaque && !base2.isOpaque) {
       ln = getLights(x, y, z-1);
       if (ll != -1 && ll != ln) {
@@ -160,8 +160,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       }
       ll = ln;
     }
-    base1 = Static.blocks.blocks[getID(x+1,y,z)];
-    base2 = Static.blocks.blocks[getID2(x+1,y,z)];
+    base1 = Static.blocks.blocks[getBlock(x+1,y,z)];
+    base2 = Static.blocks.blocks[getBlock2(x+1,y,z)];
     if (!base1.isOpaque && !base2.isOpaque) {
       le = getLights(x+1, y, z);
       if (ll != -1 && ll != le) {
@@ -169,8 +169,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       }
       ll = le;
     }
-    base1 = Static.blocks.blocks[getID(x,y,z+1)];
-    base2 = Static.blocks.blocks[getID2(x,y,z+1)];
+    base1 = Static.blocks.blocks[getBlock(x,y,z+1)];
+    base2 = Static.blocks.blocks[getBlock2(x,y,z+1)];
     if (!base1.isOpaque && !base2.isOpaque) {
       ls = getLights(x, y, z+1);
       if (ll != -1 && ll != ls) {
@@ -178,8 +178,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       }
       ll = ls;
     }
-    base1 = Static.blocks.blocks[getID(x-1,y,z)];
-    base2 = Static.blocks.blocks[getID2(x-1,y,z)];
+    base1 = Static.blocks.blocks[getBlock(x-1,y,z)];
+    base2 = Static.blocks.blocks[getBlock2(x-1,y,z)];
     if (!base1.isOpaque && !base2.isOpaque) {
       lw = getLights(x-1, y, z);
       if (ll != -1 && ll != lw) {
@@ -320,8 +320,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   public boolean setBlocksIfEmpty(Coords c1, char id1, int _bits1, Coords c2, char id2, int _bits2) {
     synchronized(lock) {
       synchronized(c2.chunk.lock) {
-        if (getID(c1.gx, c1.gy, c1.gz) != 0) return false;
-        if (c2.chunk.getID(c2.gx, c2.gy, c2.gz) != 0) return false;
+        if (getBlock(c1.gx, c1.gy, c1.gz) != 0) return false;
+        if (c2.chunk.getBlock(c2.gx, c2.gy, c2.gz) != 0) return false;
         setBlock(c1.gx, c1.gy, c1.gz, id1, _bits1);
         c2.chunk.setBlock(c2.gx, c2.gy, c2.gz, id2, _bits2);
       }
@@ -337,7 +337,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     if (z > 15) {return S.replaceBlock(x, y, z-16, id, _bits, oldid);}
     if (z < 0) {return N.replaceBlock(x, y, z+16, id, _bits, oldid);}
     synchronized(lock) {
-      if (getID(x, y, z) != oldid) return false;
+      if (getBlock(x, y, z) != oldid) return false;
       setBlock(x,y,z,id,_bits);
     }
     return false;
@@ -597,13 +597,13 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     }
   }
 
-  public char getID(int x,int y, int z) {
-    if (x > 15) return E.getID(x-16, y, z);
-    if (x < 0) return W.getID(x+16, y, z);
+  public char getBlock(int x,int y, int z) {
+    if (x > 15) return E.getBlock(x-16, y, z);
+    if (x < 0) return W.getBlock(x+16, y, z);
     if (y > 255) return 0;
     if (y < 0) return 0;
-    if (z > 15) return S.getID(x, y, z-16);
-    if (z < 0) return N.getID(x, y, z+16);
+    if (z > 15) return S.getBlock(x, y, z-16);
+    if (z < 0) return N.getBlock(x, y, z+16);
     if (blocks[y] == null) return 0;
     return blocks[y][z * 16 + x];
   }
@@ -702,13 +702,13 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     }
   }
 
-  public char getID2(int x,int y, int z) {
-    if (x > 15) return E.getID2(x-16, y, z);
-    if (x < 0) return W.getID2(x+16, y, z);
+  public char getBlock2(int x,int y, int z) {
+    if (x > 15) return E.getBlock2(x-16, y, z);
+    if (x < 0) return W.getBlock2(x+16, y, z);
     if (y > 255) return 0;
     if (y < 0) return 0;
-    if (z > 15) return S.getID2(x, y, z-16);
-    if (z < 0) return N.getID2(x, y, z+16);
+    if (z > 15) return S.getBlock2(x, y, z-16);
+    if (z < 0) return N.getBlock2(x, y, z+16);
     if (blocks2[y] == null) return 0;
     return blocks2[y][z * 16 + x];
   }
@@ -833,8 +833,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             data.x = x;
             data.temp = temp[z * 16 + x];
             data.rain = rain[z * 16 + x];
-            id = getID(x,y,z);
-            id2 = getID2(x,y,z);
+            id = getBlock(x,y,z);
+            id2 = getBlock2(x,y,z);
             boolean hasBlock = id != 0;
             boolean hasBlock2 = id2 != 0;
             if (!hasBlock && !hasBlock2) {
@@ -868,7 +868,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             data.crack = crack;
 
             if (y > 0) {
-              data.id[Direction.B] = getID(x,y-1,z);
+              data.id[Direction.B] = getBlock(x,y-1,z);
               _bits = getBits(x,y-1,z);
               data.dir[Direction.B] = getDir(_bits);
               data.var[Direction.B] = getVar(_bits);
@@ -878,7 +878,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
               data.sl[Direction.B] = (_ll & 0x0f) / 15.0f;
               data.bl[Direction.B] = ((_ll & 0xf0) >> 4) / 15.0f;
               if (hasBlock2) {
-                data.id2[Direction.B] = getID2(x,y-1,z);
+                data.id2[Direction.B] = getBlock2(x,y-1,z);
                 _bits = getBits2(x,y-1,z);
                 data.dir2[Direction.B] = getDir(_bits);
                 data.var2[Direction.B] = getVar(_bits);
@@ -891,7 +891,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             }
 
             if (y < 255) {
-              data.id[Direction.A] = getID(x,y+1,z);
+              data.id[Direction.A] = getBlock(x,y+1,z);
               _bits = getBits(x,y+1,z);
               data.dir[Direction.A] = getDir(_bits);
               data.var[Direction.A] = getVar(_bits);
@@ -901,7 +901,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
               data.sl[Direction.A] = (_ll & 0x0f) / 15.0f;
               data.bl[Direction.A] = ((_ll & 0xf0) >> 4) / 15.0f;
               if (hasBlock2) {
-                data.id2[Direction.A] = getID2(x,y+1,z);
+                data.id2[Direction.A] = getBlock2(x,y+1,z);
                 _bits = getBits2(x,y+1,z);
                 data.dir2[Direction.A] = getDir(_bits);
                 data.var2[Direction.A] = getVar(_bits);
@@ -913,7 +913,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
               data.bl[Direction.A] = 0;
             }
 
-            data.id[Direction.N] = getID(x,y,z-1);
+            data.id[Direction.N] = getBlock(x,y,z-1);
             _bits = getBits(x,y,z-1);
             data.dir[Direction.N] = getDir(_bits);
             data.var[Direction.N] = getVar(_bits);
@@ -923,13 +923,13 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             data.sl[Direction.N] = (_ll & 0x0f) / 15.0f;
             data.bl[Direction.N] = ((_ll & 0xf0) >> 4) / 15.0f;
             if (hasBlock2) {
-              data.id2[Direction.N] = getID2(x,y,z-1);
+              data.id2[Direction.N] = getBlock2(x,y,z-1);
               _bits = getBits2(x,y,z-1);
               data.dir2[Direction.N] = getDir(_bits);
               data.var2[Direction.N] = getVar(_bits);
             }
 
-            data.id[Direction.S] = getID(x,y,z+1);
+            data.id[Direction.S] = getBlock(x,y,z+1);
             _bits = getBits(x,y,z+1);
             data.dir[Direction.S] = getDir(_bits);
             data.var[Direction.S] = getVar(_bits);
@@ -939,13 +939,13 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             data.sl[Direction.S] = (_ll & 0x0f) / 15.0f;
             data.bl[Direction.S] = ((_ll & 0xf0) >> 4) / 15.0f;
             if (hasBlock2) {
-              data.id2[Direction.S] = getID2(x,y,z+1);
+              data.id2[Direction.S] = getBlock2(x,y,z+1);
               _bits = getBits2(x,y,z+1);
               data.dir2[Direction.S] = getDir(_bits);
               data.var2[Direction.S] = getVar(_bits);
             }
 
-            data.id[Direction.W] = getID(x-1,y,z);
+            data.id[Direction.W] = getBlock(x-1,y,z);
             _bits = getBits(x-1,y,z);
             data.dir[Direction.W] = getDir(_bits);
             data.var[Direction.W] = getVar(_bits);
@@ -955,13 +955,13 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             data.sl[Direction.W] = (_ll & 0x0f) / 15.0f;
             data.bl[Direction.W] = ((_ll & 0xf0) >> 4) / 15.0f;
             if (hasBlock2) {
-              data.id2[Direction.W] = getID2(x-1,y,z);
+              data.id2[Direction.W] = getBlock2(x-1,y,z);
               _bits = getBits2(x-1,y,z);
               data.dir2[Direction.W] = getDir(_bits);
               data.var2[Direction.W] = getVar(_bits);
             }
 
-            data.id[Direction.E] = getID(x+1,y,z);
+            data.id[Direction.E] = getBlock(x+1,y,z);
             _bits = getBits(x+1,y,z);
             data.dir[Direction.E] = getDir(_bits);
             data.var[Direction.E] = getVar(_bits);
@@ -971,7 +971,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             data.sl[Direction.E] = (_ll & 0x0f) / 15.0f;
             data.bl[Direction.E] = ((_ll & 0xf0) >> 4) / 15.0f;
             if (hasBlock2) {
-              data.id2[Direction.E] = getID2(x+1,y,z);
+              data.id2[Direction.E] = getBlock2(x+1,y,z);
               _bits = getBits2(x+1,y,z);
               data.dir2[Direction.E] = getDir(_bits);
               data.var2[Direction.E] = getVar(_bits);
@@ -1250,9 +1250,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     for(int a=0;a<list.length;a++) {
       Tick tick = list[a];
       if (!tick.isBlocks2)
-        id = getID(tick.x,tick.y,tick.z);
+        id = getBlock(tick.x,tick.y,tick.z);
       else
-        id = getID2(tick.x,tick.y,tick.z);
+        id = getBlock2(tick.x,tick.y,tick.z);
       if (id != 0) {
         try {
           block = Static.blocks.blocks[id];
@@ -1272,12 +1272,12 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         y = r.nextInt(16) + p;
         z = r.nextInt(16);
         //TODO : can snow_cover be replaced here???
-        id = getID(x,y,z);
+        id = getBlock(x,y,z);
         if (id != 0) {
           block = Static.blocks.blocks[id];
           block.rtick(this, x,y,z);
         }
-        id = getID2(x,y,z);
+        id = getBlock2(x,y,z);
         if (id != 0) {
           block = Static.blocks.blocks[id];
           block.rtick(this, x,y,z);
@@ -1430,31 +1430,31 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   }
 
   /** Get block for layer 1 or layer 2. */
-  public BlockBase getBlock(int x,int y,int z) {
-    char id = getID(x,y,z);
+  public BlockBase getBlockType(int x,int y,int z) {
+    char id = getBlock(x,y,z);
     if (id == 0) {
-      id = getID2(x,y,z);
+      id = getBlock2(x,y,z);
     }
     return Static.blocks.blocks[id];
   }
 
-  public BlockBase getBlock1(int x,int y,int z) {
-    char id = getID(x,y,z);
+  public BlockBase getBlockType1(int x,int y,int z) {
+    char id = getBlock(x,y,z);
     return Static.blocks.blocks[id];
   }
 
-  public BlockBase getBlock2(int x,int y,int z) {
-    char id = getID2(x,y,z);
+  public BlockBase getBlockType2(int x,int y,int z) {
+    char id = getBlock2(x,y,z);
     return Static.blocks.blocks[id];
   }
 
   public boolean isEmpty(int x,int y,int z) {
-    return (getID(x,y,z) == 0 && getID2(x,y,z) == 0);
+    return (getBlock(x,y,z) == 0 && getBlock2(x,y,z) == 0);
   }
 
   public boolean canSpawnOn(int x,int y,int z) {
-    if (getID2(x,y,z) != 0) return false;
-    BlockBase base = getBlock(x, y, z);
+    if (getBlock2(x,y,z) != 0) return false;
+    BlockBase base = getBlockType(x, y, z);
     return base.canSpawnOn && !base.isComplex;
   }
 
@@ -1597,7 +1597,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   }
 
   public void B2E(int gx, int gy, int gz, float x, float y, float z, int uid) {
-    char id = getID(gx, gy, gz);
+    char id = getBlock(gx, gy, gz);
     int bits = getBits(gx, gy, gz);
     if (id == 0) {
       Static.log("C:B2E=0:" + cx +"," + cz + ":" + gx + "," + gy + ","+ gz);

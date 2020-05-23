@@ -44,7 +44,7 @@ public abstract class BiomeBase {
       c = c.S;
       z -= 16;
     }
-    return Static.blocks.blocks[c.getID(x,y,z)];
+    return Static.blocks.blocks[c.getBlock(x,y,z)];
   }
   public void setBlock(int x, int y, int z, char id, int dir, int var) {
     if (y < 1) return;  //do not change bedrock
@@ -66,7 +66,7 @@ public abstract class BiomeBase {
       c = c.S;
       z -= 16;
     }
-    if (c.getID(x, y, z) != Blocks.AIR) return;
+    if (c.getBlock(x, y, z) != Blocks.AIR) return;
     c.setBlock(x, y, z, id, Chunk.makeBits(dir,var));
   }
   public void setBlock2(int x, int y, int z, char id, int dir, int var) {

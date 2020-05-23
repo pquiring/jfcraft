@@ -53,7 +53,7 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
     int elev = (int)chunk.elev[8 * 16 + 8] + 1;
     if (elev + print.Y > elevMax) return;
     if (elev < elevMin) return;
-    if (chunk.getID(8, elev+1, 8) != 0) return;
+    if (chunk.getBlock(8, elev+1, 8) != 0) return;
     int ang = data.c1 % 4;
     switch (ang) {
       case 0: break;  //no change

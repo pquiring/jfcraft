@@ -55,22 +55,22 @@ public abstract class BlockPortal extends BlockBase {
     int dx,dy,dz;
     if (dir == N) {
       //xy plane
-      while (c.chunk.getID(p.gx-1, p.gy, p.gz) == id) {
+      while (c.chunk.getBlock(p.gx-1, p.gy, p.gz) == id) {
         p.gx--;
         p.x--;
       }
-      while (c.chunk.getID(p.gx, p.gy-1, p.gz) == id) {
+      while (c.chunk.getBlock(p.gx, p.gy-1, p.gz) == id) {
         p.gy--;
         p.y--;
       }
       dx = 1;
       for(int x=1;x<maxSize;x++) {
-        if (c.chunk.getID(p.gx + x, p.gy, p.gz) != id) break;
+        if (c.chunk.getBlock(p.gx + x, p.gy, p.gz) != id) break;
         dx++;
       }
       dy = 1;
       for(int y=1;y<maxSize;y++) {
-        if (c.chunk.getID(p.gx, p.gy + y, p.gz) != id) break;
+        if (c.chunk.getBlock(p.gx, p.gy + y, p.gz) != id) break;
         dy++;
       }
       for(int x=0;x<dx;x++) {
@@ -81,22 +81,22 @@ public abstract class BlockPortal extends BlockBase {
       }
     } else {
       //zy plane
-      while (c.chunk.getID(p.gx, p.gy, p.gz-1) == id) {
+      while (c.chunk.getBlock(p.gx, p.gy, p.gz-1) == id) {
         p.gz--;
         p.z--;
       }
-      while (c.chunk.getID(p.gx, p.gy-1, p.gz) == id) {
+      while (c.chunk.getBlock(p.gx, p.gy-1, p.gz) == id) {
         p.gy--;
         p.y--;
       }
       dz = 1;
       for(int z=1;z<maxSize;z++) {
-        if (c.chunk.getID(p.gx, p.gy, p.gz + z) != id) break;
+        if (c.chunk.getBlock(p.gx, p.gy, p.gz + z) != id) break;
         dz++;
       }
       dy = 1;
       for(int y=1;y<maxSize;y++) {
-        if (c.chunk.getID(p.gx, p.gy + y, p.gz) != id) break;
+        if (c.chunk.getBlock(p.gx, p.gy + y, p.gz) != id) break;
         dy++;
       }
       for(int z=0;z<dz;z++) {
@@ -117,35 +117,35 @@ public abstract class BlockPortal extends BlockBase {
     char portalID = getPortalBlock();
     if (dir == N || dir == S) {
       //xy plane
-      tid = chunk.getID(tick.x+1, tick.y, tick.z);
+      tid = chunk.getBlock(tick.x+1, tick.y, tick.z);
       if (tid != portalID && tid != frameID) {
         destroy(null, tick.toWorldCoords(chunk, c), true);
         return;
       }
-      tid = chunk.getID(tick.x-1, tick.y, tick.z);
+      tid = chunk.getBlock(tick.x-1, tick.y, tick.z);
       if (tid != portalID && tid != frameID) {
         destroy(null, tick.toWorldCoords(chunk, c), true);
         return;
       }
     } else {
       //zy plane
-      tid = chunk.getID(tick.x, tick.y, tick.z+1);
+      tid = chunk.getBlock(tick.x, tick.y, tick.z+1);
       if (tid != portalID && tid != frameID) {
         destroy(null, tick.toWorldCoords(chunk, c), true);
         return;
       }
-      tid = chunk.getID(tick.x, tick.y, tick.z-1);
+      tid = chunk.getBlock(tick.x, tick.y, tick.z-1);
       if (tid != portalID && tid != frameID) {
         destroy(null, tick.toWorldCoords(chunk, c), true);
         return;
       }
     }
-    tid = chunk.getID(tick.x, tick.y-1, tick.z);
+    tid = chunk.getBlock(tick.x, tick.y-1, tick.z);
     if (tid != portalID && tid != frameID) {
       destroy(null, tick.toWorldCoords(chunk, c), true);
       return;
     }
-    tid = chunk.getID(tick.x, tick.y+1, tick.z);
+    tid = chunk.getBlock(tick.x, tick.y+1, tick.z);
     if (tid != portalID && tid != frameID) {
       destroy(null, tick.toWorldCoords(chunk, c), true);
       return;
@@ -184,7 +184,7 @@ public abstract class BlockPortal extends BlockBase {
     char portalID = getPortalBlock();
     boolean found = false;
     for(int y = 0;y < 256;y++) {
-      if (chunk.getID(p.gx, y, p.gz) == portalID) {
+      if (chunk.getBlock(p.gx, y, p.gz) == portalID) {
         e.pos.y = y;
         found = true;
         break;
@@ -195,7 +195,7 @@ public abstract class BlockPortal extends BlockBase {
       //create portal at entity coords
       boolean foundAir = false;
       for(int y = 64;y < 128-5;y++) {
-        if ((chunk.getID(p.gx, y, p.gz) == 0) && (chunk.getID(p.gx, y - 1, p.gz) != 0)) {
+        if ((chunk.getBlock(p.gx, y, p.gz) == 0) && (chunk.getBlock(p.gx, y - 1, p.gz) != 0)) {
           p.gy = y;
           foundAir = true;
           break;
@@ -203,7 +203,7 @@ public abstract class BlockPortal extends BlockBase {
       }
       if (!foundAir) {
         for(int y = 64;y > 0;y--) {
-          if ((chunk.getID(p.gx, y, p.gz) == 0) && (chunk.getID(p.gx, y - 1, p.gz) != 0)) {
+          if ((chunk.getBlock(p.gx, y, p.gz) == 0) && (chunk.getBlock(p.gx, y - 1, p.gz) != 0)) {
             p.gy = y;
             foundAir = true;
             break;

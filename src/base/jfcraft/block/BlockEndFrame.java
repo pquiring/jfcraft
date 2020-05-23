@@ -62,7 +62,7 @@ public class BlockEndFrame extends BlockBase {
     int cnt = 0;
     for(int dx = -5;dx<=5;dx++) {
       for(int dz = -5;dz<=5;dz++) {
-        if (c.chunk.getID(c.gx + dx, c.gy, c.gz + dz) == id) {
+        if (c.chunk.getBlock(c.gx + dx, c.gy, c.gz + dz) == id) {
           if (Chunk.getVar(c.chunk.getBits(c.gx + dx, c.gy, c.gz + dz)) == VAR_ENDER_EYE) {
             cnt++;
           } else {
@@ -81,7 +81,7 @@ public class BlockEndFrame extends BlockBase {
     float cx = 0, cz = 0;  //center
     for(int dx = -5;dx<=5;dx++) {
       for(int dz = -5;dz<=5;dz++) {
-        if (c.chunk.getID(c.gx + dx, c.gy, c.gz + dz) == id) {
+        if (c.chunk.getBlock(c.gx + dx, c.gy, c.gz + dz) == id) {
           bits = c.chunk.getBits(c.gx + dx, c.gy, c.gz + dz);
           dir = Chunk.getDir(bits);
           switch (dir) {
@@ -94,7 +94,7 @@ public class BlockEndFrame extends BlockBase {
               continue;
           }
           for(int a=1;a<=3;a++) {
-            if (c.chunk.getID(c.gx + dx + fx * a, c.gy, c.gz + dz + fz * a) == Blocks.END_PORTAL) break;
+            if (c.chunk.getBlock(c.gx + dx + fx * a, c.gy, c.gz + dz + fz * a) == Blocks.END_PORTAL) break;
             c.chunk.setBlock(c.gx + dx + fx * a, c.gy, c.gz + dz + fz * a, Blocks.END_PORTAL, 0);
             Static.server.broadcastSetBlock(c.chunk.dim, c.x + dx + fx * a, c.y, c.z + dz + fz * a, Blocks.END_PORTAL, 0);
           }

@@ -30,8 +30,8 @@ public class ItemMinecart extends ItemBase {
   }
   public boolean canPlace(Coords c) {
     //can only place on rails
-    BlockBase block1 = Static.blocks.blocks[c.chunk.getID(c.gx,c.gy,c.gz)];
-    BlockBase block2 = Static.blocks.blocks[c.chunk.getID2(c.gx,c.gy,c.gz)];
+    BlockBase block1 = Static.blocks.blocks[c.chunk.getBlock(c.gx,c.gy,c.gz)];
+    BlockBase block2 = Static.blocks.blocks[c.chunk.getBlock2(c.gx,c.gy,c.gz)];
     return BlockRail.isRail(block1.id) && block2.canReplace;
   }
 }

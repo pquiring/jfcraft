@@ -34,7 +34,7 @@ public abstract class TreeBase {
       c = c.S;
       z -= 16;
     }
-    char orgid = c.getBlock(x, y, z).id;
+    char orgid = c.getBlockType(x, y, z).id;
     if (orgid != Blocks.AIR && orgid != Blocks.SNOW && orgid != Blocks.WATER) return false;
     c.setBlock(x, y, z, id, Chunk.makeBits(dir,var));
     return true;

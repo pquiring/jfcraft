@@ -92,7 +92,7 @@ public class GeneratorPhase3Mario implements GeneratorPhase3Base {
       c = c.S;
       z -= 16;
     }
-    return Static.blocks.blocks[c.getID(x,y,z)];
+    return Static.blocks.blocks[c.getBlock(x,y,z)];
   }
   private void addTree(int x, int y, int z, byte var, boolean snow) {
     setBlock(x  ,y  ,z  ,Blocks.WOOD, 0, var);

@@ -17,7 +17,7 @@ public class BlockFalling extends BlockOpaque {
   public void tick(Chunk chunk, Tick tick) {
     //check if block below is empty
 //    Static.log("tick falling:" + chunk + ":" + tick);
-    char id1 = chunk.getID(tick.x, tick.y-1, tick.z);
+    char id1 = chunk.getBlock(tick.x, tick.y-1, tick.z);
     if (id1 == Blocks.AIR) {
       //convert to entity
       tick.toWorldCoords(chunk, c);

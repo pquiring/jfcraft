@@ -221,6 +221,8 @@ public class Static {
     {3, 0.7f, 1f},  //random7 : high octave for greater complexity
     {3, 0.7f, 1f},  //random8 : high octave for greater complexity
     {3, 0.7f, 1f},  //random9 : high octave for greater complexity
+
+    {1, 0.0f, 0.0005f}, //features (cave/mineshaft/fortress)
   };
   public static int N_TEMP = 0;
   public static int N_RAIN = 1;
@@ -245,6 +247,7 @@ public class Static {
   public static int N_RANDOM7 = 20;
   public static int N_RANDOM8 = 21;
   public static int N_RANDOM9 = 22;
+  public static int N_FEATURES = 23;
   //...
   public static void initNoises(World world) {
     int cnt = noiseParams.length;

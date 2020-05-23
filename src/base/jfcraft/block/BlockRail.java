@@ -16,6 +16,7 @@ import jfcraft.client.*;
 import jfcraft.data.*;
 import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
+import static jfcraft.data.Blocks.*;
 
 public class BlockRail extends BlockBase {
   private static GLModel facexz, slope;
@@ -50,12 +51,12 @@ public class BlockRail extends BlockBase {
     }
 
     boolean u1 = false;
-    if ((e1 & 0x8) == 0x8) {
+    if ((e1 & VAR_UPPER) == VAR_UPPER) {
       u1 = true;
       e1 &= 0x7;
     }
     boolean u2 = false;
-    if ((e2 & 0x8) == 0x8) {
+    if ((e2 & VAR_UPPER) == VAR_UPPER) {
       u2 = true;
       e2 &= 0x7;
     }
@@ -179,7 +180,7 @@ public class BlockRail extends BlockBase {
   }
 
   private boolean connectEnd(Coords c, int side1, int dx, int dy, int dz) {
-    char rid = c.chunk.getID(c.gx + dx, c.gy + dy, c.gz + dz);
+    char rid = c.chunk.getBlock(c.gx + dx, c.gy + dy, c.gz + dz);
     if (!isRail(rid)) return false;
     int bits = c.chunk.getBits(c.gx + dx, c.gy + dy, c.gz + dz);
     int e1 = bits & 0x0f;
@@ -278,7 +279,7 @@ public class BlockRail extends BlockBase {
   }
 
   private void deleteEnd(Coords c, int side, int dx, int dy, int dz) {
-    char rid = c.chunk.getID(c.gx + dx, c.gy + dy, c.gz + dz);
+    char rid = c.chunk.getBlock(c.gx + dx, c.gy + dy, c.gz + dz);
     if (!isRail(rid)) return;
     int bits = c.chunk.getBits(c.gx + dx, c.gy + dy, c.gz + dz);
     int b1 = bits & 0x0f;

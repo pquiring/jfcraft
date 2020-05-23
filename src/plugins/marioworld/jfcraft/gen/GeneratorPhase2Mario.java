@@ -145,7 +145,7 @@ public class GeneratorPhase2Mario implements GeneratorPhase2Base {
       c = c.S;
       z -= 16;
     }
-    return Static.blocks.blocks[c.getID(x,y,z)];
+    return Static.blocks.blocks[c.getBlock(x,y,z)];
   }
 
   private void addPipe() {
