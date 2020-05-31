@@ -324,7 +324,6 @@ public class PacketPos extends Packet {
         if (itembase2.canPlace(client.s1) && server.blockClear(client.s1)) {
           if (itembase2.isDir) {
             client.player.getDir(client.s1);
-            client.s1.otherSide();
           }
           if (itembase2.isVar) {
             client.s1.var = item.var;
@@ -348,7 +347,6 @@ public class PacketPos extends Packet {
         if (itembase2.canPlace(client.s1) && server.blockClear(client.s1)) {
           if (itembase2.isDir) {
             client.player.getDir(client.s1);
-            client.s1.otherSide();
           }
           if (itembase2.isVar) {
             client.s1.var = item.var;

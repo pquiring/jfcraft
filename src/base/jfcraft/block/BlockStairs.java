@@ -8,15 +8,20 @@ package jfcraft.block;
  */
 
 import java.util.ArrayList;
+import jfcraft.client.Client;
 import static jfcraft.data.Direction.*;
 
 import jfcraft.data.*;
 import jfcraft.opengl.*;
 
-public class BlockStairs extends BlockStep {
+public class BlockStairs extends BlockBase {
   public static int VAR_UPPER = 8;
   public BlockStairs(String id, String names[], String images[]) {
     super(id, names, images);
+    isComplex = true;
+    isSolid = false;
+    isDir = true;
+    isDirXZ = true;
   }
   public void buildBuffers(RenderDest dest, RenderData data) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);

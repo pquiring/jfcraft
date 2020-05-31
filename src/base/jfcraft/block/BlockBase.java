@@ -333,10 +333,12 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public boolean place(Client client, Coords c) {
     int dir = 0;
     if (isDir) {
-      if (isDirXZ)
+      if (reverseDir) c.otherSide();
+      if (isDirXZ) {
         dir = c.dir_xz;
-      else
+      } else {
         dir = c.dir;
+      }
     } else if (isDirFace) {
       dir = c.dir;  //will not be from player.getDir()
     }

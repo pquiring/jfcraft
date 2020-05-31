@@ -19,6 +19,7 @@ public class BlockFurnace extends BlockOpaque {
     canUse = true;
     isDir = true;
     isDirXZ = true;
+    reverseDir = true;
   }
   public boolean place(Client client, Coords c) {
     ExtraFurnace furnace = new ExtraFurnace(c.gx, c.gy, c.gz);
