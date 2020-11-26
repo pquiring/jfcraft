@@ -138,8 +138,8 @@ public class Game extends RenderScreen {
       RenderEngine.advanceAnimation();
       advanceAnimation = false;
     }
-    Static.client.chunkLighter.process();
-    Static.client.chunkBuilder.process();
+//    Static.client.chunkLighter.process();
+//    Static.client.chunkBuilder.process();
     Static.client.chunkCopier.process();
   }
 
@@ -231,7 +231,8 @@ public class Game extends RenderScreen {
 
     //move camera
     switch (camview) {
-      case normal: break;
+      case normal:
+        break;
       case behind:
         moveCamera(-4.0f);
         break;

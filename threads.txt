@@ -1,13 +1,15 @@
 Client side: (see Client.initThread())
- - packet processor
- - ticks
- - chunk requestor
- - chunk worker (lights)
- - render
+ - packet processor (transport thread)
+ - ticks (timer)
+ - chunk requestor (timer)
+ - chunk prep (lighting -> building) (threads)
+ - main thread
+   - render -> (chunk copying)
 
 Server side: (see Server.initThread())
  - packet processor (per client)
- - ticks
- - chunk saver
- - chunk generator
- - teleport worker?
+ - ticks (timer)
+ - chunk saver (timer)
+ - chunk ligher (timer)
+ - chunk generator (ChunkWorker) (thread)
+ - teleport worker (thread)

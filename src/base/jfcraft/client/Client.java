@@ -183,7 +183,9 @@ public class Client {
     }, 50, 50);
     chunkCopier = new ChunkQueueCopy();
     chunkBuilder = new ChunkQueueBuild(chunkCopier);
+    chunkBuilder.start();
     chunkLighter = new ChunkQueueLight(chunkBuilder, true);
+    chunkLighter.start();
   }
 
   public void stopTimers() {
@@ -196,6 +198,10 @@ public class Client {
       chunkTimer.cancel();
       chunkTimer = null;
     }
+    chunkBuilder.cancel();
+    chunkBuilder = null;
+    chunkLighter.cancel();
+    chunkLighter = null;
   }
 
   public ArrayList<CXCZ> loadedChunks = new ArrayList<CXCZ>();  //server side

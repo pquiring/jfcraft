@@ -292,6 +292,7 @@ public class Server {
     try {
       ss = new ServerSocket(Settings.current.tcpPort);
       new Thread() {
+        //TODO : move this to a full class
         /** Listens for clients in separate thread. */
         public void run() {
           try {

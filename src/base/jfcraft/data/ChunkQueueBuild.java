@@ -7,13 +7,14 @@ package jfcraft.data;
  * Created : Jun 14, 2014
  */
 
-public class ChunkQueueBuild {
+public class ChunkQueueBuild extends Thread {
   private static final int BUFSIZ = 1024 * 4;
   private Chunk[] chunks = new Chunk[BUFSIZ];
   private int tail, head1, head2;
   private ChunkQueueCopy next;
   private int max = 9;
   private Object lock = new Object();
+  private boolean active;
 
   public ChunkQueueBuild(ChunkQueueCopy next) {
     this.next = next;
@@ -25,6 +26,21 @@ public class ChunkQueueBuild {
    */
   public void setMax(int max) {
     this.max = max;
+  }
+
+  public void run() {
+    active = true;
+    while (active) {
+      synchronized(lock) {
+        try {lock.wait();} catch (Exception e) {}
+      }
+      process();
+    }
+  }
+
+  public void cancel() {
+    active = false;
+    signal();
   }
 
   public void process() {
@@ -82,6 +98,7 @@ public class ChunkQueueBuild {
   public void signal() {
     synchronized(lock) {
       head1 = head2;
+      lock.notify();
     }
   }
 

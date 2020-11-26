@@ -9,7 +9,7 @@ package jfcraft.data;
 
 import java.util.*;
 
-public class ChunkQueueLight {
+public class ChunkQueueLight extends Thread {
   private static final int BUFSIZ = 1024 * 4;
   private Chunk[] chunks = new Chunk[BUFSIZ];
   private int x1s[] = new int[BUFSIZ];
@@ -25,6 +25,7 @@ public class ChunkQueueLight {
   private Profiler pro = new Profiler("lp:");
   private static class Lock {};
   private Lock lock = new Lock();
+  private boolean active;
 
   public ChunkQueueLight(ChunkQueueBuild next, boolean isClient) {
     this.next = next;
@@ -37,6 +38,21 @@ public class ChunkQueueLight {
    */
   public void setMax(int max) {
     this.max = max;
+  }
+
+  public void run() {
+    active = true;
+    while (active) {
+      synchronized(lock) {
+        try {lock.wait();} catch (Exception e) {}
+      }
+      process();
+    }
+  }
+
+  public void cancel() {
+    active = false;
+    signal();
   }
 
   public void process() {
@@ -142,6 +158,7 @@ public class ChunkQueueLight {
   public void signal() {
     synchronized(lock) {
       head1 = head2;
+      lock.notify();
     }
   }
 
