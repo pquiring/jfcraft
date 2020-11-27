@@ -138,8 +138,10 @@ public class Game extends RenderScreen {
       RenderEngine.advanceAnimation();
       advanceAnimation = false;
     }
-//    Static.client.chunkLighter.process();
-//    Static.client.chunkBuilder.process();
+    if (!Static.debugChunkThreads) {
+      Static.client.chunkLighter.process();
+      Static.client.chunkBuilder.process();
+    }
     Static.client.chunkCopier.process();
   }
 

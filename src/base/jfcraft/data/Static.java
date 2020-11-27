@@ -57,6 +57,8 @@ public class Static {
   public static boolean debugPurgeEntities = false;
   public static boolean debugDisableFog = true;
   public static boolean debugTest = false;
+  public static boolean debugChunkUpdate = false;
+  public static boolean debugChunkThreads = false;  //not working
 
   public static String debugMsg;
 

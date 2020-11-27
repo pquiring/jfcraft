@@ -1,6 +1,8 @@
 package jfcraft.data;
 
-/**
+/** ChunkQueueBuild
+ *
+ * Client side only.
  *
  * @author pquiring
  *
@@ -12,12 +14,17 @@ public class ChunkQueueBuild extends Thread {
   private Chunk[] chunks = new Chunk[BUFSIZ];
   private int tail, head1, head2;
   private ChunkQueueCopy next;
+  private ChunkQueueLight prev;
   private int max = 9;
   private Object lock = new Object();
   private boolean active;
 
   public ChunkQueueBuild(ChunkQueueCopy next) {
     this.next = next;
+  }
+
+  public void setChunkQueueLight(ChunkQueueLight prev) {
+    this.prev = prev;
   }
 
   /** Max chunks to process per call to process()
@@ -50,15 +57,23 @@ public class ChunkQueueBuild extends Thread {
       while (pos != head1 && cnt != 0) {
         Chunk chunk = chunks[pos];
         if (chunk != null) {
-          if (chunk.canRender()) {
+          chunks[pos] = null;
+          if (chunk.needRelight && Static.debugChunkThreads) {
+            Static.log("build:send back to light");
+            prev.add(chunk, 0, 0, 0, 15, 255, 15);
+          } else if (chunk.canRender()) {
             try {
               chunk.buildBuffers();
             } catch (Exception e) {
               Static.log(e);
             }
-            if (next != null) next.add(chunk);
+            if (chunk.needRelight && Static.debugChunkThreads) {
+              Static.log("build:send back to light");
+              prev.add(chunk, 0, 0, 0, 15, 255, 15);
+            } else if (next != null) {
+              next.add(chunk);
+            }
           }
-          chunks[pos] = null;
         }
         pos++;
         if (pos == BUFSIZ) pos = 0;

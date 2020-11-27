@@ -34,7 +34,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   public boolean needPhase2, needPhase3;
   public boolean needLights;  //generator phases
   //flags
-  public boolean dirty;  //need to write to disk
+  public boolean dirty;  //server:need to write to disk client:need to relight->build->copy
   public boolean needRelight;
   public boolean ready;
   public boolean inRange, isAllEmpty;
@@ -307,6 +307,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       if (needLights) return;
       needRelight = true;
       dirty = true;
+      if (Static.debugChunkUpdate) {
+        Static.log("setBlock:");
+      }
       if (isBorder()) return;
       int xyz[] = getLightCoordsSet(x,y,z, newBlock, Static.blocks.blocks[oldid]);
       if (world.isClient) {
@@ -376,6 +379,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       if (needLights) return oldid;
       needRelight = true;
       dirty = true;
+      if (Static.debugChunkUpdate) {
+        Static.log("clearBlock:");
+      }
       int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
       if (world.isClient) {
         Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
@@ -415,6 +421,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       if (needLights) return oldid;
       needRelight = true;
       dirty = true;
+      if (Static.debugChunkUpdate) {
+        Static.log("setBlock:clearBlock2");
+      }
       int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
       if (world.isClient) {
         Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
@@ -454,6 +463,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       if (needLights) return true;
       needRelight = true;
       dirty = true;
+      if (Static.debugChunkUpdate) {
+        Static.log("clearBlockIf:");
+      }
       int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
       if (world.isClient) {
         Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
@@ -493,6 +505,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       if (needLights) return true;
       needRelight = true;
       dirty = true;
+      if (Static.debugChunkUpdate) {
+        Static.log("clearBlockIf2:");
+      }
       int xyz[] = getLightCoordsClear(x,y,z, Static.blocks.blocks[oldid]);
       if (world.isClient) {
         Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
@@ -551,6 +566,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       if (needLights) return true;
       needRelight = true;
       dirty = true;
+      if (Static.debugChunkUpdate) {
+        Static.log("setBlockIfEmpty:");
+      }
       int xyz[] = getLightCoordsSet(x,y,z, newBlock, Static.blocks.blocks[oldid]);
       if (world.isClient) {
         Static.client.chunkLighter.add(this, xyz[0], xyz[1], xyz[2], xyz[3], xyz[4], xyz[5]);
@@ -1130,6 +1148,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         extras.add(extra);
       }
     }
+    if (Static.debugChunkUpdate) {
+      Static.log("addExtra:");
+    }
     dirty = true;
   }
 
@@ -1144,6 +1165,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         ExtraBase extra = extras.get(a);
         if (extra.x == x && extra.y == y && extra.z == z && extra.id == type) {
           extras.remove(a);
+          if (Static.debugChunkUpdate) {
+            Static.log("delExtra:");
+          }
           dirty = true;
           return;
         }
@@ -1187,6 +1211,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
 //    Static.log("addTick:" + tick.x + "," + tick.y + "," + tick.z);
       ticks.add(tick);
     }
+    if (Static.debugChunkUpdate) {
+      Static.log("addTick:");
+    }
     dirty = true;
   }
   public void addTick(int x,int y,int z, boolean isBlocks2) {
@@ -1200,6 +1227,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
 //    Static.log("addTick:" + tick.x + "," + tick.y + "," + tick.z);
       ticks.add(tick);
     }
+    if (Static.debugChunkUpdate) {
+      Static.log("addTick:");
+    }
     dirty = true;
   }
   public void delTick(int x,int y,int z, boolean isBlocks2) {
@@ -1210,16 +1240,22 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         if (tick.x == x && tick.y == y && tick.z == z && tick.isBlocks2 == isBlocks2) {
 //          Static.log("delTick:" + tick.x + "," + tick.y + "," + tick.z);
           ticks.remove(a);
+          if (Static.debugChunkUpdate) {
+            Static.log("delTick:");
+          }
+          dirty = true;
           return;
         }
       }
     }
-    dirty = true;
   }
   public void delTick(Tick tick) {
 //    Static.log("delTick:" + tick.x + "," + tick.y + "," + tick.z);
     synchronized(lock) {
       ticks.remove(tick);
+    }
+    if (Static.debugChunkUpdate) {
+      Static.log("delTick:");
     }
     dirty = true;
   }
@@ -1296,11 +1332,17 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     synchronized(lock) {
       entities.add(e);
     }
+    if (Static.debugChunkUpdate) {
+      Static.log("addEntity:");
+    }
     dirty = true;
   }
   public void delEntity(EntityBase e) {
     synchronized(lock) {
       entities.remove(e);
+    }
+    if (Static.debugChunkUpdate) {
+      Static.log("delEntity:");
     }
     dirty = true;
   }
@@ -1399,6 +1441,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       }
       dirty = true;
     }
+    if (Static.debugChunkUpdate) {
+      Static.log("addCrack:");
+    }
   }
   public void delCrack(int x,int y,int z) {
     synchronized(lock) {
@@ -1411,6 +1456,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             Static.client.chunkBuilder.add(this);
           }
           dirty = true;
+          if (Static.debugChunkUpdate) {
+            Static.log("delCrack:");
+          }
           return;
         }
       }
@@ -1616,6 +1664,18 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     mb.blockvar = Chunk.getVar(bits);
     world.addEntity(mb);
     addEntity(mb);
+  }
+
+  public void setDirty9() {
+    dirty = true;
+    N.dirty = true;
+    E.dirty = true;
+    S.dirty = true;
+    W.dirty = true;
+    N.E.dirty = true;
+    N.W.dirty = true;
+    S.E.dirty = true;
+    S.W.dirty = true;
   }
 
   public byte[] encodeObject(SerialCoder coder) {

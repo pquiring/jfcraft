@@ -75,6 +75,7 @@ public class Chunks {
       synchronized(lock) {
         chunk.getAdjChunks(true, true, false, 1);
         Static.dims.dims[dim].getLightingServer().light(chunk);
+        chunk.setDirty9();
       }
     }
     return chunk;

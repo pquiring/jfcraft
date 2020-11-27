@@ -13,7 +13,7 @@ public class ChunkQueueCopy {
   private static final int BUFSIZ = 1024 * 4;
   private Chunk[] chunks = new Chunk[BUFSIZ];
   private int tail, head1, head2;
-  private int max = -1;
+  private int max = 9;
   private Object lock = new Object();
 
   public ChunkQueueCopy() {}

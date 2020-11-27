@@ -62,6 +62,7 @@ public class ChunkQueueLight extends Thread {
       while (pos != head1 && cnt != 0) {
         Chunk chunk = chunks[pos];
         if (chunk != null) {
+          chunks[pos] = null;
           if (chunk.canLights()) {
             int x1 = x1s[pos];
             int y1 = y1s[pos];
@@ -70,18 +71,23 @@ public class ChunkQueueLight extends Thread {
             int y2 = y2s[pos];
             int z2 = z2s[pos];
             pro.start();
+            chunk.needRelight = false;
             try {
               if (isClient) {
                 Static.dims.dims[chunk.dim].getLightingClient().update(chunk, x1,y1,z1, x2,y2,z2);
               } else {
                 Static.dims.dims[chunk.dim].getLightingServer().update(chunk, x1,y1,z1, x2,y2,z2);
+                chunk.setDirty9();
               }
             } catch (Exception e) {
               Static.log(e);
             }
             pro.next();
   //          pro.print();
-            if (next != null) {
+            if (isClient && Static.debugChunkThreads && chunk.needRelight) {
+              Static.log("light:redo chunk");
+              add(chunk, 0, 0, 0, 15, 255, 15);
+            } else if (next != null) {
               next.add(chunk);
               if (z1 <= 0) next.add(chunk.N);
               if (x2 >= 15) next.add(chunk.E);
@@ -93,7 +99,6 @@ public class ChunkQueueLight extends Thread {
               if ((z2 >= 15) && (x1 <= 0)) next.add(chunk.S.W);
             }
           }
-          chunks[pos] = null;
         }
         pos++;
         if (pos == BUFSIZ) pos = 0;

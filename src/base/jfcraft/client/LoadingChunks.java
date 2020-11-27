@@ -54,8 +54,10 @@ public class LoadingChunks extends RenderScreen {
       o_back = createMenu();
     }
 
-//    client.chunkBuilder.signal();
-//    client.chunkBuilder.process();
+    if (Static.debugChunkThreads) {
+      client.chunkBuilder.signal();
+      client.chunkBuilder.process();
+    }
     client.chunkCopier.signal();
     client.chunkCopier.process();
 

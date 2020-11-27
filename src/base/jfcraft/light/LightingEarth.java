@@ -146,16 +146,6 @@ public class LightingEarth implements LightingBase {
 
     chunk.needRelight = false;
     chunk.needLights = false;
-
-    chunk.dirty = true;
-    chunk.N.dirty = true;
-    chunk.E.dirty = true;
-    chunk.S.dirty = true;
-    chunk.W.dirty = true;
-    chunk.N.E.dirty = true;
-    chunk.N.W.dirty = true;
-    chunk.S.E.dirty = true;
-    chunk.S.W.dirty = true;
   }
 
   private byte[][] copyLights(byte in[][]) {
@@ -305,16 +295,6 @@ public class LightingEarth implements LightingBase {
     }
 
     chunk.needRelight = false;
-
-    chunk.dirty = true;
-    chunk.N.dirty = true;
-    chunk.E.dirty = true;
-    chunk.S.dirty = true;
-    chunk.W.dirty = true;
-    chunk.N.E.dirty = true;
-    chunk.N.W.dirty = true;
-    chunk.S.E.dirty = true;
-    chunk.S.W.dirty = true;
   }
 
   private void processQueue() {
