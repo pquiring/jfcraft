@@ -137,12 +137,12 @@ public abstract class ServerTransport extends Transport {
   }
 
   public void setTime(int time) {
-    Packet packet = new PacketTime(Packets.TIME, new Integer(time));
+    Packet packet = new PacketTime(Packets.TIME, time);
     addUpdate(packet);
   }
 
   public void setBedTime(int time) {
-    Packet packet = new PacketBedTime(Packets.BEDTIME, new Integer(time));
+    Packet packet = new PacketBedTime(Packets.BEDTIME, time);
     addUpdate(packet);
   }
 
