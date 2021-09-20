@@ -10,6 +10,7 @@ package jfcraft.client;
 import java.util.*;
 
 import javaforce.*;
+import javaforce.awt.*;
 import javaforce.gl.*;
 import static javaforce.gl.GL.*;
 

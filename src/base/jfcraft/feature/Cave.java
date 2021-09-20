@@ -28,6 +28,7 @@ import java.awt.*;
 
 import javaforce.gl.*;
 import javaforce.*;
+import javaforce.awt.*;
 
 import jfcraft.data.*;
 import static jfcraft.data.Static.*;

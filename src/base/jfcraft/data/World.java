@@ -12,6 +12,7 @@ import java.nio.channels.*;
 import java.util.*;
 
 import javaforce.*;
+import javaforce.awt.*;
 
 import jfcraft.block.*;
 import jfcraft.item.*;

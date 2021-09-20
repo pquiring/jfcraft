@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import javaforce.*;
+import javaforce.awt.*;
 import jfcraft.data.Settings;
 import jfcraft.data.Static;
 

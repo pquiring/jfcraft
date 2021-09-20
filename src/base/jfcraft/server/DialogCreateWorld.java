@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import javaforce.*;
+import javaforce.awt.*;
 
 import jfcraft.data.*;
 

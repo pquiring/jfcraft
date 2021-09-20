@@ -9,6 +9,7 @@ package jfcraft.server;
  */
 
 import javaforce.*;
+import javaforce.awt.*;
 
 import javax.swing.*;
 

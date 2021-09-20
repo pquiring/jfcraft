@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.swing.table.*;
 
 import javaforce.*;
+import javaforce.awt.*;
 
 import jfcraft.data.*;
 import jfcraft.plugin.*;

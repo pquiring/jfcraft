@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.zip.*;
 
 import javaforce.*;
+import javaforce.awt.*;
 import javaforce.gl.*;
 import javaforce.media.*;
 

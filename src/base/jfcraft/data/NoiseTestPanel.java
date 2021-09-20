@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.util.*;
 
 import javaforce.*;
+import javaforce.awt.*;
 
 public class NoiseTestPanel extends javax.swing.JPanel {
 

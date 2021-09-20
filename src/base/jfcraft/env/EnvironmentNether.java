@@ -6,6 +6,7 @@ package jfcraft.env;
  */
 
 import javaforce.*;
+import javaforce.awt.*;
 import javaforce.gl.*;
 import static javaforce.gl.GL.*;
 

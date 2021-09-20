@@ -11,6 +11,7 @@ import java.util.*;
 import java.util.zip.*;
 
 import javaforce.*;
+import javaforce.awt.*;
 
 import jfcraft.data.*;
 

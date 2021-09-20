@@ -6,6 +6,7 @@ package jfcraft.data;
  */
 
 import javaforce.*;
+import javaforce.awt.*;
 
 import jfcraft.packet.*;
 

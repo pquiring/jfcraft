@@ -6,6 +6,7 @@ package jfcraft.client;
  */
 
 import javaforce.*;
+import javaforce.awt.*;
 import javaforce.media.*;
 
 import jfcraft.data.Settings;

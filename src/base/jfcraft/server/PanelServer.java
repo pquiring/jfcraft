@@ -8,6 +8,7 @@ package jfcraft.server;
 import java.util.*;
 
 import javaforce.*;
+import javaforce.awt.*;
 
 import jfcraft.data.*;
 
