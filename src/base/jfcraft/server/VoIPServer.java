@@ -126,6 +126,11 @@ public class VoIPServer implements SIPServerInterface, VoIPEventHandler {
   public void onRegister(String user, int expires, String ip, int port) {
   }
 
+  public void onOptions(CallDetailsServer cd, boolean src) {
+    //send 200 and ignore
+    ss.reply(cd, 200, "OK", null, false, src);
+  }
+
   public void onInvite(CallDetailsServer _cd, boolean src) {
     VoIPCallDetails cd = (VoIPCallDetails)_cd;
     if (!cd.dialed.equals("1234")) {
