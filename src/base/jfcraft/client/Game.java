@@ -11,6 +11,7 @@ import java.util.*;
 
 import javaforce.*;
 import javaforce.awt.*;
+import javaforce.ui.*;
 import javaforce.gl.*;
 import static javaforce.gl.GL.*;
 
@@ -499,7 +500,7 @@ public class Game extends RenderScreen {
         }
       }
 
-      if (Settings.current.client_voip && Settings.current.ptt && Static.keys[GLVK.VK_CONTROL_R]) {
+      if (Settings.current.client_voip && Settings.current.ptt && Static.keys[KeyCode.VK_CONTROL_R]) {
         renderText(512 - 4 * fontSize, 512, "Talk");
       }
 
@@ -682,7 +683,7 @@ public class Game extends RenderScreen {
     if (!Static.inGame) return;
     ChatMenu chat;
     switch (vk) {
-      case GLVK.VK_E:
+      case KeyCode.VK_E:
         RenderScreen menu;
         if (Static.client.player.vehicle != null) {
           int idx = Static.client.player.vehicle.getMenu();
@@ -697,39 +698,39 @@ public class Game extends RenderScreen {
         Static.video.setScreen(menu);
         Static.inGame = false;
         break;
-      case GLVK.VK_F1:
+      case KeyCode.VK_F1:
         showControls = !showControls;
         break;
-      case GLVK.VK_F2:
+      case KeyCode.VK_F2:
         screenShot();
         break;
-      case GLVK.VK_F3:
+      case KeyCode.VK_F3:
         debug = !debug;
         break;
-      case GLVK.VK_F11:
+      case KeyCode.VK_F11:
         Main.toggleFullscreen();
         break;
-      case GLVK.VK_F5:
+      case KeyCode.VK_F5:
         switch (camview) {
           case normal: camview = Views.behind; break;
           case behind: camview = Views.infront; break;
           case infront: camview = Views.normal; break;
         }
         break;
-      case GLVK.VK_F10:
+      case KeyCode.VK_F10:
         //toggle fancy/fast graphics
         Settings.current.fancy = !Settings.current.fancy;
         Static.blocks.stitched.bind();
         Static.blocks.initPerf(true);
         Static.client.rebuildAll();
         break;
-      case GLVK.VK_F7:
+      case KeyCode.VK_F7:
         //dec fov
         fov -= 1.0f;
         JFLog.log("fov=" + fov);
         perspective = null;
         break;
-      case GLVK.VK_F8:
+      case KeyCode.VK_F8:
         //inc fov
         fov += 1.0f;
         JFLog.log("fov=" + fov);
@@ -742,13 +743,13 @@ public class Game extends RenderScreen {
         Static.inGame = false;
         break;
       case 'T':
-      case GLVK.VK_ENTER:
+      case KeyCode.VK_ENTER:
         chat = (ChatMenu)Static.screens.screens[Client.CHAT];
         chat.setup("");
         Static.video.setScreen(chat);
         Static.inGame = false;
         break;
-      case GLVK.VK_ESCAPE:
+      case KeyCode.VK_ESCAPE:
         Static.video.setScreen(Static.screens.screens[Client.PAUSE]);
         Static.inGame = false;
         break;
@@ -764,7 +765,7 @@ public class Game extends RenderScreen {
         int idx = vk - '1';
         Static.client.clientTransport.changeActiveSlot((byte)idx);
         break;
-      case GLVK.VK_F12:
+      case KeyCode.VK_F12:
         int cnt = 0;
         for(int a=0;a<Static.client.player.enderChest.items.length;a++) {
           cnt += Static.client.player.enderChest.items[a].count;

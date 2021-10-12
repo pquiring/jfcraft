@@ -11,6 +11,7 @@ import java.util.*;
 
 import javaforce.*;
 import javaforce.awt.*;
+import javaforce.ui.*;
 import javaforce.gl.*;
 import static javaforce.gl.GL.*;
 
@@ -807,17 +808,17 @@ public abstract class RenderScreen {
     }
     public void keyPressed(int code) {
       switch (code) {
-        case GLVK.VK_UP: up(); break;
-        case GLVK.VK_DOWN: down(); break;
+        case KeyCode.VK_UP: up(); break;
+        case KeyCode.VK_DOWN: down(); break;
       }
       if (center) return;
       switch (code) {
-        case GLVK.VK_BACKSPACE: backspace(); break;
-        case GLVK.VK_DELETE: delete(); break;
-        case GLVK.VK_LEFT: left(); break;
-        case GLVK.VK_RIGHT: right(); break;
-        case GLVK.VK_HOME: home(); break;
-        case GLVK.VK_END: end(); break;
+        case KeyCode.VK_BACKSPACE: backspace(); break;
+        case KeyCode.VK_DELETE: delete(); break;
+        case KeyCode.VK_LEFT: left(); break;
+        case KeyCode.VK_RIGHT: right(); break;
+        case KeyCode.VK_HOME: home(); break;
+        case KeyCode.VK_END: end(); break;
       }
     }
     public void findCursor() {

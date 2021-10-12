@@ -8,15 +8,16 @@ package jfcraft.client;
 import javaforce.JF;
 import jfcraft.data.*;
 
+import javaforce.ui.*;
 import javaforce.gl.*;
 
 import jfcraft.opengl.*;
 
-public class Main implements GLWindow.KeyEvents, GLWindow.MouseEvents, GLWindow.WindowEvents {
+public class Main implements KeyEvents, MouseEvents, WindowEvents {
   // We need to strongly reference callback instances.
-  private GLWindow window;
-  private GLWindow fullscreen;
-  private GLWindow current;
+  private Window window;
+  private Window fullscreen;
+  private Window current;
 
   private float mx, my;
   private int mb;
@@ -39,8 +40,8 @@ public class Main implements GLWindow.KeyEvents, GLWindow.MouseEvents, GLWindow.
   }
 
   private void init() {
-    GLWindow.init();
-    window = createWindow(GLWindow.STYLE_VISIBLE | GLWindow.STYLE_RESIZABLE | GLWindow.STYLE_TITLEBAR,512,512,null);
+    Window.init();
+    window = createWindow(Window.STYLE_VISIBLE | Window.STYLE_RESIZABLE | Window.STYLE_TITLEBAR,512,512,null);
     if (JF.isWindows()) {
       window.setIcon("jfcraft.ico", 16, 16);
     }
@@ -48,8 +49,8 @@ public class Main implements GLWindow.KeyEvents, GLWindow.MouseEvents, GLWindow.
     GL.glInit();  //load gl api
   }
 
-  private GLWindow createWindow(int style, int x,int y,GLWindow shared) {
-    GLWindow win = new GLWindow();
+  private Window createWindow(int style, int x,int y,Window shared) {
+    Window win = new Window();
     win.create(style, "jfCraft", x, y, shared);
     win.setKeyListener(this);
     win.setMouseListener(this);
@@ -66,7 +67,7 @@ public class Main implements GLWindow.KeyEvents, GLWindow.MouseEvents, GLWindow.
     while (true) {
       Static.video.render();
       // Poll for window events.
-      GLWindow.pollEvents();
+      Window.pollEvents();
       if (toggleFullscreenMode) {
         toggleFullscreenMode = false;
         if (fullscreenMode) {

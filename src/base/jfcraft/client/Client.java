@@ -10,6 +10,7 @@ package jfcraft.client;
 import java.util.*;
 
 import javaforce.*;
+import javaforce.ui.*;
 import javaforce.gl.*;
 
 import jfcraft.block.*;
@@ -289,7 +290,7 @@ public class Client {
       itemTextTime--;
     }
     if (sip != null && Settings.current.ptt) {
-      sip.setMute(!Static.keys[GLVK.VK_CONTROL_R]);
+      sip.setMute(!Static.keys[KeyCode.VK_CONTROL_R]);
     }
     //update animation frames
     Game.advanceAnimation = true;
@@ -300,44 +301,44 @@ public class Client {
     boolean b1 = false, b2 = false;
     if (world != null && player != null && player.hasChunk() && player.health > 0) {
       if (Static.inGame) {
-        up = Static.keys[GLVK.VK_W];
-        dn = Static.keys[GLVK.VK_S];
-        lt = Static.keys[GLVK.VK_A];
-        rt = Static.keys[GLVK.VK_D];
-        jump = Static.keys[GLVK.VK_SPACE];
-        sneak = Static.keys[GLVK.VK_SHIFT_L];
-        run = Static.keys[GLVK.VK_CONTROL_L];
-        fup = Static.keys[GLVK.VK_R];
-        fdn = Static.keys[GLVK.VK_F];
-        if (Static.button[GLWindow.MOUSE_BUTTON_LEFT] || Static.buttonClick[GLWindow.MOUSE_BUTTON_LEFT]) b1 = true;
-        Static.buttonClick[GLWindow.MOUSE_BUTTON_LEFT] = false;
-        if (Static.button[GLWindow.MOUSE_BUTTON_RIGHT] || Static.buttonClick[GLWindow.MOUSE_BUTTON_RIGHT]) b2 = true;
-        Static.buttonClick[GLWindow.MOUSE_BUTTON_RIGHT] = false;
+        up = Static.keys[KeyCode.VK_W];
+        dn = Static.keys[KeyCode.VK_S];
+        lt = Static.keys[KeyCode.VK_A];
+        rt = Static.keys[KeyCode.VK_D];
+        jump = Static.keys[KeyCode.VK_SPACE];
+        sneak = Static.keys[KeyCode.VK_SHIFT_L];
+        run = Static.keys[KeyCode.VK_CONTROL_L];
+        fup = Static.keys[KeyCode.VK_R];
+        fdn = Static.keys[KeyCode.VK_F];
+        if (Static.button[MouseButton.LEFT] || Static.buttonClick[MouseButton.LEFT]) b1 = true;
+        Static.buttonClick[MouseButton.LEFT] = false;
+        if (Static.button[MouseButton.RIGHT] || Static.buttonClick[MouseButton.RIGHT]) b2 = true;
+        Static.buttonClick[MouseButton.RIGHT] = false;
 
         synchronized(ang) {
           player.ang.copy(ang);
         }
 
         //rotate player (client side only)
-        if (Static.keys[GLVK.VK_UP]) {
+        if (Static.keys[KeyCode.VK_UP]) {
           player.rotateX(5.0f);
         }
-        if (Static.keys[GLVK.VK_DOWN]) {
+        if (Static.keys[KeyCode.VK_DOWN]) {
           player.rotateX(-5.0f);
         }
-        if (Static.keys[GLVK.VK_LEFT]) {
+        if (Static.keys[KeyCode.VK_LEFT]) {
           player.rotateY(-5.0f);
         }
-        if (Static.keys[GLVK.VK_RIGHT]) {
+        if (Static.keys[KeyCode.VK_RIGHT]) {
           player.rotateY(5.0f);
         }
 
-        if (Static.keys[GLVK.VK_Q]) {
-          Static.keys[GLVK.VK_Q] = false;
+        if (Static.keys[KeyCode.VK_Q]) {
+          Static.keys[KeyCode.VK_Q] = false;
           clientTransport.drop();
         }
-        if (Static.keys[GLVK.VK_C]) {
-          Static.keys[GLVK.VK_C] = false;
+        if (Static.keys[KeyCode.VK_C]) {
+          Static.keys[KeyCode.VK_C] = false;
           if (Static.debugTest) {
             clientTransport.gamemode();
             if (player.mode == EntityBase.MODE_FLYING)
@@ -554,7 +555,7 @@ public class Client {
     if (hand != null && crafted != null) {
       if (hand.id != crafted.id) return;
     }
-    if (Static.keys[GLVK.VK_SHIFT_L]) {
+    if (Static.keys[KeyCode.VK_SHIFT_L]) {
       //make all possible
       clientTransport.craftAll();
     } else {
