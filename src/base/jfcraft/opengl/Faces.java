@@ -19,8 +19,8 @@ public class Faces {
   public int idx[];
   private float rotate, rotate2;
 
-  private static GLMatrix mat = new GLMatrix();
-  private static GLVector3 vec = new GLVector3();
+  private static Matrix mat = new Matrix();
+  private static Vector3 vec = new Vector3();
 
   private void rotate(float rx, float ry, float rz) {
     mat.setIdentity();

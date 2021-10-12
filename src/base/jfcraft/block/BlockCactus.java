@@ -14,7 +14,7 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 
 public class BlockCactus extends BlockBase {
-  private static GLModel model;
+  private static Model model;
   public BlockCactus(String name, String names[], String images[]) {
     super(name, names, images);
     isOpaque = false;

@@ -16,7 +16,7 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 
 public class BlockRedStoneDust extends BlockBase {
-  private static GLModel model;
+  private static Model model;
   public BlockRedStoneDust(String id, String[] names, String[] images) {
     super(id, names, images);
     isRedstone = true;

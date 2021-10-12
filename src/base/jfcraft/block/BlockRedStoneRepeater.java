@@ -14,7 +14,7 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 
 public class BlockRedStoneRepeater extends BlockBase {
-  private static GLModel model, torch;
+  private static Model model, torch;
   public BlockRedStoneRepeater(String id, String[] names, String[] images) {
     super(id, names, images);
     isRedstone = true;

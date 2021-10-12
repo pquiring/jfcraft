@@ -16,7 +16,7 @@ import jfcraft.opengl.*;
 import jfcraft.server.*;
 
 public class LoadingChunks extends RenderScreen {
-  private Texture t_back;
+  private TextureMap t_back;
   private RenderBuffers o_back;
   private Client client;
 
@@ -46,7 +46,7 @@ public class LoadingChunks extends RenderScreen {
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     if (t_back == null) {
-      t_back = new Texture();
+      t_back = new TextureMap();
       t_back.load(Assets.getImage("jfcraft/background").image);
     }
 

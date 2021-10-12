@@ -15,13 +15,13 @@ import jfcraft.data.*;
 import jfcraft.opengl.*;
 
 public class Particle extends EntityBase {
-  private static GLMatrix mat = new GLMatrix();  //used in Client.tick() thread (different from EntityBase.mat which is used in Game.render() thread)
-  private static GLVector3 eye = new GLVector3();
-  private static GLVector3 at = new GLVector3();
-  private static GLVector3 up = new GLVector3();
+  private static Matrix mat = new Matrix();  //used in Client.tick() thread (different from EntityBase.mat which is used in Game.render() thread)
+  private static Vector3 eye = new Vector3();
+  private static Vector3 at = new Vector3();
+  private static Vector3 up = new Vector3();
   private static Random r = new Random();
 
-  public static Texture t_particles;
+  public static TextureMap t_particles;
   public static SubTexture t_heart;
 
   public SubTexture subtexture;

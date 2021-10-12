@@ -87,15 +87,15 @@ public class BlockDomino extends BlockBase {
     }
 
     //calc which way to fall
-    GLVector3 vD = new GLVector3();
+    Vector3 vD = new Vector3();
     vD.v[0] = 0;
     vD.v[1] = 0;
     vD.v[2] = 1;
-    GLMatrix mat = new GLMatrix();
+    Matrix mat = new Matrix();
     mat.addRotate(domino.ang.y, 0, 1, 0);
     mat.mult(vD);
 
-    GLVector3 ve = new GLVector3();
+    Vector3 ve = new Vector3();
     ve.v[0] = e.pos.x - domino.pos.x;
     ve.v[1] = e.pos.y - domino.pos.y;
     ve.v[2] = e.pos.z - domino.pos.z;

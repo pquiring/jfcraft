@@ -17,7 +17,7 @@ import jfcraft.block.*;
 import jfcraft.item.*;
 
 public class FurnaceMenu extends RenderScreen {
-  private Texture t_menu;
+  private TextureMap t_menu;
   private static RenderBuffers o_menu, o_flame, o_arrow;
   private int mx, my;
   private Slot slots[];

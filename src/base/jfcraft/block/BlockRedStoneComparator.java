@@ -15,7 +15,7 @@ import jfcraft.data.*;
 import jfcraft.opengl.*;
 
 public class BlockRedStoneComparator extends BlockBase {
-  private static GLModel model, torch;
+  private static Model model, torch;
   public BlockRedStoneComparator(String id, String[] names, String[] images) {
     super(id, names, images);
     isRedstone = true;

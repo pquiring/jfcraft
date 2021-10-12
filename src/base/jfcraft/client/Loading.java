@@ -15,7 +15,7 @@ import jfcraft.data.*;
 import jfcraft.opengl.*;
 
 public class Loading extends RenderScreen {
-  private Texture t_back;
+  private TextureMap t_back;
   private RenderBuffers o_back;
 
   public Loading() {

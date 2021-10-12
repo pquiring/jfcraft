@@ -17,7 +17,7 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 
 public class BlockFace extends BlockBase {
-  private static GLModel model;
+  private static Model model;
   public BlockFace(String id, String names[], String images[]) {
     super(id, names, images);
     isOpaque = false;

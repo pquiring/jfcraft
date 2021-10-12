@@ -53,7 +53,7 @@ public class ItemBase implements RenderSource {
   public Voxel voxel[];
 
   //armor info
-  public Texture armorTextures[];
+  public TextureMap armorTextures[];
   public String armorTextureNames[];
   public float armorScales[];
   public int armorParts[][];
@@ -496,7 +496,7 @@ public class ItemBase implements RenderSource {
 
   public void bindArmorTexture(int layer) {
     if (armorTextures == null) {
-      armorTextures = new Texture[armorTextureNames.length];
+      armorTextures = new TextureMap[armorTextureNames.length];
       for(int a=0;a<armorTextureNames.length;a++) {
         armorTextures[a] = Textures.getTexture(armorTextureNames[a], 0);
       }
@@ -558,7 +558,7 @@ public class ItemBase implements RenderSource {
     }
   }
 
-  private static GLMatrix itemView = new GLMatrix();
+  private static Matrix itemView = new Matrix();
 
   public void setViewMatrix(boolean left) {
     itemView.setIdentity();
@@ -587,7 +587,7 @@ public class ItemBase implements RenderSource {
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, itemView.m);  //view matrix
   }
 
-  public void setViewMatrixSelf(boolean left, GLVector3 l3) {
+  public void setViewMatrixSelf(boolean left, Vector3 l3) {
     boolean isBlock = Static.isBlock(id);
     itemView.setIdentity();
 

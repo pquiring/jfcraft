@@ -20,7 +20,7 @@ import jfcraft.opengl.*;
 import jfcraft.data.*;
 
 public class SinglePlayerMenu extends RenderScreen {
-  private Texture t_menu;
+  private TextureMap t_menu;
   private RenderBuffers o_menu;
   private ScrollBar sb;
   private int selectedWorld = -1;

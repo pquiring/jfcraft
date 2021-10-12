@@ -22,7 +22,7 @@ public class MovingBlock extends EntityBase {
 
   public RenderDest obj;
   public int buffersIdx;
-  public Texture texture;
+  public TextureMap texture;
 
   //types
   public static final byte FALL = 0;

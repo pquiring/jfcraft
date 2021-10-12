@@ -27,8 +27,8 @@ public class Blocks {
   public int blockCount = 0;
   public BlockBase[] blocks = new BlockBase[MAX_ID];  //blocks (in order of id)
   public BlockBase[] regBlocks = new BlockBase[MAX_ID];  //registered blocks (not in order of id)
-  public Texture stitched;  //main stitched texture (including animated textures and cracks)
-  public Texture cracks;  //cracks
+  public TextureMap stitched;  //main stitched texture (including animated textures and cracks)
+  public TextureMap cracks;  //cracks
   public SubTexture subcracks[];
   public BlockBase solid;
 
@@ -894,10 +894,10 @@ public class Blocks {
   }
 
   public void stitchTiles() {
-    stitched = new Texture();
+    stitched = new TextureMap();
     stitched.initImage(512, 512);
     stitched.initUsage();
-    cracks = new Texture();
+    cracks = new TextureMap();
     cracks.unit = 1;
     cracks.initImage(64, 64);
     cracks.initUsage();
@@ -941,7 +941,7 @@ public class Blocks {
       AssetImage ai = tiles.get(a);
       int w = ai.image.getWidth();
       int h = ai.image.getHeight();
-      Texture texture;
+      TextureMap texture;
       if (ai.isCrack) {
         texture = cracks;
       } else {
@@ -1015,7 +1015,7 @@ public class Blocks {
         boolean isFlow = ai.name.endsWith("_flow");
         SubTexture st = new SubTexture();
         st.ai = ai;
-        Texture texture;
+        TextureMap texture;
         if (ai.isCrack)
           texture = cracks;
         else

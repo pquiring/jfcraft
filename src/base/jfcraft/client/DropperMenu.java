@@ -17,7 +17,7 @@ import jfcraft.data.*;
 import jfcraft.item.*;
 
 public class DropperMenu extends RenderScreen {
-  private Texture t_menu;
+  private TextureMap t_menu;
   private static RenderBuffers o_menu;
   private int mx, my;
   private Slot slots[];

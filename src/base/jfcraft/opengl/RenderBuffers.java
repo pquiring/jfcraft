@@ -28,9 +28,9 @@ public class RenderBuffers implements Cloneable {
   public boolean isBufferEmpty() {return idxCnt == 0;}
 
   public boolean visible;
-  public GLMatrix mat;  //current rotation, translation, scale (not used by chunks)
-  public GLVertex org;  //origin (default = 0.0f,0.0f,0.0f) (pivot point) (loaded from file)
-  public GLVertex center;  //calc center point (to scale) (must call callCenter())
+  public Matrix mat;  //current rotation, translation, scale (not used by chunks)
+  public Vertex3 org;  //origin (default = 0.0f,0.0f,0.0f) (pivot point) (loaded from file)
+  public Vertex3 center;  //calc center point (to scale) (must call callCenter())
   public boolean alloced = false;
   public int vpb, uvb1, uvb2, vib, lcb, slb, blb;  //GL Buffers
   public int idxCnt;
@@ -62,8 +62,8 @@ public class RenderBuffers implements Cloneable {
     sll = new JFArrayFloat();
     bll = new JFArrayFloat();
     visible = true;
-    org = new GLVertex();
-    mat = new GLMatrix();
+    org = new Vertex3();
+    mat = new Matrix();
     type = GL_QUADS;  //default = QUADS
   }
 
@@ -74,8 +74,8 @@ public class RenderBuffers implements Cloneable {
   }
 
   public void setVisible(boolean state) {visible = state;}
-  private GLMatrix tmp = new GLMatrix();
-  public void addRotate(float angle, float x, float y, float z, GLVertex org) {
+  private Matrix tmp = new Matrix();
+  public void addRotate(float angle, float x, float y, float z, Vertex3 org) {
     //rotates relative to org
     tmp.setAA(angle, x, y, z);  //set rotation
     tmp.addTranslate(org.x, org.y, org.z);  //set translation
@@ -149,7 +149,7 @@ public class RenderBuffers implements Cloneable {
   public void addTextureCoords2(float uv[]) {
     uvl2.append(uv);
   }
-  public void addVertex(GLVertex v) {
+  public void addVertex(Vertex3 v) {
     vpl.append(v.x);
     vpl.append(v.y);
     vpl.append(v.z);
@@ -792,7 +792,7 @@ public class RenderBuffers implements Cloneable {
 
   /** Calcs the center of the cube. */
   public void calcCenter() {
-    center = new GLVertex();
+    center = new Vertex3();
     float v[] = vpl.getBuffer();
     int cnt = vpl.size() / 3;
     float x1 = v[0];

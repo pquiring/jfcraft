@@ -19,7 +19,7 @@ import jfcraft.block.*;
 import jfcraft.item.*;
 
 public class InventoryMenu extends RenderScreen {
-  private Texture t_menu;
+  private TextureMap t_menu;
   private RenderBuffers o_menu;
   private int mx, my;
   private Player player;

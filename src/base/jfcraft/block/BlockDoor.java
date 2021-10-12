@@ -19,7 +19,7 @@ import static jfcraft.data.Direction.*;
 import static jfcraft.data.Blocks.*;
 
 public class BlockDoor extends BlockBase {
-  private static GLModel model_upper, model_lower;
+  private static Model model_upper, model_lower;
 
   public BlockDoor(String id, String names[], String images[]) {
     super(id, names, images);
@@ -46,7 +46,7 @@ public class BlockDoor extends BlockBase {
       return;
     }
     SubTexture st;
-    GLObject obj;
+    Object3 obj;
 
     if ((data.var[X] & VAR_UPPER) == VAR_UPPER) {
       //upper

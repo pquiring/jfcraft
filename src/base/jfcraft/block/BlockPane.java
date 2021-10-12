@@ -12,7 +12,7 @@ import static jfcraft.data.Direction.*;
  */
 
 public class BlockPane extends BlockBase {
-  private static GLModel model_half, model_full;
+  private static Model model_half, model_full;
   public BlockPane(String id, String names[], String images[]) {
     super(id, names, images);
     isOpaque = false;

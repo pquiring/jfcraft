@@ -18,7 +18,7 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 
 public class BlockWheat extends BlockBase {
-  private static GLModel model;
+  private static Model model;
   public BlockWheat(String id, String names[], String images[]) {
     super(id, names, images);
     isOpaque = false;

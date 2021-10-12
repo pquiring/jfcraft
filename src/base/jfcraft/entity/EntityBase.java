@@ -74,7 +74,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public float angX;  //default position
 
   public static Random r = new Random();
-  public static GLMatrix mat = new GLMatrix(); //for rendering only (client side render only)
+  public static Matrix mat = new Matrix(); //for rendering only (client side render only)
 
   public World world;
 
@@ -104,7 +104,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   public abstract String getName();
 
-  public GLModel loadModel(String fn) {
+  public Model loadModel(String fn) {
     return Assets.getModel(fn).model;
   }
 
@@ -893,7 +893,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     if (ang.x > 90.0f) ang.x = 90.0f;
   }
 
-  private static GLMatrix cvmat = new GLMatrix();
+  private static Matrix cvmat = new Matrix();
   //this func is called from many threads (client & server side)
   //so it MUST be sync'ed
   public synchronized Vectors calcVectors(float speed, Vectors v) {

@@ -18,7 +18,7 @@ import jfcraft.entity.WorldItem;
 import jfcraft.item.Item;
 
 public class BlockBed extends BlockBase {
-  private static GLModel model_head, model_feet;
+  private static Model model_head, model_feet;
   private static int VAR_FEET = 0;
   private static int VAR_HEAD = 1;
   public BlockBed(String name, String names[], String images[]) {

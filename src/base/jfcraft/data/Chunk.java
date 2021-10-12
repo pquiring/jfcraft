@@ -68,7 +68,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   private static class Lock {};
   public Lock lock = new Lock();
   public RenderDest dest;
-  public GLMatrix mat;
+  public Matrix mat;
   public int adjCount;  //# of adj chunks to render (0-6)
   public ArrayList<ExtraCrack> cracks = new ArrayList<ExtraCrack>();
 
@@ -106,7 +106,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   /** Create client side objects. */
   public void createObjects() {
     dest = new RenderDest(DEST_COUNT);
-    mat = new GLMatrix();
+    mat = new Matrix();
     mat.setIdentity();
     mat.setTranslate(cx * 16.0f, 0, cz * 16.0f);
   }

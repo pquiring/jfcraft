@@ -31,7 +31,7 @@ public class Horse extends VehicleBase {
   public static final int tameCounterMax = 20 * 15;
   public ExtraHorse inventory;
 
-  private static GLModel model;
+  private static Model model;
 
   public int hearts;
 
@@ -106,8 +106,8 @@ public class Horse extends VehicleBase {
   public static final int ARMOR_DIAMOND = 17;
 
   //render assets
-  public static Texture textures[];
-  public static GLVertex org[];
+  public static TextureMap textures[];
+  public static Vertex3 org[];
 
   public static int initHealth = 10;
 
@@ -156,7 +156,7 @@ public class Horse extends VehicleBase {
 
   public void initStaticGL() {
     super.initStaticGL();
-    textures = new Texture[textureNames.length];
+    textures = new TextureMap[textureNames.length];
     int unit = 0;
     for(int a=0;a<textureNames.length;a++) {
       if (a == PATTERN_BLACKDOTS) unit = 2;  //markings
@@ -244,11 +244,11 @@ public class Horse extends VehicleBase {
   };
 
   public void buildBuffers(RenderDest dest, RenderData data) {
-    org = new GLVertex[parts.length];
+    org = new Vertex3[parts.length];
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = model.getObject(parts[a]);
+      Object3 obj = model.getObject(parts[a]);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();
@@ -256,11 +256,11 @@ public class Horse extends VehicleBase {
         buf.addDefault();
       }
       if (obj.maps.size() == 1) {
-        GLUVMap map = obj.maps.get(0);
+        UVMap map = obj.maps.get(0);
         buf.addTextureCoords(map.uvl.toArray());
       } else {
-        GLUVMap map1 = obj.maps.get(0);
-        GLUVMap map2 = obj.maps.get(1);
+        UVMap map1 = obj.maps.get(0);
+        UVMap map2 = obj.maps.get(1);
         buf.addTextureCoords(map1.uvl.toArray(), map2.uvl.toArray());
       }
       buf.org = obj.org;

@@ -8,5 +8,5 @@ package jfcraft.data;
 import javaforce.gl.*;
 
 public class AssetModel extends Asset {
-  public GLModel model;
+  public Model model;
 }

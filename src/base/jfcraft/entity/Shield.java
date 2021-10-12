@@ -15,10 +15,10 @@ import jfcraft.opengl.*;
 public class Shield extends BlockEntity {
   public float lidAngle;
   public static RenderDest dest;
-  public static GLModel model;
+  public static Model model;
 
   //render assets
-  private static Texture texture;
+  private static TextureMap texture;
   protected static String textureName;
 
   public Shield() {
@@ -62,7 +62,7 @@ public class Shield extends BlockEntity {
     for(int a=0;a<parts.length;a++) {
       if (parts[a] == null) continue;
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = model.getObject(parts[a]);
+      Object3 obj = model.getObject(parts[a]);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();
@@ -70,15 +70,15 @@ public class Shield extends BlockEntity {
         buf.addDefault();
       }
       if (obj.maps.size() == 1) {
-        GLUVMap map = obj.getUVMap("normal");
+        UVMap map = obj.getUVMap("normal");
         buf.addTextureCoords(map.uvl.toArray());
       } else {
-        GLUVMap map1 = obj.getUVMap("normal");
+        UVMap map1 = obj.getUVMap("normal");
         float uv1[] = map1.uvl.toArray();
         if (data.crack == -1) {
           buf.addTextureCoords(uv1);
         } else {
-          GLUVMap map2 = obj.getUVMap("crack");
+          UVMap map2 = obj.getUVMap("crack");
           float uv2[] = map2.uvl.toArray();
           buf.adjustCrack(uv2, data.crack);
           buf.addTextureCoords(uv1, uv2);

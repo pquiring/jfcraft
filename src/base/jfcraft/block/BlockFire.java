@@ -17,7 +17,7 @@ import static jfcraft.data.Direction.*;
 import static jfcraft.data.Types.*;
 
 public class BlockFire extends BlockBase {
-  private static GLModel model;
+  private static Model model;
   public BlockFire(String id, String names[], String images[]) {
     super(id, names, images);
     isOpaque = false;

@@ -14,7 +14,7 @@ import jfcraft.entity.*;
 import jfcraft.opengl.*;
 
 public class BlockDaylightSensor extends BlockBase {
-  private static GLModel model;
+  private static Model model;
   public BlockDaylightSensor(String name, String names[], String images[]) {
     super(name, names, images);
     isOpaque = false;

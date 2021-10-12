@@ -16,7 +16,7 @@ import jfcraft.opengl.*;
 
 public class EnvironmentNether implements EnvironmentBase {
 
-  private static Texture redSky;
+  private static TextureMap redSky;
   private static RenderBuffers skybox;
 
   private JFImage makeRedSky() {
@@ -28,7 +28,7 @@ public class EnvironmentNether implements EnvironmentBase {
 
   public void init() {
     if (redSky == null) {
-      redSky = new Texture();
+      redSky = new TextureMap();
       redSky.load(makeRedSky());
     }
     if (skybox == null) {
@@ -38,7 +38,7 @@ public class EnvironmentNether implements EnvironmentBase {
     }
   }
 
-  private GLMatrix view = new GLMatrix();
+  private Matrix view = new Matrix();
 
   public void preRender(int time, float sunLight, Client client, XYZ camera, Chunk[] chunks) {
     float zAngle = time;

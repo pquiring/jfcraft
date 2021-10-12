@@ -16,7 +16,7 @@ import jfcraft.data.*;
 import jfcraft.item.*;
 
 public class MainMenu extends RenderScreen {
-  private Texture t_menu;
+  private TextureMap t_menu;
   private RenderBuffers o_menu;
 
   public MainMenu() {

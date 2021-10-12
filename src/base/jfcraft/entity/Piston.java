@@ -21,7 +21,7 @@ public class Piston extends BlockEntity {
 
   public float extend;
   public RenderDest dest;  //can not be static, can be damaged
-  public static GLModel model;
+  public static Model model;
 
   public Piston() {
     id = Entities.PISTON;
@@ -79,7 +79,7 @@ public class Piston extends BlockEntity {
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = model.getObject(parts[a]);
+      Object3 obj = model.getObject(parts[a]);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();
@@ -88,7 +88,7 @@ public class Piston extends BlockEntity {
       }
       if (obj.maps.size() == 1) {
         //no cracking
-        GLUVMap map = obj.getUVMap("normal");
+        UVMap map = obj.getUVMap("normal");
         float uv1[] = map.uvl.toArray();
         buf.adjustTexture(uv1, textures[a]);
         if (data.crack == -1) {
@@ -100,13 +100,13 @@ public class Piston extends BlockEntity {
         }
       } else {
         //cracking
-        GLUVMap map1 = obj.getUVMap("normal");
+        UVMap map1 = obj.getUVMap("normal");
         float uv1[] = map1.uvl.toArray();
         buf.adjustTexture(uv1, textures[a]);
         if (data.crack == -1) {
           buf.addTextureCoords(uv1);
         } else {
-          GLUVMap map2 = obj.getUVMap("crack");
+          UVMap map2 = obj.getUVMap("crack");
           float uv2[] = map2.uvl.toArray();
           buf.adjustCrack(uv2, data.crack);
           buf.addTextureCoords(uv1, uv2);

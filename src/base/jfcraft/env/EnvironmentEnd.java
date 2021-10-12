@@ -18,7 +18,7 @@ import jfcraft.opengl .*;
 
 public class EnvironmentEnd implements EnvironmentBase {
 
-  private static Texture starSky;
+  private static TextureMap starSky;
   private static RenderBuffers skybox;
 
   private JFImage makePurpleStaticSky() {
@@ -35,7 +35,7 @@ public class EnvironmentEnd implements EnvironmentBase {
 
   public void init() {
     if (starSky == null) {
-      starSky = new Texture();
+      starSky = new TextureMap();
       starSky.load(makePurpleStaticSky());
     }
     if (skybox == null) {
@@ -45,7 +45,7 @@ public class EnvironmentEnd implements EnvironmentBase {
     }
   }
 
-  private GLMatrix view = new GLMatrix();
+  private Matrix view = new Matrix();
 
   public void preRender(int time, float sunLight, Client client, XYZ camera, Chunk[] chunks) {
     float zAngle = time;

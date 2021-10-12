@@ -16,7 +16,7 @@ import jfcraft.data.Textures;
 import jfcraft.data.Static;
 
 public class ConfirmMenu extends RenderScreen {
-  private Texture t_menu;
+  private TextureMap t_menu;
   private RenderBuffers o_menu;
   private String msg1, msg2, buttonText;
   private Runnable action;

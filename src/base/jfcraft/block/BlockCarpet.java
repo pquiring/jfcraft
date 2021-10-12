@@ -13,7 +13,7 @@ import jfcraft.data.*;
 import jfcraft.opengl.*;
 
 public class BlockCarpet extends BlockBase {
-  private static GLModel model;
+  private static Model model;
   public BlockCarpet(String name, String names[], String images[]) {
     super(name, names, images);
     isOpaque = false;

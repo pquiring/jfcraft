@@ -19,7 +19,7 @@ import jfcraft.entity.*;
 import jfcraft.item.*;
 
 public class BlockKelpPlant extends BlockBase {
-  private static GLModel model;
+  private static Model model;
   public static byte VAR_TOP = 1;
   public BlockKelpPlant(String id, String names[], String images[]) {
     super(id, names, images);

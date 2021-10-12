@@ -8,7 +8,7 @@ package jfcraft.block;
  * @author pquiring
  */
 
-import javaforce.gl.GLModel;
+import javaforce.gl.Model;
 import jfcraft.client.*;
 import jfcraft.data.*;
 import jfcraft.entity.*;
@@ -17,7 +17,7 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 
 public class BlockEndFrame extends BlockBase {
-  private static GLModel model;
+  private static Model model;
   public BlockEndFrame(String id, String names[], String images[]) {
     super(id, names, images);
     isDir = true;

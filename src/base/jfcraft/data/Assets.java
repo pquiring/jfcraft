@@ -12,6 +12,7 @@ import java.util.zip.*;
 import javaforce.*;
 import javaforce.awt.*;
 import javaforce.gl.*;
+import javaforce.gl.model.*;
 import javaforce.media.*;
 
 public class Assets {
@@ -112,7 +113,7 @@ public class Assets {
         case MODEL:
           AssetModel model = new AssetModel();
           model.name = name;
-          model.model = new GLModel();
+          model.model = new Model();
           return model;
         case BLUEPRINT:
           AssetBluePrint blueprint = new AssetBluePrint();

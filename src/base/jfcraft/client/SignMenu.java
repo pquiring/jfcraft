@@ -19,7 +19,7 @@ public class SignMenu extends RenderScreen {
     id = Client.SIGN;
   }
 
-  private Texture t_board;
+  private TextureMap t_board;
   private RenderBuffers b_board;
 
   public void init() {

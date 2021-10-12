@@ -17,7 +17,7 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 
 public class BlockTrapDoor extends BlockBase {
-  private static GLModel model;
+  private static Model model;
 
   public BlockTrapDoor(String id, String names[], String images[]) {
     super(id, names, images);

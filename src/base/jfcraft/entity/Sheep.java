@@ -27,8 +27,8 @@ public class Sheep extends CreatureBase {
 
   //render assets
   private static RenderDest dest;
-  private static Texture texture, furTexture;
-  private static GLModel model;
+  private static TextureMap texture, furTexture;
+  private static Model model;
 
   public static int initHealth = 10;
 
@@ -102,7 +102,7 @@ public class Sheep extends CreatureBase {
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = model.getObject(parts[a]);
+      Object3 obj = model.getObject(parts[a]);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();
@@ -110,11 +110,11 @@ public class Sheep extends CreatureBase {
         buf.addDefault();
       }
       if (obj.maps.size() == 1) {
-        GLUVMap map = obj.maps.get(0);
+        UVMap map = obj.maps.get(0);
         buf.addTextureCoords(map.uvl.toArray());
       } else {
-        GLUVMap map1 = obj.maps.get(0);
-        GLUVMap map2 = obj.maps.get(1);
+        UVMap map1 = obj.maps.get(0);
+        UVMap map2 = obj.maps.get(1);
         buf.addTextureCoords(map1.uvl.toArray(), map2.uvl.toArray());
       }
       buf.org = obj.org;

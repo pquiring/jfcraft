@@ -8,5 +8,5 @@ package jfcraft.data;
 import javaforce.gl.*;
 
 public class Vectors {
-  public GLVector3 facing = new GLVector3(), forward = new GLVector3(), left = new GLVector3();
+  public Vector3 facing = new Vector3(), forward = new Vector3(), left = new Vector3();
 }

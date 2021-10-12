@@ -21,7 +21,7 @@ import jfcraft.item.*;
 
 public class BlockHopper extends BlockBase {
   private static final int cooldownTicks = 8;
-  private static GLModel model;
+  private static Model model;
   public BlockHopper(String id, String names[], String images[]) {
     super(id, names, images);
     isOpaque = false;

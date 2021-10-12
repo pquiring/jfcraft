@@ -35,8 +35,8 @@ public class Player extends HumaniodBase {
   //render assets
   private static RenderDest dest;
   //texture size
-  private static Texture texture;
-  private static GLModel model;
+  private static TextureMap texture;
+  private static Model model;
 
   public Player() {
     super(4*9 + 1, 4);  //+1 for shield
@@ -130,7 +130,7 @@ public class Player extends HumaniodBase {
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = model.getObject(parts[a]);
+      Object3 obj = model.getObject(parts[a]);
       if (obj == null) {
         System.out.println("Warning:Couldn't find part:" + parts[a]);
       }
@@ -141,11 +141,11 @@ public class Player extends HumaniodBase {
         buf.addDefault();
       }
       if (obj.maps.size() == 1) {
-        GLUVMap map = obj.maps.get(0);
+        UVMap map = obj.maps.get(0);
         buf.addTextureCoords(map.uvl.toArray());
       } else {
-        GLUVMap map1 = obj.maps.get(0);
-        GLUVMap map2 = obj.maps.get(1);
+        UVMap map1 = obj.maps.get(0);
+        UVMap map2 = obj.maps.get(1);
         buf.addTextureCoords(map1.uvl.toArray(), map2.uvl.toArray());
       }
       buf.org = obj.org;

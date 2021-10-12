@@ -15,23 +15,23 @@ import javaforce.awt.*;
 import javaforce.gl.*;
 import static javaforce.gl.GL.*;
 
-import jfcraft.opengl.Texture;
+import jfcraft.opengl.TextureMap;
 
 public class Textures {
-  private static HashMap<String, Texture> cache = new HashMap<String, Texture>();
+  private static HashMap<String, TextureMap> cache = new HashMap<String, TextureMap>();
 
-  public static Texture getTexture(String name, int unit) {
-    Texture texture = cache.get(name);
+  public static TextureMap getTexture(String name, int unit) {
+    TextureMap texture = cache.get(name);
     if (texture != null) return texture;
-    texture = new Texture();
+    texture = new TextureMap();
     texture.unit = unit;
     texture.load(Assets.getImage(name).image);
     cache.put(name, texture);
     return texture;
   }
   /** Load directly from file (before assets are loaded) */
-  public static Texture getTexture2(String name) {
-    Texture texture = new Texture();
+  public static TextureMap getTexture2(String name) {
+    TextureMap texture = new TextureMap();
     JFImage img = new JFImage();
     if (!img.loadPNG(name)) {
       img.setSize(512, 512);

@@ -18,7 +18,7 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 
 public class BlockRedStoneTorch extends BlockBase {
-  private static GLModel model;
+  private static Model model;
   public BlockRedStoneTorch(String id, String names[], String images[]) {
     super(id, names, images);
     isOpaque = false;

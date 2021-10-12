@@ -18,7 +18,7 @@ import jfcraft.opengl .*;
 import jfcraft.data.*;
 
 public class MultiPlayerMenu extends RenderScreen {
-  private Texture t_menu;
+  private TextureMap t_menu;
   private RenderBuffers o_menu;
   private TextField serverAddress;
 

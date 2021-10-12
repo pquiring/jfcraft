@@ -190,7 +190,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     buf.addFace(data, st);
   }
 
-  private static GLModel quads;
+  private static Model quads;
 
   public void addQuad(RenderBuffers obj, RenderData data, int quad, SubTexture st) {
     if (quads == null) {
@@ -696,8 +696,8 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
 
   private static Faces faces = new Faces();
 
-  //copies GLObject to RenderBuffers (rotates/translates into position)
-  public void buildBuffers(GLObject obj, RenderBuffers buf, RenderData data, SubTexture st) {
+  //copies Object3 to RenderBuffers (rotates/translates into position)
+  public void buildBuffers(Object3 obj, RenderBuffers buf, RenderData data, SubTexture st) {
     float xyz[] = obj.vpl.toArray();
     int idx[] = obj.vil.toArray();
     data.isDir = isDir || isDirFace;
@@ -755,10 +755,10 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   /** Adjusts texture coords slightly inward to avoid adjacent textures from bleeding inward.
    * Only for full texture UV maps.
    */
-  public void adjustTextureSize(GLObject obj) {
+  public void adjustTextureSize(Object3 obj) {
     int mcnt = obj.maps.size();
     for(int m=0;m<mcnt;m++) {
-      GLUVMap map = obj.maps.get(m);
+      UVMap map = obj.maps.get(m);
       int uvcnt = map.uvl.size();
       float uv[] = map.uvl.getBuffer();
       for(int a=0;a<uvcnt;a++) {

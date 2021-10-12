@@ -401,9 +401,9 @@ public class Items {
   public final static byte VAR_ORANGE = 14;  //orange (flower or red + yellow)
   public final static byte VAR_BONEMEAL = 15;  //white
 
-  public Texture stitched;
+  public TextureMap stitched;
   public int texturesCount;
-  public ArrayList<Texture> textures = new ArrayList<Texture>();  //other textures
+  public ArrayList<TextureMap> textures = new ArrayList<TextureMap>();  //other textures
 
   public void registerDefault() {
     //register items
@@ -714,9 +714,9 @@ public class Items {
     registerItem(new ItemKelp("KELP", new String[]{"Kelp"}, new String[]{"kelp"}).setPlant("KELPTOP"));
   }
 
-  public Texture getTexture(String name) {
+  public TextureMap getTexture(String name) {
     for(int a=0;a<textures.size();a++) {
-      Texture t = textures.get(a);
+      TextureMap t = textures.get(a);
       if (t.name.equals(name)) return t;
     }
     Static.log("Texture not found:" + name);
@@ -725,7 +725,7 @@ public class Items {
 
   public int getTextureIdx(String name) {
     for(int a=0;a<textures.size();a++) {
-      Texture t = textures.get(a);
+      TextureMap t = textures.get(a);
       if (t.name.equals(name)) return a;
     }
     Static.log("Texture not found:" + name);
@@ -753,7 +753,7 @@ public class Items {
         return 0;
       }
     });
-    stitched = new Texture();
+    stitched = new TextureMap();
     stitched.initImage(512, 512);
     stitched.initUsage();
     for(int a=0;a<tiles.size();a++) {
@@ -843,7 +843,7 @@ public class Items {
     //load all independant textures
     texturesCount = textures.size();
     for(int a=0;a<textures.size();a++) {
-      Texture t = textures.get(a);
+      TextureMap t = textures.get(a);
       AssetImage ai = others.get(a);
       t.load(ai.image);
     }

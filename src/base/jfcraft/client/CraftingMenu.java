@@ -18,7 +18,7 @@ import jfcraft.block.*;
 import jfcraft.item.*;
 
 public class CraftingMenu extends RenderScreen {
-  private Texture t_menu;
+  private TextureMap t_menu;
   private RenderBuffers o_menu;
   private int mx, my;
   private Slot slots[];

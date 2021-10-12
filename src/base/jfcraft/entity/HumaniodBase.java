@@ -26,7 +26,7 @@ public abstract class HumaniodBase extends CreatureBase {
   public static final byte items_inventory = 3*9;  //9-35
   public static final byte shield_idx = 4*9;  //36
 
-  private static GLModel body;
+  private static Model body;
   private static RenderDest body_dest;
   private static String body_parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG"};
   private static final int part_head = 0;
@@ -53,7 +53,7 @@ public abstract class HumaniodBase extends CreatureBase {
     //transfer data into dest
     for(int a=0;a<body_parts.length;a++) {
       RenderBuffers buf = body_dest.getBuffers(a);
-      GLObject obj = body.getObject(body_parts[a]);
+      Object3 obj = body.getObject(body_parts[a]);
       if (obj == null) {
         System.out.println("Warning:Couldn't find part:" + body_parts[a]);
       }
@@ -64,11 +64,11 @@ public abstract class HumaniodBase extends CreatureBase {
         buf.addDefault();
       }
       if (obj.maps.size() == 1) {
-        GLUVMap map = obj.maps.get(0);
+        UVMap map = obj.maps.get(0);
         buf.addTextureCoords(map.uvl.toArray());
       } else {
-        GLUVMap map1 = obj.maps.get(0);
-        GLUVMap map2 = obj.maps.get(1);
+        UVMap map1 = obj.maps.get(0);
+        UVMap map2 = obj.maps.get(1);
         buf.addTextureCoords(map1.uvl.toArray(), map2.uvl.toArray());
       }
       buf.org = obj.org;

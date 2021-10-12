@@ -19,7 +19,7 @@ import static jfcraft.data.Direction.*;
 
 public class EnvironmentEarth implements EnvironmentBase {
 
-  private static Texture sun, moon, rain, snow, stars, blueSky, blueWater, black, t_clouds;
+  private static TextureMap sun, moon, rain, snow, stars, blueSky, blueWater, black, t_clouds;
   private static RenderBuffers skybox, sunface, moonface[], horizon, o_clouds;
   private static boolean inited = false;
   private static boolean cloudMap[];  //128x128
@@ -87,21 +87,21 @@ public class EnvironmentEarth implements EnvironmentBase {
     if (inited) return;
     Static.log("EnvironmentEarth.init()");
     RenderData data = new RenderData();
-    sun = new Texture();
+    sun = new TextureMap();
     sun.load(makeAlpha("environment/sun"));
-    moon = new Texture();
+    moon = new TextureMap();
     moon.load(makeAlpha("environment/moon_phases"));
     rain = Textures.getTexture("environment/rain", 0);
 //    snow = Textures.getTexture("environment/snow");
-    stars = new Texture();
+    stars = new TextureMap();
     stars.load(makeStars());
-    blueSky = new Texture();
+    blueSky = new TextureMap();
     blueSky.load(makeBlueSky());
-    blueWater = new Texture();
+    blueWater = new TextureMap();
     blueWater.load(makeBlueWater());
-    black = new Texture();
+    black = new TextureMap();
     black.load(makeBlack());
-    t_clouds = new Texture();
+    t_clouds = new TextureMap();
     t_clouds.load(makeClouds());
     skybox = new RenderBuffers();
     skybox.addSkyBox(-1000, -1000, -1000, 1000, 1000, 1000);
@@ -155,7 +155,7 @@ public class EnvironmentEarth implements EnvironmentBase {
     inited = true;
   }
 
-  private GLMatrix view = new GLMatrix();
+  private Matrix view = new Matrix();
 
   public void preRender(int time, float sunLight, Client client, XYZ camera, Chunk[] chunks) {
     float zAngle = time;
@@ -271,7 +271,7 @@ public class EnvironmentEarth implements EnvironmentBase {
     }
   }
 
-  private GLMatrix mat = new GLMatrix();
+  private Matrix mat = new Matrix();
 
   private Cloud clouds[] = new Cloud[0];
 

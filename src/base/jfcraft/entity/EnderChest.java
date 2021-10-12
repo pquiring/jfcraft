@@ -15,10 +15,10 @@ import jfcraft.opengl.*;
 public class EnderChest extends BlockEntity {
   public float lidAngle;
   public RenderDest dest;  //can not be static since chest can be damaged
-  public static GLModel model;
+  public static Model model;
 
   //render assets
-  private static Texture texture;
+  private static TextureMap texture;
   protected static String textureName;
 
   public EnderChest() {
@@ -61,7 +61,7 @@ public class EnderChest extends BlockEntity {
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = model.getObject(parts[a]);
+      Object3 obj = model.getObject(parts[a]);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();
@@ -70,16 +70,16 @@ public class EnderChest extends BlockEntity {
       }
       if (obj.maps.size() == 1) {
         //latch doesn't crack
-        GLUVMap map = obj.getUVMap("normal");
+        UVMap map = obj.getUVMap("normal");
         buf.addTextureCoords(map.uvl.toArray());
       } else {
         //container & lid
-        GLUVMap map1 = obj.getUVMap("normal");
+        UVMap map1 = obj.getUVMap("normal");
         float uv1[] = map1.uvl.toArray();
         if (data.crack == -1) {
           buf.addTextureCoords(uv1);
         } else {
-          GLUVMap map2 = obj.getUVMap("crack");
+          UVMap map2 = obj.getUVMap("crack");
           float uv2[] = map2.uvl.toArray();
           buf.adjustCrack(uv2, data.crack);
           buf.addTextureCoords(uv1, uv2);

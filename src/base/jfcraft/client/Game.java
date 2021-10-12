@@ -25,7 +25,7 @@ import static jfcraft.data.Direction.*;
 import static jfcraft.entity.EntityBase.*;
 
 public class Game extends RenderScreen {
-  private GLMatrix perspective, view;
+  private Matrix perspective, view;
   private float fov = 70.0f;
   private float zNear = 0.1f;  //do NOT use zero!
   private float zFar = 10000.0f;
@@ -36,15 +36,15 @@ public class Game extends RenderScreen {
   private Runtime rt = Runtime.getRuntime();
   private boolean showControls = true;
   private static RenderBuffers hand;
-  private GLFrustum frustum = new GLFrustum();
-  private GLVector4 p4 = new GLVector4();  //position
-  private GLVector4 l4 = new GLVector4();  //center (looking at)
-  private GLVector4 u4 = new GLVector4();  //up
-  private GLVector3 p3 = new GLVector3();  //position
-  private GLVector3 l3 = new GLVector3();  //center (looking at)
-  private GLVector3 u3 = new GLVector3();  //up
-  private GLVector3 pts[];  //chunk points
-  private GLVector3 forward = new GLVector3();
+  private Frustum frustum = new Frustum();
+  private Vector4 p4 = new Vector4();  //position
+  private Vector4 l4 = new Vector4();  //center (looking at)
+  private Vector4 u4 = new Vector4();  //up
+  private Vector3 p3 = new Vector3();  //position
+  private Vector3 l3 = new Vector3();  //center (looking at)
+  private Vector3 u3 = new Vector3();  //up
+  private Vector3 pts[];  //chunk points
+  private Vector3 forward = new Vector3();
   private Slot slots[];
   private enum Views {normal, behind, infront};
   private Views camview = Views.normal;
@@ -80,9 +80,9 @@ public class Game extends RenderScreen {
       o_box.type = GL_LINES;
     }
     if (pts == null) {
-      pts = new GLVector3[8];
+      pts = new Vector3[8];
       for(int a=0;a<8;a++) {
-        pts[a] = new GLVector3();
+        pts[a] = new Vector3();
         if (a > 3) {
           pts[a].v[1] = 256f;
         }
@@ -103,7 +103,7 @@ public class Game extends RenderScreen {
       o_icons = new RenderBuffers();
     }
     if (view == null) {
-      view = new GLMatrix();
+      view = new Matrix();
     }
     if (o_active == null) {
       o_active = createMenu(75, 470, 1,45, 46,46);
@@ -201,7 +201,7 @@ public class Game extends RenderScreen {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     if (perspective == null) {
-      perspective = new GLMatrix();
+      perspective = new Matrix();
       perspective.setIdentity();
       float ratio = ((float)width) / ((float)height);
       perspective.perspective(fov, ratio, zNear, zFar);
@@ -306,7 +306,7 @@ public class Game extends RenderScreen {
       pts[6].v[2] = pz2;
       pts[7].v[0] = px1;
       pts[7].v[2] = pz2;
-      if (frustum.boxInside(pts) == GLFrustum.OUTSIDE) {
+      if (frustum.boxInside(pts) == Frustum.OUTSIDE) {
         fcnt++;
         continue;
       }
@@ -870,7 +870,7 @@ public class Game extends RenderScreen {
     }
   }
 
-  private static GLMatrix handMat = new GLMatrix();
+  private static Matrix handMat = new Matrix();
 
   public void renderHand() {
     handMat.setIdentity();

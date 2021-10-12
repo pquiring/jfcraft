@@ -16,7 +16,7 @@ import static jfcraft.data.Direction.*;
 import jfcraft.item.*;
 
 public class BlockSlab extends BlockBase {
-  private static GLModel model;
+  private static Model model;
   public BlockSlab(String id, String names[], String images[]) {
     super(id, names, images);
     isOpaque = false;

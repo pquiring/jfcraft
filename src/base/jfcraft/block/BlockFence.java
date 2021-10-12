@@ -16,7 +16,7 @@ import jfcraft.data.*;
 import static jfcraft.data.Direction.*;
 
 public class BlockFence extends BlockBase {
-  private static GLModel model;
+  private static Model model;
   public BlockFence(String id, String names[], String images[]) {
     super(id, names, images);
     isOpaque = false;

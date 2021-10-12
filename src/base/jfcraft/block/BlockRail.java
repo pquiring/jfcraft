@@ -19,7 +19,7 @@ import static jfcraft.data.Direction.*;
 import static jfcraft.data.Blocks.*;
 
 public class BlockRail extends BlockBase {
-  private static GLModel facexz, slope;
+  private static Model facexz, slope;
   public BlockRail(String id, String names[], String images[]) {
     super(id, names, images);
     isOpaque = false;
@@ -73,7 +73,7 @@ public class BlockRail extends BlockBase {
     }
 
     data.dir[X] = N;
-    GLModel model = facexz;
+    Model model = facexz;
 
     switch (e1) {
       default:

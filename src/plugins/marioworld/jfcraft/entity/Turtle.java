@@ -28,7 +28,7 @@ public class Turtle extends CreatureBase {
 
   //render assets
   private static RenderDest dest;
-  private static Texture textures[];
+  private static TextureMap textures[];
 
   private static int initHealth = 20;
   private static int initArmor = 2;
@@ -86,7 +86,7 @@ public class Turtle extends CreatureBase {
   }
 
   public void initStaticGL() {
-    textures = new Texture[3];
+    textures = new TextureMap[3];
     textures[0] = Textures.getTexture("entity/turtle/green", 0);
     textures[1] = Textures.getTexture("entity/turtle/blue", 0);
     textures[2] = Textures.getTexture("entity/turtle/red", 0);
@@ -97,11 +97,11 @@ public class Turtle extends CreatureBase {
   private static final int TAIL = 6;
 
   public void buildBuffers(RenderDest dest, RenderData data) {
-    GLModel mod = loadModel("turtle");
+    Model mod = loadModel("turtle");
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = mod.getObject(parts[a]);
+      Object3 obj = mod.getObject(parts[a]);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();
@@ -109,11 +109,11 @@ public class Turtle extends CreatureBase {
         buf.addDefault();
       }
       if (obj.maps.size() == 1) {
-        GLUVMap map = obj.maps.get(0);
+        UVMap map = obj.maps.get(0);
         buf.addTextureCoords(map.uvl.toArray());
       } else {
-        GLUVMap map1 = obj.maps.get(0);
-        GLUVMap map2 = obj.maps.get(1);
+        UVMap map1 = obj.maps.get(0);
+        UVMap map2 = obj.maps.get(1);
         buf.addTextureCoords(map1.uvl.toArray(), map2.uvl.toArray());
       }
       buf.org = obj.org;

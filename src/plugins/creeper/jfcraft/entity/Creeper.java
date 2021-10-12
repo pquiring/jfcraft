@@ -23,7 +23,7 @@ public class Creeper extends CreatureBase {
   public static RenderDest dest;
 
   //render assets
-  private static Texture texture;
+  private static TextureMap texture;
   private static String textureName;
 
   private static int initHealth = 20;
@@ -87,11 +87,11 @@ public class Creeper extends CreatureBase {
   private static String parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG"};
 
   public void buildBuffers(RenderDest dest, RenderData data) {
-    GLModel mod = loadModel("creeper");
+    Model mod = loadModel("creeper");
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = mod.getObject(parts[a]);
+      Object3 obj = mod.getObject(parts[a]);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();
@@ -99,11 +99,11 @@ public class Creeper extends CreatureBase {
         buf.addDefault();
       }
       if (obj.maps.size() == 1) {
-        GLUVMap map = obj.maps.get(0);
+        UVMap map = obj.maps.get(0);
         buf.addTextureCoords(map.uvl.toArray());
       } else {
-        GLUVMap map1 = obj.maps.get(0);
-        GLUVMap map2 = obj.maps.get(1);
+        UVMap map1 = obj.maps.get(0);
+        UVMap map2 = obj.maps.get(1);
         buf.addTextureCoords(map1.uvl.toArray(), map2.uvl.toArray());
       }
       buf.org = obj.org;

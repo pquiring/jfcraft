@@ -15,7 +15,7 @@ import jfcraft.data.Textures;
 import jfcraft.data.Static;
 
 public class WaitMenu extends RenderScreen {
-  private Texture t_menu;
+  private TextureMap t_menu;
   private RenderBuffers o_menu;
   private String msg1, msg2;
 

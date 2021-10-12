@@ -18,7 +18,7 @@ import static jfcraft.data.Direction.*;
 import static jfcraft.data.Blocks.*;
 
 public class BlockX2 extends BlockBase {
-  private static GLModel model;
+  private static Model model;
   public BlockX2(String id, String names[], String images[]) {
     super(id, names, images);
     isOpaque = false;

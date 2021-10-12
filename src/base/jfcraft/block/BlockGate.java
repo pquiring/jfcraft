@@ -17,7 +17,7 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 
 public class BlockGate extends BlockBase {
-  private static GLModel model_closed, model_open;
+  private static Model model_closed, model_open;
 
   public BlockGate(String id, String names[], String images[]) {
     super(id, names, images);
@@ -46,7 +46,7 @@ public class BlockGate extends BlockBase {
       opened = er.active;
     }
     SubTexture st = getTexture(data);
-    GLObject obj;
+    Object3 obj;
 
     if (opened) {
       //opened

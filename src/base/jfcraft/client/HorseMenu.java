@@ -18,7 +18,7 @@ import jfcraft.block.*;
 import jfcraft.item.*;
 
 public class HorseMenu extends RenderScreen {
-  private Texture t_menu;
+  private TextureMap t_menu;
   private static RenderBuffers o_menu, o_15, o_armor;
   private int mx, my;
   private Slot slots[];

@@ -18,7 +18,7 @@ public class EndPortal extends BlockEntity {
   public RenderDest dest;
 
   //render assets
-  public static Texture texture;
+  public static TextureMap texture;
   //texture size
   protected static float tw;
   protected static float th;

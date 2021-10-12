@@ -44,7 +44,7 @@ public class Static {
   public static int fps;  //current FPS
   public static int tick;  //last server tick duration (ms)
   public static boolean spawn = true;  //spawn entities (monsters)
-  public static GLMatrix identity = new GLMatrix();
+  public static Matrix identity = new Matrix();
   public static XYZ camera_pos = new XYZ();  //camera position
   public static XYZ camera_ang = new XYZ();  //camera angle
 

@@ -20,8 +20,8 @@ public class Face {
   public float u2[] = new float[4];
   public float v2[] = new float[4];
 
-  private static GLMatrix mat = new GLMatrix();
-  private static GLVector3 vec = new GLVector3();
+  private static Matrix mat = new Matrix();
+  private static Vector3 vec = new Vector3();
 
   private void add(float d, boolean ay) {
     for(int a=0;a<4;a++) {

@@ -26,19 +26,19 @@ public abstract class RenderScreen {
   public float gui_height = 512;
   public float gui_width = 512;
 
-  public static Texture t_widgets;
-  public static Texture t_icons;
-  public static Texture t_text;
-  public static Texture t_white;  //single white pixel
-  public static Texture t_white50;  //single white pixel (50% alpha)
+  public static TextureMap t_widgets;
+  public static TextureMap t_icons;
+  public static TextureMap t_text;
+  public static TextureMap t_white;  //single white pixel
+  public static TextureMap t_white50;  //single white pixel (50% alpha)
   private static Timer cursorTimer;
 
   // top/left=0,0 : bottom/right=1,1
-  public static GLMatrix orthoItem = new GLMatrix();
+  public static Matrix orthoItem = new Matrix();
   // show block at 3/4 view
-  public static GLMatrix orthoBlock = new GLMatrix();
+  public static Matrix orthoBlock = new Matrix();
   // show two blocks
-  public static GLMatrix orthoPlayer = new GLMatrix();
+  public static Matrix orthoPlayer = new Matrix();
 
   public static int fontSize = 12;
 
@@ -50,7 +50,7 @@ public abstract class RenderScreen {
 
   private static RenderBuffers o_chars[];
 
-  public static GLMatrix identity = new GLMatrix();
+  public static Matrix identity = new Matrix();
 
   public byte id;
   private TextField focus;
@@ -188,14 +188,14 @@ public abstract class RenderScreen {
     if (t_white == null) {
       JFImage pixel = new JFImage(1,1);
       pixel.putPixel(0, 0, 0xffffff);  //white pixel
-      t_white = new Texture();
+      t_white = new TextureMap();
       t_white.load(pixel);
     }
     if (t_white50 == null) {
       JFImage pixel = new JFImage(1,1);
       pixel.putPixel(0, 0, 0xffffff);  //white pixel
       pixel.putAlpha(0, 0, 0x80);  //50% transparent
-      t_white50 = new Texture();
+      t_white50 = new TextureMap();
       t_white50.load(pixel);
     }
     if (cursorTimer == null) {

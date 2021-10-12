@@ -17,7 +17,7 @@ import jfcraft.opengl .*;
 import jfcraft.data.*;
 
 public class CreateWorldMenu extends RenderScreen {
-  private Texture t_menu;
+  private TextureMap t_menu;
   private RenderBuffers o_menu;
   private TextField world_name;
   private TextField seed;

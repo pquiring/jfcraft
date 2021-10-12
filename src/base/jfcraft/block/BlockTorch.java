@@ -17,7 +17,7 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 
 public class BlockTorch extends BlockBase {
-  private static GLModel model;
+  private static Model model;
   private static ArrayList<Box> lb = new ArrayList<Box>();
   private static ArrayList<Box> ln = new ArrayList<Box>();
   private static ArrayList<Box> le = new ArrayList<Box>();

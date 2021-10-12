@@ -17,7 +17,7 @@ import static jfcraft.data.Direction.*;
 import jfcraft.opengl.*;
 
 public class BlockButton extends BlockBase {
-  private static GLModel model;
+  private static Model model;
 
   public BlockButton(String name, String names[], String images[]) {
     super(name, names, images);

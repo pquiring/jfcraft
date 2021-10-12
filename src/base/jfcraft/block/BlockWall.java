@@ -12,7 +12,7 @@ import static jfcraft.data.Direction.*;
  */
 
 public class BlockWall extends BlockBase {
-  private static GLModel model;
+  private static Model model;
   public BlockWall(String id, String names[], String images[]) {
     super(id, names, images);
     isOpaque = false;

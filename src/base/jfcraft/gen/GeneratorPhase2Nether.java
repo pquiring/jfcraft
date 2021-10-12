@@ -137,10 +137,10 @@ public class GeneratorPhase2Nether implements GeneratorPhase2Base {
     float y = elev;
     float z = 8;
     int len = 64 + r.nextInt(256);
-    GLMatrix mat = new GLMatrix();
-    GLVector3 vecx = new GLVector3();
-    GLVector3 vecy = new GLVector3();
-    GLVector3 vecz = new GLVector3();
+    Matrix mat = new Matrix();
+    Vector3 vecx = new Vector3();
+    Vector3 vecy = new Vector3();
+    Vector3 vecz = new Vector3();
     float width = 3f;
     float height = 3f;
     float ydir = 0f;
@@ -259,10 +259,10 @@ public class GeneratorPhase2Nether implements GeneratorPhase2Base {
     float x = 8;
     float y = elev;
     float z = 8;
-    GLMatrix mat = new GLMatrix();
-    GLVector3 vecx = new GLVector3();
-    GLVector3 vecy = new GLVector3();
-    GLVector3 vecz = new GLVector3();
+    Matrix mat = new Matrix();
+    Vector3 vecx = new Vector3();
+    Vector3 vecy = new Vector3();
+    Vector3 vecz = new Vector3();
     float dxzdir = 0;
     do {
       mat.setIdentity();

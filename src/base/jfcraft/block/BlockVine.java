@@ -15,7 +15,7 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 
 public class BlockVine extends BlockFace {
-  private static GLModel model;
+  private static Model model;
   public BlockVine(String id, String names[], String images[]) {
     super(id, names, images);
     isDirFace = true;

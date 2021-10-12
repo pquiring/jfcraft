@@ -21,11 +21,11 @@ public class Minecart extends VehicleBase {
   public int dir;  //current direction (N,E,S,W,NE,NW,SE,SW,A=none)
   public float dist;  //distance travel on current rail in dir
 
-  private static GLModel model;
+  private static Model model;
   private static int initHealth = 5;
 
   //render assets
-  public static Texture texture;
+  public static TextureMap texture;
   private static String textureName;
 
   public static final float pushSpeed = 3.0f;
@@ -88,7 +88,7 @@ public class Minecart extends VehicleBase {
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
-      GLObject obj = model.getObject(parts[a]);
+      Object3 obj = model.getObject(parts[a]);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();
@@ -96,17 +96,17 @@ public class Minecart extends VehicleBase {
         buf.addDefault();
       }
       if (obj.maps.size() == 1) {
-        GLUVMap map = obj.getUVMap(0);
+        UVMap map = obj.getUVMap(0);
         buf.addTextureCoords(map.uvl.toArray());
       } else {
-        GLUVMap map1 = obj.getUVMap("normal");
+        UVMap map1 = obj.getUVMap("normal");
         float uv1[] = map1.uvl.toArray();
         int crack = 10 - (int)(health * 2);
         if (crack > 9) crack = 9;  //it's broken
         if (crack == 0) {
           buf.addTextureCoords(uv1);
         } else {
-          GLUVMap map2 = obj.getUVMap("crack");
+          UVMap map2 = obj.getUVMap("crack");
           float uv2[] = map2.uvl.toArray();
           buf.adjustCrack(uv2, crack);
           buf.addTextureCoords(uv1, uv2);

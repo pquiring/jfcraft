@@ -10,7 +10,7 @@ package jfcraft.opengl;
 import jfcraft.data.*;
 
 public class SubTexture {
-  public Texture texture;
+  public TextureMap texture;
   public float x1, y1, x2, y2;  //texture coords
   public float fx1, fy1, fx2, fy2;  //texture coords (flowing water on 45 def angle)
   public float fx3, fy3, fx4, fy4;  //texture coords (flowing water on 45 def angle)

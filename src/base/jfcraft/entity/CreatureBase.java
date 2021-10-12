@@ -76,11 +76,11 @@ public abstract class CreatureBase extends EntityBase {
         target = from;  //switch target (if aggresive)
         if (from != null) {
           //do knockback
-          GLMatrix mat = new GLMatrix();  //TODO : make this static??? (minor)
+          Matrix mat = new Matrix();  //TODO : make this static??? (minor)
           float ang = from.ang.y + 180.0f;
           if (ang > 180.0f) ang -= 360.0f;
           mat.addRotate(ang, 0, 1, 0);
-          GLVector3 vec = new GLVector3();
+          Vector3 vec = new Vector3();
           vec.v[0] = 0;
           vec.v[1] = 0;
           vec.v[2] = 1;
@@ -342,8 +342,8 @@ public abstract class CreatureBase extends EntityBase {
     ang.x = angX;
   }
 
-  private static GLMatrix mMat = new GLMatrix();
-  private static GLVector3 mVec = new GLVector3();
+  private static Matrix mMat = new Matrix();
+  private static Vector3 mVec = new Vector3();
 
   /** Moves a creature (animal or monster)
    *

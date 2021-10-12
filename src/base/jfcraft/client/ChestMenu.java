@@ -17,7 +17,7 @@ import jfcraft.data.*;
 import jfcraft.item.*;
 
 public class ChestMenu extends RenderScreen {
-  private Texture t_menu;
+  private TextureMap t_menu;
   private RenderBuffers o_menu, o_menu2;
   private int mx, my;
   private int cnt;
