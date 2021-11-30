@@ -67,11 +67,13 @@ public class RenderBuffers implements Cloneable {
     type = GL_QUADS;  //default = QUADS
   }
 
+/*
   public void finalize() {
     if (alloced) {
       addFreeList(new int[] {vpb, uvb1, uvb2, vib, lcb, slb, blb});
     }
   }
+*/
 
   public void setVisible(boolean state) {visible = state;}
   private Matrix tmp = new Matrix();
