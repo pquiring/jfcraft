@@ -42,11 +42,11 @@ public class EditOptions extends javax.swing.JDialog {
     client_voip = new javax.swing.JCheckBox();
     jLabel1 = new javax.swing.JLabel();
     jLabel3 = new javax.swing.JLabel();
-    mic = new javax.swing.JComboBox();
+    mic = new javax.swing.JComboBox<>();
     ptt = new javax.swing.JRadioButton();
     phone = new javax.swing.JRadioButton();
     jLabel4 = new javax.swing.JLabel();
-    spk = new javax.swing.JComboBox();
+    spk = new javax.swing.JComboBox<>();
     ok = new javax.swing.JButton();
     cancel = new javax.swing.JButton();
     jPanel3 = new javax.swing.JPanel();
@@ -305,14 +305,14 @@ public class EditOptions extends javax.swing.JDialog {
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   private javax.swing.JPanel jPanel3;
-  private javax.swing.JComboBox mic;
+  private javax.swing.JComboBox<String> mic;
   private javax.swing.ButtonGroup mic_mode;
   private javax.swing.JButton ok;
   private javax.swing.JRadioButton phone;
   private javax.swing.JRadioButton ptt;
   private javax.swing.JCheckBox pvp;
   private javax.swing.JCheckBox server_voip;
-  private javax.swing.JComboBox spk;
+  private javax.swing.JComboBox<String> spk;
   // End of variables declaration//GEN-END:variables
 
   private boolean ready = false;

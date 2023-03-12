@@ -55,7 +55,7 @@ public class PluginLoader {
         String ver = props.getProperty("Version");
         String desc = props.getProperty("Desc");
         zf.close();
-        Class cls = Class.forName(clsName);
+        Class<?> cls = Class.forName(clsName);
         Constructor c = cls.getConstructor();
         PluginBase plugin = (PluginBase)c.newInstance();
         plugins.add(plugin);

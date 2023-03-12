@@ -8,6 +8,7 @@ package jfcraft.data;
  */
 
 import java.util.*;
+import java.lang.reflect.*;
 
 import javaforce.*;
 import javaforce.gl.*;
@@ -191,7 +192,9 @@ public class Entities implements SerialCreator {
       return null;
     }
     try {
-      EntityBase eb = base.getClass().newInstance();
+      Class<?> cls = base.getClass();
+      Constructor ctor = cls.getConstructor();
+      EntityBase eb = (EntityBase)ctor.newInstance();
       return eb;
     } catch (Exception e) {
       e.printStackTrace();

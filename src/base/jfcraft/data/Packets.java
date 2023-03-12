@@ -5,6 +5,8 @@ package jfcraft.data;
  * @author pquiring
  */
 
+import java.lang.reflect.*;
+
 import javaforce.*;
 import javaforce.awt.*;
 
@@ -267,7 +269,9 @@ public class Packets implements SerialCreator {
     byte cmd = buffer.peekByte();
 //    Static.log(), ""packets.create(), ")cmd=" + cmd + ",name=" + packets[cmd].getClass(), ").getName(), "");
     try {
-      return packets[cmd].getClass().newInstance();
+      Class<?> cls = packets[cmd].getClass();
+      Constructor ctor = cls.getConstructor();
+      return (Packet)ctor.newInstance();
     } catch (Exception e) {
       Static.log("Packet not found:" + cmd);
       e.printStackTrace();

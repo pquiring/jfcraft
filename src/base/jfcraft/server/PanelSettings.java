@@ -42,7 +42,7 @@ public class PanelSettings extends javax.swing.JPanel {
   private void initComponents() {
 
     jLabel1 = new javax.swing.JLabel();
-    worlds = new javax.swing.JComboBox();
+    worlds = new javax.swing.JComboBox<>();
     jButton1 = new javax.swing.JButton();
     jButton2 = new javax.swing.JButton();
     jPanel1 = new javax.swing.JPanel();
@@ -52,7 +52,7 @@ public class PanelSettings extends javax.swing.JPanel {
     jScrollPane1 = new javax.swing.JScrollPane();
     pluginsTable = new javax.swing.JTable();
     jLabel3 = new javax.swing.JLabel();
-    memory = new javax.swing.JComboBox();
+    memory = new javax.swing.JComboBox<>();
     jLabel2 = new javax.swing.JLabel();
 
     jLabel1.setText("World");
@@ -138,7 +138,7 @@ public class PanelSettings extends javax.swing.JPanel {
 
     jLabel3.setText("Memory:");
 
-    memory.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "256M", "512M", "1G", "2G", "4G" }));
+    memory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "256M", "512M", "1G", "2G", "4G" }));
     memory.setSelectedIndex(2);
 
     jLabel2.setText("Plugins");
@@ -210,11 +210,11 @@ public class PanelSettings extends javax.swing.JPanel {
   private javax.swing.JLabel jLabel3;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JScrollPane jScrollPane1;
-  private javax.swing.JComboBox memory;
+  private javax.swing.JComboBox<String> memory;
   private javax.swing.JTable pluginsTable;
   private javax.swing.JCheckBox pvp;
   private javax.swing.JCheckBox voip;
-  private javax.swing.JComboBox worlds;
+  private javax.swing.JComboBox<String> worlds;
   // End of variables declaration//GEN-END:variables
 
   String plugins[][];  //jar/class/name/version/desc

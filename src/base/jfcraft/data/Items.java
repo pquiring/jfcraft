@@ -744,8 +744,8 @@ public class Items {
         item.ai[b] = ai;
       }
     }
-    Collections.sort(tiles, new Comparator() {
-      public int compare(Object o1, Object o2) {
+    Collections.sort(tiles, new Comparator<AssetImage>() {
+      public int compare(AssetImage o1, AssetImage o2) {
         AssetImage ai1 = (AssetImage)o1;
         AssetImage ai2 = (AssetImage)o2;
         if (ai1.image.getWidth() < ai2.image.getWidth()) return -1;

@@ -5,6 +5,8 @@ package jfcraft.data;
  * @author pquiring
  */
 
+import java.lang.reflect.*;
+
 public class Extras implements SerialCreator {
   public static final int MAX_ID = 128;
   public int extraCount;
@@ -64,7 +66,9 @@ public class Extras implements SerialCreator {
       return null;
     }
     try {
-      ExtraBase eb = base.getClass().newInstance();
+      Class<?> cls = base.getClass();
+      Constructor ctor = cls.getConstructor();
+      ExtraBase eb = (ExtraBase)ctor.newInstance();
       return eb;
     } catch (Exception e) {
       e.printStackTrace();
