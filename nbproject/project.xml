@@ -87,26 +87,26 @@ auxiliary.show.customizer.message=<message>
             </view>
             <subprojects/>
         </general-data>
-        <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/4">
+        <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/5">
             <compilation-unit>
                 <package-root>src/base</package-root>
                 <classpath mode="compile">javaforce.jar;lwjgl.jar</classpath>
-                <source-level>1.8</source-level>
+                <source-level>11</source-level>
             </compilation-unit>
             <compilation-unit>
                 <package-root>src/plugins/creeper</package-root>
                 <classpath mode="compile">javaforce.jar;jfcraft.jar</classpath>
-                <source-level>1.8</source-level>
+                <source-level>11</source-level>
             </compilation-unit>
             <compilation-unit>
                 <package-root>src/plugins/domino</package-root>
                 <classpath mode="compile">javaforce.jar;jfcraft.jar</classpath>
-                <source-level>1.8</source-level>
+                <source-level>11</source-level>
             </compilation-unit>
             <compilation-unit>
                 <package-root>src/plugins/marioworld</package-root>
                 <classpath mode="compile">javaforce.jar;jfcraft.jar</classpath>
-                <source-level>1.8</source-level>
+                <source-level>11</source-level>
             </compilation-unit>
         </java-data>
     </configuration>
