@@ -21,15 +21,7 @@
     <download url="http://jfcraft.sourceforge.net/base.zip" dest="base.zip"/>
   </target>
 
-  <target name="depjars" depends="depnatives">
-    <jar destfile="javaforce.jar">
-      <zipfileset src="../../jars/javaforce.jar"/>
-      <manifest>
-        <attribute name="Trusted-Library" value="true"/>
-        <attribute name="Permissions" value="all-permissions"/>
-        <attribute name="Codebase" value="jfcraft.sourceforge.net"/>
-      </manifest>
-    </jar>
+  <target name="depjars" depends="depnatives,jar-javaforce">
     <copy todir=".">
       <fileset dir="${home}/native" includes="*"/>
     </copy>
