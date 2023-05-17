@@ -300,7 +300,7 @@ public class Launcher extends javax.swing.JFrame {
   public void checkVersion() {
     try {
       BufferedReader reader = new BufferedReader(new InputStreamReader(
-        new URL("http://pquiring.github.io/jfcraft/version.html").openStream()));
+        new URI("http://pquiring.github.io/jfcraft/version.html").toURL().openStream()));
       String line = reader.readLine();
       if (line.equals(Static.version)) {Static.log("version is up-to-date"); return;}
       Static.log("newer version is available : " + line);
@@ -325,7 +325,7 @@ public class Launcher extends javax.swing.JFrame {
   public void initWeb() {
     try {
       html.setContentType("text/html");
-      html.setPage(new URL("http://pquiring.github.io/jfcraft/news.html"));
+      html.setPage(new URI("http://pquiring.github.io/jfcraft/news.html").toURL());
     } catch (Exception e) {
       e.printStackTrace();
     }
