@@ -46,8 +46,6 @@ Compile Javaforce and it's native libraries (see javaforce/readme.txt)
   ant
   cd javaforce\native\windows
   ant
-  cd javaforce\stubs\windows
-  ant
 Then build jfCraft.
   cd javaforce\games\jfcraft
   ant
