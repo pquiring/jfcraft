@@ -251,15 +251,16 @@ public class VoIPRTPRelay implements RTPInterface {
     }
   }
 
-  public void rtpH263(RTPChannel rtp, byte data[],int off,int len) {}
-  public void rtpH263_1998(RTPChannel rtp, byte[] data, int off, int len) {}
-  public void rtpH263_2000(RTPChannel rtp, byte[] data, int off, int len) {}
-  public void rtpH264(RTPChannel rtp, byte data[],int off,int len) {}
-  public void rtpJPEG(RTPChannel rtp, byte data[],int off,int len) {}
-  public void rtpVP8(RTPChannel rtp, byte data[],int off,int len) {}
   public void rtpInactive(RTPChannel rtp) {}
 
   public String toString() {
     return "RTPRelay:{src=" + rtp_src + ",dst=" + rtp_dst + "}";
+  }
+
+  public void rtpPacket(RTPChannel channel, int codec, byte[] bytes, int offset, int length) {
+    switch (codec) {
+      case CodecType.RTP: rtpPacket(channel, bytes, offset, length); break;
+      case CodecType.RTCP: rtcpPacket(channel, bytes, offset, length); break;
+    }
   }
 }

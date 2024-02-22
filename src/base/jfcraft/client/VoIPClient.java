@@ -438,10 +438,13 @@ public class VoIPClient implements SIPClientInterface, RTPInterface {
   public void onRefer(SIPClient sip, String callid) {
   }
 
-  public void onNotify(SIPClient sip, String callid, String cmd, String data) {
+  public void onNotify(SIPClient sip, String callid, String cmd, String[] params) {
   }
 
   public void onAck(SIPClient sip, String callid, SDP sdp) {
+  }
+
+  public void onMessage(SIPClient sipc, String string, String string1, String string2, String[] strings) {
   }
 
   //RTPInterface
@@ -452,28 +455,7 @@ public class VoIPClient implements SIPClientInterface, RTPInterface {
   public void rtpDigit(RTPChannel rtp, char digit) {
   }
 
-  public void rtpPacket(RTPChannel rtp, byte[] bytes, int off, int length) {
-  }
-
-  public void rtcpPacket(RTPChannel rtp, byte[] bytes, int off, int length) {
-  }
-
-  public void rtpH263(RTPChannel rtp, byte[] bytes, int off, int length) {
-  }
-
-  public void rtpH263_1998(RTPChannel rtp, byte[] bytes, int off, int length) {
-  }
-
-  public void rtpH263_2000(RTPChannel rtp, byte[] bytes, int off, int length) {
-  }
-
-  public void rtpH264(RTPChannel rtp, byte[] bytes, int off, int length) {
-  }
-
-  public void rtpVP8(RTPChannel rtp, byte[] bytes, int off, int length) {
-  }
-
-  public void rtpJPEG(RTPChannel rtp, byte[] bytes, int off, int length) {
+  public void rtpPacket(RTPChannel rtpc, int i, byte[] bytes, int i1, int i2) {
   }
 
   public void rtpInactive(RTPChannel rtp) {

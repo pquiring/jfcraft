@@ -211,6 +211,9 @@ public class VoIPServer implements SIPServerInterface, VoIPEventHandler {
     VoIPCallDetails cd = (VoIPCallDetails)_cd;
   }
 
+  public void onMessage(CallDetailsServer cds, String string, String string1, String[] strings, boolean bln) {
+  }
+
   //VoIPEventHandler interface
 
   public void event(VoIPCallDetails cd, int type, char digit, boolean interrupted) {
