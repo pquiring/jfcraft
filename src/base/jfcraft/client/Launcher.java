@@ -61,8 +61,6 @@ public class Launcher extends javax.swing.JFrame {
     jLabel2 = new javax.swing.JLabel();
     player = new javax.swing.JTextField();
     getPlugins = new javax.swing.JButton();
-    jLabel3 = new javax.swing.JLabel();
-    memory = new javax.swing.JComboBox();
     jPanel1 = new javax.swing.JPanel();
     jScrollPane2 = new javax.swing.JScrollPane();
     html = new javax.swing.JEditorPane();
@@ -122,11 +120,6 @@ public class Launcher extends javax.swing.JFrame {
       }
     });
 
-    jLabel3.setText("Memory:");
-
-    memory.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "256M", "512M", "1G", "2G", "4G" }));
-    memory.setSelectedIndex(3);
-
     html.setEditable(false);
     html.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
       public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
@@ -161,10 +154,6 @@ public class Launcher extends javax.swing.JFrame {
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addComponent(jLabel3)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(memory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(opts)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(start))
@@ -201,8 +190,6 @@ public class Launcher extends javax.swing.JFrame {
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(start)
-          .addComponent(jLabel3)
-          .addComponent(memory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(opts))
         .addContainerGap())
     );
@@ -282,11 +269,9 @@ public class Launcher extends javax.swing.JFrame {
   private javax.swing.JEditorPane html;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
-  private javax.swing.JLabel jLabel3;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JScrollPane jScrollPane2;
-  private javax.swing.JComboBox memory;
   private javax.swing.JButton opts;
   private javax.swing.JTextField player;
   private javax.swing.JTable pluginsTable;
