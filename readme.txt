@@ -35,6 +35,10 @@ Commands:
 /import x1 y1 z1 filename [mx | my] [r90 | r180 | r270]
   - import a blueprint
 
+Downloading:
+------------
+Windows installer is available at http://jfcraft.sourceforge.net
+
 Compiling:
 ----------
 jfCraft is built on top of JavaForce, so check it out first:
