@@ -46,7 +46,7 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
       window.setIcon("jfcraft.ico", 16, 16);
     }
     current = window;
-    GL.glInit();  //load gl api
+    GL.init();
   }
 
   private Window createWindow(int style, int x,int y,Window shared) {
