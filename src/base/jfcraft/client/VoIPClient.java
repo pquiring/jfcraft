@@ -359,7 +359,7 @@ public class VoIPClient implements SIPClientInterface, RTPInterface {
     }
   }
 
-  private byte[] encode(Coder coder, short in[], int bufIdx) {
+  private byte[] encode(RTPAudioCoder coder, short in[], int bufIdx) {
     byte encoded[] = null;
     int rate = coder.getSampleRate();
     switch (rate) {
