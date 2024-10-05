@@ -30,6 +30,7 @@ public class PacketMoveBack extends Packet {
       client.player.pos.x = f1;
       client.player.pos.y = f2;
       client.player.pos.z = f3;
+      client.resetMoveKeys();
     }
   }
 

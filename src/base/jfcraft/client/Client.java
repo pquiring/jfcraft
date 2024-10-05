@@ -377,6 +377,19 @@ public class Client {
     Static.dims.dims[player.dim].getEnvironment().tick();
   }
 
+  public void resetMoveKeys() {
+    //reset movement keys if something bad happens
+    Static.keys[KeyCode.VK_W] = false;
+    Static.keys[KeyCode.VK_S] = false;
+    Static.keys[KeyCode.VK_A] = false;
+    Static.keys[KeyCode.VK_D] = false;
+    Static.keys[KeyCode.VK_SPACE] = false;
+    if (Static.debugTest) {
+      Static.keys[KeyCode.VK_R] = false;
+      Static.keys[KeyCode.VK_F] = false;
+    }
+  }
+
   private void doChunks() {
     //load more chunks as needed
     if (teleport) {
