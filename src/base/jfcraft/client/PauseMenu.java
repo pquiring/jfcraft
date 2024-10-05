@@ -29,6 +29,7 @@ public class PauseMenu extends RenderScreen {
       Static.inGame = true;
     }});
     addButton( "Options", 56, 300, 190, new Runnable() {public void run() {
+      //TODO : does nothing now
     }});
     openToLan = addButton( "Open to LAN", 266, 300, 190, new Runnable() {public void run() {
       if (Static.client.openToLan) return;
