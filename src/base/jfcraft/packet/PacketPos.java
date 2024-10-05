@@ -65,15 +65,7 @@ public class PacketPos extends Packet {
         Static.log("Error:client moved too far? " + dx + "," + dy + "," + dz);
         Static.log("C=" + f1 + "," + f2 + "," + f3);
         Static.log("S=" + client.player.pos.x + "," + client.player.pos.y + "," + client.player.pos.z);
-        PacketMoveBack update = new PacketMoveBack(Packets.MOVEBACK, client.player.pos.x, client.player.pos.y, client.player.pos.z);
-        client.serverTransport.addUpdate(update);
-        client.cheat++;
-        if (false && client.cheat > 20) {
-          client.serverTransport.close();
-          server.removeClient(client);
-          Static.log("Removing Player because cheat > 20");
-          return;
-        }
+        resetPlayerPos(client, server);
       } else {
         if (dx > 0.1f || dy > 0.1f || dz > 0.1f) {
           Static.log("Warning:client moved too far? " + dx + "," + dy + "," + dz);
@@ -118,11 +110,13 @@ public class PacketPos extends Packet {
     }
     if (chunk1 == null) {
       Static.log("Error:chunk1 == null");
+      resetPlayerPos(client, server);
       return;
     }
     Chunk chunk2 = client.player.getChunk();
     if (chunk2 == null) {
       Static.log("Error:chunk2 == null");
+      resetPlayerPos(client, server);
       return;
     }
     if (chunk1 != chunk2) {
@@ -179,6 +173,7 @@ public class PacketPos extends Packet {
           //break block
           if (client.s1.block.id == 0) {
             Static.log("Error:Player tried to break air?");
+            resetPlayerPos(client, server);
             return;
           }
           synchronized(client.s1.chunk.lock) {
@@ -296,6 +291,18 @@ public class PacketPos extends Packet {
       //try to use shield
       ItemBase itembase = Static.items.items[client.player.items[Player.shield_idx].id];
       itembase.useItem(client, client.s1);
+    }
+  }
+
+  private void resetPlayerPos(Client client, Server server) {
+    PacketMoveBack update = new PacketMoveBack(Packets.MOVEBACK, client.player.pos.x, client.player.pos.y, client.player.pos.z);
+    client.serverTransport.addUpdate(update);
+    client.cheat++;
+    if (false && client.cheat > 20) {
+      client.serverTransport.close();
+      server.removeClient(client);
+      Static.log("Removing Player because cheat > 20");
+      return;
     }
   }
 
