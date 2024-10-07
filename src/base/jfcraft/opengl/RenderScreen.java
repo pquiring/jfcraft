@@ -53,6 +53,12 @@ public abstract class RenderScreen {
   public static Matrix identity = new Matrix();
 
   public byte id;
+  public byte getID() {
+    return id;
+  }
+  public boolean isMain() {
+    return false;
+  }
   private TextField focus;
   public ArrayList<Button> buttons = new ArrayList<Button>();
   public ArrayList<CheckBox> checkboxes = new ArrayList<CheckBox>();

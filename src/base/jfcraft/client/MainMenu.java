@@ -23,6 +23,10 @@ public class MainMenu extends RenderScreen {
     id = Client.MAIN;
   }
 
+  public boolean isMain() {
+    return true;
+  }
+
   private void reset() {
     Static.client = null;
     Static.server = null;

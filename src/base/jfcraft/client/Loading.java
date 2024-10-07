@@ -51,7 +51,7 @@ public class Loading extends RenderScreen {
 
     if (done) {
       loadGL();
-      Static.video.setScreen(Static.screens.screens[Client.MAIN]);
+      Static.video.setScreen(Static.screens.getMain());
     }
   }
 

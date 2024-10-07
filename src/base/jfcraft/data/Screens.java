@@ -13,9 +13,13 @@ import jfcraft.opengl.*;
 public class Screens {
   public static final int MAX_ID = 1024;
   public RenderScreen[] screens = new RenderScreen[MAX_ID];
+  public byte main = -1;
 
   public void registerScreen(RenderScreen screen) {
     screens[screen.id] = screen;
+    if (screen.isMain()) {
+      main = screen.getID();
+    }
   }
 
   public void registerDefault() {
@@ -50,5 +54,9 @@ public class Screens {
       if (screen == null) continue;
       screen.init();
     }
+  }
+
+  public RenderScreen getMain() {
+    return screens[main];
   }
 }
