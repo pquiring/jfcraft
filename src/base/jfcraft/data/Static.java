@@ -20,7 +20,7 @@ import jfcraft.plugin.PluginLoader;
 import jfcraft.server.*;
 
 public class Static {
-  public static String version = "0.27";
+  public static String version = "0.28";
 
 //  public static boolean debug;
 

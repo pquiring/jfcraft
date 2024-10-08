@@ -310,7 +310,7 @@ public class Launcher extends javax.swing.JFrame {
   public void initWeb() {
     try {
       html.setContentType("text/html");
-      html.setPage(new URI("http://pquiring.github.io/jfcraft/news.html").toURL());
+      html.setPage(new URI("http://pquiring.github.io/jfcraft/whatsnew.txt").toURL());
     } catch (Exception e) {
       e.printStackTrace();
     }

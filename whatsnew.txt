@@ -1,7 +1,14 @@
 ChangeLog
 =========
 
-May 1, 2020 v0.26 released!
+Oct 8, 2024 : v0.28 released!
+  - after a long hiatus development has continued
+  - compass and clock render properly
+  - fixed stairs recipe
+  - lots of bug fixes and performance improvements
+  - upgraded to glfw/3.4
+
+May 1, 2020 v0.27 released!
   - many bugs fixed
   - terrain/biome generation improved
 
