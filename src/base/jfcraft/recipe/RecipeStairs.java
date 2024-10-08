@@ -23,7 +23,7 @@ public class RecipeStairs extends Recipe {
 //      if (items[0].id != Blocks.AIR) return null;
       if (items[1].id != Blocks.AIR) return null;
       if (items[2].id != Blocks.PLANKS) return null;
-//      if (items[2].var != var) return null;
+      if (items[2].var != var) return null;
 
       if (items[3].id != Blocks.AIR) return null;
       if (items[4].id != Blocks.PLANKS) return null;
@@ -42,7 +42,7 @@ public class RecipeStairs extends Recipe {
 
       if (items[0].id != Blocks.PLANKS) return null;
       if (items[0].var != var) return null;
-      if (items[1].id != Blocks.PLANKS) return null;
+      if (items[1].id != Blocks.AIR) return null;
       if (items[2].id != Blocks.AIR) return null;
 
       if (items[3].id != Blocks.PLANKS) return null;
