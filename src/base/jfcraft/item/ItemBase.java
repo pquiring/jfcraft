@@ -515,7 +515,11 @@ public class ItemBase implements RenderSource {
   public static RenderData data = new RenderData();
 
   public RenderDest getDest(RenderData data) {
-    return bufs[data.var[X] & varMask];
+    int idx = 0;
+    if (isVar) {
+      idx = data.var[X] & varMask;
+    }
+    return bufs[idx];
   }
 
   public void buildBuffers(RenderDest dest, RenderData data) {

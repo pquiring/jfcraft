@@ -16,6 +16,7 @@ import jfcraft.opengl.*;
 public class ItemCompass extends ItemBase {
   public ItemCompass(String id, String names[], String texture[]) {
     super(id, names, texture);
+    varMask = 0;
   }
   public int getAngle(int cnt) {
     float yAngle = 0;

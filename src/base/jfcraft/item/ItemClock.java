@@ -16,6 +16,7 @@ import jfcraft.opengl.*;
 public class ItemClock extends ItemBase {
   public ItemClock(String id, String names[], String texture[]) {
     super(id, names, texture);
+    varMask = 0;
   }
   public int getTime(int cnt) {
     float time = 0;
