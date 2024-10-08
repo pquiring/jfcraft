@@ -628,11 +628,11 @@ public class Items {
     registerItem(new ItemBase("MINECART_CHEST", new String[]{"Minecart Chest"}, new String[]{"chest_minecart"}));
     registerItem(new ItemBase("MINECART_FURNACE", new String[]{"Minecart Furnace"}, new String[]{"furnace_minecart"}));
     registerItem(new ItemBase("EGG", new String[]{"Egg"}, new String[]{"egg"}));
-    registerItem(new ItemCompass("COMPASS", new String[]{"Compass"}, new String[]{"compass_00"}));
+    registerItem(new ItemCompass("COMPASS", new String[]{"Compass"}, series("compass", 32)));
     registerItem(new ItemBase("FISHING_ROD", new String[]{"Fishing Rod"}, new String[]{"fishing_rod"})
       .setFuel(10).setMaterial(MAT_WOOD).setDurability(64)
     );
-    registerItem(new ItemClock("CLOCK", new String[]{"Clock"}, new String[]{"clock_00"}));
+    registerItem(new ItemClock("CLOCK", new String[]{"Clock"}, series("clock", 64)));
     registerItem(new ItemBase("GLOWSTONE_DUST", new String[]{"Glowstone Dust"}, new String[]{"glowstone_dust"}));
     registerItem(new ItemBase("FISH_RAW", new String[]{"Fish Raw"}, new String[]{"cod"}).setFood(2,0.4f));  //variations
     registerItem(new ItemBase("FISH_COOKED", new String[]{"Fish Cooked"}, new String[]{"cooked_cod"}).setFood(5,6));  //variations
@@ -712,6 +712,14 @@ public class Items {
       .setCanPlace().setBlockID("HOPPER").setDirFace()
     );
     registerItem(new ItemKelp("KELP", new String[]{"Kelp"}, new String[]{"kelp"}).setPlant("KELPTOP"));
+  }
+
+  private String[] series(String name, int count) {
+    String[] txts = new String[count];
+    for(int a=0;a<count;a++) {
+      txts[a] = String.format("%s%c%02d", name, '_', a);
+    }
+    return txts;
   }
 
   public TextureMap getTexture(String name) {
@@ -851,8 +859,8 @@ public class Items {
 
   public void initBuffers() {
     for(int a=0;a<MAX_ID;a++) {
-      if (regItems[a] == null) continue;
       ItemBase item = regItems[a];
+      if (item == null) continue;
       if (item.cantGive) continue;
       int vars = 1;
       if (item.isVar) {
@@ -864,13 +872,9 @@ public class Items {
       for(int var=0;var<vars;var++) {
         try {
           //create item object for inventory screens
-          item.bufs[var] = new RenderDest(1);
-          item.buildBuffers(item.bufs[var], ItemBase.data);
-          item.bufs[var].getBuffers(0).copyBuffers();
+          item.createItem(var);
           //create item object for rendering in world (voxels)
-          item.voxel[var] = new Voxel(item, var);
-          item.voxel[var].buildBuffers(item.voxel[var].dest, ItemBase.data);
-          item.voxel[var].dest.getBuffers(0).copyBuffers();
+          item.createVoxel(var);
         } catch (Exception e) {
           e.printStackTrace();
         }

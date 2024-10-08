@@ -558,6 +558,28 @@ public class ItemBase implements RenderSource {
     }
   }
 
+  /** Create Item to render in inventory screen. */
+  public void createItem(int var) {
+    if (bufs[var] == null) {
+      bufs[var] = new RenderDest(1);
+    }
+    buildBuffers(bufs[var], ItemBase.data);
+    bufs[var].getBuffers(0).copyBuffers();
+  }
+
+  /** Create Item voxel to render in player hand. */
+  public void createVoxel(int var) {
+    if (voxel[var] == null) {
+      voxel[var] = new Voxel(this, var);
+    }
+    voxel[var].buildBuffers(voxel[var].dest, ItemBase.data);
+    voxel[var].dest.getBuffers(0).copyBuffers();
+  }
+
+  public Voxel getVoxel(int var) {
+    return voxel[var];
+  }
+
   private static Matrix itemView = new Matrix();
 
   public void setViewMatrix(boolean left) {

@@ -20,12 +20,17 @@ public class Voxel implements RenderSource {
     dest = new RenderDest(1);
   }
 
+  public void setVar(int var) {
+    this.var = var;
+  }
+
   public void buildBuffers(RenderDest dest, RenderData data) {
     SubTexture st = item.textures[var];
     int w = st.ai.w;
     int h = st.ai.h;
     int px[] = st.ai.getPixels();
     RenderBuffers bufs = dest.getBuffers(0);
+    bufs.reset();
     float d = 1.0f / ((float)w);  //size of each voxel
     //bottom to top, left to right
     float x1 = 0f;

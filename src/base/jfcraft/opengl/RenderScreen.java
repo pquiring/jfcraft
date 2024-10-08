@@ -599,15 +599,7 @@ public abstract class RenderScreen {
     } else {
       setViewportItem(x, y);
       ItemBase itembase = Static.items.items[item.id];
-      int var = 0;
-      if (itembase.isVar) var = item.var;
-      if (itembase.bufs == null) {
-        Static.log("error:no buffers for item:" + itembase);
-        return;
-      }
-      RenderBuffers buf = itembase.bufs[var].getBuffers(0);
-      buf.bindBuffers();
-      buf.render();
+      itembase.render();
     }
   }
 

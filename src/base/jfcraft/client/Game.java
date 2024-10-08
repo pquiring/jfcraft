@@ -852,7 +852,7 @@ public class Game extends RenderScreen {
         //var max = 4
         var = Static.client.player.bowPower * (4-1)/ 40;
       }
-      voxel = itembase.voxel[var];
+      voxel = itembase.getVoxel(var);
       voxel.bindTexture();
     } else {
       itembase.bindTexture();
