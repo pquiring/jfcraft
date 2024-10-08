@@ -38,6 +38,12 @@
     </zip>
   </target>
 
+  <target name="base">
+    <zip destfile="base.zip">
+      <fileset dir="base" includes="**/*"/>
+    </zip>
+  </target>
+
   <target name="jar" depends="compile,depjars,jfassets,baseassets" description="build jar file">
     <!-- Build jar file from class files -->
     <jar destfile="jfcraft.jar" includes="**/*.class" basedir="${build}">

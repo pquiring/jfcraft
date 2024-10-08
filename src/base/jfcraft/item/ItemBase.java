@@ -71,10 +71,10 @@ public class ItemBase implements RenderSource {
     this.name = name;
     this.names = names;
   }
-  public ItemBase(String name, String names[], String textures[]) {
+  public ItemBase(String name, String names[], String images[]) {
     this.name = name;
     this.names = names;
-    this.images = textures;
+    this.images = images;
   }
 
   public ItemBase setMaxStack(int cnt) {

@@ -39,11 +39,9 @@ public class BlockGate extends BlockBase {
     boolean opened = false;
     if (data.chunk != null) {
       ExtraRedstone er = (ExtraRedstone)data.chunk.getExtra((int)data.x, (int)data.y, (int)data.z, Extras.REDSTONE);
-      if (er == null) {
-        Static.log("BlockGate.buildBuffers():Error:Can not find extra data");
-        return;
+      if (er != null) {
+        opened = er.active;
       }
-      opened = er.active;
     }
     SubTexture st = getTexture(data);
     Object3 obj;

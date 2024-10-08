@@ -36,10 +36,17 @@ public class ItemClock extends ItemBase {
     if (frame >= ai.noFrames) frame = ai.noFrames-1;
     if (frame < 0) frame = 0;
 //    Static.log("time=" + time + ",ay=" + ay + ":frames=" + frames);
-    tx1 = st.x1s[frame];
-    ty1 = st.y1s[frame];
-    tx2 = st.x2s[frame];
-    ty2 = st.y2s[frame];
+    if (st.isAnimated) {
+      tx1 = st.x1s[frame];
+      ty1 = st.y1s[frame];
+      tx2 = st.x2s[frame];
+      ty2 = st.y2s[frame];
+    } else {
+      tx1 = 0;
+      ty1 = 0;
+      tx2 = 1;
+      ty2 = 1;
+    }
     float x1 = 0;
     float y1 = 0;
     float x2 = 1;
