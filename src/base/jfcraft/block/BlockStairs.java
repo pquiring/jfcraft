@@ -22,6 +22,7 @@ public class BlockStairs extends BlockBase {
     isSolid = false;
     isDir = true;
     isDirXZ = true;
+    isVar = true;
   }
   public void buildBuffers(RenderDest dest, RenderData data) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
