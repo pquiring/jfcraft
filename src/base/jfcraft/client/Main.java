@@ -25,6 +25,11 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
   private boolean fullscreenMode;
   private boolean toggleFullscreenMode;
 
+  private boolean changeCursor;
+  private boolean cursorMode;
+
+  private Thread mainThread;
+
   public void run() {
     main = this;
     try {
@@ -40,6 +45,7 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
   }
 
   private void init() {
+    Static.log("Main.init:thread=" + Thread.currentThread().getName());
     Window.init();
     window = createWindow(Window.STYLE_VISIBLE | Window.STYLE_RESIZABLE | Window.STYLE_TITLEBAR,512,512,null);
     if (JF.isWindows()) {
@@ -63,7 +69,10 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
     Static.video.setScreen(new Loading());
   }
 
+  /** Main program loop. */
   private void loop() {
+    mainThread = Thread.currentThread();
+    Static.log("loop:thread=" + mainThread.getName());
     while (true) {
       Static.video.render();
       // Poll for window events.
@@ -87,6 +96,10 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
 //        GLContext.createFromCurrent();  //I don't use LWJGL for OpenGL API
         fullscreenMode = !fullscreenMode;
         Static.video.reload();
+      }
+      if (changeCursor) {
+        changeCursor = false;
+        _setCursor(cursorMode);
       }
     }
   }
@@ -118,19 +131,26 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
   }
 
   private void _setCursor(boolean state) {
-    if (state) {
-      current.showCursor();
+    if (Thread.currentThread() != mainThread) {
+      //wrong thread - glfw does not support this
+      cursorMode = state;
+      changeCursor = true;
     } else {
-      current.lockCursor();
+      if (state) {
+        current.showCursor();
+      } else {
+        current.lockCursor();
+      }
     }
   }
 
   public static void setCursor(boolean state) {
+    Static.log("setCursor:" + state);
     main._setCursor(state);
   }
 
   public static void toggleFullscreen() {
-//    main.toggleFullscreenMode = true;  //Not supported yet
+    main.toggleFullscreenMode = false;  //Not supported yet
   }
 
   @Override
