@@ -962,4 +962,8 @@ public class Game extends RenderScreen {
     );
     img.savePNG(filename);
   }
+
+  public void setViewMatrix() {
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
+  }
 }

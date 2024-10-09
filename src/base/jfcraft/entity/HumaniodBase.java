@@ -171,6 +171,9 @@ public abstract class HumaniodBase extends CreatureBase {
     itembase.bindTexture();
 
     itembase.render();
+
+    //reset view matrix after changing it
+    Static.game.setViewMatrix();
   }
 
   public Item getRightArmItem() {
