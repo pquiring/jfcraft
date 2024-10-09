@@ -750,7 +750,10 @@ public class RenderBuffers implements Cloneable {
   }
 
   public void bindBuffers() {
-    if (idxCnt == 0) return;
+    if (idxCnt == 0) {
+      //Static.logTrace("Error:RenderBuffer.bindBuffers() but buffers are empty");
+      return;
+    }
     glBindBuffer(GL_ARRAY_BUFFER, vpb);
     glVertexAttribPointer(Static.attribVertex, 3, GL_FLOAT, GL_FALSE, 0, 0);
 

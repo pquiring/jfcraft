@@ -29,18 +29,18 @@ public class RenderData {
 
   public int bits;
 
-  public char id[] = new char[11];  //IDs of adjacent sides
+  public char[] id = new char[11];  //IDs of adjacent sides
 //  public int bits[] = new int[11];
-    public int var[] = new int[11];  //from bits
-    public int dir[] = new int[11];  //from bits
+    public int[] var = new int[11];  //from bits
+    public int[] dir = new int[11];  //from bits
 
   //block2 data
     public char[] id2 = new char[11];
     public int[] var2 = new int[11];  //from bits2
     public int[] dir2 = new int[11];  //from bits2
 
-  public float sl[] = new float[32];  //sun light levels
-  public float bl[] = new float[32];  //blk light levels
+  public float[] sl = new float[32];  //sun light levels
+  public float[] bl = new float[32];  //blk light levels
   public boolean adjLight;
 
   public boolean[] opaque = new boolean[11];  //is side opaque (therefore do not need to render)

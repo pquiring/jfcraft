@@ -25,7 +25,7 @@ public class BlockAlpha extends BlockBase {
     SubTexture st = getTexture(data);
     for(int a=0;a<6;a++) {
       if (data.opaque[a]) continue;
-      if (data.id[a] == id) continue;
+      if (data.id[a] == id && id != 0) continue;
       data.side = a;
       data.dirSide = a;
       data.isDir = isDir;
