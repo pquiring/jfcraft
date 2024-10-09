@@ -128,6 +128,7 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
           String value = arg.substring(idx + 1);
           switch (key) {
             case "-music": Static.optionMusic = value.equals("true"); break;
+            case "-creative": Settings.current.creativeMode = value.equals("true"); break;
           }
       }
     }
