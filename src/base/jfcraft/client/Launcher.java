@@ -285,12 +285,13 @@ public class Launcher extends javax.swing.JFrame {
   public void checkVersion() {
     try {
       BufferedReader reader = new BufferedReader(new InputStreamReader(
-        new URI("http://pquiring.github.io/jfcraft/version.html").toURL().openStream()));
+        new URI("http://pquiring.github.io/jfcraft/docs/version.html").toURL().openStream())
+      );
       String line = reader.readLine();
       if (line.equals(Static.version)) {Static.log("version is up-to-date"); return;}
       Static.log("newer version is available : " + line);
       JOptionPane.showMessageDialog(this,
-        "A newer version of jfCraft is available! (v" + line + ")\r\nPlease goto http://pquiring.github.io/jfcraft to download it",
+        "A newer version of jfCraft is available! (v" + line + ")\r\nPlease goto http://jfcraft.sourceforge.net to download it",
         "Info",
         JOptionPane.INFORMATION_MESSAGE);
     } catch (Exception e) {
