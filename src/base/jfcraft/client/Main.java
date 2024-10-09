@@ -19,6 +19,8 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
   private Window fullscreen;
   private Window current;
 
+  private String[] args;
+
   private float mx, my;
   private int mb;
 
@@ -30,10 +32,15 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
 
   private Thread mainThread;
 
+  public Main(String[] args) {
+    this.args = args;
+  }
+
   public void run() {
     main = this;
     try {
       Settings.load();
+      parseArgs();
       init();
       initGame();
       loop();
@@ -105,19 +112,25 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
   }
 
   public static void main(String[] args) {
+    new Main(args).run();
+  }
+
+  private void parseArgs() {
     for(int a=0;a<args.length;a++) {
       String arg = args[a];
-      if (arg.equals("-debug")) {
-        Static.debugTest = true;
-      }
-      if (arg.equals("-debuglights")) {
-        Static.debugLights = true;
-      }
-      if (arg.equals("-music=false")) {
-        Static.optionMusic = false;
+      switch (arg) {
+        case "-debug": Static.debugTest = true; break;
+        case "-debuglights": Static.debugLights = true; break;
+        default:
+          int idx = arg.indexOf('=');
+          if (idx == -1) break;
+          String key = arg.substring(0, idx);
+          String value = arg.substring(idx + 1);
+          switch (key) {
+            case "-music": Static.optionMusic = value.equals("true"); break;
+          }
       }
     }
-    new Main().run();
   }
 
   public static Main main;

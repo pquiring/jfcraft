@@ -23,6 +23,7 @@ public class Settings {
   public boolean doViewBobbing = true;  //view bobbing
   public boolean pvp = true;
   public boolean dropItemsOnDeath = true;
+  public boolean creativeMode = false;
   //VoIP stuff
   public boolean server_voip = true;
   public boolean client_voip = true;
@@ -70,6 +71,7 @@ public class Settings {
     doViewBobbing = true;  //view bobbing
     pvp = true;
     dropItemsOnDeath = true;
+    creativeMode = false;
     //VoIP stuff
     server_voip = true;
     client_voip = true;

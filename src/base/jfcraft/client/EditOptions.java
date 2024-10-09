@@ -56,6 +56,7 @@ public class EditOptions extends javax.swing.JDialog {
     fpsSlider = new javax.swing.JSlider();
     fpsLabel = new javax.swing.JLabel();
     fancy = new javax.swing.JCheckBox();
+    creativeMode = new javax.swing.JCheckBox();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     setTitle("Options");
@@ -77,7 +78,7 @@ public class EditOptions extends javax.swing.JDialog {
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(pvp)
           .addComponent(server_voip))
-        .addContainerGap(286, Short.MAX_VALUE))
+        .addContainerGap(312, Short.MAX_VALUE))
     );
     jPanel1Layout.setVerticalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -198,6 +199,8 @@ public class EditOptions extends javax.swing.JDialog {
     fancy.setSelected(true);
     fancy.setText("Fancy Graphics");
 
+    creativeMode.setText("Allow Creative Mode (C)");
+
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
     jPanel3Layout.setHorizontalGroup(
@@ -210,14 +213,15 @@ public class EditOptions extends javax.swing.JDialog {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(fpsSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(fpsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(fpsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
           .addGroup(jPanel3Layout.createSequentialGroup()
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(dropItemsOnDeath)
               .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(clouds)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fancy)))
+                .addComponent(fancy))
+              .addComponent(creativeMode))
             .addGap(0, 0, Short.MAX_VALUE)))
         .addContainerGap())
     );
@@ -225,19 +229,21 @@ public class EditOptions extends javax.swing.JDialog {
       jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel3Layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addComponent(fpsLabel)
+        .addComponent(dropItemsOnDeath)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(clouds)
+          .addComponent(fancy))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(creativeMode)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(jPanel3Layout.createSequentialGroup()
-            .addComponent(dropItemsOnDeath)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-              .addComponent(clouds)
-              .addComponent(fancy))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-              .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-              .addComponent(fpsSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jLabel2)
+            .addGap(0, 0, Short.MAX_VALUE))
+          .addComponent(fpsLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+          .addComponent(fpsSlider, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+        .addContainerGap())
     );
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -266,7 +272,7 @@ public class EditOptions extends javax.swing.JDialog {
         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 117, Short.MAX_VALUE)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(ok)
           .addComponent(cancel))
@@ -294,6 +300,7 @@ public class EditOptions extends javax.swing.JDialog {
   private javax.swing.JButton cancel;
   private javax.swing.JCheckBox client_voip;
   private javax.swing.JCheckBox clouds;
+  private javax.swing.JCheckBox creativeMode;
   private javax.swing.JCheckBox dropItemsOnDeath;
   private javax.swing.JCheckBox fancy;
   private javax.swing.JLabel fpsLabel;
@@ -321,6 +328,7 @@ public class EditOptions extends javax.swing.JDialog {
     server_voip.setSelected(Settings.current.server_voip);
     pvp.setSelected(Settings.current.pvp);
     dropItemsOnDeath.setSelected(Settings.current.dropItemsOnDeath);
+    creativeMode.setSelected(Settings.current.creativeMode);
     client_voip.setSelected(Settings.current.client_voip);
     ptt.setSelected(Settings.current.ptt);
     fancy.setSelected(Settings.current.fancy);
@@ -337,6 +345,7 @@ public class EditOptions extends javax.swing.JDialog {
     Settings.current.server_voip = server_voip.isSelected();
     Settings.current.pvp = pvp.isSelected();
     Settings.current.dropItemsOnDeath = dropItemsOnDeath.isSelected();
+    Settings.current.creativeMode = creativeMode.isSelected();
     Settings.current.client_voip = client_voip.isSelected();
     Settings.current.ptt = ptt.isSelected();
     Settings.current.mic = (String)mic.getSelectedItem();

@@ -339,7 +339,7 @@ public class Client {
         }
         if (Static.keys[KeyCode.VK_C]) {
           Static.keys[KeyCode.VK_C] = false;
-          if (Static.debugTest) {
+          if (Settings.current.creativeMode) {
             clientTransport.gamemode();
             if (player.mode == EntityBase.MODE_FLYING)
               player.mode = EntityBase.MODE_WALK;
