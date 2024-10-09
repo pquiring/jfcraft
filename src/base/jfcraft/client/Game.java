@@ -357,6 +357,7 @@ public class Game extends RenderScreen {
       o_box.render();
       glUniform1i(Static.uniformEnableTextures, 1);
     }
+    //render box around selected entity
     if (Static.client.selection.entity != null) {
       o_box.reset();
       EntityBase e = Static.client.selection.entity;
@@ -418,6 +419,9 @@ public class Game extends RenderScreen {
     }
     glUniform1f(Static.uniformSunLight, sunLight);
 
+    //reset view matrix (entities can change it)
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
+
     pro.next();
 
     //render text (signs)
@@ -439,7 +443,7 @@ public class Game extends RenderScreen {
 
     pro.next();
 
-    //render stitched chunks (alpha) (ie: iceblock)
+    //render stitched chunks (alpha) (ie: iceblock, water)
     for(int a=0;a<chunks.length;a++) {
       Chunk chunk = chunks[a];
       if (!chunk.inRange) continue;

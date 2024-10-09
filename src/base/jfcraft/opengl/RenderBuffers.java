@@ -819,4 +819,8 @@ public class RenderBuffers implements Cloneable {
     center.y = y1 + (y2 - y1)/2f;
     center.z = z1 + (z2 - z1)/2f;
   }
+
+  public String toString() {
+    return "RenderBuffers:" + idxCnt;
+  }
 }
