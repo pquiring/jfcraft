@@ -7,11 +7,25 @@ Includes 0% Minecraft source or resources.
 Uses the Faithful Texture pack.
 Is not compatible with the official game in anyway.
 
-Some parts of the game are complete but much is still left to do.
-See todo.txt and bugs.txt for a full list.
+The server includes a VoIP push to talk (PTT) communications system.
 
-The server includes a VoIP communication system.
-Hold in the right CTRL key to talk (PTT).
+Controls:
+---------
+A/S/D/W = move character
+SPACE = jump
+LEFT_CTRL = run
+LEFT_SHIFT = sneak
+E = inventory
+RIGHT_CTRL = talk (if PTT enabled)
+T = type message (chat)
+C = toggle creative mode (if enabled)
+R/F = fly up/down when in creative mode (no clipping)
+mouse = look around
+B1 = use item in hand
+B2 = use block / hold up shield
+wheel = select item
+1-9 = select item
+Q = drop item
 
 Commands:
 ---------
@@ -38,6 +52,10 @@ Commands:
 Downloading:
 ------------
 Windows installer is available at http://jfcraft.sourceforge.net
+
+Assets:
+-------
+You can override assets by placing them in %APPDATA%\.jfcraft\assets
 
 Compiling:
 ----------
