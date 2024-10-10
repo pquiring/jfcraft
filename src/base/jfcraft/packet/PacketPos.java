@@ -337,11 +337,13 @@ public class PacketPos extends Packet {
           }
           if (!itembase2.place(client, client.s1)) return true;
           server.world.checkPowered(client.s1.chunk.dim, client.s1.x, client.s1.y, client.s1.z);
-          item.count--;
-          if (item.count == 0) {
-            item.clear();
+          if (client.player.mode != EntityBase.MODE_FLYING) {
+            item.count--;
+            if (item.count == 0) {
+              item.clear();
+            }
+            client.serverTransport.setInvItem((byte)client.player.activeSlot, item);
           }
-          client.serverTransport.setInvItem((byte)client.player.activeSlot, item);
           return false;
         }
       }
@@ -360,11 +362,13 @@ public class PacketPos extends Packet {
           }
           if (!itembase2.place(client, client.s1)) return false;
           server.world.checkPowered(client.s1.chunk.dim, client.s1.x, client.s1.y, client.s1.z);
-          item.count--;
-          if (item.count == 0) {
-            item.clear();
+          if (client.player.mode != EntityBase.MODE_FLYING) {
+            item.count--;
+            if (item.count == 0) {
+              item.clear();
+            }
+            client.serverTransport.setInvItem((byte)client.player.activeSlot, item);
           }
-          client.serverTransport.setInvItem((byte)client.player.activeSlot, item);
         }
       }
     }
