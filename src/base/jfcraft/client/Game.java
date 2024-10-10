@@ -641,7 +641,7 @@ public class Game extends RenderScreen {
         }
       }
       float air = Static.client.player.air;
-      if (air != 20f) {
+      if (Static.client.player.underWater) {
         for(int a=0;a<10;a++) {
           if (air >= 2) {
             //full
