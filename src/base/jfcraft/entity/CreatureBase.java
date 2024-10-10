@@ -36,6 +36,7 @@ public abstract class CreatureBase extends EntityBase {
   }
 
   public void takeDmg(float amt, CreatureBase from) {
+    if (creative) return;  //immune to dmg
     synchronized(lock) {
       if (health == 0) {
         Static.log("already dead");

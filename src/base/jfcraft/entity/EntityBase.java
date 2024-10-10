@@ -1255,6 +1255,10 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     this.part = part;
   }
 
+  public boolean isFlying() {
+    return mode == MODE_FLYING;
+  }
+
   public String toString() {
     return "EntityBase:" + getName();
   }

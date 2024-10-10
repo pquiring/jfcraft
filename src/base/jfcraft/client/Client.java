@@ -337,14 +337,22 @@ public class Client {
           Static.keys[KeyCode.VK_Q] = false;
           clientTransport.drop();
         }
-        if (Static.keys[KeyCode.VK_C]) {
-          Static.keys[KeyCode.VK_C] = false;
-          if (Settings.current.creativeMode) {
-            clientTransport.gamemode();
-            if (player.mode == EntityBase.MODE_FLYING)
-              player.mode = EntityBase.MODE_WALK;
-            else
+        if (Settings.current.creativeMode) {
+          if (Static.keys[KeyCode.VK_C]) {
+            Static.keys[KeyCode.VK_C] = false;
+            player.creative = !player.creative;
+            if (!player.creative) {
+              if (player.isFlying()) {
+                player.mode = EntityBase.MODE_WALK;
+              }
+            }
+            clientTransport.changegamemode();
+          }
+          if (player.creative && (fup || fdn)) {
+            if (!player.isFlying()) {
               player.mode = EntityBase.MODE_FLYING;
+              clientTransport.changegamemode();
+            }
           }
         }
       }

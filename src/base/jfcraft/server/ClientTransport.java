@@ -228,9 +228,9 @@ public abstract class ClientTransport extends Transport {
       packets.add(packet);
     }
   }
-  public void gamemode() {
+  public void changegamemode() {
     //must be sent BEFORE next POS packet
-    Packet packet = new PacketToggleGameMode(Packets.TOGGLEGAMEMODE);
+    Packet packet = new PacketToggleGameMode(Packets.TOGGLEGAMEMODE, client.player.creative, client.player.isFlying());
     send(coder.encodeObject(packet, false));
   }
   public void setExtra(int cx,int cz,ExtraBase eb) {

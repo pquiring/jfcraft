@@ -19,17 +19,21 @@ public class PacketToggleGameMode extends Packet {
     super(cmd);
   }
 
-  public PacketToggleGameMode(byte cmd, byte b) {
+  public PacketToggleGameMode(byte cmd, boolean creative, boolean flying) {
     super(cmd);
-    this.b = b;
+    byte bits = 0;
+    if (creative) bits |= 1;
+    if (flying) bits |= 2;
+    this.b = bits;
   }
 
   //process on server side
   public void process(Server server, Client client) {
-    if (client.player.mode == EntityBase.MODE_FLYING)
-      client.player.mode = EntityBase.MODE_IDLE;
-    else
-      client.player.mode = EntityBase.MODE_FLYING;
+    byte bits = b;
+    boolean creative = (bits & 1) != 0;
+    boolean flying = (bits & 2) != 0;
+    client.player.creative = creative;
+    client.player.mode = flying ? EntityBase.MODE_FLYING : EntityBase.MODE_WALK;
   }
 
   @Override
