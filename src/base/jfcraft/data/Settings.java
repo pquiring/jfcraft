@@ -34,6 +34,7 @@ public class Settings {
   public boolean clouds = true;
 
   public static void load() {
+    Static.initBaseFolder();
     try {
       XML xml = new XML();
       FileInputStream fis = new FileInputStream(Static.getBasePath() + "/jfcraft.xml");

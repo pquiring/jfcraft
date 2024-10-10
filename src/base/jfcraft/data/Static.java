@@ -87,6 +87,25 @@ public class Static {
     JFLog.logTrace(getLogID(), msg);
   }
 
+  private static String[] folders = {
+    "block",
+    "entity",
+    "gui",
+    "item",
+    "models",
+  };
+
+  public static void initBaseFolder() {
+    //create .jfcraft folder (and some sub folders)
+    new File(getBasePath()).mkdirs();
+    new File(getWorldsPath()).mkdirs();
+    String assets = getBasePath() + "assets/minecraft/textures/";
+    new File(assets).mkdirs();
+    for(String folder : folders) {
+      new File(assets + folder).mkdirs();
+    }
+  }
+
   private static void initLog(String name, boolean stdout) {
     String path = getBasePath() + "/logs";
     new File(path).mkdirs();

@@ -82,17 +82,30 @@ public class Assets {
     }
     ZipEntry ze = null;
     InputStream is = null;
-    for(int a=0;a<zips.size();a++) {
-      ze = zips.get(a).getEntry(filename);
-      if (ze != null) {
-        try {
-          is = zips.get(a).getInputStream(ze);
-        } catch (Exception e) {
-          Static.log(e);
-          is = null;
+    String file = Static.getBasePath() + filename;
+    //check %APPDATA%\.jfcraft\assets
+    if (new File(file).exists()) {
+      try {
+        is = new FileInputStream(file);
+      } catch (Exception e) {
+        Static.log(e);
+        is = null;
+      }
+    }
+    if (is == null) {
+      //search zip files
+      for(int a=0;a<zips.size();a++) {
+        ze = zips.get(a).getEntry(filename);
+        if (ze != null) {
+          try {
+            is = zips.get(a).getInputStream(ze);
+          } catch (Exception e) {
+            Static.log(e);
+            is = null;
+            break;
+          }
           break;
         }
-        break;
       }
     }
     if (is == null) {
