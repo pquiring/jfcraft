@@ -337,6 +337,7 @@ public class Game extends RenderScreen {
 
     //render main stitched objects
     for(Chunk chunk : chunks) {
+      if (!chunk.inRange) continue;
       obj = chunk.dest.getBuffers(Chunk.DEST_NORMAL);
       if (obj.isBufferEmpty()) continue;
       glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, chunk.mat.m);  //model matrix
@@ -426,8 +427,7 @@ public class Game extends RenderScreen {
 
     //render entities
     //these will change the view/model matrix
-    for(int a=0;a<chunks.length;a++) {
-      Chunk chunk = chunks[a];
+    for(Chunk chunk : chunks) {
       if (!chunk.inRange) continue;
       EntityBase entities[] = chunk.getEntities();
       int numEntities = entities.length;
@@ -452,8 +452,7 @@ public class Game extends RenderScreen {
 
     //render text (signs)
     t_text.bind();
-    for(int a=0;a<chunks.length;a++) {
-      Chunk chunk = chunks[a];
+    for(Chunk chunk : chunks) {
       if (!chunk.inRange) continue;
       if (!chunk.dest.exists(Chunk.DEST_TEXT)) continue;
       obj = chunk.dest.getBuffers(Chunk.DEST_TEXT);
@@ -470,8 +469,7 @@ public class Game extends RenderScreen {
     pro.next();
 
     //render stitched chunks (alpha) (ie: iceblock, water)
-    for(int a=0;a<chunks.length;a++) {
-      Chunk chunk = chunks[a];
+    for(Chunk chunk : chunks) {
       if (!chunk.inRange) continue;
       if (!chunk.dest.exists(Chunk.DEST_ALPHA)) continue;
       obj = chunk.dest.getBuffers(Chunk.DEST_ALPHA);
