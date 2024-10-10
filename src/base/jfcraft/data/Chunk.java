@@ -29,6 +29,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   private byte lights[][] = new byte[256][];  //blk_light:4 sun_light:4
   //blocks2 is for WATER, LAVA, SNOW, etc. (extra plane)
 
+  public double distance;  //from camera (to sort chunks)
+
   public long seed;
 //  public boolean readOnly;
   public boolean needPhase2, needPhase3;

@@ -752,7 +752,7 @@ public class Items {
         item.ai[b] = ai;
       }
     }
-    Collections.sort(tiles, new Comparator<AssetImage>() {
+    tiles.sort(new Comparator<AssetImage>() {
       public int compare(AssetImage o1, AssetImage o2) {
         AssetImage ai1 = (AssetImage)o1;
         AssetImage ai2 = (AssetImage)o2;

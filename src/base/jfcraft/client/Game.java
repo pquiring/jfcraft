@@ -254,6 +254,24 @@ public class Game extends RenderScreen {
 
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
 
+    //calc chunk distance from camera (approx)
+    float cam_x = Static.camera_pos.x;
+    float cam_z = Static.camera_pos.z;
+    for(Chunk chunk : chunks) {
+      double x = ((chunk.cx * 16f) - cam_x);
+      double y = ((chunk.cz * 16f) - cam_z);
+      chunk.distance = Math.sqrt(x * x + y * y);
+    }
+
+    //sort chunks far to near (based on camera view)
+    chunks = Chunks.sortChunks(chunks, new Comparator<Chunk> () {
+      public int compare(Chunk o1, Chunk o2) {
+        if (o1.distance < o2.distance) return 1;
+        if (o1.distance > o2.distance) return -1;
+        return 0;
+      }
+    });
+
     //setup frustum culling
     p3.set(Static.camera_pos.x, Static.camera_pos.y, Static.camera_pos.z);
     l3.set(0, 0, -1f);
@@ -307,6 +325,7 @@ public class Game extends RenderScreen {
       pts[7].v[0] = px1;
       pts[7].v[2] = pz2;
       if (frustum.boxInside(pts) == Frustum.OUTSIDE) {
+        //do not render chunk outside of view
         fcnt++;
         continue;
       }

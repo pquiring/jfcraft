@@ -923,8 +923,7 @@ public class Blocks {
       tiles.add(ai);
     }
     //sort list big to small (animated first)
-    //NOTE:tiles.sort(Comparator) is only available in JDK8+
-    Collections.sort(tiles, new Comparator<AssetImage>() {
+    tiles.sort(new Comparator<AssetImage>() {
       public int compare(AssetImage o1, AssetImage o2) {
         AssetImage ai1 = (AssetImage)o1;
         AssetImage ai2 = (AssetImage)o2;

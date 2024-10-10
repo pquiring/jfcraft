@@ -310,6 +310,10 @@ public class Chunks {
     }
     return chunks;
   }
+  public static Chunk[] sortChunks(Chunk[] chunks, Comparator<Chunk> cmp) {
+    Arrays.sort(chunks, cmp);
+    return chunks;
+  }
 
   private Object fileLock = new Object();
   private HashMap<ChunkKey, ChunkStore> stores = new HashMap<ChunkKey, ChunkStore>();
