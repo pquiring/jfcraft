@@ -34,7 +34,7 @@ Commands:
 /tp x y z
   - Teleports you
 /time tick
-  - Sets current time in ticks (0=midnight 600=6am 1800=6pm etc)
+  - Sets current time in ticks (0=midnight 6000=6am 18000=6pm etc)
 /healme
   - "Heal me I am in need of assistance" - Palley
   - Restores all your health and hunger
