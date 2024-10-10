@@ -47,6 +47,7 @@ public class Static {
   public static Matrix identity = new Matrix();
   public static XYZ camera_pos = new XYZ();  //camera position
   public static XYZ camera_ang = new XYZ();  //camera angle
+  public static final double INF_DISTANCE = JF.TB;
 
   public static boolean debugRotate = false;
   public static boolean debugProfile = false;

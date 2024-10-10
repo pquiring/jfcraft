@@ -254,24 +254,6 @@ public class Game extends RenderScreen {
 
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
 
-    //calc chunk distance from camera (approx)
-    float cam_x = Static.camera_pos.x;
-    float cam_z = Static.camera_pos.z;
-    for(Chunk chunk : chunks) {
-      double x = ((chunk.cx * 16f) - cam_x);
-      double y = ((chunk.cz * 16f) - cam_z);
-      chunk.distance = Math.sqrt(x * x + y * y);
-    }
-
-    //sort chunks far to near (based on camera view)
-    chunks = Chunks.sortChunks(chunks, new Comparator<Chunk> () {
-      public int compare(Chunk o1, Chunk o2) {
-        if (o1.distance < o2.distance) return 1;
-        if (o1.distance > o2.distance) return -1;
-        return 0;
-      }
-    });
-
     //setup frustum culling
     p3.set(Static.camera_pos.x, Static.camera_pos.y, Static.camera_pos.z);
     l3.set(0, 0, -1f);
@@ -293,9 +275,8 @@ public class Game extends RenderScreen {
 
     pro.next();
 
-    //render main stitched objects
-    for(int a=0;a<chunks.length;a++) {
-      Chunk chunk = chunks[a];
+    //calc which chunks are in front of camera
+    for(Chunk chunk : chunks) {
       chunk.inRange = false;
       if (!chunk.canRender()) continue;
       if (chunk.isAllEmpty) continue;
@@ -330,6 +311,32 @@ public class Game extends RenderScreen {
         continue;
       }
       chunk.inRange = true;
+    }
+
+    //calc chunk distance from camera (approx)
+    float cam_x = Static.camera_pos.x;
+    float cam_z = Static.camera_pos.z;
+    for(Chunk chunk : chunks) {
+      if (!chunk.inRange) {
+        chunk.distance = Static.INF_DISTANCE;
+        continue;
+      }
+      double x = ((chunk.cx * 16f) - cam_x);
+      double y = ((chunk.cz * 16f) - cam_z);
+      chunk.distance = Math.sqrt(x * x + y * y);
+    }
+
+    //sort chunks far to near (based on camera view)
+    chunks = Chunks.sortChunks(chunks, new Comparator<Chunk> () {
+      public int compare(Chunk o1, Chunk o2) {
+        if (o1.distance < o2.distance) return 1;
+        if (o1.distance > o2.distance) return -1;
+        return 0;
+      }
+    });
+
+    //render main stitched objects
+    for(Chunk chunk : chunks) {
       obj = chunk.dest.getBuffers(Chunk.DEST_NORMAL);
       if (obj.isBufferEmpty()) continue;
       glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, chunk.mat.m);  //model matrix
