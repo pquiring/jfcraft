@@ -15,6 +15,7 @@ package jfcraft.opengl;
 
 public class VertexShader {
   public static String source =
+"#version 330\n" +
 "attribute vec2 aTextureCoord;\n" +
 "attribute vec2 aTextureCoord2;\n" +  //used to show "cracking" overlay
 "attribute vec3 aVertexPosition;\n" +

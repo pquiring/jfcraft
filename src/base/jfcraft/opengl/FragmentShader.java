@@ -14,6 +14,7 @@ package jfcraft.opengl;
 
 public class FragmentShader {
   public static String source =
+"#version 330\n" +
 "varying vec2 vTextureCoord;\n" +
 "varying vec2 vTextureCoord2;\n" +
 "varying float vLength;\n" +
