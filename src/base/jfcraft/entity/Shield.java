@@ -12,7 +12,7 @@ import jfcraft.data.*;
 import jfcraft.item.*;
 import jfcraft.opengl.*;
 
-public class Shield extends BlockEntity {
+public class Shield extends EntityBase {
   public float lidAngle;
   public static RenderDest dest;
   public static Model model;
@@ -97,9 +97,19 @@ public class Shield extends BlockEntity {
     dest.copyBuffers();
   }
 
+  private void setMatrixModel() {
+    mat.setIdentity();
+    mat.addRotate(-ang.y, 0, 1, 0);
+    mat.addRotate(-ang.x, 1, 0, 0);
+    mat.addTranslate(pos.x, pos.y, pos.z);
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
+  }
+
   public void render() {
+//    setMatrixModel();
     RenderBuffers buf = dest.getBuffers(part);
     buf.bindBuffers();
     buf.render();
+//    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
   }
 }

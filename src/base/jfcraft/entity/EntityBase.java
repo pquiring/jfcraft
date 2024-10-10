@@ -1254,4 +1254,8 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public void setPart(int part) {
     this.part = part;
   }
+
+  public String toString() {
+    return "EntityBase:" + getName();
+  }
 }

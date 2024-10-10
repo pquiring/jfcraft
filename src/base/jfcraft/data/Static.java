@@ -129,7 +129,10 @@ public class Static {
   public static int attribVertex, attribTextureCoords, attribTextureCoords2, attribColor, attribSunLight, attribBlockLight;
 
   //opengl uniforms
-  public static int uniformMatrixPerspective, uniformMatrixModel , uniformMatrixView;
+  public static int uniformMatrixPerspective;
+  public static int uniformMatrixModel;
+  public static int uniformMatrixView;
+
   public static int uniformSunLight;
   public static int uniformAlphaFactor;
   public static int uniformEnableTextures;

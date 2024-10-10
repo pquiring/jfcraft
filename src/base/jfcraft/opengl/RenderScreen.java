@@ -599,6 +599,8 @@ public abstract class RenderScreen {
     } else {
       setViewportItem(x, y);
       ItemBase itembase = Static.items.items[item.id];
+      ItemBase.data.hand = 0;
+      itembase.bindTexture();
       itembase.render();
     }
   }

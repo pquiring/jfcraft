@@ -9,8 +9,7 @@ package jfcraft.item;
 
 import javaforce.*;
 import javaforce.gl.*;
-import static javaforce.gl.GL.GL_FALSE;
-import static javaforce.gl.GL.glUniformMatrix4fv;
+import static javaforce.gl.GL.*;
 
 import jfcraft.item.Item;
 import jfcraft.opengl.*;
@@ -47,6 +46,7 @@ public class ItemBase implements RenderSource {
   public int material;
   public RenderDest bufs[];  //inventory (vars)
   public boolean renderAsEntity;
+  public boolean renderAsItem;
   public int entityID;
   public float durability = 0.01f;  //good for 100 uses
   public int varMask = 0xf;
@@ -523,7 +523,7 @@ public class ItemBase implements RenderSource {
   }
 
   public void buildBuffers(RenderDest dest, RenderData data) {
-    if (renderAsEntity) return;
+    if (renderAsEntity && !renderAsItem) return;
     addFaceInvItem(dest.getBuffers(0), data.var[X], isGreen);
     buffersIdx = 0;
   }
@@ -533,7 +533,7 @@ public class ItemBase implements RenderSource {
   }
 
   public void bindTexture() {
-    if (renderAsEntity) {
+    if (renderAsEntity && data.hand != 0) {
       EntityBase entity = Static.entities.entities[entityID];
       entity.bindTexture();
     } else {
@@ -542,7 +542,7 @@ public class ItemBase implements RenderSource {
   }
 
   public void render() {
-    if (renderAsEntity) {
+    if (renderAsEntity && data.hand != 0) {
       EntityBase entity = Static.entities.entities[entityID];
       entity.pos.x = 0;
       entity.pos.y = 0;
@@ -554,6 +554,7 @@ public class ItemBase implements RenderSource {
       } else {
         entity.setPart(EntityBase.R_ITEM);
       }
+      entity.bindTexture();
       entity.render();
     } else {
       RenderBuffers buf = getDest(data).getBuffers(buffersIdx);
