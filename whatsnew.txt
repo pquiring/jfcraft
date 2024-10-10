@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+Oct 9, 2024 : v0.29 released!
+  - fixed alpha rendering
+  - fixed shield rendering
+
 Oct 8, 2024 : v0.28 released!
   - after a long hiatus development has continued
   - compass and clock render properly
