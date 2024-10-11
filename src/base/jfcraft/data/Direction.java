@@ -65,10 +65,6 @@ public class Direction {
   public static final int QLSW = 0x40;
   public static final int QLSE = 0x80;
 
-  //left/right hand
-  public static final int LEFT = 1;
-  public static final int RIGHT = 2;
-
   public static int opposite(int dir) {
     switch (dir) {
       case A: return B;

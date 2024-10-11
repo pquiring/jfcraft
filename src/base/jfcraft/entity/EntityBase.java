@@ -933,6 +933,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   }
 
   //normal body parts (steve, zombie, etc.)
+  public static final int NONE = -1;
   public static final int HEAD = 0;
   public static final int BODY = 1;
   public static final int L_ARM = 2;

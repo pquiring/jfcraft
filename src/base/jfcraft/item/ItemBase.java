@@ -20,6 +20,7 @@ import jfcraft.entity.*;
 import static jfcraft.data.Direction.*;
 import jfcraft.item.*;
 import static jfcraft.data.Types.*;
+import static jfcraft.entity.EntityBase.*;
 
 public class ItemBase implements RenderSource {
   public char id;
@@ -46,6 +47,7 @@ public class ItemBase implements RenderSource {
   public int material;
   public RenderDest bufs[];  //inventory (vars)
   public boolean renderAsEntity;
+  public boolean renderAsArmor;
   public boolean renderAsItem;
   public int entityID;
   public float durability = 0.01f;  //good for 100 uses
@@ -533,7 +535,7 @@ public class ItemBase implements RenderSource {
   }
 
   public void bindTexture() {
-    if (renderAsEntity && data.hand != 0) {
+    if (renderAsEntity && data.part != NONE) {
       EntityBase entity = Static.entities.entities[entityID];
       entity.bindTexture();
     } else {
@@ -542,18 +544,14 @@ public class ItemBase implements RenderSource {
   }
 
   public void render() {
-    if (renderAsEntity && data.hand != 0) {
+    if (renderAsEntity && data.part != NONE) {
       EntityBase entity = Static.entities.entities[entityID];
       entity.pos.x = 0;
       entity.pos.y = 0;
       entity.pos.z = 0;
       entity.ang.y = 180;
       entity.setScale(1.0f);
-      if (data.hand == LEFT) {
-        entity.setPart(EntityBase.L_ITEM);
-      } else {
-        entity.setPart(EntityBase.R_ITEM);
-      }
+      entity.setPart(data.part);
       entity.bindTexture();
       entity.render();
     } else {

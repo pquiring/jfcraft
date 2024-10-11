@@ -21,6 +21,7 @@ import jfcraft.data.*;
 import jfcraft.item.*;
 import jfcraft.entity.*;
 import static jfcraft.data.Direction.*;
+import static jfcraft.entity.EntityBase.*;
 
 public abstract class RenderScreen {
   public float gui_height = 512;
@@ -599,7 +600,7 @@ public abstract class RenderScreen {
     } else {
       setViewportItem(x, y);
       ItemBase itembase = Static.items.items[item.id];
-      ItemBase.data.hand = 0;
+      ItemBase.data.part = NONE;
       itembase.bindTexture();
       itembase.render();
     }

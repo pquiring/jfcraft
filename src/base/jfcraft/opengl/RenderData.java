@@ -15,7 +15,7 @@ public class RenderData {
   public float x,y,z;
   public int side;  //side we are rendering
   public int dirSide;  //side after rotating
-  public int hand;  //LEFT or RIGHT
+  public int part;  //body part (-1 = none) EntityBase.*
 
   public boolean isDir, isDirXZ;
   public boolean isRed, isGreen, isBlue;
@@ -67,6 +67,7 @@ public class RenderData {
     x = y = z = 0;
     isDir = false;
     isDirXZ = false;
+    part = -1;
     resetRotate();
   }
 

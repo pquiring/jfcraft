@@ -18,8 +18,9 @@ public class ItemShield extends ItemBase {
     isTool = true;
     tool = TOOL_SHIELD;
     material = MAT_WOOD;
-    renderAsEntity = true;  //when in hand
-    renderAsItem = true;  //when in inventory
+    renderAsEntity = true;
+    renderAsItem = true;
+    renderAsArmor = true;
     entityID = 0;  //set in getIDs()
   }
   public void getIDs(World world) {

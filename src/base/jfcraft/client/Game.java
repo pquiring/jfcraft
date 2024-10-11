@@ -892,9 +892,10 @@ public class Game extends RenderScreen {
       voxel.render();
     } else {
       data.var[X] = item.var;
-      data.hand = left ? LEFT : RIGHT;
+      data.part = left ? L_ITEM : R_ITEM;
       itembase.prepRender(data);
       itembase.render();
+      data.part = NONE;
     }
   }
 
