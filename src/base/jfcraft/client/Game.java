@@ -868,7 +868,7 @@ public class Game extends RenderScreen {
     data.reset();
 
     ItemBase itembase = Static.items.items[item.id];
-    boolean isItem = Static.isItem(itembase.id) && !itembase.renderAsEntity;
+    boolean isItem = Static.isItem(itembase.id) && !itembase.renderAsEntity && !itembase.renderAsArmor;
     RenderSource voxel = null;
     if (isItem) {
       int var = 0;

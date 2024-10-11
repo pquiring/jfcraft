@@ -535,16 +535,17 @@ public class ItemBase implements RenderSource {
   }
 
   public void bindTexture() {
-    if (renderAsEntity && data.part != NONE) {
+    if (renderAsEntity || (renderAsArmor && data.part != NONE)) {
       EntityBase entity = Static.entities.entities[entityID];
       entity.bindTexture();
     } else {
-      textures[0].texture.bind();  //BUG? Zero?
+      if (textures.length == 0) return;
+      textures[0].texture.bind();
     }
   }
 
   public void render() {
-    if (renderAsEntity && data.part != NONE) {
+    if (renderAsArmor && data.part != NONE) {
       EntityBase entity = Static.entities.entities[entityID];
       entity.pos.x = 0;
       entity.pos.y = 0;
@@ -552,6 +553,17 @@ public class ItemBase implements RenderSource {
       entity.ang.y = 180;
       entity.setScale(1.0f);
       entity.setPart(data.part);
+      entity.bindTexture();
+      entity.render();
+    } else if (renderAsEntity) {
+      EntityBase entity = Static.entities.entities[entityID];
+      entity.pos.x = 0;
+      entity.pos.y = 0;
+      entity.pos.z = 0;
+      entity.ang.x = 0;
+      entity.ang.y = 0;
+      entity.ang.z = 0;
+      entity.setScale(1.0f);
       entity.bindTexture();
       entity.render();
     } else {

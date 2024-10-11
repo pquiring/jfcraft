@@ -18,8 +18,6 @@ public class ItemShield extends ItemBase {
     isTool = true;
     tool = TOOL_SHIELD;
     material = MAT_WOOD;
-    renderAsEntity = true;
-    renderAsItem = true;
     renderAsArmor = true;
     entityID = 0;  //set in getIDs()
   }
