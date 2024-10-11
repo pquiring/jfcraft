@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+Oct 10, 2024 : v0.30 released!
+  - chunks are ordered by distance to fix alpha rendering
+  - assets can be overriden in %APPDATA%\.jfcraft\assets
+  - some creative mode changes
+
 Oct 9, 2024 : v0.29 released!
   - fixed alpha rendering
   - fixed shield rendering

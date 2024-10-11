@@ -550,7 +550,9 @@ public class ItemBase implements RenderSource {
       entity.pos.x = 0;
       entity.pos.y = 0;
       entity.pos.z = 0;
+      entity.ang.x = 0;
       entity.ang.y = 180;
+      entity.ang.z = 0;
       entity.setScale(1.0f);
       entity.setPart(data.part);
       entity.bindTexture();
