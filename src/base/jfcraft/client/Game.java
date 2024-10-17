@@ -211,8 +211,8 @@ public class Game extends RenderScreen {
     Static.camera_pos.z = Static.client.player.pos.z;
     float ax, ay;
     synchronized(Static.client.ang) {
-      ax = Static.client.ang.x;
-      ay = Static.client.ang.y;
+      ax = Static.client.player.ang.x;
+      ay = Static.client.player.ang.y;
     }
     Static.camera_ang.x = ax;
     Static.camera_ang.y = ay;
@@ -318,8 +318,8 @@ public class Game extends RenderScreen {
         chunk.distance = Static.INF_DISTANCE;
         continue;
       }
-      double x = ((chunk.cx * 16f) - cam_x);
-      double y = ((chunk.cz * 16f) - cam_z);
+      double x = ((chunk.cx * 16f + 8f) - cam_x);
+      double y = ((chunk.cz * 16f + 8f) - cam_z);
       chunk.distance = Math.sqrt(x * x + y * y);
     }
 
@@ -486,7 +486,9 @@ public class Game extends RenderScreen {
 
     if (showControls) {
       if (Static.camview == Static.CameraView.normal) {
+        //Static.log("renderPlayer:start");
         Static.client.player.renderPlayer();
+        //Static.log("renderPlayer:stop");
       }
 
       glUniform1f(Static.uniformSunLight, 1.0f);
