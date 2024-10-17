@@ -40,11 +40,11 @@ public class BlockRail extends BlockBase {
     return this;
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
 
-    int e1 = data.var[X];
-    int e2 = data.dir[X];
+    int e1 = Static.data.var[X];
+    int e2 = Static.data.dir[X];
     if (e1 == 0 && e2 != 0) {
       e1 = e2;
       e2 = 0;
@@ -64,7 +64,7 @@ public class BlockRail extends BlockBase {
     SubTexture st = textures[0];
 
     if (isRedstone) {
-      ExtraRedstone er = (ExtraRedstone)data.chunk.getExtra((int)data.x, (int)data.y, (int)data.z, Extras.REDSTONE);
+      ExtraRedstone er = (ExtraRedstone)Static.data.chunk.getExtra((int)Static.data.x, (int)Static.data.y, (int)Static.data.z, Extras.REDSTONE);
       if (er == null) {
         Static.log("BlockRail:ExtraRedstone not found");
         return;
@@ -72,7 +72,7 @@ public class BlockRail extends BlockBase {
       if (er.powered) st = textures[1];
     }
 
-    data.dir[X] = N;
+    Static.data.dir[X] = N;
     Model model = facexz;
 
     switch (e1) {
@@ -81,7 +81,7 @@ public class BlockRail extends BlockBase {
         switch (e2) {
           case E:
             st = textures[1];
-            data.dir[X] = W;  //N->W
+            Static.data.dir[X] = W;  //N->W
             break;
           default:
           case S:
@@ -89,12 +89,12 @@ public class BlockRail extends BlockBase {
               model = slope;
             } else if (u2) {
               model = slope;
-              data.dir[X] = S;  //N->S
+              Static.data.dir[X] = S;  //N->S
             }
             break;
           case W:
             st = textures[1];
-            data.dir[X] = S;  //N->S
+            Static.data.dir[X] = S;  //N->S
             break;
         }
         break;
@@ -102,7 +102,7 @@ public class BlockRail extends BlockBase {
         switch (e2) {
           case N:
             st = textures[1];
-            data.dir[X] = W;  //N->W
+            Static.data.dir[X] = W;  //N->W
             break;
           case S:
             st = textures[1];
@@ -110,13 +110,13 @@ public class BlockRail extends BlockBase {
           default:
           case W:
             if (u1) {
-              data.dir[X] = E;  //N->E
+              Static.data.dir[X] = E;  //N->E
               model = slope;
             } else if (u2) {
-              data.dir[X] = W;  //N->W
+              Static.data.dir[X] = W;  //N->W
               model = slope;
             } else {
-              data.dir[X] = W;  //N->W
+              Static.data.dir[X] = W;  //N->W
             }
             break;
         }
@@ -126,7 +126,7 @@ public class BlockRail extends BlockBase {
           default:
           case N:
             if (u1) {
-              data.dir[X] = S;  //N->S
+              Static.data.dir[X] = S;  //N->S
               model = slope;
             } else if (u2) {
               model = slope;
@@ -137,7 +137,7 @@ public class BlockRail extends BlockBase {
             break;
           case W:
             st = textures[1];
-            data.dir[X] = E;  //N->E
+            Static.data.dir[X] = E;  //N->E
             break;
         }
         break;
@@ -145,29 +145,29 @@ public class BlockRail extends BlockBase {
         switch (e2) {
           case N:
             st = textures[1];
-            data.dir[X] = S;  //N->S
+            Static.data.dir[X] = S;  //N->S
             break;
           default:
           case E:
             if (u1) {
-              data.dir[X] = W;  //N->W
+              Static.data.dir[X] = W;  //N->W
               model = slope;
             } else if (u2) {
-              data.dir[X] = E;  //N->E
+              Static.data.dir[X] = E;  //N->E
               model = slope;
             } else {
-              data.dir[X] = E;  //N->E
+              Static.data.dir[X] = E;  //N->E
             }
             break;
           case S:
             st = textures[1];
-            data.dir[X] = E;  //N->E
+            Static.data.dir[X] = E;  //N->E
             break;
         }
         break;
     }
 
-    buildBuffers(model.getObject("FACE"), buf, data, st);
+    buildBuffers(model.getObject("FACE"), buf, st);
   }
 
   public static boolean isRail(char id) {

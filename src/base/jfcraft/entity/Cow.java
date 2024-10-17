@@ -82,7 +82,7 @@ public class Cow extends CreatureBase {
   private static final int L_HORN = 6;
   private static final int R_HORN = 7;
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);

@@ -24,7 +24,7 @@ public class BlockEndPortal extends BlockBase {
     addBox(0,0,0, 16,4,16,Type.BOTH);
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     //it's an entity that can not be selected
   }
   public void destroy(Client client, Coords c, boolean doDrop) {

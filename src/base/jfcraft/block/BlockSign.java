@@ -47,60 +47,60 @@ public class BlockSign extends BlockBase {
     }
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
-    if (data.chunk == null) {
+  public void buildBuffers(RenderDest dest) {
+    if (Static.data.chunk == null) {
       Static.log("BlockSign.buildBuffer() as item???");
       return;
     }
-    ExtraSign er = (ExtraSign)data.chunk.getExtra((int)data.x, (int)data.y, (int)data.z, Extras.SIGN);
+    ExtraSign er = (ExtraSign)Static.data.chunk.getExtra((int)Static.data.x, (int)Static.data.y, (int)Static.data.z, Extras.SIGN);
     if (er == null) {
       Static.log("BlockSign.buildBuffer() : can not find extra data");
       er = new ExtraSign();
     }
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    int dir = data.dir[X];
+    int dir = Static.data.dir[X];
     if (dir == B) {
-      data.yrotate = true;
-      data.rotate = er.dir;
-      buildBuffers(model.getObject("SIGN"), buf, data, textures[0]);
-      buildBuffers(model.getObject("POST"), buf, data, textures[0]);
-      data.translate_pre = new float[] {0,0.25f,Static._1_16 + Static._1_32};
-      addText(dest, er.txt, data);
+      Static.data.yrotate = true;
+      Static.data.rotate = er.dir;
+      buildBuffers(model.getObject("SIGN"), buf, textures[0]);
+      buildBuffers(model.getObject("POST"), buf, textures[0]);
+      Static.data.translate_pre = new float[] {0,0.25f,Static._1_16 + Static._1_32};
+      addText(dest, er.txt);
     } else {
       float y = -0.25f;
       switch(dir) {
         case N:
-          data.translate_pst = new float[] {0,y,-Static._1_16 * 7f};
+          Static.data.translate_pst = new float[] {0,y,-Static._1_16 * 7f};
           break;
         case E:
-          data.translate_pst = new float[] {Static._1_16 * 7f,y,0};
+          Static.data.translate_pst = new float[] {Static._1_16 * 7f,y,0};
           break;
         case S:
-          data.translate_pst = new float[] {0,y,Static._1_16 * 7f};
+          Static.data.translate_pst = new float[] {0,y,Static._1_16 * 7f};
           break;
         case W:
-          data.translate_pst = new float[] {-Static._1_16 * 7f,y,0};
+          Static.data.translate_pst = new float[] {-Static._1_16 * 7f,y,0};
           break;
       }
-      buildBuffers(model.getObject("SIGN"), buf, data, textures[0]);
-      data.translate_pst[1] = 0;
+      buildBuffers(model.getObject("SIGN"), buf, textures[0]);
+      Static.data.translate_pst[1] = 0;
       switch(dir) {
         case N:
-          data.translate_pst[2] += Static._1_16 + Static._1_32;
+          Static.data.translate_pst[2] += Static._1_16 + Static._1_32;
           break;
         case E:
-          data.translate_pst[0] -= Static._1_16 + Static._1_32;
+          Static.data.translate_pst[0] -= Static._1_16 + Static._1_32;
           break;
         case S:
-          data.translate_pst[2] -= Static._1_16 + Static._1_32;
+          Static.data.translate_pst[2] -= Static._1_16 + Static._1_32;
           break;
         case W:
-          data.translate_pst[0] += Static._1_16 + Static._1_32;
+          Static.data.translate_pst[0] += Static._1_16 + Static._1_32;
           break;
       }
-      addText(dest, er.txt, data);
+      addText(dest, er.txt);
     }
-    data.resetRotate();
+    Static.data.resetRotate();
   }
 
   public boolean place(Client client, Coords c) {

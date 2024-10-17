@@ -32,9 +32,9 @@ public class BlockButton extends BlockBase {
     model = Assets.getModel("button").model;
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    buildBuffers(model.getObject("BUTTON"), buf, data, textures[0]);
+    buildBuffers(model.getObject("BUTTON"), buf, textures[0]);
   }
 
   public void useBlock(Client client, Coords c) {

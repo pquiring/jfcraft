@@ -84,7 +84,7 @@ public class Pig extends CreatureBase {
 
   private static final int SNOUT = 6;
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);

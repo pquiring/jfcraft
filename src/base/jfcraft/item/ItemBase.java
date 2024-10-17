@@ -52,7 +52,7 @@ public class ItemBase implements RenderSource {
   public int entityID;
   public float durability = 0.01f;  //good for 100 uses
   public int varMask = 0xf;
-  public Voxel voxel[];
+  public Voxel voxel[];  //items only
 
   //armor info
   public TextureMap armorTextures[];
@@ -514,64 +514,78 @@ public class ItemBase implements RenderSource {
     return armorParts[layer][partidx];
   }
 
-  public static RenderData data = new RenderData();
-
-  public RenderDest getDest(RenderData data) {
+  public RenderDest getDest() {
     int idx = 0;
     if (isVar) {
-      idx = data.var[X] & varMask;
+      idx = Static.data.var[X] & varMask;
     }
     return bufs[idx];
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     if (renderAsEntity && !renderAsItem) return;
-    addFaceInvItem(dest.getBuffers(0), data.var[X], isGreen);
+    addFaceInvItem(dest.getBuffers(0), Static.data.var[X], isGreen);
     buffersIdx = 0;
   }
 
-  public void prepRender(RenderData data) {
-    this.data = data;
-  }
-
   public void bindTexture() {
-    if (renderAsEntity || (renderAsArmor && data.part != NONE)) {
+    if (renderAsEntity || (renderAsArmor && Static.data.part != NONE)) {
       EntityBase entity = Static.entities.entities[entityID];
       entity.bindTexture();
     } else {
-      if (textures.length == 0) return;
-      textures[0].texture.bind();
+      if (voxel != null && !Static.data.inventory) {
+        voxel[isVar ? Static.data.var[X] : 0].bindTexture();
+      } else {
+        if (textures.length == 0) {
+          Static.logTrace("Error:ItemBase.bindTexture() : no textures");
+          return;
+        }
+        textures[isVar ? Static.data.var[X] : 0].texture.bind();
+      }
     }
   }
 
+  /*
+  There are 4 main areas where items are rendered:
+    WorldItem.render()                [voxel or entity rotating]
+    HumanoidBase.renderItemInHand()   [voxel or entity in hand]
+    HumanoidBase.renderArmor()        [render as entity over body]
+    RenderScreen.renderItem()         [flat face or entity (not voxel)]
+  */
+
   public void render() {
-    if (renderAsArmor && data.part != NONE) {
+    if (renderAsArmor && Static.data.part != NONE) {
       EntityBase entity = Static.entities.entities[entityID];
-      entity.pos.x = 0;
-      entity.pos.y = 0;
-      entity.pos.z = 0;
-      entity.ang.x = 0;
-      entity.ang.y = 180;
-      entity.ang.z = 0;
-      entity.setScale(1.0f);
-      entity.setPart(data.part);
+      entity.pos.copy(Static.data.pos);
+      entity.ang.copy(Static.data.ang);
+      entity.setScale(Static.data.scale);
+      entity.setPart(Static.data.part);
       entity.bindTexture();
       entity.render();
     } else if (renderAsEntity) {
       EntityBase entity = Static.entities.entities[entityID];
-      entity.pos.x = 0;
-      entity.pos.y = 0;
-      entity.pos.z = 0;
-      entity.ang.x = 0;
-      entity.ang.y = 0;
-      entity.ang.z = 0;
-      entity.setScale(1.0f);
+      entity.pos.copy(Static.data.pos);
+      entity.ang.copy(Static.data.ang);
+      entity.setScale(Static.data.scale);
       entity.bindTexture();
       entity.render();
     } else {
-      RenderBuffers buf = getDest(data).getBuffers(buffersIdx);
-      buf.bindBuffers();
-      buf.render();
+      if (Static.isBlock(id)) {
+        BlockBase block = (BlockBase)this;
+        if (block.isDirXZ) {
+          Static.data.dir[X] = S;
+        } else {
+          Static.data.dir[X] = A;
+        }
+      }
+      bindTexture();
+      if (voxel != null && !Static.data.inventory) {
+        voxel[isVar ? Static.data.var[X] : 0].render();
+      } else {
+        RenderBuffers buf = getDest().getBuffers(buffersIdx);
+        buf.bindBuffers();
+        buf.render();
+      }
     }
   }
 
@@ -580,7 +594,7 @@ public class ItemBase implements RenderSource {
     if (bufs[var] == null) {
       bufs[var] = new RenderDest(1);
     }
-    buildBuffers(bufs[var], ItemBase.data);
+    buildBuffers(bufs[var]);
     bufs[var].getBuffers(0).copyBuffers();
   }
 
@@ -589,99 +603,12 @@ public class ItemBase implements RenderSource {
     if (voxel[var] == null) {
       voxel[var] = new Voxel(this, var);
     }
-    voxel[var].buildBuffers(voxel[var].dest, ItemBase.data);
+    voxel[var].buildBuffers(voxel[var].dest);
     voxel[var].dest.getBuffers(0).copyBuffers();
   }
 
   public Voxel getVoxel(int var) {
     return voxel[var];
-  }
-
-  private static Matrix itemView = new Matrix();
-
-  public void setViewMatrix(boolean left) {
-    itemView.setIdentity();
-
-    itemView.addRotate(90, 0, 1, 0);
-    itemView.addRotate(90, 1, 0, 0);
-    itemView.addScale(10, 10, 10);
-
-    if (Static.isBlock(id)) {
-      if (left) {
-        itemView.addRotate(HumaniodBase.blockLeftHandAngle.x, 1, 0, 0);
-        itemView.addRotate(HumaniodBase.blockLeftHandAngle.y, 0, 1, 0);
-      } else {
-        itemView.addRotate(HumaniodBase.blockRightHandAngle.x, 1, 0, 0);
-        itemView.addRotate(HumaniodBase.blockRightHandAngle.y, 0, 1, 0);
-      }
-//      handMat.addRotate(baseHandAngle.z, 0, 0, 1);
-      itemView.addTranslate(-0.5f, -0.5f, 0);
-    }
-    if (left) {
-      itemView.addTranslate(HumaniodBase.blockLeftHandPos.x, HumaniodBase.blockLeftHandPos.y, HumaniodBase.blockLeftHandPos.z);
-    } else {
-      itemView.addTranslate(HumaniodBase.blockRightHandPos.x, HumaniodBase.blockRightHandPos.y, HumaniodBase.blockRightHandPos.z);
-    }
-
-    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, itemView.m);  //view matrix
-  }
-
-  public void setViewMatrixSelf(boolean left, Vector3 l3) {
-    boolean isBlock = Static.isBlock(id);
-    itemView.setIdentity();
-
-    itemView.addTranslate(-0.5f, -0.5f, -0.5f);  //center block/item at 0,0,0
-    if (!left) {
-      //TODO : move these into HumaniodBase entity instance (animated ang)
-      itemView.addRotate4(Static.client.handAngle.x, 1, 0, 0);
-      itemView.addRotate4(Static.client.handAngle.y, 0, 1, 0);
-      itemView.addRotate4(Static.client.handAngle.z, 0, 0, 1);
-    }
-
-    if (isBlock) {
-      itemView.addScale(2, 2, 2);
-      if (left) {
-        itemView.addRotate4(HumaniodBase.blockLeftHandAngle.x, 1, 0, 0);
-        itemView.addRotate4(HumaniodBase.blockLeftHandAngle.y, 0, 1, 0);
-        itemView.addRotate4(HumaniodBase.blockLeftHandAngle.z, 0, 0, 1);
-      } else {
-        itemView.addRotate4(HumaniodBase.blockRightHandAngle.x, 1, 0, 0);
-        itemView.addRotate4(HumaniodBase.blockRightHandAngle.y, 0, 1, 0);
-        itemView.addRotate4(HumaniodBase.blockRightHandAngle.z, 0, 0, 1);
-      }
-      if (left) {
-        itemView.addTranslate(HumaniodBase.blockLeftHandPos.x, HumaniodBase.blockLeftHandPos.y, HumaniodBase.blockLeftHandPos.z);
-      } else {
-        itemView.addTranslate(HumaniodBase.blockRightHandPos.x, HumaniodBase.blockRightHandPos.y, HumaniodBase.blockRightHandPos.z);
-      }
-    } else {
-      if (left) {
-        itemView.addScale(10, 10, 10);
-        itemView.addRotate4(HumaniodBase.itemLeftHandAngle.x, 1, 0, 0);
-        itemView.addRotate4(HumaniodBase.itemLeftHandAngle.y, 0, 1, 0);
-        itemView.addRotate4(HumaniodBase.itemLeftHandAngle.z, 0, 0, 1);
-      } else {
-        itemView.addScale(2, 2, 2);
-        itemView.addRotate4(HumaniodBase.itemRightHandAngle.x, 1, 0, 0);
-        itemView.addRotate4(HumaniodBase.itemRightHandAngle.y, 0, 1, 0);
-        itemView.addRotate4(HumaniodBase.itemRightHandAngle.z, 0, 0, 1);
-      }
-      if (left) {
-        itemView.addTranslate(HumaniodBase.itemLeftHandPos.x, HumaniodBase.itemLeftHandPos.y, HumaniodBase.itemLeftHandPos.z);
-      } else {
-        itemView.addTranslate(HumaniodBase.itemRightHandPos.x, HumaniodBase.itemRightHandPos.y, HumaniodBase.itemRightHandPos.z);
-      }
-    }
-    //now apply hand animation
-    if (left) {
-      float raise = 0.2f * Static.client.player.blockCount;
-      itemView.addTranslate(raise, raise, 0f);
-    } else {
-      //TODO : move these into HumaniodBase entity too (animated pos)
-      itemView.addTranslate(Static.client.handPos.x, Static.client.handPos.y, Static.client.handPos.z);
-    }
-
-    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, itemView.m);  //view matrix
   }
 
   public String toString() {

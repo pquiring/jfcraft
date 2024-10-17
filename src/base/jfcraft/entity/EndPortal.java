@@ -69,9 +69,9 @@ public class EndPortal extends BlockEntity {
     dest = new RenderDest(1);
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     float dia2 = dia/2.0f;
-    dest.getBuffers(0).addFaceAB(-dia2, 0.5f, -dia2, dia2, 0.5f, dia2, 0, 0, 1, 1, data);
+    dest.getBuffers(0).addFaceAB(-dia2, 0.5f, -dia2, dia2, 0.5f, dia2, 0, 0, 1, 1);
   }
 
   public void bindTexture() {

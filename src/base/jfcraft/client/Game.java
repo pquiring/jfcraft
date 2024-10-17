@@ -46,9 +46,6 @@ public class Game extends RenderScreen {
   private Vector3 pts[];  //chunk points
   private Vector3 forward = new Vector3();
   private Slot slots[];
-  private enum Views {normal, behind, infront};
-  private Views camview = Views.normal;
-
   public static boolean advanceAnimation;
 
   public Game() {
@@ -220,7 +217,7 @@ public class Game extends RenderScreen {
     Static.camera_ang.x = ax;
     Static.camera_ang.y = ay;
     //rotate camera
-    switch (camview) {
+    switch (Static.camview) {
       case normal: break;
       case behind: break;
       case infront:
@@ -234,7 +231,7 @@ public class Game extends RenderScreen {
     view.addRotate(Static.camera_ang.y, 0, 1, 0);
 
     //move camera
-    switch (camview) {
+    switch (Static.camview) {
       case normal:
         break;
       case behind:
@@ -431,7 +428,7 @@ public class Game extends RenderScreen {
       if (!chunk.inRange) continue;
       EntityBase entities[] = chunk.getEntities();
       int numEntities = entities.length;
-      entity_data.reset();
+      Static.data.reset();
       for(int b=0;b<numEntities;b++) {
         EntityBase entity = entities[b];
 //        if (entity.uid == Static.client.player.uid && camview == Views.normal) continue;  //do not render self
@@ -439,7 +436,7 @@ public class Game extends RenderScreen {
         renderEntity(entity);
       }
     }
-    if (camview != Views.normal) {
+    if (Static.camview != Static.CameraView.normal) {
       EntityBase entity = Static.client.player;
       renderEntity(entity);
     }
@@ -488,8 +485,8 @@ public class Game extends RenderScreen {
     Static.dims.dims[dim].getEnvironment().postRender(world.time, sunLight, Static.client, Static.camera_pos, chunks);
 
     if (showControls) {
-      if (camview == Views.normal) {
-        renderItemInHand();
+      if (Static.camview == Static.CameraView.normal) {
+        Static.client.player.renderPlayer();
       }
 
       glUniform1f(Static.uniformSunLight, 1.0f);
@@ -739,10 +736,10 @@ public class Game extends RenderScreen {
         Main.toggleFullscreen();
         break;
       case KeyCode.VK_F5:
-        switch (camview) {
-          case normal: camview = Views.behind; break;
-          case behind: camview = Views.infront; break;
-          case infront: camview = Views.normal; break;
+        switch (Static.camview) {
+          case normal: Static.camview = Static.CameraView.behind; break;
+          case behind: Static.camview = Static.CameraView.infront; break;
+          case infront: Static.camview = Static.CameraView.normal; break;
         }
         break;
       case KeyCode.VK_F10:
@@ -842,92 +839,13 @@ public class Game extends RenderScreen {
     Static.client.clientTransport.changeActiveSlot((byte)activeSlot);
   }
 
-  private void renderItemInHand() {
-    glClear(GL_DEPTH_BUFFER_BIT);
-
-    glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, perspective.m);  //perspective matrix
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
-
-    Static.client.player.setLight(sunLight);
-
-    Item item = Static.client.player.items[Static.client.player.activeSlot];
-    if (item.id == 0) {
-      renderHand();
-    } else {
-      renderItemInHand(item, false);
-    }
-    item = Static.client.player.items[Player.shield_idx];
-    if (item.id == Items.SHIELD) {
-      renderItemInHand(item, true);
-    }
-  }
-
-  private static RenderData data = new RenderData();
-
-  private void renderItemInHand(Item item, boolean left) {
-    data.reset();
-
-    ItemBase itembase = Static.items.items[item.id];
-    boolean isItem = Static.isItem(itembase.id) && !itembase.renderAsEntity && !itembase.renderAsArmor;
-    RenderSource voxel = null;
-    if (isItem) {
-      int var = 0;
-      if (itembase.isVar) {
-        var = item.var;
-      }
-      if (itembase.id == Items.BOW) {
-        //bowPower max = 40
-        //var max = 4
-        var = Static.client.player.bowPower * (4-1)/ 40;
-      }
-      voxel = itembase.getVoxel(var);
-      voxel.bindTexture();
-    } else {
-      itembase.bindTexture();
-    }
-
-    itembase.setViewMatrixSelf(left, l3);
-
-    if (isItem) {
-      voxel.render();
-    } else {
-      data.var[X] = item.var;
-      data.part = left ? L_ITEM : R_ITEM;
-      itembase.prepRender(data);
-      itembase.render();
-      data.part = NONE;
-    }
-  }
-
-  private static Matrix handMat = new Matrix();
-
-  public void renderHand() {
-    handMat.setIdentity();
-    handMat.addTranslate(hand.org.x, hand.org.y, hand.org.z);
-    handMat.addScale(3, 3, 3);
-    handMat.addRotate2(-170, 0, 0, 1);
-    handMat.addRotate4(Static.client.handAngle.x, 1, 0, 0);
-    handMat.addRotate4(Static.client.handAngle.y, 0, 1, 0);
-    handMat.addRotate4(Static.client.handAngle.z, 0, 0, 1);
-    handMat.addTranslate2(-hand.org.x, -hand.org.y, -hand.org.z);
-    handMat.addTranslate(-0.5f,-2f,0);
-    handMat.addTranslate(HumaniodBase.blockRightHandPos.x, HumaniodBase.blockRightHandPos.y, HumaniodBase.blockRightHandPos.z);
-    handMat.addTranslate(Static.client.handPos.x, Static.client.handPos.y, Static.client.handPos.z);
-    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, handMat.m);  //view matrix
-    Static.entities.entities[Entities.PLAYER].bindTexture();
-    hand.bindBuffers();
-    hand.render();
-  }
-
-  private static RenderData entity_data = new RenderData();
-
   public void renderEntity(EntityBase entity) {
     if (!entity.instanceInited) {
       entity.initInstance();
     }
     if (!entity.isStatic) {
       if (entity.dirty) {
-        entity.buildBuffers(entity.getDest(), entity_data);
+        entity.buildBuffers(entity.getDest());
         entity.dirty = false;
       }
       if (entity.needCopyBuffers) {

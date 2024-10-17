@@ -22,14 +22,14 @@ public class BlockAir extends BlockBase {
     canSpawnOn = false;
     resetBoxes(Type.BOTH);
   }
-  public void addFace(RenderBuffers obj, RenderData data, SubTexture st) {
+  public void addFace(RenderBuffers obj, SubTexture st) {
     try {
       Static.log("BlockAir:addFace():id=" + (int)id);
     } catch (Exception e) {
       Static.log(e);
     }
   }
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     try {
       Static.log("BlockAir:buildBuffers():id=" + (int)id);
     } catch (Exception e) {

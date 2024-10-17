@@ -41,9 +41,9 @@ public abstract class BlockPortal extends BlockBase {
     }
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    buildBuffers(model.getObject("PORTAL"), buf, data, textures[0]);
+    buildBuffers(model.getObject("PORTAL"), buf, textures[0]);
   }
 
   private static final int maxSize = 15;

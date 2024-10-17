@@ -19,12 +19,7 @@ import static jfcraft.data.Direction.*;
 public class WorldItem extends EntityBase {
   public Item item;
 
-  public EntityBase entity;
-  public Voxel voxel;
-  public BlockBase block;
-  private boolean isItem;
-
-  private static RenderData data = new RenderData();
+  private ItemBase itembase;
 
   public WorldItem() {
     id = Entities.WORLDITEM;
@@ -52,77 +47,51 @@ public class WorldItem extends EntityBase {
     yDrag = Static.dragSpeed;
     xzDrag = 0.5f;
     maxAge = 20 * 60 * 5;  //5 mins
-  }
-  public void initInstance() {
-    super.initInstance();
-    if (item == null) return;
-    if (Static.isBlock(item.id)) {
-      isItem = false;
-      block = Static.blocks.blocks[item.id];
-      if (block.renderAsEntity) {
-        entity = Static.entities.entities[block.entityID];
-      } else if (block.renderAsItem) {
-        voxel = Static.items.items[item.id].voxel[item.var];
-      }
-    } else {
-      isItem = true;
-      voxel = Static.items.items[item.id].voxel[item.var];
+    if (item != null) {
+      itembase = Static.getItemBase(item.id);
     }
   }
+
+  private static Matrix mat = new Matrix();
+
+  private void setMatrixModel() {
+    mat.setIdentity();
+
+    float scale = 0.25f;
+    mat.addScale(scale, scale, scale);
+
+    mat.addRotate(ang.y, 0, 1, 0);
+    mat.addTranslate2(-0.5f, 0, -0.5f);
+    mat.addTranslate(pos.x, pos.y, pos.z);
+
+    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
+  }
+
   public void bindTexture() {
-    if (entity != null) {
-      entity.bindTexture();
-    } else if (voxel != null) {
-      voxel.bindTexture();
-    } else {
-      block.bindTexture();
+    if (itembase == null) {
+      Static.logTrace("Error:WorldItem.bindTexture():itembase == null");
+      return;
     }
+    itembase.bindTexture();
   }
   public void render() {
-    if (entity != null) {
-      entity.pos.x = pos.x;
-      entity.pos.y = pos.y + 0.125f;  //0.5f * 0.25f = 0.125f
-      entity.pos.z = pos.z;
-      entity.ang.y = ang.y;
-      entity.setScale(0.25f);
-      entity.render();
-      if (item.count > 1) {
-        entity.pos.y += 0.25f;
-        entity.pos.z += 0.25f;
-        entity.render();
-      }
-    } else {
-      mat.setIdentity();
-      float scale = 0.25f;
-      mat.addScale(scale, scale, scale);
-      mat.addRotate(ang.y, 0, 1, 0);
-      mat.addTranslate2(-0.5f, 0, -0.5f);
-      mat.addTranslate(pos.x, pos.y, pos.z);
-      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);
-      if (voxel != null) {
-        voxel.render();
-      } else {
-        data.var[X] = item.var;
-        block.prepRender(data);
-        block.render();
-      }
-      if (item.count > 1) {
-        mat.setIdentity();
-        mat.addScale(scale, scale, scale);
-        mat.addRotate(ang.y, 0, 1, 0);
-        mat.addTranslate2(-0.5f, 0, -0.5f);
-        if (isItem)
-          mat.addTranslate2(0, 0, 0.5f);
-        else
-          mat.addTranslate2(0.25f, 0.25f, 0.25f);
-        mat.addTranslate(pos.x, pos.y, pos.z);
-        glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);
-        if (voxel != null) {
-          voxel.render();
-        } else {
-          block.render();
-        }
-      }
+    if (itembase == null) {
+      Static.logTrace("Error:WorldItem.render():itembase == null");
+      return;
+    }
+    Static.data.pos.copy(pos);
+    ang.y += 0.125f;
+    Static.data.ang.copy(ang);
+    Static.data.scale = 0.25f;
+    Static.data.count = item.count;
+    Static.data.var[X] = item.var;
+    setMatrixModel();
+    itembase.bindTexture();
+    itembase.render();
+    if (item.count > 1) {
+      Static.data.pos.x += 0.25f;
+      Static.data.pos.z += 0.25f;
+      itembase.render();
     }
   }
   private int maxStack;

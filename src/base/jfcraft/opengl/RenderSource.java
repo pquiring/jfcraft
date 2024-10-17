@@ -10,7 +10,7 @@ package jfcraft.opengl;
 import javaforce.gl.*;
 
 public interface RenderSource {
-  public void buildBuffers(RenderDest dest, RenderData data);
+  public void buildBuffers(RenderDest dest);
   public void bindTexture();
   public void render();
 }

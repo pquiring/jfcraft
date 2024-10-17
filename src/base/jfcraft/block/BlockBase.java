@@ -93,11 +93,11 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public String[] images2 = new String[0];
   public SubTexture[] textures2;
 
-  public SubTexture getTexture(RenderData data) {
+  public SubTexture getTexture() {
     int cnt = textures.length / names.length;
     int idx = 0;
     if (isVar) {
-      idx = (data.var[X] & varMask) * cnt;
+      idx = (Static.data.var[X] & varMask) * cnt;
     }
     if ((idx + cnt - 1) >= textures.length) {
       System.out.println("textures missing for block:" + name + ":" + idx + ">" + textures.length);
@@ -106,14 +106,14 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
       case 1:
         return textures[idx];
       case 2:
-        if (data.side == A || data.side == B)
+        if (Static.data.side == A || Static.data.side == B)
           return textures[idx+0];
         else
           return textures[idx+1];
       case 3:
-        if (data.side == A) {
+        if (Static.data.side == A) {
           return textures[idx+0];
-        } else if (data.side == B) {
+        } else if (Static.data.side == B) {
           return textures[idx+2];
         } else {
           return textures[idx+1];
@@ -121,22 +121,22 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
       case 4:
         if (isDirXZ) {
           //block faces north
-          if (data.side == N) {
+          if (Static.data.side == N) {
             return textures[idx+1];  //faces player
-          } else if (data.side == B) {
+          } else if (Static.data.side == B) {
             return textures[idx+3];  //bottom
-          } else if (data.side == A) {
+          } else if (Static.data.side == A) {
             return textures[idx+0];  //top
           } else {
             return textures[idx+2];  //sides
           }
         } else {
           //block faces UP!
-          if (data.side == A) {
+          if (Static.data.side == A) {
             return textures[idx+1];  //faces player
-          } else if (data.side == S) {
+          } else if (Static.data.side == S) {
             return textures[idx+3];  //bottom
-          } else if (data.side == N) {
+          } else if (Static.data.side == N) {
             return textures[idx+0];  //top
           } else {
             return textures[idx+2];  //sides
@@ -178,20 +178,20 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     return this;
   }
 
-  public void addFace(RenderBuffers buf, RenderData data, SubTexture st) {
-    data.isDir = isDir;
-    data.isDirXZ = isDirXZ;
-    data.isGreen = isGreenAllSides
-      || (isGreenTop && data.dirSide == A)
-      || (isGreenSide && data.dirSide >= N && data.dirSide <= W);
-    data.isRed = isRed;
-    data.isBlue = isBlue;
-    buf.addFace(data, st);
+  public void addFace(RenderBuffers buf, SubTexture st) {
+    Static.data.isDir = isDir;
+    Static.data.isDirXZ = isDirXZ;
+    Static.data.isGreen = isGreenAllSides
+      || (isGreenTop && Static.data.dirSide == A)
+      || (isGreenSide && Static.data.dirSide >= N && Static.data.dirSide <= W);
+    Static.data.isRed = isRed;
+    Static.data.isBlue = isBlue;
+    buf.addFace(st);
   }
 
   private static Model quads;
 
-  public void addQuad(RenderBuffers obj, RenderData data, int quad, SubTexture st) {
+  public void addQuad(RenderBuffers obj, int quad, SubTexture st) {
     if (quads == null) {
       quads = Assets.getModel("quads").model;
     }
@@ -206,7 +206,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
      6|7
       +z
     */
-    buildBuffers(quads.getObject("Q" + quad), obj, data, st);
+    buildBuffers(quads.getObject("Q" + quad), obj, st);
   }
   /** Clears all bounding boxes for block. */
   public BlockBase resetBoxes(BlockHitTest.Type type) {
@@ -659,7 +659,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     return side; //no change
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     if (renderAsEntity) {
       EntityBase entity = Static.entities.entities[entityID];
       entity.pos.x = 0;
@@ -671,24 +671,24 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
       //voxel ???
       buffersIdx = 0;
     } else {
-      buffersIdx = textures[0].buffersIdx;  //BUG : zero?
+      buffersIdx = textures[isVar ? Static.data.var[X] : 0].buffersIdx;
 
       RenderBuffers buf = dest.getBuffers(buffersIdx);
       for(int a=0;a<6;a++) {
         int side = a;
         if (isDir) {
           if (!isDirXZ) {
-            side = rotateSide(side, data.dir[X]);
+            side = rotateSide(side, Static.data.dir[X]);
           } else {
-            side = rotateSideXZ(side, data.dir[X]);
+            side = rotateSideXZ(side, Static.data.dir[X]);
           }
         }
-        data.dirSide = side;
-        if (data.opaque[side]) continue;
-        data.side = a;
-        data.isDir = isDir;
-        data.isDirXZ = isDirXZ;
-        addFace(buf, data, getTexture(data));
+        Static.data.dirSide = side;
+        if (Static.data.opaque[side]) continue;
+        Static.data.side = a;
+        Static.data.isDir = isDir;
+        Static.data.isDirXZ = isDirXZ;
+        addFace(buf, getTexture());
       }
     }
   }
@@ -696,16 +696,16 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   private static Faces faces = new Faces();
 
   //copies Object3 to RenderBuffers (rotates/translates into position)
-  public void buildBuffers(Object3 obj, RenderBuffers buf, RenderData data, SubTexture st) {
+  public void buildBuffers(Object3 obj, RenderBuffers buf, SubTexture st) {
     float xyz[] = obj.vpl.toArray();
     int idx[] = obj.vil.toArray();
-    data.isDir = isDir || isDirFace;
-    data.isDirXZ = isDirXZ;
-    data.isGreen = isGreen;
-    data.isRed = isRed;
-    data.isBlue = isBlue;
+    Static.data.isDir = isDir || isDirFace;
+    Static.data.isDirXZ = isDirXZ;
+    Static.data.isGreen = isGreen;
+    Static.data.isRed = isRed;
+    Static.data.isBlue = isBlue;
     faces.xyz = xyz;
-    faces.rotate(data);
+    faces.rotate();
     int off = buf.getVertexCount();
     for(int a=0;a<idx.length;a++) {
       idx[a] += off;
@@ -721,11 +721,11 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
       case 1: {
         float uv1[] = obj.getUVMap("normal").uvl.toArray();
         buf.adjustTexture(uv1, st);
-        if (data.crack == -1) {
+        if (Static.data.crack == -1) {
           buf.addTextureCoords(uv1);
         } else {
           float uv2[] = obj.getUVMap("normal").uvl.toArray();
-          buf.adjustCrack(uv2, data.crack);
+          buf.adjustCrack(uv2, Static.data.crack);
           buf.addTextureCoords(uv1, uv2);
         }
         break;
@@ -733,11 +733,11 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
       case 2: {
         float uv1[] = obj.getUVMap("normal").uvl.toArray();
         buf.adjustTexture(uv1, st);
-        if (data.crack == -1) {
+        if (Static.data.crack == -1) {
           buf.addTextureCoords(uv1);
         } else {
           float uv2[] = obj.getUVMap("crack").uvl.toArray();
-          buf.adjustCrack(uv2, data.crack);
+          buf.adjustCrack(uv2, Static.data.crack);
           buf.addTextureCoords(uv1, uv2);
         }
         break;
@@ -745,9 +745,9 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     }
     int vc = xyz.length/3;
     for(int a=0;a<vc;a++) {
-      buf.addColor(data);
-      buf.addSunLight(data.sl[X]);
-      buf.addBlockLight(data.bl[X]);
+      buf.addColor();
+      buf.addSunLight(Static.data.sl[X]);
+      buf.addBlockLight(Static.data.bl[X]);
     }
   }
 
@@ -780,7 +780,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     return super.canPlace(c);
   }
 
-  public void addText(RenderDest dest, String lns[], RenderData data) {
+  public void addText(RenderDest dest, String[] lns) {
     RenderBuffers buf = dest.getBuffers(Chunk.DEST_TEXT);
     int chars = 0;
     for(int a=0;a<lns.length;a++) {
@@ -847,7 +847,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
       y -= Static._1_8;
     }
     faces.xyz = xyz;
-    faces.rotate(data);
+    faces.rotate();
     int off = buf.getVertexCount();
     for(int a=0;a<idx.length;a++) {
       idx[a] += off;

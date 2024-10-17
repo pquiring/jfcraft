@@ -24,25 +24,25 @@ public class BlockWall extends BlockBase {
     }
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    int dir = data.dir[X];
+    int dir = Static.data.dir[X];
     SubTexture st = textures[0];
     if ((dir & NB) != 0) {
-      buildBuffers(model.getObject("NORTH"), buf, data, st);
+      buildBuffers(model.getObject("NORTH"), buf, st);
     }
     if ((dir & SB) != 0) {
-      buildBuffers(model.getObject("SOUTH"), buf, data, st);
+      buildBuffers(model.getObject("SOUTH"), buf, st);
     }
     if ((dir & EB) != 0) {
-      buildBuffers(model.getObject("EAST"), buf, data, st);
+      buildBuffers(model.getObject("EAST"), buf, st);
     }
     if ((dir & WB) != 0) {
-      buildBuffers(model.getObject("WEST"), buf, data, st);
+      buildBuffers(model.getObject("WEST"), buf, st);
     }
     //do post if has a corner
     if (dir != N_S && dir != E_W) {
-      buildBuffers(model.getObject("POST"), buf, data, st);
+      buildBuffers(model.getObject("POST"), buf, st);
     }
   }
 

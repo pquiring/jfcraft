@@ -86,7 +86,6 @@ public class EnvironmentEarth implements EnvironmentBase {
   public void init() {
     if (inited) return;
     Static.log("EnvironmentEarth.init()");
-    RenderData data = new RenderData();
     sun = new TextureMap();
     sun.load(makeAlpha("environment/sun"));
     moon = new TextureMap();
@@ -107,7 +106,7 @@ public class EnvironmentEarth implements EnvironmentBase {
     skybox.addSkyBox(-1000, -1000, -1000, 1000, 1000, 1000);
     skybox.copyBuffers();
     sunface = new RenderBuffers();
-    sunface.addFaceAB(-10, -50, -10, 10, -50, 10, 0, 0, 1, 1, data);
+    sunface.addFaceAB(-10, -50, -10, 10, -50, 10, 0, 0, 1, 1);
     sunface.copyBuffers();
     moonface = new RenderBuffers[8];
     int p = 0;
@@ -117,7 +116,7 @@ public class EnvironmentEarth implements EnvironmentBase {
         float tx = x * 0.25f;
         float ty = y * 0.50f;
         //TODO : rotate coords by 90
-        moonface[p].addFaceAB(-10, 50, 10, 10, 50, -10, tx, ty, tx + 0.25f, ty + 0.50f, data);
+        moonface[p].addFaceAB(-10, 50, 10, 10, 50, -10, tx, ty, tx + 0.25f, ty + 0.50f);
         moonface[p].copyBuffers();
         p++;
       }
@@ -225,16 +224,15 @@ public class EnvironmentEarth implements EnvironmentBase {
     float fx2 = +5.99f;
     float fy2 = +2f;
     float fz2 = +5.99f;
-    RenderData data = new RenderData();
-    data.sl[X] = 0.8f;
-    o_clouds.addFace  (fx2,fy1,fz2, fx1,fy2,fz2, 0,0,1,1, data);  //N
-    o_clouds.addFace  (fx1,fy1,fz1, fx2,fy2,fz1, 0,0,1,1, data);  //S
-    data.sl[X] = 0.9f;
-    o_clouds.addFace  (fx2,fy1,fz1, fx2,fy2,fz2, 0,0,1,1, data);  //W
-    o_clouds.addFace  (fx1,fy1,fz2, fx1,fy2,fz1, 0,0,1,1, data);  //E
-    data.sl[X] = 1.0f;
-    o_clouds.addFaceAB(fx1,fy1,fz2, fx2,fy1,fz1, 0,0,1,1, data);  //A
-    o_clouds.addFaceAB(fx1,fy2,fz1, fx2,fy2,fz2, 0,0,1,1, data);  //B
+    Static.data.sl[X] = 0.8f;
+    o_clouds.addFace  (fx2,fy1,fz2, fx1,fy2,fz2, 0,0,1,1);  //N
+    o_clouds.addFace  (fx1,fy1,fz1, fx2,fy2,fz1, 0,0,1,1);  //S
+    Static.data.sl[X] = 0.9f;
+    o_clouds.addFace  (fx2,fy1,fz1, fx2,fy2,fz2, 0,0,1,1);  //W
+    o_clouds.addFace  (fx1,fy1,fz2, fx1,fy2,fz1, 0,0,1,1);  //E
+    Static.data.sl[X] = 1.0f;
+    o_clouds.addFaceAB(fx1,fy1,fz2, fx2,fy1,fz1, 0,0,1,1);  //A
+    o_clouds.addFaceAB(fx1,fy2,fz1, fx2,fy2,fz2, 0,0,1,1);  //B
   }
 
   private float cloudOffset = 0f;

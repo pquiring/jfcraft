@@ -6,8 +6,6 @@ package jfcraft.opengl;
 
 import jfcraft.item.*;
 import jfcraft.data.*;
-import static jfcraft.data.Direction.*;
-import static jfcraft.item.ItemBase.data;
 
 public class Voxel implements RenderSource {
   private ItemBase item;
@@ -24,7 +22,7 @@ public class Voxel implements RenderSource {
     this.var = var;
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     SubTexture st = item.textures[var];
     int w = st.ai.w;
     int h = st.ai.h;
@@ -48,6 +46,7 @@ public class Voxel implements RenderSource {
     float v2 = solidTexture.y2;
     float clr[] = new float[3];
     float clr2[] = new float[3];
+    Static.data.reset();
     for(float fy = y1; fy < y2; fy+=d) {
       x = 0;
       for(float fx = x1; fx < x2; fx+=d) {
@@ -56,7 +55,7 @@ public class Voxel implements RenderSource {
           off++;
           continue;
         }
-        data.clr = clr;
+        Static.data.clr = clr;
         clr[0] = (float)((px[off] & 0xff0000) >> 16) / 255.0f;
         clr[1] = (float)((px[off] & 0xff00) >> 8) / 255.0f;
         clr[2] = (float)((px[off] & 0xff)) / 255.0f;
@@ -65,25 +64,25 @@ public class Voxel implements RenderSource {
         clr2[2] = (clr[2] > 5) ? clr[2] - 5f : 0f;
         //see bufs.addBox()
         //S
-        bufs.addFace(fx,fy,zz-d2, fx+d,fy+d,zz-d2, u1,v1, u2,v2, data);
+        bufs.addFace(fx,fy,zz-d2, fx+d,fy+d,zz-d2, u1,v1, u2,v2);
         //N
-        bufs.addFace(fx+d,fy,zz+d2, fx,fy+d,zz+d2, u1,v1, u2,v2, data);
-        data.clr = clr2;
+        bufs.addFace(fx+d,fy,zz+d2, fx,fy+d,zz+d2, u1,v1, u2,v2);
+        Static.data.clr = clr2;
         //B
         if (y < h-1 && (px[off + w] & 0xff000000) == 0) {
-          bufs.addFaceAB(fx,fy+d,zz+d2, fx+d,fy+d,zz-d2, u1,v1, u2,v2, data);
+          bufs.addFaceAB(fx,fy+d,zz+d2, fx+d,fy+d,zz-d2, u1,v1, u2,v2);
         }
         //A
         if (y > 0 && (px[off - w] & 0xff000000) == 0) {
-          bufs.addFaceAB(fx,fy,zz-d2, fx+d,fy,zz+d2, u1,v1, u2,v2, data);
+          bufs.addFaceAB(fx,fy,zz-d2, fx+d,fy,zz+d2, u1,v1, u2,v2);
         }
         //E
         if (x < w-1 && (px[off + 1] & 0xff000000) == 0) {
-          bufs.addFace(fx,fy,zz-d2, fx,fy+d,zz+d2, u1,v1, u2,v2, data);
+          bufs.addFace(fx,fy,zz-d2, fx,fy+d,zz+d2, u1,v1, u2,v2);
         }
         //W
         if (x > 0 && (px[off - 1] & 0xff000000) == 0) {
-          bufs.addFace(fx+d,fy,zz+d2, fx+d,fy+d,zz-d2, u1,v1, u2,v2, data);
+          bufs.addFace(fx+d,fy,zz+d2, fx+d,fy+d,zz-d2, u1,v1, u2,v2);
         }
         x++;
         off++;

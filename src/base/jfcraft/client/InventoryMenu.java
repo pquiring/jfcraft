@@ -108,6 +108,7 @@ public class InventoryMenu extends RenderScreen {
     player = (Player)Static.entities.entities[Entities.PLAYER];
     player.ang.y = 180.0f;  //face the "real" player
     player.armors = Static.client.player.armors;
+    player.items = Static.client.player.items;
   }
 
   public void render(int width, int height) {
@@ -157,7 +158,10 @@ public class InventoryMenu extends RenderScreen {
       ex = 45.0f;
     }
     player.ang.y = 180.0f - ex;
+    player.activeSlot = Static.client.player.activeSlot;
     player.render();
+
+    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     glDepthFunc(GL_ALWAYS);

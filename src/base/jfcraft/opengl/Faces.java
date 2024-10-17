@@ -11,6 +11,7 @@ import javaforce.*;
 import javaforce.gl.*;
 
 import static jfcraft.data.Direction.*;
+import jfcraft.data.*;
 
 public class Faces {
   public float xyz[];
@@ -72,21 +73,21 @@ public class Faces {
   }
 
   /** Rotates the faces and then translates into position. */
-  public void rotate(RenderData data) {
-    rotate = data.rotate;
-    rotate2 = data.rotate2;
-    if (data.translate_pre != null) {
+  public void rotate() {
+    rotate = Static.data.rotate;
+    rotate2 = Static.data.rotate2;
+    if (Static.data.translate_pre != null) {
       for(int a=0;a<xyz.length;) {
-        xyz[a++] += data.translate_pre[0];
-        xyz[a++] += data.translate_pre[1];
-        xyz[a++] += data.translate_pre[2];
+        xyz[a++] += Static.data.translate_pre[0];
+        xyz[a++] += Static.data.translate_pre[1];
+        xyz[a++] += Static.data.translate_pre[2];
       }
     }
-    if (data.yrotate) {
-      rotate(0,data.rotate,0);
-    } else if (data.isDir && !data.norotate) {
-      if (!data.isDirXZ) {
-        switch (data.dir[X]) {
+    if (Static.data.yrotate) {
+      rotate(0,Static.data.rotate,0);
+    } else if (Static.data.isDir && !Static.data.norotate) {
+      if (!Static.data.isDirXZ) {
+        switch (Static.data.dir[X]) {
           case A:
             //default
             break;
@@ -112,7 +113,7 @@ public class Faces {
             break;
         }
       } else {
-        switch (data.dir[X]) {
+        switch (Static.data.dir[X]) {
           case N:
             //default
             break;
@@ -131,16 +132,16 @@ public class Faces {
         }
       }
     }
-    if (data.translate_pst != null) {
+    if (Static.data.translate_pst != null) {
       for(int a=0;a<xyz.length;) {
-        xyz[a++] += data.translate_pst[0];
-        xyz[a++] += data.translate_pst[1];
-        xyz[a++] += data.translate_pst[2];
+        xyz[a++] += Static.data.translate_pst[0];
+        xyz[a++] += Static.data.translate_pst[1];
+        xyz[a++] += Static.data.translate_pst[2];
       }
     }
-    float tx = data.x + 0.5f;
-    float ty = data.y + 0.5f;
-    float tz = data.z + 0.5f;
+    float tx = Static.data.x + 0.5f;
+    float ty = Static.data.y + 0.5f;
+    float tz = Static.data.z + 0.5f;
     for(int a=0;a<xyz.length;) {
       xyz[a++] += tx;
       xyz[a++] += ty;

@@ -18,7 +18,6 @@ import static jfcraft.data.Direction.*;
 
 public class BlockTrapDoor extends BlockBase {
   private static Model model;
-
   public BlockTrapDoor(String id, String names[], String images[]) {
     super(id, names, images);
     isOpaque = false;
@@ -31,11 +30,11 @@ public class BlockTrapDoor extends BlockBase {
     model = Assets.getModel("trapdoor").model;
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
     boolean opened = false;
-    if (data.chunk != null) {
-      ExtraRedstone er = (ExtraRedstone)data.chunk.getExtra((int)data.x, (int)data.y, (int)data.z, Extras.REDSTONE);
+    if (Static.data.chunk != null) {
+      ExtraRedstone er = (ExtraRedstone)Static.data.chunk.getExtra((int)Static.data.x, (int)Static.data.y, (int)Static.data.z, Extras.REDSTONE);
       if (er == null) {
         Static.log("BlockTrapDoor.buildBuffers():Error:Can not find extra data");
         return;
@@ -44,10 +43,10 @@ public class BlockTrapDoor extends BlockBase {
     }
 
     if (opened) {
-      data.dir[X] = data.var[X];
+      Static.data.dir[X] = Static.data.var[X];
     }
 
-    buildBuffers(model.getObject("TRAPDOOR"), buf, data, textures[0]);
+    buildBuffers(model.getObject("TRAPDOOR"), buf, textures[0]);
   }
   public ArrayList<Box> getBoxes(Coords c, Type type) {
     ExtraRedstone er = (ExtraRedstone)c.chunk.getExtra(c.gx, c.gy, c.gz, Extras.REDSTONE);

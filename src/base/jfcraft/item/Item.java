@@ -69,7 +69,7 @@ public class Item implements java.lang.Cloneable, SerialClass, SerialCreator {
     return id == 0;
   }
   public final String toString() {
-    return "item:" + id + "," + var + "," + count + "," + dmg;
+    return "item:" + (int)id + "," + var + "," + count + "," + dmg;
   }
   public Object clone() {
     try {

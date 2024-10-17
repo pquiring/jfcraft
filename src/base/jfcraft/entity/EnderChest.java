@@ -56,7 +56,7 @@ public class EnderChest extends BlockEntity {
 
   private static String parts[] = {"CONTAINER", "LID", "LATCH"};
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     dest.resetAll();
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
@@ -76,12 +76,12 @@ public class EnderChest extends BlockEntity {
         //container & lid
         UVMap map1 = obj.getUVMap("normal");
         float uv1[] = map1.uvl.toArray();
-        if (data.crack == -1) {
+        if (Static.data.crack == -1) {
           buf.addTextureCoords(uv1);
         } else {
           UVMap map2 = obj.getUVMap("crack");
           float uv2[] = map2.uvl.toArray();
-          buf.adjustCrack(uv2, data.crack);
+          buf.adjustCrack(uv2, Static.data.crack);
           buf.addTextureCoords(uv1, uv2);
         }
       }

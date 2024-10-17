@@ -29,10 +29,10 @@ public class BlockDaylightSensor extends BlockBase {
     }
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    buildBuffers(model.getObject("TOP"), buf, data, textures[0]);
-    buildBuffers(model.getObject("SIDES"), buf, data, textures[1]);
+    buildBuffers(model.getObject("TOP"), buf, textures[0]);
+    buildBuffers(model.getObject("SIDES"), buf, textures[1]);
   }
 
   public int getPowerLevel(Coords c, Coords from) {

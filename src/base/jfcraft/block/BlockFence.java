@@ -17,6 +17,7 @@ import static jfcraft.data.Direction.*;
 
 public class BlockFence extends BlockBase {
   private static Model model;
+
   public BlockFence(String id, String names[], String images[]) {
     super(id, names, images);
     isOpaque = false;
@@ -28,26 +29,26 @@ public class BlockFence extends BlockBase {
     model = Assets.getModel("fence").model;
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
-    SubTexture st = getTexture(data);
+  public void buildBuffers(RenderDest dest) {
+    SubTexture st = getTexture();
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    buildBuffers(model.getObject("POST"), buf, data, st);
-    int dir = data.dir[X];
+    buildBuffers(model.getObject("POST"), buf, st);
+    int dir = Static.data.dir[X];
     if ((dir & NB) != 0) {
-      buildBuffers(model.getObject("N1"), buf, data, st);
-      buildBuffers(model.getObject("N2"), buf, data, st);
+      buildBuffers(model.getObject("N1"), buf, st);
+      buildBuffers(model.getObject("N2"), buf, st);
     }
     if ((dir & EB) != 0) {
-      buildBuffers(model.getObject("E1"), buf, data, st);
-      buildBuffers(model.getObject("E2"), buf, data, st);
+      buildBuffers(model.getObject("E1"), buf, st);
+      buildBuffers(model.getObject("E2"), buf, st);
     }
     if ((dir & SB) != 0) {
-      buildBuffers(model.getObject("S1"), buf, data, st);
-      buildBuffers(model.getObject("S2"), buf, data, st);
+      buildBuffers(model.getObject("S1"), buf, st);
+      buildBuffers(model.getObject("S2"), buf, st);
     }
     if ((dir & WB) != 0) {
-      buildBuffers(model.getObject("W1"), buf, data, st);
-      buildBuffers(model.getObject("W2"), buf, data, st);
+      buildBuffers(model.getObject("W1"), buf, st);
+      buildBuffers(model.getObject("W2"), buf, st);
     }
   }
 

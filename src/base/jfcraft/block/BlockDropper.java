@@ -28,9 +28,9 @@ public class BlockDropper extends BlockOpaque {
     canUse = true;
   }
 
-  public SubTexture getTexture(RenderData data) {
-    if (data.dirSide == data.dir[X]) {
-      if (data.dirSide == A || data.dirSide == B) {
+  public SubTexture getTexture() {
+    if (Static.data.dirSide == Static.data.dir[X]) {
+      if (Static.data.dirSide == A || Static.data.dirSide == B) {
         return textures[1];  //vertical
       } else {
         return textures[0];  //horizontal

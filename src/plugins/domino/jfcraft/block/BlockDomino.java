@@ -38,10 +38,7 @@ public class BlockDomino extends BlockBase {
       Static.log("BlockDomino.buildBuffers():Can not find entity@" + c);
       return;
     }
-    RenderData data2 = new RenderData();
-    data2.crack = data.crack;
-    data2.var[X] = data.var[X];
-    domino.buildBuffers(domino.getDest(), data2);
+    domino.buildBuffers(domino.getDest(), null);
     domino.needCopyBuffers = true;
   }
   public boolean place(Client client, Coords c) {

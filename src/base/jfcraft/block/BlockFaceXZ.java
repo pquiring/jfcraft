@@ -29,9 +29,9 @@ public class BlockFaceXZ extends BlockBase {
     model = Assets.getModel("facexz").model;
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    buildBuffers(model.getObject("FACE"), buf, data, textures[0]);
+    buildBuffers(model.getObject("FACE"), buf, textures[0]);
   }
 
   public ArrayList<Box> getBoxes(Coords c, Type type) {

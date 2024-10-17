@@ -42,15 +42,14 @@ public class MovingBlock extends EntityBase {
     if (blockid == 0) return;
     obj = new RenderDest(2);  //DEST_NORMAL + DEST_ALPHA
     BlockBase block = Static.blocks.blocks[blockid];
-    RenderData data = new RenderData();
-    data.dir[X] = dir;
-    data.sl[X] = 1.0f;
-    data.bl[X] = 0.0f;
-    data.crack = -1;
-    block.buildBuffers(obj, data);
+    Static.data.dir[X] = dir;
+    Static.data.sl[X] = 1.0f;
+    Static.data.bl[X] = 0.0f;
+    Static.data.crack = -1;
+    block.buildBuffers(obj);
     obj.getBuffers(block.buffersIdx).copyBuffers();
     buffersIdx = block.buffersIdx;
-    texture = block.getTexture(data).texture;
+    texture = block.getTexture().texture;
   }
   public void bindTexture() {
     texture.bind();

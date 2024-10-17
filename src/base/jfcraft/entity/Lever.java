@@ -51,8 +51,8 @@ public class Lever extends BlockEntity {
 
   private static String parts[] = {"STICK", "BASE"};
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
-    this.active = data.active;
+  public void buildBuffers(RenderDest dest) {
+    this.active = Static.data.active;
     dest.resetAll();
     SubTexture textures[];
     textures = Static.blocks.getRegisteredBlock("lever").textures;
@@ -71,11 +71,11 @@ public class Lever extends BlockEntity {
         UVMap map = obj.getUVMap("normal");
         float uv1[] = map.uvl.toArray();
         buf.adjustTexture(uv1, textures[a]);
-        if (data.crack == -1) {
+        if (Static.data.crack == -1) {
           buf.addTextureCoords(uv1);
         } else {
           float uv2[] = map.uvl.toArray();
-          buf.adjustCrack(uv2, data.crack);
+          buf.adjustCrack(uv2, Static.data.crack);
           buf.addTextureCoords(uv1, uv2);
         }
       } else {
@@ -83,12 +83,12 @@ public class Lever extends BlockEntity {
         UVMap map1 = obj.getUVMap("normal");
         float uv1[] = map1.uvl.toArray();
         buf.adjustTexture(uv1, textures[a]);
-        if (data.crack == -1) {
+        if (Static.data.crack == -1) {
           buf.addTextureCoords(uv1);
         } else {
           UVMap map2 = obj.getUVMap("crack");
           float uv2[] = map2.uvl.toArray();
-          buf.adjustCrack(uv2, data.crack);
+          buf.adjustCrack(uv2, Static.data.crack);
           buf.addTextureCoords(uv1, uv2);
         }
       }

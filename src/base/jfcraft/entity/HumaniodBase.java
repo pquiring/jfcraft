@@ -29,12 +29,6 @@ public abstract class HumaniodBase extends CreatureBase {
   private static Model body;
   private static RenderDest body_dest;
   private static String body_parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG"};
-  private static final int part_head = 0;
-  private static final int part_body = 1;
-  private static final int part_left_arm = 2;
-  private static final int part_right_arm = 3;
-  private static final int part_left_leg = 4;
-  private static final int part_right_leg = 5;
 
   public boolean disable_cull_face = false;
 
@@ -48,7 +42,7 @@ public abstract class HumaniodBase extends CreatureBase {
     return body_dest;
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     //BUG : some derived classes to DOT call this base method
     //transfer data into dest
     for(int a=0;a<body_parts.length;a++) {
@@ -101,20 +95,31 @@ public abstract class HumaniodBase extends CreatureBase {
     return items[shield_idx];
   }
 
-  public void render() {
-    if (disable_cull_face) glDisable(GL_CULL_FACE);
+  private void renderBody(int start, int end) {
+    bindTexture();
     RenderDest dest = getDest();
-    int cnt = dest.count();
-    for(int a=0;a<cnt;a++) {
+    for(int a=start;a<=end;a++) {
       RenderBuffers buf = dest.getBuffers(a);
       setMatrixModel(a, buf);
       buf.bindBuffers();
       buf.render();
     }
-    if (disable_cull_face) glEnable(GL_CULL_FACE);
+  }
+
+  public void render() {
+    renderBody(0, getDest().count() - 1);
     renderArmor();
-    renderItemInHand(getRightItem(), 1.0f, false);
-    renderItemInHand(getLeftItem(), 1.0f, true);
+    //render items
+    renderItemInHand(getRightItem(), 1.0f, R_ITEM);
+    renderItemInHand(getLeftItem(), 1.0f, L_ITEM);
+  }
+
+  public void renderPlayer() {
+    //only render arms & items
+    renderBody(L_ARM, R_ARM);
+    //render items
+    renderItemInHand(getRightItem(), 1.0f, R_ITEM);
+    renderItemInHand(getLeftItem(), 1.0f, L_ITEM);
   }
 
   public void renderArmor() {
@@ -140,40 +145,27 @@ public abstract class HumaniodBase extends CreatureBase {
     scale = 1.0f;
   }
 
-  private static RenderData render_data = new RenderData();
-  private static RenderDest render_dest = new RenderDest(Chunk.DEST_COUNT);
-
-  public static final XYZ blockRightHandAngle = new XYZ(0.0f, -45.0f, 25f);
-  public static final XYZ blockRightHandPos = new XYZ(3f, -4f, -5.0f);
-  public static final XYZ blockLeftHandAngle = new XYZ(0.0f, -45.0f, -25f);
-  public static final XYZ blockLeftHandPos = new XYZ(-3f, -4f, -5.0f);
-
-  public static final XYZ itemRightHandAngle = new XYZ(-35.0f, -45.0f, 25f);
-  public static final XYZ itemRightHandPos = new XYZ(3f, -3.5f, -5.0f);
-  public static final XYZ itemLeftHandAngle = new XYZ(90f, -90.0f, 0f);
-  public static final XYZ itemLeftHandPos = new XYZ(6f, -10f, -5.0f);
-
-  public void renderItemInHand(Item item, float light, boolean left) {
+  public void renderItemInHand(Item item, float light, int part) {
     if (item == null || item.count == 0) return;
-    ItemBase itembase = Static.items.items[item.id];
-    if (Static.isBlock(item.id)) {
-      BlockBase block = Static.blocks.blocks[item.id];
-      if (block.isDirXZ) {
-        render_data.dir[X] = S;
-      } else {
-        render_data.dir[X] = A;
-      }
+    ItemBase itembase = Static.getItemBase(item.id);
+    Static.data.reset();
+    Static.data.isBlock = Static.isBlock(item.id);
+    Static.data.isEntity = itembase.renderAsEntity;
+    Static.data.pos.copy(pos);
+    Static.data.pos.x += 0.5f;
+    Static.data.pos.y += 0.5f;
+    Static.data.pos.z -= 0.5f;
+    Static.data.ang.copy(ang);
+    Static.data.scale = 0.5f;
+    int idx = part;
+    switch (part) {
+      case L_ITEM: idx = L_ARM; break;
+      case R_ITEM: idx = R_ARM; break;
     }
-    itembase.buildBuffers(render_dest, render_data);
-
-    itembase.setViewMatrix(left);
-
-    itembase.bindTexture();
-
+    Static.data.part = part;
+    Static.data.isItem = true;
+    setMatrixModel(part, body_dest.getBuffers(idx));
     itembase.render();
-
-    //reset view matrix after changing it
-    Static.game.setViewMatrix();
   }
 
   public Item getRightArmItem() {

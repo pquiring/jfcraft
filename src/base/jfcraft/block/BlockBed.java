@@ -49,20 +49,20 @@ public class BlockBed extends BlockBase {
   //"bed_head_side" 4
   //"bed_feet_top" 5
   //"bed_head_top" 6
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    if (data.var[X] == 1) {
+    if (Static.data.var[X] == 1) {
       //head end
-      buildBuffers(model_head.getObject("BOTTOM"), buf, data, textures[0]);
-      buildBuffers(model_head.getObject("SIDES"), buf, data, textures[4]);
-      buildBuffers(model_head.getObject("END"), buf, data, textures[2]);
-      buildBuffers(model_head.getObject("TOP"), buf, data, textures[6]);
+      buildBuffers(model_head.getObject("BOTTOM"), buf, textures[0]);
+      buildBuffers(model_head.getObject("SIDES"), buf, textures[4]);
+      buildBuffers(model_head.getObject("END"), buf, textures[2]);
+      buildBuffers(model_head.getObject("TOP"), buf, textures[6]);
     } else {
       //feet end
-      buildBuffers(model_feet.getObject("BOTTOM"), buf, data, textures[0]);
-      buildBuffers(model_feet.getObject("SIDES"), buf, data, textures[3]);
-      buildBuffers(model_feet.getObject("END"), buf, data, textures[1]);
-      buildBuffers(model_feet.getObject("TOP"), buf, data, textures[5]);
+      buildBuffers(model_feet.getObject("BOTTOM"), buf, textures[0]);
+      buildBuffers(model_feet.getObject("SIDES"), buf, textures[3]);
+      buildBuffers(model_feet.getObject("END"), buf, textures[1]);
+      buildBuffers(model_feet.getObject("TOP"), buf, textures[5]);
     }
   }
 

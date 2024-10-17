@@ -41,7 +41,7 @@ public class PacketHealth extends Packet {
     if (e == null) return;
     e.health = health;
     if (e.cracks()) {
-      e.buildBuffers(e.getDest(), null);
+      e.buildBuffers(e.getDest());
     }
   }
 

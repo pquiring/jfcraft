@@ -8,6 +8,7 @@ package jfcraft.client;
  */
 
 import javaforce.gl.*;
+import javaforce.ui.*;
 import static javaforce.gl.GL.*;
 
 import jfcraft.server.*;
@@ -24,9 +25,7 @@ public class PauseMenu extends RenderScreen {
   public void init() {
     super.init();
     addButton( "Back to Game", 56, 40, 400, new Runnable() {public void run() {
-      Static.video.setScreen(Static.game);
-      setCursor(false);
-      Static.inGame = true;
+      returnToGame();
     }});
     addButton( "Options", 56, 300, 190, new Runnable() {public void run() {
       //TODO : does nothing now
@@ -88,5 +87,19 @@ public class PauseMenu extends RenderScreen {
   }
 
   public void mouseWheel(int delta) {
+  }
+
+  public void keyPressed(int vk) {
+    switch (vk) {
+      case KeyCode.VK_ESCAPE:
+        returnToGame();
+        break;
+    }
+  }
+
+  private void returnToGame() {
+    Static.video.setScreen(Static.game);
+    setCursor(false);
+    Static.inGame = true;
   }
 }

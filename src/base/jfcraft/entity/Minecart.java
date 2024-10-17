@@ -83,7 +83,7 @@ public class Minecart extends VehicleBase {
 
   private static String parts[] = {"BASE", "NORTH", "EAST", "SOUTH", "WEST"};
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     dest.resetAll();
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {

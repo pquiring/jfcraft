@@ -27,8 +27,8 @@ public class BlockCarpet extends BlockBase {
     }
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    buildBuffers(model.getObject("CARPET"), buf, data, getTexture(data));
+    buildBuffers(model.getObject("CARPET"), buf, getTexture());
   }
 }

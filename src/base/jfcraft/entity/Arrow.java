@@ -72,7 +72,7 @@ public class Arrow extends EntityBase {
 
   private static String parts[] = {"ARROW"};
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);

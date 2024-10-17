@@ -28,7 +28,7 @@ public class BlockStep extends BlockBase {
 
   private static boolean q[] = new boolean[8];
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
     /*
       -z
@@ -41,7 +41,7 @@ public class BlockStep extends BlockBase {
      6|7    y-
       +z
     */
-    int bits = data.bits;
+    int bits = Static.data.bits;
     q[0] = (bits & QUNW) != 0;
     q[1] = (bits & QUNE) != 0;
     q[2] = (bits & QLNW) != 0;
@@ -51,10 +51,10 @@ public class BlockStep extends BlockBase {
     q[6] = (bits & QLSW) != 0;
     q[7] = (bits & QLSE) != 0;
 
-    SubTexture st = getTexture(data);
+    SubTexture st = getTexture();
     for(int a=0;a<8;a++) {
       if (q[a]) {
-        addQuad(buf, data, a, st);
+        addQuad(buf, a, st);
       }
     }
   }

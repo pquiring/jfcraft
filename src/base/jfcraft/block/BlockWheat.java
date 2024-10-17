@@ -32,9 +32,9 @@ public class BlockWheat extends BlockBase {
     model = Assets.getModel("wheat").model;
     adjustTextureSize(model.getObject("WHEAT"));
   }
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    buildBuffers(model.getObject("WHEAT"), buf, data, textures[data.var[X] & varMask]);
+    buildBuffers(model.getObject("WHEAT"), buf, textures[Static.data.var[X] & varMask]);
   }
   public void rtick(Chunk chunk, int gx, int gy,int gz) {
     int x = chunk.cx * 16 + gx;

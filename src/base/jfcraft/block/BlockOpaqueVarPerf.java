@@ -19,12 +19,12 @@ public class BlockOpaqueVarPerf extends BlockOpaque {
     isPerf = true;
     clampAlpha = true;
   }
-  public SubTexture getTexture(RenderData data) {
+  public SubTexture getTexture() {
     int idx = 0;
     if (isDir) {
-      idx = data.var[data.side] & varMask;
+      idx = Static.data.var[Static.data.side] & varMask;
     } else {
-      idx = data.var[X] & varMask;
+      idx = Static.data.var[X] & varMask;
     }
     return textures[idx];
   }

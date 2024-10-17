@@ -35,22 +35,22 @@ public class BlockHopper extends BlockBase {
     model = Assets.getModel("hopper").model;
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    data.norotate = true;  //do not rotate based on dir
-    buildBuffers(model.getObject("TOP"), buf, data, textures[0]);
-    buildBuffers(model.getObject("INSIDE"), buf, data, textures[1]);
-    buildBuffers(model.getObject("SIDES"), buf, data, textures[2]);
-    switch (data.dir[X]) {
-      case B: data.translate_pre = new float[] {0,-4f * 0.0625f,0}; break;
-      case N: data.translate_pre = new float[] {0,0,-5f * 0.0625f}; break;
-      case E: data.translate_pre = new float[] {+5f * 0.0625f,0,0}; break;
-      case S: data.translate_pre = new float[] {0,0,+5f * 0.0625f}; break;
-      case W: data.translate_pre = new float[] {-5f * 0.0625f,0,0}; break;
+    Static.data.norotate = true;  //do not rotate based on dir
+    buildBuffers(model.getObject("TOP"), buf, textures[0]);
+    buildBuffers(model.getObject("INSIDE"), buf, textures[1]);
+    buildBuffers(model.getObject("SIDES"), buf, textures[2]);
+    switch (Static.data.dir[X]) {
+      case B: Static.data.translate_pre = new float[] {0,-4f * 0.0625f,0}; break;
+      case N: Static.data.translate_pre = new float[] {0,0,-5f * 0.0625f}; break;
+      case E: Static.data.translate_pre = new float[] {+5f * 0.0625f,0,0}; break;
+      case S: Static.data.translate_pre = new float[] {0,0,+5f * 0.0625f}; break;
+      case W: Static.data.translate_pre = new float[] {-5f * 0.0625f,0,0}; break;
     }
-    buildBuffers(model.getObject("SPOUT"), buf, data, textures[2]);
-    data.translate_pre = null;
-    data.norotate = false;
+    buildBuffers(model.getObject("SPOUT"), buf, textures[2]);
+    Static.data.translate_pre = null;
+    Static.data.norotate = false;
   }
 
   public boolean place(Client client, Coords c) {

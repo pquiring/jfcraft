@@ -38,28 +38,28 @@ public class BlockRedStoneComparator extends BlockBase {
   // BIT_UPPER = subtract mode (front torch on)
 
   //textures = repeater_off, repeater_on, stone, redstone_torch_off, redstone_torch_on
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
     ExtraRedstone er;
     boolean active;
-    if (data.chunk != null) {
-      er = (ExtraRedstone)data.chunk.getExtra((int)data.x, (int)data.y, (int)data.z, Extras.REDSTONE);
+    if (Static.data.chunk != null) {
+      er = (ExtraRedstone)Static.data.chunk.getExtra((int)Static.data.x, (int)Static.data.y, (int)Static.data.z, Extras.REDSTONE);
       if (er == null) return;
       active = er.active;
     } else {
       Static.log("BlockRedStoneComparator:Error:Block as item?");
       active = false;
     }
-    buildBuffers(model.getObject("TOP"), buf, data, textures[active ? 1 : 0]);
-    buildBuffers(model.getObject("SIDES"), buf, data, textures[2]);
+    buildBuffers(model.getObject("TOP"), buf, textures[active ? 1 : 0]);
+    buildBuffers(model.getObject("SIDES"), buf, textures[2]);
 
-    data.translate_pre = new float[] {0,-Static._1_16 * 4.0f,-Static._1_16 * 4.0f};
-    buildBuffers(torch.getObject("TORCH"), buf, data, textures[active ? 4 : 3]);
-    data.translate_pre = new float[] {-Static._1_16 * 4.0f,-Static._1_16 * 4.0f,+Static._1_16 * 4.0f};
-    buildBuffers(torch.getObject("TORCH"), buf, data, textures[active ? 4 : 3]);
-    data.translate_pre = new float[] {+Static._1_16 * 4.0f,-Static._1_16 * 4.0f,+Static._1_16 * 4.0f};
-    buildBuffers(torch.getObject("TORCH"), buf, data, textures[active ? 4 : 3]);
-    data.translate_pre = null;
+    Static.data.translate_pre = new float[] {0,-Static._1_16 * 4.0f,-Static._1_16 * 4.0f};
+    buildBuffers(torch.getObject("TORCH"), buf, textures[active ? 4 : 3]);
+    Static.data.translate_pre = new float[] {-Static._1_16 * 4.0f,-Static._1_16 * 4.0f,+Static._1_16 * 4.0f};
+    buildBuffers(torch.getObject("TORCH"), buf, textures[active ? 4 : 3]);
+    Static.data.translate_pre = new float[] {+Static._1_16 * 4.0f,-Static._1_16 * 4.0f,+Static._1_16 * 4.0f};
+    buildBuffers(torch.getObject("TORCH"), buf, textures[active ? 4 : 3]);
+    Static.data.translate_pre = null;
   }
 
   public void useBlock(Client client, Coords c) {

@@ -16,6 +16,6 @@ public class BlockBarrier extends BlockBase {
     setDrop("air");
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {}
+  public void buildBuffers(RenderDest dest) {}
   public void destroy(Client client, Coords c, boolean doDrop) {}
 }

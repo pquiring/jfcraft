@@ -131,7 +131,6 @@ public class Entities implements SerialCreator {
 
   public void initStaticGL() {
     Static.log("initStatic(gl)");
-    RenderData data = new RenderData();
     World world = new World(true);
     for(int a=0;a<MAX_ID;a++) {
       EntityBase entity = regEntities[a];
@@ -140,7 +139,7 @@ public class Entities implements SerialCreator {
         entity.initStaticGL();
         entity.init(world);
         entity.initInstance();
-        entity.buildBuffers(entity.getDest(), data);
+        entity.buildBuffers(entity.getDest());
         entity.copyBuffers();
       } catch (Exception e) {
         Static.log(e);

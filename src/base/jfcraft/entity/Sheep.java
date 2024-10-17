@@ -98,7 +98,7 @@ public class Sheep extends CreatureBase {
     "HEAD_FUR", "BODY_FUR", "L_ARM_FUR", "R_ARM_FUR", "L_LEG_FUR", "R_LEG_FUR"
   };
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);

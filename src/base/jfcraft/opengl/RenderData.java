@@ -10,15 +10,26 @@ package jfcraft.opengl;
 import jfcraft.block.*;
 import jfcraft.data.*;
 import static jfcraft.data.Direction.*;
+import static jfcraft.entity.EntityBase.*;
 
 public class RenderData {
   public float x,y,z;
   public int side;  //side we are rendering
   public int dirSide;  //side after rotating
   public int part;  //body part (-1 = none) EntityBase.*
+  public int context;  //rendering context
+
+  public XYZ pos = new XYZ();  //position
+  public XYZ ang = new XYZ();  //angle
+  public float scale;
+  public int count;  //WorldItem only
+  public boolean inventory;  //render in inventory screen (no voxel)
 
   public boolean isDir, isDirXZ;
   public boolean isRed, isGreen, isBlue;
+  public boolean isBlock;
+  public boolean isEntity;
+  public boolean isItem;
   public float clr[];  //custom color
 
   public boolean active;
@@ -67,7 +78,16 @@ public class RenderData {
     x = y = z = 0;
     isDir = false;
     isDirXZ = false;
-    part = -1;
+    isRed = isGreen = isBlue = false;
+    isBlock = false;
+    isEntity = false;
+    isItem = false;
+    part = NONE;
+    pos.reset();
+    ang.reset();
+    count = 1;
+    scale = 1;
+    inventory = false;
     resetRotate();
   }
 

@@ -243,7 +243,7 @@ public class Horse extends VehicleBase {
     {L_EAR_SHORT, R_EAR_SHORT, MANE, TAIL_1, TAIL_2, TAIL_3},  //white
   };
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     org = new Vertex3[parts.length];
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {

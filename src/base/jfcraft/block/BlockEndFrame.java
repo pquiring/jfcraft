@@ -29,14 +29,14 @@ public class BlockEndFrame extends BlockBase {
   }
   private static final int VAR_ENDER_EYE = 1;
   //textures = "endframe_top", "endframe_side", "end_stone", "endframe_eye"
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    buildBuffers(model.getObject("TOP"), buf, data, textures[0]);
-    buildBuffers(model.getObject("SIDES"), buf, data, textures[1]);
-    buildBuffers(model.getObject("BOTTOM"), buf, data, textures[2]);
-    if (data.var[X] == VAR_ENDER_EYE) {
+    buildBuffers(model.getObject("TOP"), buf, textures[0]);
+    buildBuffers(model.getObject("SIDES"), buf, textures[1]);
+    buildBuffers(model.getObject("BOTTOM"), buf, textures[2]);
+    if (Static.data.var[X] == VAR_ENDER_EYE) {
       //add ender pearl on top
-      buildBuffers(model.getObject("EYE"), buf, data, textures[3]);
+      buildBuffers(model.getObject("EYE"), buf, textures[3]);
     }
   }
   public boolean useTool(Client client, Coords c) {

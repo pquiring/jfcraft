@@ -110,35 +110,35 @@ public class BlockLiquid extends BlockAlpha {
     }
     return dir;
   }
-  public void buildBuffers(RenderDest dest, RenderData data) {
-    data.doubleSided = true;
+  public void buildBuffers(RenderDest dest) {
+    Static.data.doubleSided = true;
     RenderBuffers buf = dest.getBuffers(buffersIdx);
     SubTexture st = textures[0];
-    int x = (int)data.x;
-    int y = (int)data.y;
-    int z = (int)data.z;
-    Chunk chunk = data.chunk;
+    int x = (int)Static.data.x;
+    int y = (int)Static.data.y;
+    int z = (int)Static.data.z;
+    Chunk chunk = Static.data.chunk;
     float depth = 1;
     if (chunk != null) {
       depth = getDepth(chunk,x,y,z);
     }
-    int dir = data.dir2[X];
-    data.isDir = false;
-    data.isDirXZ = false;
-    data.isGreen = isGreen;
-    data.isRed = isRed;
-    data.isBlue = isBlue;
-    data.crack = -1;
+    int dir = Static.data.dir2[X];
+    Static.data.isDir = false;
+    Static.data.isDirXZ = false;
+    Static.data.isGreen = isGreen;
+    Static.data.isRed = isRed;
+    Static.data.isBlue = isBlue;
+    Static.data.crack = -1;
     if (depth == 1f) {
       for(int a=0;a<6;a++) {
-        if (data.opaque[a]) continue;
-        if (data.id2[a] == id) continue;
-        data.side = a;
-        data.dirSide = a;
-        data.isDir = isDir;
-        data.isDirXZ = isDirXZ;
-        if (data.id[a] == Blocks.ICEBLOCK) continue;
-        addFace(buf,data,st);
+        if (Static.data.opaque[a]) continue;
+        if (Static.data.id2[a] == id) continue;
+        Static.data.side = a;
+        Static.data.dirSide = a;
+        Static.data.isDir = isDir;
+        Static.data.isDirXZ = isDirXZ;
+        if (Static.data.id[a] == Blocks.ICEBLOCK) continue;
+        addFace(buf,st);
       }
     } else {
       float y1,y2,y3,y4;
@@ -184,7 +184,7 @@ wxe
       }
       switch (dir) {
         default:
-          Static.log("Liquid with invalid dir:" + dir + "@" + data.x + "," + data.y + "," + data.z);
+          Static.log("Liquid with invalid dir:" + dir + "@" + Static.data.x + "," + Static.data.y + "," + Static.data.z);
           //no break
         case A:
           face.u1[0] = st.x1; face.v1[0] = st.y1;
@@ -241,21 +241,21 @@ wxe
           face.u1[3] = st.x2; face.v1[3] = st.y2;
           break;
       }
-      data.side = A;
-      data.dirSide = A;
-      buf.addFace(face, data);
+      Static.data.side = A;
+      Static.data.dirSide = A;
+      buf.addFace(face);
       st = textures[0];
       face.u1[0] = st.x1; face.v1[0] = st.y1;
       face.u1[1] = st.x2; face.v1[1] = st.y1;
       face.u1[2] = st.x2; face.v1[2] = st.y2;
       face.u1[3] = st.x1; face.v1[3] = st.y2;
       //bottom
-      if ((!data.opaque[B]) && (data.id2[B] != id)) {
-        data.side = B;
-        data.dirSide = B;
-        data.isDir = isDir;
-        data.isDirXZ = isDirXZ;
-        addFace(buf,data,st);
+      if ((!Static.data.opaque[B]) && (Static.data.id2[B] != id)) {
+        Static.data.side = B;
+        Static.data.dirSide = B;
+        Static.data.isDir = isDir;
+        Static.data.isDirXZ = isDirXZ;
+        addFace(buf,st);
       }
       st = textures[1];  //sides are always flowing down (should never see it though)
       face.u1[0] = st.x1; face.v1[0] = st.y1;
@@ -263,7 +263,7 @@ wxe
       face.u1[2] = st.x2; face.v1[2] = st.y2;
       face.u1[3] = st.x1; face.v1[3] = st.y2;
       //n
-      if ((!data.opaque[N]) && (data.id2[N] != id)) {
+      if ((!Static.data.opaque[N]) && (Static.data.id2[N] != id)) {
         face.x[0] = 1; face.y[0] = y2; face.z[0] = 0;
         face.x[1] = 0; face.y[1] = y1; face.z[1] = 0;
         face.x[2] = 0; face.y[2] = 0; face.z[2] = 0;
@@ -272,12 +272,12 @@ wxe
         face.v1[0] = st.y1 + ((1f - y2) * st.height);
         face.v1[1] = st.y1 + ((1f - y1) * st.height);
 
-        data.side = N;
-        data.dirSide = N;
-        buf.addFace(face, data);
+        Static.data.side = N;
+        Static.data.dirSide = N;
+        buf.addFace(face);
       }
       //e
-      if ((!data.opaque[E]) && (data.id2[E] != id)) {
+      if ((!Static.data.opaque[E]) && (Static.data.id2[E] != id)) {
         face.x[0] = 1; face.y[0] = y3; face.z[0] = 1;
         face.x[1] = 1; face.y[1] = y2; face.z[1] = 0;
         face.x[2] = 1; face.y[2] = 0; face.z[2] = 0;
@@ -286,12 +286,12 @@ wxe
         face.v1[0] = st.y1 + ((1f - y3) * st.height);
         face.v1[1] = st.y1 + ((1f - y2) * st.height);
 
-        data.side = E;
-        data.dirSide = E;
-        buf.addFace(face, data);
+        Static.data.side = E;
+        Static.data.dirSide = E;
+        buf.addFace(face);
       }
       //s
-      if ((!data.opaque[S]) && (data.id2[S] != id)) {
+      if ((!Static.data.opaque[S]) && (Static.data.id2[S] != id)) {
         face.x[0] = 0; face.y[0] = y4; face.z[0] = 1;
         face.x[1] = 1; face.y[1] = y3; face.z[1] = 1;
         face.x[2] = 1; face.y[2] = 0; face.z[2] = 1;
@@ -300,12 +300,12 @@ wxe
         face.v1[0] = st.y1 + ((1f - y4) * st.height);
         face.v1[1] = st.y1 + ((1f - y3) * st.height);
 
-        data.side = S;
-        data.dirSide = S;
-        buf.addFace(face, data);
+        Static.data.side = S;
+        Static.data.dirSide = S;
+        buf.addFace(face);
       }
       //w
-      if ((!data.opaque[W]) && (data.id2[W] != id)) {
+      if ((!Static.data.opaque[W]) && (Static.data.id2[W] != id)) {
         face.x[0] = 0; face.y[0] = y1; face.z[0] = 0;
         face.x[1] = 0; face.y[1] = y4; face.z[1] = 1;
         face.x[2] = 0; face.y[2] = 0; face.z[2] = 1;
@@ -314,12 +314,12 @@ wxe
         face.v1[0] = st.y1 + ((1f - y1) * st.height);
         face.v1[1] = st.y1 + ((1f - y4) * st.height);
 
-        data.side = W;
-        data.dirSide = W;
-        buf.addFace(face, data);
+        Static.data.side = W;
+        Static.data.dirSide = W;
+        buf.addFace(face);
       }
     }
-    data.doubleSided = false;
+    Static.data.doubleSided = false;
   }
   private Coords c = new Coords();
   public void tick(Chunk chunk, Tick tick) {

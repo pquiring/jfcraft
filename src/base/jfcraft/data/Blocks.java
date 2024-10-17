@@ -27,7 +27,7 @@ public class Blocks {
   public int blockCount = 0;
   public BlockBase[] blocks = new BlockBase[MAX_ID];  //blocks (in order of id)
   public BlockBase[] regBlocks = new BlockBase[MAX_ID];  //registered blocks (not in order of id)
-  public TextureMap stitched;  //main stitched texture (including animated textures and cracks)
+  public TextureMap stitched;  //main stitched texture (including animated textures)
   public TextureMap cracks;  //cracks
   public SubTexture subcracks[];
   public BlockBase solid;
@@ -1105,8 +1105,7 @@ public class Blocks {
   }
 
   public void initBuffers() {
-    RenderData data = new RenderData();
-    data.chunk = new Chunk(null);
+    Static.data.chunk = new Chunk(null);
     for(int a=0;a<MAX_ID;a++) {
       if (regBlocks[a] == null) continue;
       BlockBase block = regBlocks[a];
@@ -1123,19 +1122,19 @@ public class Blocks {
           block.addFaceInvItem(block.bufs[b].getBuffers(0), b, block.isGreen);
           block.bufs[b].preferedIdx = 0;
         } else {
-          data.x = 0;
-          data.y = 0;
-          data.z = 0;
-          data.sl[X] = 1.0f;
-          data.bl[X] = 0.0f;
-          data.crack = -1;
-          data.dir[X] = block.getPreferredDir();
+          Static.data.x = 0;
+          Static.data.y = 0;
+          Static.data.z = 0;
+          Static.data.sl[X] = 1.0f;
+          Static.data.bl[X] = 0.0f;
+          Static.data.crack = -1;
+          Static.data.dir[X] = block.getPreferredDir();
           if (block.isVar) {
-            data.var[X] = b;
+            Static.data.var[X] = b;
           } else {
-            data.var[X] = 0;
+            Static.data.var[X] = 0;
           }
-          block.buildBuffers(block.bufs[b], data);
+          block.buildBuffers(block.bufs[b]);
           block.bufs[b].preferedIdx = block.buffersIdx;
         }
         block.bufs[b].getBuffers(block.bufs[b].preferedIdx).copyBuffers();

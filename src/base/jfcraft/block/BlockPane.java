@@ -32,36 +32,36 @@ public class BlockPane extends BlockBase {
     }
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    int dir = data.dir[X];
+    int dir = Static.data.dir[X];
     if (dir == 0) dir = 0xf;
-    SubTexture st1 = textures[data.var[X] * 2 + 0];  //faces
-    SubTexture st2 = textures[data.var[X] * 2 + 1];  //top (sides)
+    SubTexture st1 = textures[Static.data.var[X] * 2 + 0];  //faces
+    SubTexture st2 = textures[Static.data.var[X] * 2 + 1];  //top (sides)
     if ((dir & (N_S)) == N_S) {
-        buildBuffers(model_full.getObject("NS_FACES"), buf, data, st1);
-        buildBuffers(model_full.getObject("NS_SIDES"), buf, data, st2);
+        buildBuffers(model_full.getObject("NS_FACES"), buf, st1);
+        buildBuffers(model_full.getObject("NS_SIDES"), buf, st2);
     } else {
       if ((dir & NB) != 0) {
-        buildBuffers(model_half.getObject("N_FACES"), buf, data, st1);
-        buildBuffers(model_half.getObject("N_SIDES"), buf, data, st2);
+        buildBuffers(model_half.getObject("N_FACES"), buf, st1);
+        buildBuffers(model_half.getObject("N_SIDES"), buf, st2);
       }
       if ((dir & SB) != 0) {
-        buildBuffers(model_half.getObject("S_FACES"), buf, data, st1);
-        buildBuffers(model_half.getObject("S_SIDES"), buf, data, st2);
+        buildBuffers(model_half.getObject("S_FACES"), buf, st1);
+        buildBuffers(model_half.getObject("S_SIDES"), buf, st2);
       }
     }
     if ((dir & E_W) == E_W) {
-        buildBuffers(model_full.getObject("EW_FACES"), buf, data, st1);
-        buildBuffers(model_full.getObject("EW_SIDES"), buf, data, st2);
+        buildBuffers(model_full.getObject("EW_FACES"), buf, st1);
+        buildBuffers(model_full.getObject("EW_SIDES"), buf, st2);
     } else {
       if ((dir & EB) != 0) {
-        buildBuffers(model_half.getObject("E_FACES"), buf, data, st1);
-        buildBuffers(model_half.getObject("E_SIDES"), buf, data, st2);
+        buildBuffers(model_half.getObject("E_FACES"), buf, st1);
+        buildBuffers(model_half.getObject("E_SIDES"), buf, st2);
       }
       if ((dir & WB) != 0) {
-        buildBuffers(model_half.getObject("W_FACES"), buf, data, st1);
-        buildBuffers(model_half.getObject("W_SIDES"), buf, data, st2);
+        buildBuffers(model_half.getObject("W_FACES"), buf, st1);
+        buildBuffers(model_half.getObject("W_SIDES"), buf, st2);
       }
     }
   }

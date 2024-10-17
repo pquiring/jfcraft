@@ -33,19 +33,19 @@ public class BlockSlab extends BlockBase {
   private static final int AB = 0x1;
   private static final int BB = 0x2;
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    int dir = data.dir[X];
+    int dir = Static.data.dir[X];
     if (dir == 0) {
       dir = BB;  //inventory
     }
     if ((dir & AB) != 0) {
-      buildBuffers(model.getObject("UPPER_AB"), buf, data, textures[0]);
-      buildBuffers(model.getObject("UPPER_SIDES"), buf, data, textures[1]);
+      buildBuffers(model.getObject("UPPER_AB"), buf, textures[0]);
+      buildBuffers(model.getObject("UPPER_SIDES"), buf, textures[1]);
     }
     if ((dir & BB) != 0) {
-      buildBuffers(model.getObject("LOWER_AB"), buf, data, textures[0]);
-      buildBuffers(model.getObject("LOWER_SIDES"), buf, data, textures[1]);
+      buildBuffers(model.getObject("LOWER_AB"), buf, textures[0]);
+      buildBuffers(model.getObject("LOWER_SIDES"), buf, textures[1]);
     }
   }
 

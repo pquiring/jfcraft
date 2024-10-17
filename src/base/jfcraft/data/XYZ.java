@@ -13,6 +13,14 @@ public class XYZ {
     this.y = y;
     this.z = z;
   }
+  public void reset() {
+    x = y = z = 0f;
+  }
+  public void set(float x, float y, float z) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+  }
   public void copy(XYZ in) {
     this.x = in.x;
     this.y = in.y;

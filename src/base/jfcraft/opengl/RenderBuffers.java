@@ -160,19 +160,19 @@ public class RenderBuffers implements Cloneable {
     uvl2.append(0);
     uvl2.append(0);
   }
-  public void addColor(RenderData data) {
-    if (data.isGreen) {
-      float clr[] = {0,0.5f + (data.temp / 200.0f),0};
+  public void addColor() {
+    if (Static.data.isGreen) {
+      float clr[] = {0,0.5f + (Static.data.temp / 200.0f),0};
       addColor(clr);
-    } else if (data.isRed) {
-      float clr[] = {(1 + data.var[X]) / 16.0f,0,0};
+    } else if (Static.data.isRed) {
+      float clr[] = {(1 + Static.data.var[X]) / 16.0f,0,0};
       addColor(clr);
-    } else if (data.isBlue) {
-      float clr[] = {0,0,0.5f + (data.temp / 200.0f)};
+    } else if (Static.data.isBlue) {
+      float clr[] = {0,0,0.5f + (Static.data.temp / 200.0f)};
       addColor(clr);
     } else {
-      if (data.clr != null) {
-        addColor(data.clr);
+      if (Static.data.clr != null) {
+        addColor(Static.data.clr);
       } else {
         addColor(Static.white);
       }
@@ -193,12 +193,12 @@ public class RenderBuffers implements Cloneable {
   private static float base_light = 70f;  //(use 10f to debug)
   private static float adj_light = 10f;  //3 adj block levels  (use 30f to debug)
   //TODO : need lighting from ANE,ANW,etc blocks to better implement this
-  private float calcLight(Face f, RenderData data, float lvls[], int vertex) {
+  private float calcLight(Face f, float[] lvls, int vertex) {
     //vertex are in CW order starting at top left (but Face.rotate() rotates them)
     //A/B faces are viewed from player perspective
-    float lvl = lvls[data.dirSide] * base_light;
-    vertex = f.rotateVertex(data, vertex);
-    switch (data.dirSide) {
+    float lvl = lvls[Static.data.dirSide] * base_light;
+    vertex = f.rotateVertex(vertex);
+    switch (Static.data.dirSide) {
       case N:
         switch (vertex) {
           case 0: lvl += lvls[NE] * adj_light; lvl += lvls[ANE] * adj_light; lvl += lvls[AN] * adj_light; break;
@@ -250,17 +250,17 @@ public class RenderBuffers implements Cloneable {
     }
     return lvl / 100.0f;
   }
-  public void addSunLight(RenderData data, Face f, int vertex) {
+  public void addSunLight(Face f, int vertex) {
     float lvl;
-    if (data.adjLight) {
+    if (Static.data.adjLight) {
       //complex adj lighting
-      lvl = calcLight(f, data, data.sl, vertex);
+      lvl = calcLight(f, Static.data.sl, vertex);
     } else {
       //simple X lighting
-      lvl = data.sl[X];
+      lvl = Static.data.sl[X];
     }
     //dim lights on the sides and bottom
-    switch (data.dirSide) {
+    switch (Static.data.dirSide) {
 //      case A:
 //        break;
       case N:
@@ -280,17 +280,17 @@ public class RenderBuffers implements Cloneable {
     }
     sll.append(lvl);
   }
-  public void addBlockLight(RenderData data, Face f, int vertex) {
+  public void addBlockLight(Face f, int vertex) {
     float lvl;
-    if (data.adjLight) {
+    if (Static.data.adjLight) {
       //complex adj lighting
-      lvl = calcLight(f, data, data.bl, vertex);
+      lvl = calcLight(f, Static.data.bl, vertex);
     } else {
       //simple X lighting
-      lvl = data.bl[X];
+      lvl = Static.data.bl[X];
     }
     //dim lights on the sides and bottom
-    switch (data.dirSide) {
+    switch (Static.data.dirSide) {
 //      case A:
 //        break;
       case N:
@@ -355,7 +355,7 @@ public class RenderBuffers implements Cloneable {
   }
 
   /** Adds any face that is upright for Entity. */
-  public void addFace(float fx1, float fy1, float fz1, float fx2, float fy2, float fz2, float u1, float v1, float u2, float v2, RenderData data) {
+  public void addFace(float fx1, float fy1, float fz1, float fx2, float fy2, float fz2, float u1, float v1, float u2, float v2) {
     Face f = new Face();
     f.x[0] = fx1;
     f.x[1] = fx2;
@@ -377,11 +377,11 @@ public class RenderBuffers implements Cloneable {
     f.v1[2] = v2;
     f.u1[3] = u1;
     f.v1[3] = v2;
-    addFace(f, data);
+    addFace(f);
   }
   /** Adds a face that is laying flat (up or down) for Entity. */
-  public void addFaceAB(float fx1, float fy1, float fz1, float fx2, float fy2, float fz2, float u1, float v1, float u2, float v2, RenderData data) {
-    data.sl[X] = 1;
+  public void addFaceAB(float fx1, float fy1, float fz1, float fx2, float fy2, float fz2, float u1, float v1, float u2, float v2) {
+    Static.data.sl[X] = 1;
     Face f = new Face();
     f.x[0] = fx1;
     f.x[1] = fx2;
@@ -403,7 +403,7 @@ public class RenderBuffers implements Cloneable {
     f.v1[2] = v2;
     f.u1[3] = u1;
     f.v1[3] = v2;
-    addFace(f, data);
+    addFace(f);
   }
 
   /** Adds a box for the sky.
@@ -412,13 +412,12 @@ public class RenderBuffers implements Cloneable {
    * @param fx/fy/fz = coords of cube
    */
   public void addSkyBox(float fx1, float fy1, float fz1, float fx2, float fy2, float fz2) {
-    RenderData data = new RenderData();
-    addFace  (fx2,fy1,fz1, fx1,fy2,fz1, 0,0,1,1, data);  //N
-    addFace  (fx1,fy1,fz2, fx2,fy2,fz2, 0,0,1,1, data);  //S
-    addFace  (fx1,fy1,fz1, fx1,fy2,fz2, 0,0,1,1, data);  //W
-    addFace  (fx2,fy1,fz2, fx2,fy2,fz1, 0,0,1,1, data);  //E
-    addFaceAB(fx1,fy2,fz2, fx2,fy2,fz1, 0,0,1,1, data);  //A
-    addFaceAB(fx1,fy1,fz1, fx2,fy1,fz2, 0,0,1,1, data);  //B
+    addFace  (fx2,fy1,fz1, fx1,fy2,fz1, 0,0,1,1);  //N
+    addFace  (fx1,fy1,fz2, fx2,fy2,fz2, 0,0,1,1);  //S
+    addFace  (fx1,fy1,fz1, fx1,fy2,fz2, 0,0,1,1);  //W
+    addFace  (fx2,fy1,fz2, fx2,fy2,fz1, 0,0,1,1);  //E
+    addFaceAB(fx1,fy2,fz2, fx2,fy2,fz1, 0,0,1,1);  //A
+    addFaceAB(fx1,fy1,fz1, fx2,fy1,fz2, 0,0,1,1);  //B
   }
 
   /** Adds a box for the horizon.
@@ -427,13 +426,12 @@ public class RenderBuffers implements Cloneable {
    * @param fx/fy/fz = coords of cube
    */
   public void addHorizonBox(float fx1, float fy1, float fz1, float fx2, float fy2, float fz2) {
-    RenderData data = new RenderData();
-    addFace  (fx2,fy1,fz1, fx1,fy2,fz1, 0,0,1,1, data);  //N
-    addFace  (fx1,fy1,fz2, fx2,fy2,fz2, 0,0,1,1, data);  //S
-    addFace  (fx1,fy1,fz1, fx1,fy2,fz2, 0,0,1,1, data);  //W
-    addFace  (fx2,fy1,fz2, fx2,fy2,fz1, 0,0,1,1, data);  //E
+    addFace  (fx2,fy1,fz1, fx1,fy2,fz1, 0,0,1,1);  //N
+    addFace  (fx1,fy1,fz2, fx2,fy2,fz2, 0,0,1,1);  //S
+    addFace  (fx1,fy1,fz1, fx1,fy2,fz2, 0,0,1,1);  //W
+    addFace  (fx2,fy1,fz2, fx2,fy2,fz1, 0,0,1,1);  //E
 //    addFaceAB(fx1,fy2,fz2, fx2,fy2,fz1, 0,0,1,1,clr);  //A
-    addFaceAB(fx1,fy1,fz1, fx2,fy1,fz2, 0,0,1,1, data);  //B
+    addFaceAB(fx1,fy1,fz1, fx2,fy1,fz2, 0,0,1,1);  //B
   }
 
   /** Adds a normal box.
@@ -442,17 +440,16 @@ public class RenderBuffers implements Cloneable {
    * @param fx/fy/fz = coords of cube
    */
   public void addBox(float fx1, float fy1, float fz1, float fx2, float fy2, float fz2) {
-    RenderData data = new RenderData();
-    addFace  (fx2,fy1,fz2, fx1,fy2,fz2, 0,0,1,1, data);  //N
-    addFace  (fx1,fy1,fz1, fx2,fy2,fz1, 0,0,1,1, data);  //S
-    addFace  (fx2,fy1,fz1, fx2,fy2,fz2, 0,0,1,1, data);  //W
-    addFace  (fx1,fy1,fz2, fx1,fy2,fz1, 0,0,1,1, data);  //E
-    addFaceAB(fx1,fy1,fz2, fx2,fy1,fz1, 0,0,1,1, data);  //A
-    addFaceAB(fx1,fy2,fz1, fx2,fy2,fz2, 0,0,1,1, data);  //B
+    addFace  (fx2,fy1,fz2, fx1,fy2,fz2, 0,0,1,1);  //N
+    addFace  (fx1,fy1,fz1, fx2,fy2,fz1, 0,0,1,1);  //S
+    addFace  (fx2,fy1,fz1, fx2,fy2,fz2, 0,0,1,1);  //W
+    addFace  (fx1,fy1,fz2, fx1,fy2,fz1, 0,0,1,1);  //E
+    addFaceAB(fx1,fy1,fz2, fx2,fy1,fz1, 0,0,1,1);  //A
+    addFaceAB(fx1,fy2,fz1, fx2,fy2,fz2, 0,0,1,1);  //B
   }
 
   /** Adds a face for a block. */
-  public void addFace(RenderData data, SubTexture st) {
+  public void addFace(SubTexture st) {
     Face f = new Face();
 
     f.u1[0] = st.x1;
@@ -464,7 +461,7 @@ public class RenderBuffers implements Cloneable {
     f.u1[3] = st.x1;
     f.v1[3] = st.y2;
 
-    switch (data.side) {
+    switch (Static.data.side) {
       case N:
         f.x[0] = 1;
         f.y[0] = 1;
@@ -568,22 +565,22 @@ public class RenderBuffers implements Cloneable {
         f.z[3] = 0;
         break;
       default:
-        Static.log("Invalid side:" + data.side);
+        Static.log("Invalid side:" + Static.data.side);
         return;
     }
 
-    if (data.adjLight)
-      addFaceComplexLighting(f, data);
+    if (Static.data.adjLight)
+      addFaceComplexLighting(f);
     else
-      addFace(f, data);
+      addFace(f);
   }
 
   /** Adds face for Blocks w/ complex lighting. */
-  private void addFaceComplexLighting(Face f, RenderData data) {
-    f.rotate(data);
+  private void addFaceComplexLighting(Face f) {
+    f.rotate();
 
-    if (data.crack != -1) {
-      SubTexture crack = Static.blocks.subcracks[data.crack];
+    if (Static.data.crack != -1) {
+      SubTexture crack = Static.blocks.subcracks[Static.data.crack];
 
       f.u2[0] = crack.x1;
       f.v2[0] = crack.y1;
@@ -605,9 +602,9 @@ public class RenderBuffers implements Cloneable {
     }
 
     for(int a=0;a<4;a++) {
-      f.x[a] += data.x;
-      f.y[a] += data.y;
-      f.z[a] += data.z;
+      f.x[a] += Static.data.x;
+      f.y[a] += Static.data.y;
+      f.z[a] += Static.data.z;
     }
 
     int off = getVertexCount();
@@ -617,22 +614,22 @@ public class RenderBuffers implements Cloneable {
     addVertex(new float[] {f.x[3],f.y[3],f.z[3]}, new float[] {f.u1[3],f.v1[3]}, new float[] {f.u2[3],f.v2[3]});
 
     for(int a=0;a<4;a++) {
-      addColor(data);
-      addSunLight(data, f, a);
-      addBlockLight(data, f, a);
+      addColor();
+      addSunLight(f, a);
+      addBlockLight(f, a);
     }
     addPoly(new int[] {off+3,off+2,off+1,off+0});
-    if (data.doubleSided) {
+    if (Static.data.doubleSided) {
       addPoly(new int[] {off+0,off+1,off+2,off+3});
     }
   }
 
   /** Adds complex face for Blocks/Entities. */
-  public void addFace(Face f, RenderData data) {
-    f.rotate(data);
+  public void addFace(Face f) {
+    f.rotate();
 
-    if (data.crack != -1) {
-      SubTexture crack = Static.blocks.subcracks[data.crack];
+    if (Static.data.crack != -1) {
+      SubTexture crack = Static.blocks.subcracks[Static.data.crack];
 
       f.u2[0] = crack.x1;
       f.v2[0] = crack.y1;
@@ -654,9 +651,9 @@ public class RenderBuffers implements Cloneable {
     }
 
     for(int a=0;a<4;a++) {
-      f.x[a] += data.x;
-      f.y[a] += data.y;
-      f.z[a] += data.z;
+      f.x[a] += Static.data.x;
+      f.y[a] += Static.data.y;
+      f.z[a] += Static.data.z;
     }
 
     int off = getVertexCount();
@@ -666,12 +663,12 @@ public class RenderBuffers implements Cloneable {
     addVertex(new float[] {f.x[3],f.y[3],f.z[3]}, new float[] {f.u1[3],f.v1[3]}, new float[] {f.u2[3],f.v2[3]});
 
     for(int a=0;a<4;a++) {
-      addColor(data);
-      addSunLight(data.sl[X]);
-      addBlockLight(data.bl[X]);
+      addColor();
+      addSunLight(Static.data.sl[X]);
+      addBlockLight(Static.data.bl[X]);
     }
     addPoly(new int[] {off+3,off+2,off+1,off+0});
-    if (data.doubleSided) {
+    if (Static.data.doubleSided) {
       addPoly(new int[] {off+0,off+1,off+2,off+3});
     }
   }

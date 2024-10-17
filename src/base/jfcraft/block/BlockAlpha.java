@@ -20,17 +20,17 @@ public class BlockAlpha extends BlockBase {
     isAlpha = true;
     canReplace = false;
   }
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    SubTexture st = getTexture(data);
+    SubTexture st = getTexture();
     for(int a=0;a<6;a++) {
-      if (data.opaque[a]) continue;
-      if (data.id[a] == id && id != 0) continue;
-      data.side = a;
-      data.dirSide = a;
-      data.isDir = isDir;
-      data.isDirXZ = isDirXZ;
-      addFace(buf,data,st);
+      if (Static.data.opaque[a]) continue;
+      if (Static.data.id[a] == id && id != 0) continue;
+      Static.data.side = a;
+      Static.data.dirSide = a;
+      Static.data.isDir = isDir;
+      Static.data.isDirXZ = isDirXZ;
+      addFace(buf,st);
     }
   }
 }

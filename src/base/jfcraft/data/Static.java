@@ -14,6 +14,7 @@ import javaforce.*;
 import javaforce.gl.*;
 
 import jfcraft.audio.*;
+import jfcraft.item.*;
 import jfcraft.client.*;
 import jfcraft.opengl.*;
 import jfcraft.plugin.PluginLoader;
@@ -25,6 +26,7 @@ public class Static {
 //  public static boolean debug;
 
   public static RenderEngine video;
+  public static RenderData data = new RenderData();
   public static AudioEngine audio;
   public static Object renderLock = new Object();  //TODO : eliminate this
   public static Object clientMoveLock = new Object();  //TODO : eliminate this
@@ -41,6 +43,8 @@ public class Static {
   public static Client client;  //playing client (client side only)
   public static Server server;  //current server (server side only)
   public static Game game;  //main screen for rendering game
+  public enum CameraView {normal, behind, infront};
+  public static CameraView camview = CameraView.normal;
   public static int fps;  //current FPS
   public static int tick;  //last server tick duration (ms)
   public static boolean spawn = true;  //spawn entities (monsters)
@@ -136,6 +140,14 @@ public class Static {
       Static.log("Timer start:" + name);
   }
 
+  public static ItemBase getItemBase(char id) {
+    if (isBlock(id)) {
+      return blocks.blocks[id];
+    } else {
+      return items.items[id];
+    }
+  }
+
   //gui
   public static float width;
   public static float height;
@@ -149,9 +161,10 @@ public class Static {
   public static int attribVertex, attribTextureCoords, attribTextureCoords2, attribColor, attribSunLight, attribBlockLight;
 
   //opengl uniforms
-  public static int uniformMatrixPerspective;
-  public static int uniformMatrixModel;
-  public static int uniformMatrixView;
+  public static int uniformMatrixPerspective;  //sets camera view style : perspective or ortho : defines rendering coords (relative to view port)
+  public static int uniformMatrixModel;  //move camera to where model is in 3d space: ie: chunks, arrow, boat, chest, items.
+  public static int uniformMatrixView;  //rotate camera where player is viewing
+  //NOTE : the viewport is further used to control where rendering is applied on screen coords
 
   public static int uniformSunLight;
   public static int uniformAlphaFactor;

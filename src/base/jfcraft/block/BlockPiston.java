@@ -37,18 +37,15 @@ public class BlockPiston extends BlockBase {
   //I could use BlockBase.buildBuffers() instead of using an Entity
   //  since it uses stitched textures
   //  but since piston moves entity is better
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     Coords c = new Coords();
-    c.setPos(data.x + data.chunk.cx * 16, data.y, data.z + data.chunk.cz * 16);
-    Piston piston = (Piston)data.chunk.findBlockEntity(entityID, c);
+    c.setPos(Static.data.x + Static.data.chunk.cx * 16, Static.data.y, Static.data.z + Static.data.chunk.cz * 16);
+    Piston piston = (Piston)Static.data.chunk.findBlockEntity(entityID, c);
     if (piston == null) {
       Static.log("BlockPiston.buildBuffers():Can not find entity");
       return;
     }
-    RenderData data2 = new RenderData();
-    data2.crack = data.crack;
-    data2.var[X] = data.var[X];
-    piston.buildBuffers(piston.getDest(), data2);
+    piston.buildBuffers(piston.getDest());
     piston.needCopyBuffers = true;
   }
   public boolean place(Client client, Coords c) {

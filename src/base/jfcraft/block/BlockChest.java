@@ -27,16 +27,14 @@ public class BlockChest extends BlockBase {
     super.getIDs(world);
     entityID = Entities.CHEST;
   }
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     Coords c = new Coords();
-    c.setPos(data.x + data.chunk.cx * 16, data.y, data.z + data.chunk.cz * 16);
-    Chest chest = (Chest)data.chunk.findBlockEntity(Entities.CHEST, c);
+    c.setPos(Static.data.x + Static.data.chunk.cx * 16, Static.data.y, Static.data.z + Static.data.chunk.cz * 16);
+    Chest chest = (Chest)Static.data.chunk.findBlockEntity(Entities.CHEST, c);
     if (chest == null) {
       return;
     }
-    RenderData data2 = new RenderData();
-    data2.crack = data.crack;
-    chest.buildBuffers(chest.getDest(), data2);
+    chest.buildBuffers(chest.getDest());
     chest.needCopyBuffers = true;
   }
   public boolean place(Client client, Coords c) {

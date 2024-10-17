@@ -31,25 +31,25 @@ public class BlockFire extends BlockBase {
     model = Assets.getModel("fire").model;
     resetBoxes(Type.BOTH);
   }
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    switch (data.dir2[X]) {
+    switch (Static.data.dir2[X]) {
       case A:  //not used
         Static.log("BlockFire:dir==A???");
       case B:
-        buildBuffers(model.getObject("FIRE"), buf, data, textures[0]);
+        buildBuffers(model.getObject("FIRE"), buf, textures[0]);
         return;
       case N:
-        buildBuffers(model.getObject("NORTH"), buf, data, textures[0]);
+        buildBuffers(model.getObject("NORTH"), buf, textures[0]);
         return;
       case E:
-        buildBuffers(model.getObject("EAST"), buf, data, textures[0]);
+        buildBuffers(model.getObject("EAST"), buf, textures[0]);
         return;
       case S:
-        buildBuffers(model.getObject("SOUTH"), buf, data, textures[0]);
+        buildBuffers(model.getObject("SOUTH"), buf, textures[0]);
         return;
       case W:
-        buildBuffers(model.getObject("WEST"), buf, data, textures[0]);
+        buildBuffers(model.getObject("WEST"), buf, textures[0]);
         return;
     }
   }

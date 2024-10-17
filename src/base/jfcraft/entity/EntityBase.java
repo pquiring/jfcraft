@@ -1161,7 +1161,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   public RenderDest getDest() {return null;}
 
-  public void buildBuffers(RenderDest dest, RenderData data) {}
+  public void buildBuffers(RenderDest dest) {}
 
   public void copyBuffers() {}
 

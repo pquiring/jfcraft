@@ -87,7 +87,7 @@ public class Slime extends CreatureBase {
 
   private static String parts[] = {"INNER", "L_EYE", "R_EYE", "MOUTH", "OUTTER"};  //outter MUST be last (transparent)
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);

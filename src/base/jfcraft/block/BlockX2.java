@@ -31,17 +31,17 @@ public class BlockX2 extends BlockBase {
     }
     resetBoxes(Type.BOTH);
   }
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
     SubTexture st;
     int idx = 0;
-    if ((data.var[X] & VAR_UPPER) == VAR_UPPER) {
-      idx = (data.var[X] & varMask) * 2;
+    if ((Static.data.var[X] & VAR_UPPER) == VAR_UPPER) {
+      idx = (Static.data.var[X] & varMask) * 2;
     } else {
-      idx = (data.var[X] & varMask) * 2 + 1;
+      idx = (Static.data.var[X] & varMask) * 2 + 1;
     }
     st = textures[idx];
-    buildBuffers(model.getObject("X"), buf, data, st);
+    buildBuffers(model.getObject("X"), buf, st);
   }
   public boolean place(Client client, Coords c) {
     Coords c2 = c.clone();

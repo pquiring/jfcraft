@@ -38,9 +38,9 @@ public class BlockDoor extends BlockBase {
     cantGive = true;  //give item instead
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    ExtraRedstone er = (ExtraRedstone)data.chunk.getExtra((int)data.x, (int)data.y, (int)data.z, Extras.REDSTONE);
+    ExtraRedstone er = (ExtraRedstone)Static.data.chunk.getExtra((int)Static.data.x, (int)Static.data.y, (int)Static.data.z, Extras.REDSTONE);
     if (er == null) {
       Static.log("BlockDoor.buildBuffers():Error:Can not find extra data");
       return;
@@ -48,32 +48,32 @@ public class BlockDoor extends BlockBase {
     SubTexture st;
     Object3 obj;
 
-    if ((data.var[X] & VAR_UPPER) == VAR_UPPER) {
+    if ((Static.data.var[X] & VAR_UPPER) == VAR_UPPER) {
       //upper
-      st = textures[(data.var[X] & varMask) * 2];
+      st = textures[(Static.data.var[X] & varMask) * 2];
       obj = model_upper.getObject("DOOR_UPPER");
     } else {
       //lower
-      st = textures[(data.var[X] & varMask) * 2 + 1];
+      st = textures[(Static.data.var[X] & varMask) * 2 + 1];
       obj = model_lower.getObject("DOOR_LOWER");
     }
 
-    int dir = data.dir[X];
+    int dir = Static.data.dir[X];
     if (er.active) {
       switch (dir) {
-        case N: data.dir[X] = W; break;
-        case E: data.dir[X] = S; break;
-        case S: data.dir[X] = E; break;
-        case W: data.dir[X] = N; break;
+        case N: Static.data.dir[X] = W; break;
+        case E: Static.data.dir[X] = S; break;
+        case S: Static.data.dir[X] = E; break;
+        case W: Static.data.dir[X] = N; break;
       }
     }
-    switch (data.dir[X]) {
-      case E: data.rotate = -90; data.translate_pst = new float[] {0.8125f,0,0}; break;
-      case W: data.rotate = -90; data.translate_pst = new float[] {-0.8125f,0,0}; break;
+    switch (Static.data.dir[X]) {
+      case E: Static.data.rotate = -90; Static.data.translate_pst = new float[] {0.8125f,0,0}; break;
+      case W: Static.data.rotate = -90; Static.data.translate_pst = new float[] {-0.8125f,0,0}; break;
     }
-    buildBuffers(obj, buf, data, st);
-    data.rotate = 90;
-    data.translate_pst = null;
+    buildBuffers(obj, buf, st);
+    Static.data.rotate = 90;
+    Static.data.translate_pst = null;
   }
   public ArrayList<Box> getBoxes(Coords c, Type type) {
     ExtraRedstone er = (ExtraRedstone)c.chunk.getExtra(c.gx, c.gy, c.gz, Extras.REDSTONE);

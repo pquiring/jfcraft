@@ -86,8 +86,8 @@ public class ItemClock extends ItemBase {
     obj.addFace2D(x1,y1,x2,y2,tx1,ty1,tx2,ty2,Static.white);
   }
   public void render() {
-    data.reset();
-    buildBuffers(bufs[0], data);
+    Static.data.reset();
+    buildBuffers(bufs[0]);
     bufs[0].copyBuffers();
     super.render();
   }

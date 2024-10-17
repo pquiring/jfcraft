@@ -41,33 +41,33 @@ public class BlockTorch extends BlockBase {
     }
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    SubTexture st = getTexture(data);
-    data.rotate = -45.0f;
-    data.rotate2 = 0;
-    switch (data.dir[X]) {
+    SubTexture st = getTexture();
+    Static.data.rotate = -45.0f;
+    Static.data.rotate2 = 0;
+    switch (Static.data.dir[X]) {
       case N:
-        data.translate_pre = new float [] { 0.0f, 0.0f,-0.3f};
+        Static.data.translate_pre = new float [] { 0.0f, 0.0f,-0.3f};
         break;
       case E:
-        data.translate_pre = new float [] { 0.3f, 0.0f, 0.0f};
+        Static.data.translate_pre = new float [] { 0.3f, 0.0f, 0.0f};
         break;
       case S:
-        data.translate_pre = new float [] { 0.0f, 0.0f, 0.3f};
+        Static.data.translate_pre = new float [] { 0.0f, 0.0f, 0.3f};
         break;
       case W:
-        data.translate_pre = new float [] {-0.3f, 0.0f, 0.0f};
+        Static.data.translate_pre = new float [] {-0.3f, 0.0f, 0.0f};
         break;
       case A:
-        Static.log("Torch with invalid dir:A:@" + data.x + "," + data.y + "," + data.z);
+        Static.log("Torch with invalid dir:A:@" + Static.data.x + "," + Static.data.y + "," + Static.data.z);
         break;
       case B:
-        data.rotate = 0;  //do not rotate
+        Static.data.rotate = 0;  //do not rotate
         break;
     }
-    buildBuffers(model.getObject("TORCH"), buf, data, st);
-    data.resetRotate();
+    buildBuffers(model.getObject("TORCH"), buf, st);
+    Static.data.resetRotate();
   }
   public boolean place(Client client, Coords c) {
     if (c.dir == A) return false;  //can not place torch on ceiling

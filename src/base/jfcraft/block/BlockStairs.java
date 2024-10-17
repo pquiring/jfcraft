@@ -24,7 +24,7 @@ public class BlockStairs extends BlockBase {
     isDirXZ = true;
     isVar = true;
   }
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
     /*
       -z
@@ -38,10 +38,10 @@ public class BlockStairs extends BlockBase {
       +z
     */
     boolean q[] = null;
-    if (data.var[X] == VAR_UPPER) {
-      switch (data.dir[X]) {
+    if (Static.data.var[X] == VAR_UPPER) {
+      switch (Static.data.dir[X]) {
         default:
-          Static.log("BlockStairs with invalid dir:" + data.dir[X]);
+          Static.log("BlockStairs with invalid dir:" + Static.data.dir[X]);
           //no break
         case N:
           q = new boolean[] {true, true, true, true, true, true, false, false};
@@ -81,9 +81,9 @@ public class BlockStairs extends BlockBase {
           break;
       }
     } else {
-      switch (data.dir[X]) {
+      switch (Static.data.dir[X]) {
         default:
-          Static.log("BlockStairs with invalid dir:" + (data.dir[X]));
+          Static.log("BlockStairs with invalid dir:" + (Static.data.dir[X]));
           //no break
         case N:
           q = new boolean[] {true, true, true, true, false, false, true, true};
@@ -123,12 +123,12 @@ public class BlockStairs extends BlockBase {
           break;
       }
     }
-    data.isDir = false;  //do not allow rotation
-    data.dir[X] = N;  //do not allow rotation
-    SubTexture st = getTexture(data);
+    Static.data.isDir = false;  //do not allow rotation
+    Static.data.dir[X] = N;  //do not allow rotation
+    SubTexture st = getTexture();
     for(int a=0;a<8;a++) {
       if (q[a]) {
-        addQuad(buf, data, a, st);
+        addQuad(buf, a, st);
       }
     }
   }

@@ -27,8 +27,8 @@ public class BlockX extends BlockBase {
     }
     resetBoxes(Type.BOTH);
   }
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
-    buildBuffers(model.getObject("X"), buf, data, getTexture(data));
+    buildBuffers(model.getObject("X"), buf, getTexture());
   }
 }

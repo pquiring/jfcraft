@@ -28,27 +28,25 @@ public class BlockLever extends BlockBase {
     renderAsItem = true;
   }
 
-  public SubTexture getTexture(RenderData data) {
+  public SubTexture getTexture() {
     return textures[1];
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     Coords c = new Coords();
-    c.setPos(data.x + data.chunk.cx * 16, data.y, data.z + data.chunk.cz * 16);
-    Lever lever = (Lever)data.chunk.findBlockEntity(Entities.LEVER, c);
+    c.setPos(Static.data.x + Static.data.chunk.cx * 16, Static.data.y, Static.data.z + Static.data.chunk.cz * 16);
+    Lever lever = (Lever)Static.data.chunk.findBlockEntity(Entities.LEVER, c);
     if (lever == null) {
       Static.log("Lever:Error:Can't find object");
       return;
     }
-    RenderData data2 = new RenderData();
-    ExtraRedstone er = (ExtraRedstone)data.chunk.getExtra(c.gx, c.gy, c.gz, Extras.REDSTONE);
+    ExtraRedstone er = (ExtraRedstone)Static.data.chunk.getExtra(c.gx, c.gy, c.gz, Extras.REDSTONE);
     if (er != null) {
-      data2.active = er.active;
+      Static.data.active = er.active;
     } else {
       Static.log("Lever:Error:Can't find Extra data@" + c.gx +","+ c.gy +","+ c.gz);
     }
-    data2.crack = data.crack;
-    lever.buildBuffers(lever.getDest(), data2);
+    lever.buildBuffers(lever.getDest());
     lever.needCopyBuffers = true;
   }
 

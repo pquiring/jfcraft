@@ -837,8 +837,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       byte _ll;
       int crack;
       BlockBase block = null, adjBlock, block2 = null;
-      RenderData data = new RenderData();
-      data.chunk = this;
+      Static.data.chunk = this;
       //reset all objects
       for(int a=0;a<DEST_COUNT;a++) {
         if (!dest.exists(a)) continue;
@@ -846,13 +845,13 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       }
       for(int y=0;y<256;y++) {  //+ - 256
         if (blocks[y] == null && blocks2[y] == null) continue;
-        data.y = y;
+        Static.data.y = y;
         for(int z=0;z<16;z++) {  //+ - 16
-          data.z = z;
+          Static.data.z = z;
           for(int x=0;x<16;x++) {  //+ - 1
-            data.x = x;
-            data.temp = temp[z * 16 + x];
-            data.rain = rain[z * 16 + x];
+            Static.data.x = x;
+            Static.data.temp = temp[z * 16 + x];
+            Static.data.rain = rain[z * 16 + x];
             id = getBlock(x,y,z);
             id2 = getBlock2(x,y,z);
             boolean hasBlock = id != 0;
@@ -862,22 +861,22 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             }
             if (hasBlock) {
               _bits = getBits(x,y,z);
-              data.bits = _bits;
-              data.dir[Direction.X] = getDir(_bits);
-              data.var[Direction.X] = getVar(_bits);
+              Static.data.bits = _bits;
+              Static.data.dir[Direction.X] = getDir(_bits);
+              Static.data.var[Direction.X] = getVar(_bits);
               block = Static.blocks.blocks[id];
-              data.opaque[Direction.X] = block.isOpaque;
+              Static.data.opaque[Direction.X] = block.isOpaque;
             }
             if (hasBlock2) {
               _bits = getBits2(x,y,z);
-              data.dir2[Direction.X] = getDir(_bits);
-              data.var2[Direction.X] = getVar(_bits);
-              data.id2[Direction.X] = id2;
+              Static.data.dir2[Direction.X] = getDir(_bits);
+              Static.data.var2[Direction.X] = getVar(_bits);
+              Static.data.id2[Direction.X] = id2;
               block2 = Static.blocks.blocks[id2];
             }
             _ll = getLights(x,y,z);
-            data.sl[Direction.X] = (_ll & 0x0f) / 15.0f;
-            data.bl[Direction.X] = ((_ll & 0xf0) >> 4) / 15.0f;
+            Static.data.sl[Direction.X] = (_ll & 0x0f) / 15.0f;
+            Static.data.bl[Direction.X] = ((_ll & 0xf0) >> 4) / 15.0f;
             ExtraCrack c = getCrack(x,y,z);
             if (c != null) {
               crack = (int)(c.dmg / 10.0f);
@@ -885,133 +884,133 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
             } else {
               crack = -1;
             }
-            data.crack = crack;
+            Static.data.crack = crack;
 
             if (y > 0) {
-              data.id[Direction.B] = getBlock(x,y-1,z);
+              Static.data.id[Direction.B] = getBlock(x,y-1,z);
               _bits = getBits(x,y-1,z);
-              data.dir[Direction.B] = getDir(_bits);
-              data.var[Direction.B] = getVar(_bits);
-              adjBlock = Static.blocks.blocks[data.id[Direction.B]];
-              data.opaque[Direction.B] = adjBlock.isOpaque;
+              Static.data.dir[Direction.B] = getDir(_bits);
+              Static.data.var[Direction.B] = getVar(_bits);
+              adjBlock = Static.blocks.blocks[Static.data.id[Direction.B]];
+              Static.data.opaque[Direction.B] = adjBlock.isOpaque;
               _ll = getLights(x,y-1,z);
-              data.sl[Direction.B] = (_ll & 0x0f) / 15.0f;
-              data.bl[Direction.B] = ((_ll & 0xf0) >> 4) / 15.0f;
+              Static.data.sl[Direction.B] = (_ll & 0x0f) / 15.0f;
+              Static.data.bl[Direction.B] = ((_ll & 0xf0) >> 4) / 15.0f;
               if (hasBlock2) {
-                data.id2[Direction.B] = getBlock2(x,y-1,z);
+                Static.data.id2[Direction.B] = getBlock2(x,y-1,z);
                 _bits = getBits2(x,y-1,z);
-                data.dir2[Direction.B] = getDir(_bits);
-                data.var2[Direction.B] = getVar(_bits);
+                Static.data.dir2[Direction.B] = getDir(_bits);
+                Static.data.var2[Direction.B] = getVar(_bits);
               }
             } else {
-              data.id[Direction.B] = 0;
-              data.opaque[Direction.B] = false;
-              data.sl[Direction.B] = 0;
-              data.bl[Direction.B] = 0;
+              Static.data.id[Direction.B] = 0;
+              Static.data.opaque[Direction.B] = false;
+              Static.data.sl[Direction.B] = 0;
+              Static.data.bl[Direction.B] = 0;
             }
 
             if (y < 255) {
-              data.id[Direction.A] = getBlock(x,y+1,z);
+              Static.data.id[Direction.A] = getBlock(x,y+1,z);
               _bits = getBits(x,y+1,z);
-              data.dir[Direction.A] = getDir(_bits);
-              data.var[Direction.A] = getVar(_bits);
-              adjBlock = Static.blocks.blocks[data.id[Direction.A]];
-              data.opaque[Direction.A] = adjBlock.isOpaque;
+              Static.data.dir[Direction.A] = getDir(_bits);
+              Static.data.var[Direction.A] = getVar(_bits);
+              adjBlock = Static.blocks.blocks[Static.data.id[Direction.A]];
+              Static.data.opaque[Direction.A] = adjBlock.isOpaque;
               _ll = getLights(x,y+1,z);
-              data.sl[Direction.A] = (_ll & 0x0f) / 15.0f;
-              data.bl[Direction.A] = ((_ll & 0xf0) >> 4) / 15.0f;
+              Static.data.sl[Direction.A] = (_ll & 0x0f) / 15.0f;
+              Static.data.bl[Direction.A] = ((_ll & 0xf0) >> 4) / 15.0f;
               if (hasBlock2) {
-                data.id2[Direction.A] = getBlock2(x,y+1,z);
+                Static.data.id2[Direction.A] = getBlock2(x,y+1,z);
                 _bits = getBits2(x,y+1,z);
-                data.dir2[Direction.A] = getDir(_bits);
-                data.var2[Direction.A] = getVar(_bits);
+                Static.data.dir2[Direction.A] = getDir(_bits);
+                Static.data.var2[Direction.A] = getVar(_bits);
               }
             } else {
-              data.id[Direction.A] = 0;
-              data.opaque[Direction.A] = false;
-              data.sl[Direction.A] = 1;
-              data.bl[Direction.A] = 0;
+              Static.data.id[Direction.A] = 0;
+              Static.data.opaque[Direction.A] = false;
+              Static.data.sl[Direction.A] = 1;
+              Static.data.bl[Direction.A] = 0;
             }
 
-            data.id[Direction.N] = getBlock(x,y,z-1);
+            Static.data.id[Direction.N] = getBlock(x,y,z-1);
             _bits = getBits(x,y,z-1);
-            data.dir[Direction.N] = getDir(_bits);
-            data.var[Direction.N] = getVar(_bits);
-            adjBlock = Static.blocks.blocks[data.id[Direction.N]];
-            data.opaque[Direction.N] = adjBlock.isOpaque;
+            Static.data.dir[Direction.N] = getDir(_bits);
+            Static.data.var[Direction.N] = getVar(_bits);
+            adjBlock = Static.blocks.blocks[Static.data.id[Direction.N]];
+            Static.data.opaque[Direction.N] = adjBlock.isOpaque;
             _ll = getLights(x,y,z-1);
-            data.sl[Direction.N] = (_ll & 0x0f) / 15.0f;
-            data.bl[Direction.N] = ((_ll & 0xf0) >> 4) / 15.0f;
+            Static.data.sl[Direction.N] = (_ll & 0x0f) / 15.0f;
+            Static.data.bl[Direction.N] = ((_ll & 0xf0) >> 4) / 15.0f;
             if (hasBlock2) {
-              data.id2[Direction.N] = getBlock2(x,y,z-1);
+              Static.data.id2[Direction.N] = getBlock2(x,y,z-1);
               _bits = getBits2(x,y,z-1);
-              data.dir2[Direction.N] = getDir(_bits);
-              data.var2[Direction.N] = getVar(_bits);
+              Static.data.dir2[Direction.N] = getDir(_bits);
+              Static.data.var2[Direction.N] = getVar(_bits);
             }
 
-            data.id[Direction.S] = getBlock(x,y,z+1);
+            Static.data.id[Direction.S] = getBlock(x,y,z+1);
             _bits = getBits(x,y,z+1);
-            data.dir[Direction.S] = getDir(_bits);
-            data.var[Direction.S] = getVar(_bits);
-            adjBlock = Static.blocks.blocks[data.id[Direction.S]];
-            data.opaque[Direction.S] = adjBlock.isOpaque;
+            Static.data.dir[Direction.S] = getDir(_bits);
+            Static.data.var[Direction.S] = getVar(_bits);
+            adjBlock = Static.blocks.blocks[Static.data.id[Direction.S]];
+            Static.data.opaque[Direction.S] = adjBlock.isOpaque;
             _ll = getLights(x,y,z+1);
-            data.sl[Direction.S] = (_ll & 0x0f) / 15.0f;
-            data.bl[Direction.S] = ((_ll & 0xf0) >> 4) / 15.0f;
+            Static.data.sl[Direction.S] = (_ll & 0x0f) / 15.0f;
+            Static.data.bl[Direction.S] = ((_ll & 0xf0) >> 4) / 15.0f;
             if (hasBlock2) {
-              data.id2[Direction.S] = getBlock2(x,y,z+1);
+              Static.data.id2[Direction.S] = getBlock2(x,y,z+1);
               _bits = getBits2(x,y,z+1);
-              data.dir2[Direction.S] = getDir(_bits);
-              data.var2[Direction.S] = getVar(_bits);
+              Static.data.dir2[Direction.S] = getDir(_bits);
+              Static.data.var2[Direction.S] = getVar(_bits);
             }
 
-            data.id[Direction.W] = getBlock(x-1,y,z);
+            Static.data.id[Direction.W] = getBlock(x-1,y,z);
             _bits = getBits(x-1,y,z);
-            data.dir[Direction.W] = getDir(_bits);
-            data.var[Direction.W] = getVar(_bits);
-            adjBlock = Static.blocks.blocks[data.id[Direction.W]];
-            data.opaque[Direction.W] = adjBlock.isOpaque;
+            Static.data.dir[Direction.W] = getDir(_bits);
+            Static.data.var[Direction.W] = getVar(_bits);
+            adjBlock = Static.blocks.blocks[Static.data.id[Direction.W]];
+            Static.data.opaque[Direction.W] = adjBlock.isOpaque;
             _ll = getLights(x-1,y,z);
-            data.sl[Direction.W] = (_ll & 0x0f) / 15.0f;
-            data.bl[Direction.W] = ((_ll & 0xf0) >> 4) / 15.0f;
+            Static.data.sl[Direction.W] = (_ll & 0x0f) / 15.0f;
+            Static.data.bl[Direction.W] = ((_ll & 0xf0) >> 4) / 15.0f;
             if (hasBlock2) {
-              data.id2[Direction.W] = getBlock2(x-1,y,z);
+              Static.data.id2[Direction.W] = getBlock2(x-1,y,z);
               _bits = getBits2(x-1,y,z);
-              data.dir2[Direction.W] = getDir(_bits);
-              data.var2[Direction.W] = getVar(_bits);
+              Static.data.dir2[Direction.W] = getDir(_bits);
+              Static.data.var2[Direction.W] = getVar(_bits);
             }
 
-            data.id[Direction.E] = getBlock(x+1,y,z);
+            Static.data.id[Direction.E] = getBlock(x+1,y,z);
             _bits = getBits(x+1,y,z);
-            data.dir[Direction.E] = getDir(_bits);
-            data.var[Direction.E] = getVar(_bits);
-            adjBlock = Static.blocks.blocks[data.id[Direction.E]];
-            data.opaque[Direction.E] = adjBlock.isOpaque;
+            Static.data.dir[Direction.E] = getDir(_bits);
+            Static.data.var[Direction.E] = getVar(_bits);
+            adjBlock = Static.blocks.blocks[Static.data.id[Direction.E]];
+            Static.data.opaque[Direction.E] = adjBlock.isOpaque;
             _ll = getLights(x+1,y,z);
-            data.sl[Direction.E] = (_ll & 0x0f) / 15.0f;
-            data.bl[Direction.E] = ((_ll & 0xf0) >> 4) / 15.0f;
+            Static.data.sl[Direction.E] = (_ll & 0x0f) / 15.0f;
+            Static.data.bl[Direction.E] = ((_ll & 0xf0) >> 4) / 15.0f;
             if (hasBlock2) {
-              data.id2[Direction.E] = getBlock2(x+1,y,z);
+              Static.data.id2[Direction.E] = getBlock2(x+1,y,z);
               _bits = getBits2(x+1,y,z);
-              data.dir2[Direction.E] = getDir(_bits);
-              data.var2[Direction.E] = getVar(_bits);
+              Static.data.dir2[Direction.E] = getDir(_bits);
+              Static.data.var2[Direction.E] = getVar(_bits);
             }
 
             boolean adjLight = false;
             if (hasBlock) {
-              data.adjLight = !block.isComplex;
-              if (data.adjLight) {
+              Static.data.adjLight = !block.isComplex;
+              if (Static.data.adjLight) {
                 adjLight = true;
-                getFarCorners(data,x,y,z);
+                getFarCorners(x,y,z);
               }
-              block.buildBuffers(dest, data);
+              block.buildBuffers(dest);
             }
             if (hasBlock2) {
-              data.adjLight = !block2.isComplex;
-              if (data.adjLight && !adjLight) {
-                getFarCorners(data,x,y,z);
+              Static.data.adjLight = !block2.isComplex;
+              if (Static.data.adjLight && !adjLight) {
+                getFarCorners(x,y,z);
               }
-              block2.buildBuffers(dest, data);
+              block2.buildBuffers(dest);
             }
           }
         }
@@ -1020,76 +1019,76 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     }
   }
 
-  private void getFarCorners(RenderData data,int x,int y,int z) {
+  private void getFarCorners(int x, int y, int z) {
     int _ll;
 
     //A sides
     _ll = getLights(x,y+1,z-1);
-    data.sl[Direction.AN] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.AN] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.AN] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.AN] = ((_ll & 0xf0) >> 4) / 15.0f;
 
     _ll = getLights(x+1,y+1,z);
-    data.sl[Direction.AE] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.AE] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.AE] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.AE] = ((_ll & 0xf0) >> 4) / 15.0f;
 
     _ll = getLights(x,y+1,z+1);
-    data.sl[Direction.AS] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.AS] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.AS] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.AS] = ((_ll & 0xf0) >> 4) / 15.0f;
 
     _ll = getLights(x-1,y+1,z);
-    data.sl[Direction.AW] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.AW] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.AW] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.AW] = ((_ll & 0xf0) >> 4) / 15.0f;
 
     //A corners
     _ll = getLights(x-1,y+1,z-1);
-    data.sl[Direction.ANW] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.ANW] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.ANW] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.ANW] = ((_ll & 0xf0) >> 4) / 15.0f;
 
     _ll = getLights(x+1,y+1,z-1);
-    data.sl[Direction.ANE] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.ANE] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.ANE] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.ANE] = ((_ll & 0xf0) >> 4) / 15.0f;
 
     _ll = getLights(x+1,y+1,z+1);
-    data.sl[Direction.ASE] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.ASE] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.ASE] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.ASE] = ((_ll & 0xf0) >> 4) / 15.0f;
 
     _ll = getLights(x-1,y+1,z+1);
-    data.sl[Direction.ASW] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.ASW] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.ASW] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.ASW] = ((_ll & 0xf0) >> 4) / 15.0f;
 
     //B sides
     _ll = getLights(x,y-1,z-1);
-    data.sl[Direction.BN] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.BN] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.BN] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.BN] = ((_ll & 0xf0) >> 4) / 15.0f;
 
     _ll = getLights(x+1,y-1,z);
-    data.sl[Direction.BE] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.BE] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.BE] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.BE] = ((_ll & 0xf0) >> 4) / 15.0f;
 
     _ll = getLights(x,y-1,z+1);
-    data.sl[Direction.BS] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.BS] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.BS] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.BS] = ((_ll & 0xf0) >> 4) / 15.0f;
 
     _ll = getLights(x-1,y-1,z);
-    data.sl[Direction.BW] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.BW] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.BW] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.BW] = ((_ll & 0xf0) >> 4) / 15.0f;
 
     //B corners
     _ll = getLights(x-1,y-1,z-1);
-    data.sl[Direction.BNW] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.BNW] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.BNW] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.BNW] = ((_ll & 0xf0) >> 4) / 15.0f;
 
     _ll = getLights(x+1,y-1,z-1);
-    data.sl[Direction.BNE] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.BNE] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.BNE] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.BNE] = ((_ll & 0xf0) >> 4) / 15.0f;
 
     _ll = getLights(x+1,y-1,z+1);
-    data.sl[Direction.BSE] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.BSE] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.BSE] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.BSE] = ((_ll & 0xf0) >> 4) / 15.0f;
 
     _ll = getLights(x-1,y-1,z+1);
-    data.sl[Direction.BSW] = (_ll & 0x0f) / 15.0f;
-    data.bl[Direction.BSW] = ((_ll & 0xf0) >> 4) / 15.0f;
+    Static.data.sl[Direction.BSW] = (_ll & 0x0f) / 15.0f;
+    Static.data.bl[Direction.BSW] = ((_ll & 0xf0) >> 4) / 15.0f;
   }
 
   public boolean canRender() {

@@ -34,16 +34,16 @@ public class BlockGate extends BlockBase {
     model_open = Assets.getModel("gate_open").model;
   }
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
     boolean opened = false;
-    if (data.chunk != null) {
-      ExtraRedstone er = (ExtraRedstone)data.chunk.getExtra((int)data.x, (int)data.y, (int)data.z, Extras.REDSTONE);
+    if (Static.data.chunk != null) {
+      ExtraRedstone er = (ExtraRedstone)Static.data.chunk.getExtra((int)Static.data.x, (int)Static.data.y, (int)Static.data.z, Extras.REDSTONE);
       if (er != null) {
         opened = er.active;
       }
     }
-    SubTexture st = getTexture(data);
+    SubTexture st = getTexture();
     Object3 obj;
 
     if (opened) {
@@ -54,7 +54,7 @@ public class BlockGate extends BlockBase {
       obj = model_closed.getObject("GATE");
     }
 
-    buildBuffers(obj, buf, data, st);
+    buildBuffers(obj, buf, st);
   }
   public ArrayList<Box> getBoxes(Coords c, Type type) {
     ExtraRedstone er = (ExtraRedstone)c.chunk.getExtra(c.gx, c.gy, c.gz, Extras.REDSTONE);

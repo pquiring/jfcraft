@@ -10,6 +10,7 @@ package jfcraft.opengl;
 import javaforce.gl.*;
 
 import static jfcraft.data.Direction.*;
+import jfcraft.data.Static;
 
 public class Face {
   public float x[] = new float[4];
@@ -61,10 +62,10 @@ public class Face {
     add(0.5f, ay);
   }
 
-  public void rotate(RenderData data) {
-    if (data.isDir) {
-      if (!data.isDirXZ) {
-        switch (data.dir[X]) {
+  public void rotate() {
+    if (Static.data.isDir) {
+      if (!Static.data.isDirXZ) {
+        switch (Static.data.dir[X]) {
           case A:
             //default
             break;
@@ -90,7 +91,7 @@ public class Face {
             break;
         }
       } else {
-        switch (data.dir[X]) {
+        switch (Static.data.dir[X]) {
           case N:
             //default
             break;
@@ -223,11 +224,11 @@ public class Face {
   /** Rotates a vertex when a Face is rotated.
    Effectively the order of the vertex is changed.
    */
-  public int rotateVertex(RenderData data, int vertex) {
-    if (data.isDirXZ) {
-      switch (data.dirSide) {
+  public int rotateVertex(int vertex) {
+    if (Static.data.isDirXZ) {
+      switch (Static.data.dirSide) {
         case A:
-          switch (data.dir[X]) {
+          switch (Static.data.dir[X]) {
             case A: return vA__A[vertex];
             case B: return vA__B[vertex];
             case N: return vA__N[vertex];
@@ -237,7 +238,7 @@ public class Face {
           }
           break;
         case B:
-          switch (data.dir[X]) {
+          switch (Static.data.dir[X]) {
             case A: return vB__A[vertex];
             case B: return vB__B[vertex];
             case N: return vB__N[vertex];
@@ -249,10 +250,10 @@ public class Face {
         default:
           return vertex;
       }
-    } else if (data.isDir) {
-      switch (data.dir[X]) {
+    } else if (Static.data.isDir) {
+      switch (Static.data.dir[X]) {
         case A:
-          switch (data.dirSide) {
+          switch (Static.data.dirSide) {
             case A: return vA_A[vertex];
             case B: return vA_B[vertex];
             case N: return vA_N[vertex];
@@ -262,7 +263,7 @@ public class Face {
           }
           break;
         case B:
-          switch (data.dirSide) {
+          switch (Static.data.dirSide) {
             case A: return vB_A[vertex];
             case B: return vB_B[vertex];
             case N: return vB_N[vertex];
@@ -271,7 +272,7 @@ public class Face {
             case W: return vB_W[vertex];
           }
         case N:
-          switch (data.dirSide) {
+          switch (Static.data.dirSide) {
             case A: return vN_A[vertex];
             case B: return vN_B[vertex];
             case N: return vN_N[vertex];
@@ -280,7 +281,7 @@ public class Face {
             case W: return vN_W[vertex];
           }
         case E:
-          switch (data.dirSide) {
+          switch (Static.data.dirSide) {
             case A: return vE_A[vertex];
             case B: return vE_B[vertex];
             case N: return vE_N[vertex];
@@ -289,7 +290,7 @@ public class Face {
             case W: return vE_W[vertex];
           }
         case S:
-          switch (data.dirSide) {
+          switch (Static.data.dirSide) {
             case A: return vS_A[vertex];
             case B: return vS_B[vertex];
             case N: return vS_N[vertex];
@@ -298,7 +299,7 @@ public class Face {
             case W: return vS_W[vertex];
           }
         case W:
-          switch (data.dirSide) {
+          switch (Static.data.dirSide) {
             case A: return vW_A[vertex];
             case B: return vW_B[vertex];
             case N: return vW_N[vertex];

@@ -19,21 +19,21 @@ public class BlockTrans extends BlockBase {
     isComplex = true;
     isSolid = false;
   }
-  public void addFace(RenderBuffers obj, RenderData data) {
-    addFace(obj, data, textures[data.dir[data.side]]);
+  public void addFace(RenderBuffers obj) {
+    addFace(obj, textures[Static.data.dir[Static.data.side]]);
   }
-  public void buildBuffers(RenderDest dest, RenderData data) {
+  public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
     for(int a=0;a<6;a++) {
-      if (data.opaque[a]) continue;
-      if (data.opaque[a]) continue;
-      if (data.id[a] == id) continue;
-      if (data.id[a] == id) continue;
-      data.side = a;
-      data.dirSide = a;
-      data.isDir = isDir;
-      data.isDirXZ = isDirXZ;
-      addFace(buf,data);
+      if (Static.data.opaque[a]) continue;
+      if (Static.data.opaque[a]) continue;
+      if (Static.data.id[a] == id) continue;
+      if (Static.data.id[a] == id) continue;
+      Static.data.side = a;
+      Static.data.dirSide = a;
+      Static.data.isDir = isDir;
+      Static.data.isDirXZ = isDirXZ;
+      addFace(buf);
     }
   }
 }

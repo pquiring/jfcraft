@@ -65,8 +65,8 @@ public class Piston extends BlockEntity {
 
   private static String parts[] = {"BASE_BOTTOM", "BASE_SIDES", "BASE_TOP", "SHAFT", "PLATE_BOTTOM", "PLATE_SIDES", "PLATE_TOP"};
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
-    extend = Static._1_16 * data.var[X] * 2.0f;
+  public void buildBuffers(RenderDest dest) {
+    extend = Static._1_16 * Static.data.var[X] * 2.0f;
     dest.resetAll();
     SubTexture textures[];
     if (!sticky) {
@@ -91,11 +91,11 @@ public class Piston extends BlockEntity {
         UVMap map = obj.getUVMap("normal");
         float uv1[] = map.uvl.toArray();
         buf.adjustTexture(uv1, textures[a]);
-        if (data.crack == -1) {
+        if (Static.data.crack == -1) {
           buf.addTextureCoords(uv1);
         } else {
           float uv2[] = map.uvl.toArray();
-          buf.adjustCrack(uv2, data.crack);
+          buf.adjustCrack(uv2, Static.data.crack);
           buf.addTextureCoords(uv1, uv2);
         }
       } else {
@@ -103,12 +103,12 @@ public class Piston extends BlockEntity {
         UVMap map1 = obj.getUVMap("normal");
         float uv1[] = map1.uvl.toArray();
         buf.adjustTexture(uv1, textures[a]);
-        if (data.crack == -1) {
+        if (Static.data.crack == -1) {
           buf.addTextureCoords(uv1);
         } else {
           UVMap map2 = obj.getUVMap("crack");
           float uv2[] = map2.uvl.toArray();
-          buf.adjustCrack(uv2, data.crack);
+          buf.adjustCrack(uv2, Static.data.crack);
           buf.addTextureCoords(uv1, uv2);
         }
       }

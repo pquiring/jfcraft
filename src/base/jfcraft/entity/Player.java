@@ -125,8 +125,8 @@ public class Player extends HumaniodBase {
 
   private static String parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG"};
 
-  public void buildBuffers(RenderDest dest, RenderData data) {
-    super.buildBuffers(super.getDest(), data);  //HumanoidBase
+  public void buildBuffers(RenderDest dest) {
+    super.buildBuffers(super.getDest());  //HumanoidBase
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
       RenderBuffers buf = dest.getBuffers(a);
@@ -163,7 +163,12 @@ public class Player extends HumaniodBase {
 
   public void setMatrixModel(int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
-    mat.addRotate(-ang.y, 0, 1, 0);
+    float _scale = 1.0f;
+    if (Static.data.isBlock) {
+      _scale = 0.5f;
+    }
+    float _1_scale = 1.0f / _scale;
+    mat.addRotate(-ang.y, 0, 1, 0);  //rotation to face direction
     switch (bodyPart) {
       case HEAD:
         mat.addTranslate(0, buf.org.y, 0);
@@ -172,11 +177,21 @@ public class Player extends HumaniodBase {
         break;
       case BODY:
         break;
+      case L_ITEM:
+        //shield
+        //no break
       case L_ARM:
         mat.addTranslate(0, buf.org.y, 0);
         mat.addRotate(walkAngle, 1, 0, 0);
         mat.addTranslate2(0, -buf.org.y, 0);
         break;
+      case R_ITEM:
+        if (Static.data.isBlock) {
+          mat.addTranslate(-0.5f, -0.5f, -0.5f);
+          mat.addScale(0.5f, 0.5f, 0.5f);
+          mat.addTranslate(0.5f, 0.5f, 0.5f);
+        }
+        //no break
       case R_ARM:
         mat.addTranslate(0, buf.org.y, 0);
         mat.addRotate(-walkAngle, 1, 0, 0);
@@ -202,6 +217,36 @@ public class Player extends HumaniodBase {
           mat.addTranslate(0, buf.org.y, 0);
           mat.addRotate(90, 1, 0, 0);
           mat.addTranslate2(0, -buf.org.y, 0);
+        }
+        break;
+    }
+    switch (bodyPart) {
+      case L_ITEM:
+        //shield
+        if (Static.camview == Static.CameraView.normal) {
+          //TODO : keep shield on side of screen
+          mat.addTranslate2(-0.5f, 0, 0);
+        }
+        mat.addTranslate2(-Static._1_16 * 3, 0, 0);
+        break;
+      case R_ITEM:
+        if (Static.camview == Static.CameraView.normal) {
+          //TODO : keep item on side of screen
+          mat.addTranslate2(0.5f, 0, 0);
+        }
+        if (Static.data.isBlock) {
+          mat.addTranslate2(Static._1_16 * 6, 0, 0);
+          mat.addTranslate2(0, -Static._1_16 * 4, 0);
+          mat.addTranslate2(0, 0, -Static._1_16 * 20);
+        } else {
+          mat.addTranslate2(-Static._1_16 * 2, 0, 0);
+          mat.addTranslate2(0, Static._1_16 * 12, 0);
+          mat.addTranslate2(0, 0, -Static._1_16 * 2);
+          mat.addRotate2(90, 0, 1, 0);
+        }
+        if (Static.data.isEntity) {
+          //entities are centered on 0,0,0 while blocks are centered on 0.5,0.5,0.5
+          mat.addTranslate2(0.5f, 0.5f, 0.5f);
         }
         break;
     }
