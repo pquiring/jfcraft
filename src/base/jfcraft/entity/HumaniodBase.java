@@ -87,6 +87,7 @@ public abstract class HumaniodBase extends CreatureBase {
   }
 
   public Item getRightItem() {
+    if (items == null || items.length <= activeSlot) return null;
     return items[activeSlot];
   }
 
@@ -95,19 +96,20 @@ public abstract class HumaniodBase extends CreatureBase {
     return items[shield_idx];
   }
 
-  private void renderBody(int start, int end) {
+  private void renderBodyPart(int part) {
     bindTexture();
     RenderDest dest = getDest();
-    for(int a=start;a<=end;a++) {
-      RenderBuffers buf = dest.getBuffers(a);
-      setMatrixModel(a, buf);
-      buf.bindBuffers();
-      buf.render();
-    }
+    RenderBuffers buf = dest.getBuffers(part);
+    setMatrixModel(part, buf);
+    buf.bindBuffers();
+    buf.render();
   }
 
   public void render() {
-    renderBody(0, getDest().count() - 1);
+    int cnt = getDest().count();
+    for(int a=0;a<cnt;a++) {
+      renderBodyPart(a);
+    }
     renderArmor();
     //render items
     renderItemInHand(getRightItem(), 1.0f, R_ITEM);
@@ -115,11 +117,20 @@ public abstract class HumaniodBase extends CreatureBase {
   }
 
   public void renderPlayer() {
-    //only render arms & items
-    renderBody(L_ARM, R_ARM);
+    //render arms & items
+    Item rightItem = getRightItem();
+    Item leftItem = getLeftItem();
+    if (leftItem != null && !leftItem.isEmpty()) {
+      //only render left arm if holding shield
+      renderBodyPart(L_ARM);
+    }
+    if (rightItem == null || rightItem.isEmpty()) {
+      //only render right arm if NOT holding an item
+      renderBodyPart(R_ARM);
+    }
     //render items
-    renderItemInHand(getRightItem(), 1.0f, R_ITEM);
-    renderItemInHand(getLeftItem(), 1.0f, L_ITEM);
+    renderItemInHand(rightItem, 1.0f, R_ITEM);
+    renderItemInHand(leftItem, 1.0f, L_ITEM);
   }
 
   public void renderArmor() {

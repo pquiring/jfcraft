@@ -564,7 +564,6 @@ public abstract class RenderScreen {
     }
     setViewportItem(x, y);
     //TODO : itembase.setMatrixModel() : see Chest.java
-    itembase.bindTexture();
     itembase.render();
   }
 
@@ -584,6 +583,10 @@ public abstract class RenderScreen {
     ItemBase itembase;
     BlockBase blockbase;
     //render items
+    for(int a=0;a<=X;a++) {
+      Static.data.sl[a] = 1f;
+      Static.data.bl[a] = 1f;
+    }
     setOrtho();
     Static.items.stitched.bind();
     for(int a=0;a<slots.length;a++) {
