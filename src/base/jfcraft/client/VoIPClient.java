@@ -447,6 +447,10 @@ public class VoIPClient implements SIPClientInterface, RTPInterface {
   public void onMessage(SIPClient sipc, String string, String string1, String string2, String[] strings) {
   }
 
+  public SDP onOptions(SIPClient sipc, String string) {
+    return null;
+  }
+
   //RTPInterface
 
   public void rtpSamples(RTPChannel rtp) {
