@@ -23,6 +23,7 @@ public class CreateWorldMenu extends RenderScreen {
   private TextField seed;
   private String initTxt;
   private CheckBox steps;
+  private CheckBox grassbank;
 
   public CreateWorldMenu() {
     id = Client.CREATEWORLD;
@@ -33,6 +34,7 @@ public class CreateWorldMenu extends RenderScreen {
     setFocus(world_name);
     randomSeed();
     steps.setSelected(true);
+    grassbank.setSelected(false);
   }
 
   public void init() {
@@ -53,10 +55,16 @@ public class CreateWorldMenu extends RenderScreen {
     addButton("Cancel", 266, 390, 226, new Runnable() {public void run() {
       Static.video.setScreen(Static.screens.screens[Client.SINGLE]);
     }});
+    //steps
     addButton("Add Steps", 20, 79+32+40+16, 226, new Runnable() {public void run() {
       steps.setSelected(!steps.isSelected());
     }});
     steps = addCheckBox(20+226+16, 79+32+40+16+5);
+    //grassbank
+    addButton("Use GrassBank", 20, 79+32+40+16+32+16, 226, new Runnable() {public void run() {
+      grassbank.setSelected(!grassbank.isSelected());
+    }});
+    grassbank = addCheckBox(20+226+16, 79+32+40+16+32+16+5);
   }
 
   public void render(int width, int height) {
@@ -123,6 +131,7 @@ public class CreateWorldMenu extends RenderScreen {
     WorldOptions opts = new WorldOptions();
     opts.seed = seedValue;
     opts.doSteps = steps.isSelected();
+    opts.doGrassBank = grassbank.isSelected();
     if (!server.createWorld(name, opts)) {
       MessageMenu message = (MessageMenu)Static.screens.screens[Client.MESSAGE];
       message.setup("Error", server.errmsg, Static.screens.screens[Client.MAIN]);

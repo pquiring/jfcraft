@@ -888,4 +888,8 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   }
 
   public void reloadAll() {}
+
+  public String toString() {
+    return "Block:" + name;
+  }
 }

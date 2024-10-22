@@ -118,11 +118,12 @@ public abstract class HumaniodBase extends CreatureBase {
 
   public void renderPlayer() {
     //render arms & items
+    Static.data.isPlayerView = true;
     Item rightItem = getRightItem();
     Item leftItem = getLeftItem();
     if (leftItem != null && !leftItem.isEmpty()) {
       //only render left arm if holding shield
-      renderBodyPart(L_ARM);
+      //renderBodyPart(L_ARM);
     }
     if (rightItem == null || rightItem.isEmpty()) {
       //only render right arm if NOT holding an item
@@ -131,6 +132,7 @@ public abstract class HumaniodBase extends CreatureBase {
     //render items
     renderItemInHand(rightItem, 1.0f, R_ITEM);
     renderItemInHand(leftItem, 1.0f, L_ITEM);
+    Static.data.isPlayerView = false;
   }
 
   public void renderArmor() {

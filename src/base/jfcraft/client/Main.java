@@ -54,7 +54,7 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
   private void init() {
     Static.log("Main.init:thread=" + Thread.currentThread().getName());
     Window.init();
-    window = createWindow(Window.STYLE_VISIBLE | Window.STYLE_RESIZABLE | Window.STYLE_TITLEBAR,512,512,null);
+    window = createWindow(Window.STYLE_VISIBLE | Window.STYLE_RESIZABLE | Window.STYLE_TITLEBAR,Static.INIT_X,Static.INIT_Y,null);
     if (JF.isWindows()) {
       window.setIcon("jfcraft.ico", 16, 16);
     }

@@ -52,6 +52,8 @@ public class Static {
   public static XYZ camera_pos = new XYZ();  //camera position
   public static XYZ camera_ang = new XYZ();  //camera angle
   public static final double INF_DISTANCE = JF.TB;
+  public static final int INIT_X = 910;
+  public static final int INIT_Y = 512;
 
   public static boolean debugRotate = false;
   public static boolean debugProfile = false;

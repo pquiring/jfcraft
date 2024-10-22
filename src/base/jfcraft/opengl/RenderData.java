@@ -30,6 +30,7 @@ public class RenderData {
   public boolean isBlock;
   public boolean isEntity;
   public boolean isItem;
+  public boolean isPlayerView;
   public float clr[];  //custom color
 
   public boolean active;

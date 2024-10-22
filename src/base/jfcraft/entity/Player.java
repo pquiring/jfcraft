@@ -179,19 +179,25 @@ public class Player extends HumaniodBase {
         break;
       case L_ITEM:
         //shield
-        //no break
+        break;
       case L_ARM:
         mat.addTranslate(0, buf.org.y, 0);
         mat.addRotate(walkAngle, 1, 0, 0);
         mat.addTranslate2(0, -buf.org.y, 0);
         break;
       case R_ITEM:
-        if (Static.data.isBlock) {
+        if (Static.data.isEntity) {
+          mat.addScale(0.5f, 0.5f, 0.5f);
+        } else if (Static.data.isBlock) {
+          //blocks are centered on 0.5,0.5,0.5 but need to be scaled
           mat.addTranslate(-0.5f, -0.5f, -0.5f);
           mat.addScale(0.5f, 0.5f, 0.5f);
           mat.addTranslate(0.5f, 0.5f, 0.5f);
+        } else {
+          //item (voxel)
+          mat.addRotate(90, 0, 1, 0);
         }
-        //no break
+        break;
       case R_ARM:
         mat.addTranslate(0, buf.org.y, 0);
         mat.addRotate(-walkAngle, 1, 0, 0);
@@ -221,37 +227,80 @@ public class Player extends HumaniodBase {
         break;
     }
     switch (bodyPart) {
-      case L_ITEM:
+      case L_ITEM: {
         //shield
-        if (Static.camview == Static.CameraView.normal) {
-          //TODO : keep shield on side of screen
-          mat.addTranslate2(-0.5f, 0, 0);
-        }
-        mat.addTranslate2(-Static._1_16 * 3, 0, 0);
-        break;
-      case R_ITEM:
-        if (Static.camview == Static.CameraView.normal) {
-          //TODO : keep item on side of screen
-          mat.addTranslate2(0.5f, 0, 0);
-        }
-        if (Static.data.isBlock) {
-          mat.addTranslate2(Static._1_16 * 6, 0, 0);
-          mat.addTranslate2(0, -Static._1_16 * 4, 0);
-          mat.addTranslate2(0, 0, -Static._1_16 * 20);
-        } else {
+        if (Static.data.isPlayerView) {
+          mat.addTranslate(0, eyeHeight, 0);  //move center to hips and rotate up/down with camera view
+          mat.addRotate2(-ang.x, 1, 0, 0);
+          mat.addTranslate2(0, -eyeHeight, 0);  //move back
+          //TODO : keep shield on side of screen : this may need tweaking for screen aspect ratio
           mat.addTranslate2(-Static._1_16 * 2, 0, 0);
-          mat.addTranslate2(0, Static._1_16 * 12, 0);
-          mat.addTranslate2(0, 0, -Static._1_16 * 2);
-          mat.addRotate2(90, 0, 1, 0);
+        }
+        float tx = Static._1_16 * -3;
+        float ty = Static._1_16 * 0;
+        float tz = Static._1_16 * 0;
+        mat.addTranslate2(tx, ty, tz);
+        break;
+      }
+      case R_ITEM: {
+        if (Static.data.isPlayerView) {
+          mat.addTranslate(0, eyeHeight, 0);  //move center to eyeLevel and rotate up/down with camera view
+          if (Static.data.isBlock || Static.data.isEntity) {
+            mat.addRotate2(-ang.x, 1, 0, 0);  //block / entity
+          } else {
+            mat.addRotate2(-ang.x + 25, 0, 0, 1);  //item (voxel) : on z axis because of 90 deg rotation
+          }
+          mat.addTranslate2(0, -eyeHeight, 0);  //move back
+          //TODO : keep item on side of screen : this may need tweaking for screen aspect ratio
+          float tx = 0;
+          float ty = 0;
+          float tz = 0;
+          if (Static.data.isEntity) {
+            //adjust tx, ty, tz
+            tx = Static._1_16 * 12;
+            ty = -Static._1_16 * 6;
+            tz = 0;
+          } else if (Static.data.isBlock) {
+            //adjust tx, ty, tz
+            tx = Static._1_16 * 12;
+            ty = -Static._1_16 * 6;
+            tz = 0;
+          } else {
+            //adjust tx, ty, tz
+            tx = Static._1_16 * 2;
+            ty = 0;
+            tz = 0;
+          }
+          if (Static.data.isBlock || Static.data.isEntity) {
+            mat.addTranslate2(tx, ty, tz);
+          } else {
+            mat.addTranslate2(tz, ty, tx);
+          }
         }
         if (Static.data.isEntity) {
-          //entities are centered on 0,0,0 while blocks are centered on 0.5,0.5,0.5
-          mat.addTranslate2(0.5f, 0.5f, 0.5f);
+          //entity (+0.5f)
+          float tx = Static._1_16 * 4 + 0.5f;
+          float ty = Static._1_16 * 16 + 0.5f;
+          float tz = Static._1_16 * -20 + 0.5f;
+          mat.addTranslate2(tx, ty, tz);
+        } else if (Static.data.isBlock) {
+          //block
+          float tx = Static._1_16 * 4;
+          float ty = Static._1_16 * 16;
+          float tz = Static._1_16 * -20;
+          mat.addTranslate2(tx, ty, tz);
+        } else {
+          //item (voxel) [swap x,z because of 90 deg rotation]
+          float tx = Static._1_16 * -2;
+          float ty = Static._1_16 * 10;
+          float tz = Static._1_16 * 0;
+          mat.addTranslate2(tz, ty, tx);
         }
         break;
+      }
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
-    if (scale != 1.0f) {
+    if (false && scale != 1.0f) {
       mat.addTranslate2(buf.center.x, buf.center.y, buf.center.z);
       mat.addScale(scale, scale, scale);
       mat.addTranslate2(-buf.center.x, -buf.center.y, -buf.center.z);

@@ -61,7 +61,11 @@ public class WorldItem extends EntityBase {
     mat.addScale(scale, scale, scale);
 
     mat.addRotate(ang.y, 0, 1, 0);
-    mat.addTranslate2(-0.5f, 0, -0.5f);
+    if (itembase.renderAsEntity) {
+      mat.addTranslate2(0.5f, 0.5f, 0.5f);
+    } else {
+      mat.addTranslate2(-0.5f, 0, -0.5f);
+    }
     mat.addTranslate(pos.x, pos.y, pos.z);
 
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
@@ -85,6 +89,9 @@ public class WorldItem extends EntityBase {
     Static.data.scale = 0.25f;
     Static.data.count = item.count;
     Static.data.var[X] = item.var;
+    if (itembase.renderAsEntity) {
+      Static.data.pos.y += 0.25f;
+    }
     setMatrixModel();
     itembase.bindTexture();
     itembase.render();

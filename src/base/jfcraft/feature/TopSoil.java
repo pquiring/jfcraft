@@ -105,7 +105,7 @@ public class TopSoil {
         for(int y=elev;y>=Static.SEALEVEL;y--) {
           id = chunk.getBlock(x,y,z);
           if (id != Blocks.DIRT) break;
-          chunk.setBlock(x, y, z, y == Static.SEALEVEL ? Blocks.GRASSBANK : Blocks.GRASS, 0);
+          chunk.setBlock(x, y, z, y == Static.SEALEVEL || Static.server.world.options.doGrassBank ? Blocks.GRASSBANK : Blocks.GRASS, 0);
           boolean n = chunk.getBlock(x  ,y,z-1) != 0;
           boolean e = chunk.getBlock(x+1,y,z  ) != 0;
           boolean s = chunk.getBlock(x  ,y,z+1) != 0;

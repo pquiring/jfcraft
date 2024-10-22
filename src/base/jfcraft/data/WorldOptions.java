@@ -7,9 +7,11 @@ package jfcraft.data;
 public class WorldOptions implements SerialClass, SerialCreator {
   public long seed;
   public boolean doSteps;
+  public boolean doGrassBank;
 
   private static final int SEED = 1;
   private static final int STEPS = 2;
+  private static final int GRASSBANK = 3;
   private static final int END = 0;
 
   public boolean write(SerialBuffer buffer, boolean file) {
@@ -19,6 +21,9 @@ public class WorldOptions implements SerialClass, SerialCreator {
     buffer.writeInt(STEPS);
     buffer.writeInt(1);
     buffer.writeBoolean(doSteps);
+    buffer.writeInt(GRASSBANK);
+    buffer.writeInt(1);
+    buffer.writeBoolean(doGrassBank);
     buffer.writeInt(END);
     buffer.writeInt(0);
     return true;
@@ -32,6 +37,7 @@ public class WorldOptions implements SerialClass, SerialCreator {
       switch (type) {
         case SEED: seed = buffer.readLong(); break;
         case STEPS: doSteps = buffer.readBoolean(); break;
+        case GRASSBANK: doGrassBank = buffer.readBoolean(); break;
         case END: break out;
         default: buffer.readBytes(new byte[length]); break;
       }

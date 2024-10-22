@@ -79,7 +79,7 @@ public class RenderEngine {
     glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, max);
     Static.log("max texture units=" + max[0]);
 
-    resize(512, 512);
+    resize(Static.INIT_X, Static.INIT_Y);
 
     //setup opengl
     glFrontFace(GL_CCW);  //3DS uses GL_CCW

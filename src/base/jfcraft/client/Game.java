@@ -21,8 +21,6 @@ import jfcraft.entity.*;
 import jfcraft.item.*;
 import jfcraft.opengl.*;
 import jfcraft.server.*;
-import static jfcraft.data.Direction.*;
-import static jfcraft.entity.EntityBase.*;
 
 public class Game extends RenderScreen {
   private Matrix perspective, view;
@@ -32,7 +30,8 @@ public class Game extends RenderScreen {
   private int width, height;
   private static RenderBuffers o_slots, o_active, o_icons, o_cross, o_box;
   private World world;
-  public static boolean debug;
+  public static boolean debug = false;
+  public static boolean debugViewPlayer = false;
   private Runtime rt = Runtime.getRuntime();
   private boolean showControls = true;
   private static RenderBuffers hand;
@@ -242,7 +241,13 @@ public class Game extends RenderScreen {
         break;
     }
 
+    if (debugViewPlayer) {
+      Static.camera_pos.z += 2.0f;
+    }
     view.addTranslate2(-Static.camera_pos.x, -Static.camera_pos.y, -Static.camera_pos.z);
+    if (debugViewPlayer) {
+      Static.camera_pos.z -= 2.0f;
+    }
 
     glUniform1f(Static.uniformSunLight, 1.0f);
     if (!Static.debugDisableFog) glUniform1i(Static.uniformEnableFog, 0);
@@ -486,9 +491,7 @@ public class Game extends RenderScreen {
 
     if (showControls) {
       if (Static.camview == Static.CameraView.normal) {
-        //Static.log("renderPlayer:start");
         Static.client.player.renderPlayer();
-        //Static.log("renderPlayer:stop");
       }
 
       glUniform1f(Static.uniformSunLight, 1.0f);
