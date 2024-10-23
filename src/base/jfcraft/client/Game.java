@@ -516,7 +516,11 @@ public class Game extends RenderScreen {
       for(int a=0;a<9;a++) {
         slots[a].item = Static.client.player.items[a];
       }
-      renderItems(slots);
+      try{
+        renderItems(slots);
+      } catch (Exception e) {
+        Static.log(e);
+      }
 
       if (Static.client.chatTime > 0) {
         //render chat

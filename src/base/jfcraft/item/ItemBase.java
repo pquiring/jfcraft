@@ -519,6 +519,10 @@ public class ItemBase implements RenderSource {
     if (isVar) {
       idx = Static.data.var[X] & varMask;
     }
+    if (idx >= bufs.length) {
+      Static.log("Error:idx > bufs.length:" + this);
+      idx = bufs.length - 1;
+    }
     return bufs[idx];
   }
 
