@@ -7,10 +7,6 @@ package jfcraft.item;
  * Created : May 2, 2014
  */
 
-import javaforce.*;
-import javaforce.gl.*;
-import static javaforce.gl.GL.*;
-
 import jfcraft.item.Item;
 import jfcraft.opengl.*;
 import jfcraft.client.*;
@@ -475,10 +471,8 @@ public class ItemBase implements RenderSource {
 
   /** Returned preferred dir to show item/block in inventory. */
   public int getPreferredDir() {
-    if (isDirXZ)
-      return Direction.S;
-    else
-      return Direction.A;
+    if (isDirXZ || isDirFace) return Direction.S;
+    return Direction.A;
   }
 
   public ItemBase setArmorTextures(String names[], float scales[], int parts[][]) {
@@ -574,14 +568,7 @@ public class ItemBase implements RenderSource {
       entity.bindTexture();
       entity.render();
     } else {
-      if (Static.isBlock(id)) {
-        BlockBase block = (BlockBase)this;
-        if (block.isDirXZ) {
-          Static.data.dir[X] = S;
-        } else {
-          Static.data.dir[X] = A;
-        }
-      }
+      Static.data.dir[X] = getPreferredDir();
       bindTexture();
       if (voxel != null && !Static.data.inventory) {
         voxel[isVar ? Static.data.var[X] : 0].render();

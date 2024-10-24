@@ -260,6 +260,11 @@ public class Player extends HumaniodBase {
             tx = Static._1_16 * 12;
             ty = -Static._1_16 * 6;
             tz = 0;
+          } else if (Static.data.isRenderAsItem) {
+            //adjust tx, ty, tz
+            tx = Static._1_16 * 1;
+            ty = -Static._1_16 * 4;
+            tz = 0;
           } else if (Static.data.isBlock) {
             //adjust tx, ty, tz
             tx = Static._1_16 * 12;

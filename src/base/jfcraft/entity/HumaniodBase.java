@@ -164,6 +164,7 @@ public abstract class HumaniodBase extends CreatureBase {
     Static.data.reset();
     Static.data.isBlock = Static.isBlock(item.id);
     Static.data.isEntity = itembase.renderAsEntity;
+    Static.data.isRenderAsItem = itembase.renderAsItem;
     Static.data.pos.copy(pos);
     Static.data.pos.x += 0.5f;
     Static.data.pos.y += 0.5f;

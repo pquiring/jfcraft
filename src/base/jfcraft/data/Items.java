@@ -858,6 +858,7 @@ public class Items {
   }
 
   public void initBuffers() {
+    Static.log("Items.initBuffers()");
     for(int a=0;a<MAX_ID;a++) {
       ItemBase item = regItems[a];
       if (item == null) continue;

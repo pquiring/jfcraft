@@ -23,8 +23,6 @@ import jfcraft.server.*;
 public class Static {
   public static String version = "0.30";
 
-//  public static boolean debug;
-
   public static RenderEngine video;
   public static RenderData data = new RenderData();
   public static AudioEngine audio;
@@ -55,6 +53,7 @@ public class Static {
   public static final int INIT_X = 910;
   public static final int INIT_Y = 512;
 
+  public static boolean debug;
   public static boolean debugRotate = false;
   public static boolean debugProfile = false;
   public static boolean debugCaves = false;

@@ -677,6 +677,10 @@ public class RenderBuffers implements Cloneable {
     return vpl.size() / 3;
   }
 
+  public int getIndexCount() {
+    return vil.size();
+  }
+
   /** Changes color of entire object.  Must call copyBuffers(GL) after. */
   public void setClr(float clr[]) {
     int cnt = lcl.size();

@@ -28,9 +28,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
    * @param images = block images required to render this block
    */
   public BlockBase(String name, String names[], String images[]) {
-    this.name = name;
-    this.names = names;
-    this.images = images;
+    super(name, names, images);
     canPlace = true;  //all blocks can be placed
     isSolid = true;  //most blocks are solid
     canSelect = true;

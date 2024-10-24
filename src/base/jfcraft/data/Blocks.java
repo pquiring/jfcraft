@@ -1105,10 +1105,11 @@ public class Blocks {
   }
 
   public void initBuffers() {
+    Static.log("Blocks.initBuffers()");
     Static.data.chunk = new Chunk(null);
     for(int a=0;a<MAX_ID;a++) {
-      if (regBlocks[a] == null) continue;
       BlockBase block = regBlocks[a];
+      if (block == null) continue;
       if (block.cantGive) continue;
       if (block.renderAsEntity) continue;
       int vars = 1;
@@ -1116,11 +1117,16 @@ public class Blocks {
         vars = block.names.length;
       }
       block.bufs = new RenderDest[vars];
-      for(int b=0;b<vars;b++) {
-        block.bufs[b] = new RenderDest(Chunk.DEST_COUNT);
+      if (block.renderAsItem) {
+        block.voxel = new Voxel[vars];
+      }
+      for(int var=0;var<vars;var++) {
+        block.bufs[var] = new RenderDest(Chunk.DEST_COUNT);
         if (block.renderAsItem) {
-          block.addFaceInvItem(block.bufs[b].getBuffers(0), b, block.isGreen);
-          block.bufs[b].preferedIdx = 0;
+          block.addFaceInvItem(block.bufs[var].getBuffers(0), var, block.isGreen);
+          block.bufs[var].preferedIdx = 0;
+          //also create voxel for render in hand
+          block.createVoxel(var);
         } else {
           Static.data.x = 0;
           Static.data.y = 0;
@@ -1129,15 +1135,11 @@ public class Blocks {
           Static.data.bl[X] = 0.0f;
           Static.data.crack = -1;
           Static.data.dir[X] = block.getPreferredDir();
-          if (block.isVar) {
-            Static.data.var[X] = b;
-          } else {
-            Static.data.var[X] = 0;
-          }
-          block.buildBuffers(block.bufs[b]);
-          block.bufs[b].preferedIdx = block.buffersIdx;
+          Static.data.var[X] = block.isVar ? var : 0;
+          block.buildBuffers(block.bufs[var]);
+          block.bufs[var].preferedIdx = block.buffersIdx;
         }
-        block.bufs[b].getBuffers(block.bufs[b].preferedIdx).copyBuffers();
+        block.bufs[var].getBuffers(block.bufs[var].preferedIdx).copyBuffers();
       }
     }
   }
