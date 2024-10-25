@@ -151,6 +151,15 @@ public class ItemBase implements RenderSource {
     isGreen = true;
     return this;
   }
+
+  public boolean isItem() {
+    return true;
+  }
+
+  public boolean isBlock() {
+    return false;
+  }
+
   public Item bake() {
     return null;
   }

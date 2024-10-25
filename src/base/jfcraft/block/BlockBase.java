@@ -176,6 +176,14 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     return this;
   }
 
+  public boolean isItem() {
+    return false;
+  }
+
+  public boolean isBlock() {
+    return true;
+  }
+
   public void addFace(RenderBuffers buf, SubTexture st) {
     Static.data.isDir = isDir;
     Static.data.isDirXZ = isDirXZ;
