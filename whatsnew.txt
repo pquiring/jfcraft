@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+Oct 25, 2025 : v0.31 released!
+  - render item in hand on Inventory screen
+    - and on other players in multi-player server mode
+
 Oct 10, 2024 : v0.30 released!
   - chunks are ordered by distance to fix alpha rendering
   - assets can be overriden in %APPDATA%\.jfcraft\assets
