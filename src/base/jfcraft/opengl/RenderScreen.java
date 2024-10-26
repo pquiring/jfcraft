@@ -1029,4 +1029,8 @@ public abstract class RenderScreen {
   public void setCursor(boolean state) {
     Main.setCursor(state);
   }
+
+  public String toString() {
+    return getClass().getName();
+  }
 }

@@ -491,7 +491,11 @@ public class Game extends RenderScreen {
 
     if (showControls) {
       if (Static.camview == Static.CameraView.normal) {
+        glDepthMask(false);  //turn off depth buffer updates
+        glDisable(GL.GL_DEPTH_TEST);  //turn off depth tests
         Static.client.player.renderPlayer();
+        glDepthMask(true);  //turn on depth buffer updates
+        glEnable(GL.GL_DEPTH_TEST);  //turn off depth tests
       }
 
       glUniform1f(Static.uniformSunLight, 1.0f);
