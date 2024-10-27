@@ -113,6 +113,7 @@ public class InventoryMenu extends RenderScreen {
 
   public void render(int width, int height) {
     Static.game.render(width, height);
+    depth(false);
 
     if (t_menu == null) {
       t_menu = Textures.getTexture("gui/container/inventory", 0);
@@ -127,8 +128,6 @@ public class InventoryMenu extends RenderScreen {
 
     renderShade();
 
-    glDepthFunc(GL_ALWAYS);
-
     setOrtho();
     setViewportMenu();
 
@@ -138,7 +137,9 @@ public class InventoryMenu extends RenderScreen {
 
     setOrthoPlayer();
     setViewportPlayer();
-    glDepthFunc(GL_LEQUAL);
+
+    depth(true);
+
     glClear(GL_DEPTH_BUFFER_BIT);
     player.bindTexture();
     //rotate player to point head towards mouse coords
@@ -164,7 +165,8 @@ public class InventoryMenu extends RenderScreen {
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
-    glDepthFunc(GL_ALWAYS);
+    depth(false);
+
     setOrtho();
 
     //inventory slots

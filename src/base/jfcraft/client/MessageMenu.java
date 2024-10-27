@@ -39,6 +39,7 @@ public class MessageMenu extends RenderScreen {
   }
 
   public void render(int width, int height) {
+    depth(false);
     if (t_menu == null) {
       t_menu = Textures.getTexture("jfcraft/background", 0);
     }
@@ -48,9 +49,7 @@ public class MessageMenu extends RenderScreen {
     }
 
     //now render stuff
-    glViewport(0, 0, width, height);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    clear(0, 0, width, height);
 
     setOrtho();
     setViewportMenu();

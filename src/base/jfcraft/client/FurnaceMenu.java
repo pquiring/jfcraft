@@ -81,6 +81,7 @@ public class FurnaceMenu extends RenderScreen {
 
   public void render(int width, int height) {
     Static.game.render( width, height);
+    depth(false);
 
     if (t_menu == null) {
       t_menu = Textures.getTexture( "gui/container/furnace", 0);
@@ -117,8 +118,6 @@ public class FurnaceMenu extends RenderScreen {
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     renderShade();
-
-    glDepthFunc(GL_ALWAYS);
 
     setOrtho();
     setViewportMenu();

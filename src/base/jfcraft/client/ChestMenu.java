@@ -95,6 +95,8 @@ public class ChestMenu extends RenderScreen {
 
   public void render(int width, int height) {
     Static.game.render(width, height);
+    depth(false);
+
     ExtraContainer chest = Static.client.container;
     if (chest == null) return;
 
@@ -115,8 +117,6 @@ public class ChestMenu extends RenderScreen {
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     renderShade();
-
-    glDepthFunc(GL_ALWAYS);
 
     setOrtho();
     setViewportMenu();

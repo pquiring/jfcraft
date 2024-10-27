@@ -452,7 +452,7 @@ public abstract class RenderScreen {
     o_menu.copyBuffers();
   }
 
-  public void clear() {
+  public void clearUI() {
     buttons.clear();
     fields.clear();
     scrolls.clear();
@@ -1028,6 +1028,22 @@ public abstract class RenderScreen {
 
   public void setCursor(boolean state) {
     Main.setCursor(state);
+  }
+
+  public static void depth(boolean on) {
+    if (on) {
+      glDepthMask(true);
+      glEnable(GL.GL_DEPTH_TEST);
+    } else {
+      glDepthMask(false);
+      glDisable(GL.GL_DEPTH_TEST);
+    }
+  }
+
+  public static void clear(int x, int y, int width, int height) {
+    glViewport(x, y, width, height);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
   }
 
   public String toString() {

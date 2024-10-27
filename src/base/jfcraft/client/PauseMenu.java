@@ -64,6 +64,7 @@ public class PauseMenu extends RenderScreen {
 
   public void render(int width, int height) {
     Static.game.render(width, height);
+    depth(false);
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
     renderShade();

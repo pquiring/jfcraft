@@ -176,7 +176,7 @@ public class Game extends RenderScreen {
     Chunk chunks[] = Static.client.world.chunks.getChunks();
 
     //now render stuff
-    glDepthMask(true);
+    depth(true);
     //set sunlight level
     if (world.time >= 19000 || world.time <= 5000) {
       //moon light
@@ -193,9 +193,7 @@ public class Game extends RenderScreen {
       sunLight = 1.0f - ((((float)world.time) - 17000.0f) / 2000.0f);
       if (sunLight < 0.1f) sunLight = 0.1f;
     }
-    glViewport(0, 0, width, height);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    clear(0, 0, width, height);
     if (perspective == null) {
       perspective = new Matrix();
       perspective.setIdentity();
@@ -465,7 +463,7 @@ public class Game extends RenderScreen {
     }
 
     //now render alpha stuff
-    glDepthMask(false);  //turn off depth buffer updates
+    glDepthMask(false);  //turn off depth buffer updates (but keep depth_test on)
     Static.blocks.stitched.bind();
 
     pro.next();
@@ -490,17 +488,12 @@ public class Game extends RenderScreen {
     Static.dims.dims[dim].getEnvironment().postRender(world.time, sunLight, Static.client, Static.camera_pos, chunks);
 
     if (showControls) {
+      depth(false);
       if (Static.camview == Static.CameraView.normal) {
-        glDepthMask(false);  //turn off depth buffer updates
-        glDisable(GL.GL_DEPTH_TEST);  //turn off depth tests
         Static.client.player.renderPlayer();
-        glDepthMask(true);  //turn on depth buffer updates
-        glEnable(GL.GL_DEPTH_TEST);  //turn off depth tests
       }
 
       glUniform1f(Static.uniformSunLight, 1.0f);
-
-      glDepthFunc(GL_ALWAYS);
 
       //now render slots at bottom
       gui_position = BOTTOM;

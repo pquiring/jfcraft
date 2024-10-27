@@ -16,6 +16,7 @@ import jfcraft.data.*;
 import jfcraft.client.*;
 import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
+import static jfcraft.opengl.RenderScreen.depth;
 
 public class EnvironmentEarth implements EnvironmentBase {
 
@@ -167,8 +168,7 @@ public class EnvironmentEarth implements EnvironmentBase {
     view.addRotate(zAngle, 0, 0, 1);
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
 
-    glDepthMask(false);
-    glDepthFunc(GL_ALWAYS);
+    depth(false);
 
     glUniform1f(Static.uniformAlphaFactor, 1.0f - sunLight);
     stars.bind();
@@ -205,8 +205,7 @@ public class EnvironmentEarth implements EnvironmentBase {
     horizon.bindBuffers();
     horizon.render();
 
-    glDepthMask(true);
-    glDepthFunc(GL_LEQUAL);
+    depth(true);
   }
 
   public void postRender(int time, float sunLight, Client client, XYZ camera, Chunk[] chunks) {

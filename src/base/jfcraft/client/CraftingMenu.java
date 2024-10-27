@@ -87,6 +87,7 @@ public class CraftingMenu extends RenderScreen {
 
   public void render(int width, int height) {
     Static.game.render(width, height);
+    depth(false);
 
     if (t_menu == null) {
       t_menu = Textures.getTexture("gui/container/crafting_table", 0);
@@ -100,8 +101,6 @@ public class CraftingMenu extends RenderScreen {
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     renderShade();
-
-    glDepthFunc(GL_ALWAYS);
 
     setOrtho();
     setViewportMenu();

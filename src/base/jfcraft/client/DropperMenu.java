@@ -80,6 +80,7 @@ public class DropperMenu extends RenderScreen {
 
   public void render(int width, int height) {
     Static.game.render(width, height);
+    depth(false);
 
     if (t_menu == null) {
       t_menu = Textures.getTexture( "gui/container/dispenser", 0);
@@ -95,8 +96,6 @@ public class DropperMenu extends RenderScreen {
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     renderShade();
-
-    glDepthFunc(GL_ALWAYS);
 
     setOrtho();
     setViewportMenu();

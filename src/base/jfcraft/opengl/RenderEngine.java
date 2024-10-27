@@ -17,6 +17,7 @@ import static javaforce.gl.GL.*;
 import jfcraft.client.*;
 import jfcraft.audio.*;
 import jfcraft.data.*;
+import static jfcraft.opengl.RenderScreen.depth;
 
 public class RenderEngine {
   public static ArrayList<AssetImage> animatedTextures = new ArrayList<AssetImage>();
@@ -85,7 +86,7 @@ public class RenderEngine {
     glFrontFace(GL_CCW);  //3DS uses GL_CCW
     glEnable(GL_CULL_FACE);  //don't draw back sides
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
+    glDepthFunc(GL_LESS);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -191,7 +192,7 @@ public class RenderEngine {
     if (screen != null) {
       try {
         long start = System.currentTimeMillis();
-        glDepthFunc(GL_LEQUAL);
+        depth(true);
         synchronized(screenLock) {
           if (nextFrame && processed) {
             if (Settings.current.FPS != -1) nextFrame = false;

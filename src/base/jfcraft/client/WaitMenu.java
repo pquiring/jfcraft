@@ -33,6 +33,7 @@ public class WaitMenu extends RenderScreen {
   }
 
   public void render(int width, int height) {
+    depth(false);
     if (Static.server == null) {
       Static.video.setScreen(Static.screens.screens[Client.MAIN]);
       return;
@@ -47,9 +48,7 @@ public class WaitMenu extends RenderScreen {
     }
 
     //now render stuff
-    glViewport(0, 0, width, height);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    clear(0, 0, width, height);
 
     setOrtho();
     setViewportMenu();
