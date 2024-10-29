@@ -32,7 +32,27 @@ public class Voxel implements RenderSource {
     SubTexture st = item.textures[var];
     int w = st.ai.w;
     int h = st.ai.h;
-    int pxs[] = st.ai.getPixels();
+    int size = w * h;
+    int px;
+    int pxs[] = new int[size];
+    int spxs[] = st.ai.getPixels();
+    //copy pixels mirrored on both axis
+    int src = 0;
+    int dst = 0;
+    int last = w * (h-1);
+    for(int y=0;y<h;y++) {
+      dst = (w-1) - y + last;
+      for(int x=0;x<w;x++) {
+        px = spxs[src++];
+        pxs[dst] = px;
+        dst -= w;
+      }
+    }
+    //swap w, h
+    int tw = w;
+    int th = h;
+    w = th;
+    h = tw;
     RenderBuffers bufs = dest.getBuffers(0);
     bufs.reset();
     float d = 1.0f / ((float)w);  //size of each voxel
@@ -43,7 +63,8 @@ public class Voxel implements RenderSource {
     float y1 = 0f;
     float y2 = y1 + h * d;
     int off = w * (h-1);
-    int x = 0, y = h-1;
+    int x = 0;
+    int y = h-1;
     float z1 = 0.5f + d2;
     float z2 = 0.5f - d2;
     SubTexture solidTexture = Static.blocks.solid.textures[0];
@@ -57,12 +78,12 @@ public class Voxel implements RenderSource {
     for(float fy = y1; fy < y2; fy+=d) {
       x = 0;
       for(float fx = x1; fx < x2; fx+=d) {
-        if ((pxs[off] & 0xff000000) == 0) {  //transparent pixel?
+        px = pxs[off];
+        if ((px & 0xff000000) == 0) {  //transparent pixel?
           x++;
           off++;
           continue;
         }
-        int px = pxs[off];
         clr[0] = (float)((px & 0xff0000) >> 16) / 255.0f;
         clr[1] = (float)((px & 0xff00) >> 8) / 255.0f;
         clr[2] = (float)((px & 0xff)) / 255.0f;
