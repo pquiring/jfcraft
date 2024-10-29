@@ -67,6 +67,7 @@ public class Static {
   public static boolean debugChunkThreads = false;  //not working
 
   public static String debugMsg;
+  public static float debugValue;
 
   public static boolean optionMusic = true;
 

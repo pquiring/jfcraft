@@ -296,6 +296,13 @@ public class Client {
     Game.advanceAnimation = true;
     world.time++;
     if (world.time >= 24000) world.time = 0;
+    //debug 3D
+    if (Static.keys[KeyCode.VK_Y]) {
+      Static.debugValue += 0.1f;
+    }
+    if (Static.keys[KeyCode.VK_H]) {
+      Static.debugValue -= 0.1f;
+    }
     //do keyboard input
     boolean up = false, dn = false, lt = false, rt = false, jump = false, sneak = false, run = false, fup = false, fdn = false;
     boolean b1 = false, b2 = false;

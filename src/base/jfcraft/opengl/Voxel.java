@@ -2,6 +2,10 @@ package jfcraft.opengl;
 
 /**
  * Voxel - converts an image into a 3d pixelated object.
+ *
+ * dims : 0,0 -> 1,1
+ *    z : -1/32 -> 1/32
+ *
  */
 
 import jfcraft.item.*;

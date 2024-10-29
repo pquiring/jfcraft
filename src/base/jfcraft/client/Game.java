@@ -240,11 +240,11 @@ public class Game extends RenderScreen {
     }
 
     if (debugViewPlayer) {
-      Static.camera_pos.z += 2.0f;
+      Static.camera_pos.z += Static.debugValue;
     }
     view.addTranslate2(-Static.camera_pos.x, -Static.camera_pos.y, -Static.camera_pos.z);
     if (debugViewPlayer) {
-      Static.camera_pos.z -= 2.0f;
+      Static.camera_pos.z -= Static.debugValue;
     }
 
     glUniform1f(Static.uniformSunLight, 1.0f);

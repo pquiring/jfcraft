@@ -28,7 +28,7 @@ public class RenderData {
   public boolean isDir, isDirXZ;
   public boolean isRed, isGreen, isBlue;
   public boolean isBlock;
-  public boolean isEntity;
+  public boolean isRenderAsEntity;
   public boolean isItem;
   public boolean isRenderAsItem;
   public boolean isPlayerView;
@@ -82,7 +82,7 @@ public class RenderData {
     isDirXZ = false;
     isRed = isGreen = isBlue = false;
     isBlock = false;
-    isEntity = false;
+    isRenderAsEntity = false;
     isItem = false;
     part = NONE;
     pos.reset();

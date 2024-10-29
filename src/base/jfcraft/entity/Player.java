@@ -163,12 +163,8 @@ public class Player extends HumaniodBase {
 
   public void setMatrixModel(int bodyPart, RenderBuffers buf) {
     mat.setIdentity();
-    float _scale = 1.0f;
-    if (Static.data.isBlock) {
-      _scale = 0.5f;
-    }
-    float _1_scale = 1.0f / _scale;
     mat.addRotate(-ang.y, 0, 1, 0);  //rotation to face direction
+    scale = Static.data.scale;
     switch (bodyPart) {
       case HEAD:
         mat.addTranslate(0, buf.org.y, 0);
@@ -186,16 +182,17 @@ public class Player extends HumaniodBase {
         mat.addTranslate2(0, -buf.org.y, 0);
         break;
       case R_ITEM:
-        if (Static.data.isEntity) {
-          mat.addScale(0.5f, 0.5f, 0.5f);
+        if (Static.data.isRenderAsEntity) {
+          mat.addScale(scale, scale, scale);
         } else if (Static.data.isBlock) {
           //blocks are centered on 0.5,0.5,0.5 but need to be scaled
           mat.addTranslate(-0.5f, -0.5f, -0.5f);
-          mat.addScale(0.5f, 0.5f, 0.5f);
+          mat.addScale(scale, scale, scale);
           mat.addTranslate(0.5f, 0.5f, 0.5f);
         } else {
           //item (voxel)
           mat.addRotate(90, 0, 1, 0);
+          mat.addScale(scale, scale, scale);
         }
         break;
       case R_ARM:
@@ -245,7 +242,7 @@ public class Player extends HumaniodBase {
       case R_ITEM: {
         if (Static.data.isPlayerView) {
           mat.addTranslate(0, eyeHeight, 0);  //move center to eyeLevel and rotate up/down with camera view
-          if (Static.data.isBlock || Static.data.isEntity) {
+          if (Static.data.isBlock || Static.data.isRenderAsEntity) {
             mat.addRotate2(-ang.x, 1, 0, 0);  //block / entity
           } else {
             mat.addRotate2(-ang.x + 25, 0, 0, 1);  //item (voxel) : on z axis because of 90 deg rotation
@@ -255,7 +252,7 @@ public class Player extends HumaniodBase {
           float tx = 0;
           float ty = 0;
           float tz = 0;
-          if (Static.data.isEntity) {
+          if (Static.data.isRenderAsEntity) {
             //adjust tx, ty, tz
             tx = Static._1_16 * 12;
             ty = -Static._1_16 * 6;
@@ -272,17 +269,17 @@ public class Player extends HumaniodBase {
             tz = 0;
           } else {
             //adjust tx, ty, tz
-            tx = Static._1_16 * 2;
-            ty = 0;
+            tx = Static._1_16 * 1;
+            ty = -Static._1_16 * 16;
             tz = 0;
           }
-          if (Static.data.isBlock || Static.data.isEntity) {
+          if (Static.data.isRenderAsEntity || Static.data.isBlock || Static.data.isRenderAsItem) {
             mat.addTranslate2(tx, ty, tz);
           } else {
             mat.addTranslate2(tz, ty, tx);
           }
         }
-        if (Static.data.isEntity) {
+        if (Static.data.isRenderAsEntity) {
           //entity (+0.5f)
           float tx = Static._1_16 * 4 + 0.5f;
           float ty = Static._1_16 * 16 + 0.5f;
@@ -296,9 +293,9 @@ public class Player extends HumaniodBase {
           mat.addTranslate2(tx, ty, tz);
         } else {
           //item (voxel) [swap x,z because of 90 deg rotation]
-          float tx = Static._1_16 * -2;
-          float ty = Static._1_16 * 10;
-          float tz = Static._1_16 * 0;
+          float tx = Static._1_16 * 4;
+          float ty = Static._1_16 * (16+8);
+          float tz = Static._1_16 * 2;
           mat.addTranslate2(tz, ty, tx);
         }
         break;
