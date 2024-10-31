@@ -231,12 +231,8 @@ public class Player extends HumaniodBase {
           mat.addRotate2(-ang.x, 1, 0, 0);
           mat.addTranslate2(0, -eyeHeight, 0);  //move back
           //TODO : keep shield on side of screen : this may need tweaking for screen aspect ratio
-          mat.addTranslate2(-Static._1_16 * 2, 0, 0);
+          mat.addTranslate2(-Static._1_16 * 1, 0, 0);
         }
-        float tx = Static._1_16 * -3;
-        float ty = Static._1_16 * 0;
-        float tz = Static._1_16 * 0;
-        mat.addTranslate2(tx, ty, tz);
         break;
       }
       case R_ITEM: {
