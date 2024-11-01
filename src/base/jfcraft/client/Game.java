@@ -224,6 +224,11 @@ public class Game extends RenderScreen {
     }
 
     view.setIdentity();
+
+    if (debugViewPlayer) {
+      Static.camera_ang.y += Static.debugY;
+    }
+
     view.addRotate(Static.camera_ang.x, 1, 0, 0);
     view.addRotate(Static.camera_ang.y, 0, 1, 0);
 
@@ -240,11 +245,14 @@ public class Game extends RenderScreen {
     }
 
     if (debugViewPlayer) {
-      Static.camera_pos.z += Static.debugValue;
+      Static.camera_pos.z += Static.debugX;
     }
+
     view.addTranslate2(-Static.camera_pos.x, -Static.camera_pos.y, -Static.camera_pos.z);
+
     if (debugViewPlayer) {
-      Static.camera_pos.z -= Static.debugValue;
+      Static.camera_pos.z -= Static.debugX;
+      Static.camera_ang.y -= Static.debugY;
     }
 
     glUniform1f(Static.uniformSunLight, 1.0f);

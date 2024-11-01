@@ -298,10 +298,16 @@ public class Client {
     if (world.time >= 24000) world.time = 0;
     //debug 3D
     if (Static.keys[KeyCode.VK_Y]) {
-      Static.debugValue += 0.1f;
+      Static.debugX -= 0.1f;
     }
     if (Static.keys[KeyCode.VK_H]) {
-      Static.debugValue -= 0.1f;
+      Static.debugX += 0.1f;
+    }
+    if (Static.keys[KeyCode.VK_G]) {
+      Static.debugY -= 3.0f;
+    }
+    if (Static.keys[KeyCode.VK_J]) {
+      Static.debugY += 3.0f;
     }
     //do keyboard input
     boolean up = false, dn = false, lt = false, rt = false, jump = false, sneak = false, run = false, fup = false, fdn = false;
