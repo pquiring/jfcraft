@@ -34,25 +34,31 @@ public class Voxel implements RenderSource {
     int h = st.ai.h;
     int size = w * h;
     int px;
-    int pxs[] = new int[size];
-    int spxs[] = st.ai.getPixels();
-    //copy pixels mirrored on both axis
-    int src = 0;
-    int dst = 0;
-    int last = w * (h-1);
-    for(int y=0;y<h;y++) {
-      dst = (w-1) - y + last;
-      for(int x=0;x<w;x++) {
-        px = spxs[src++];
-        pxs[dst] = px;
-        dst -= w;
+    int[] spxs = st.ai.getPixels();
+    int[] pxs;
+    if (item.isTool || item.isWeapon) {
+      //copy pixels mirrored on both axis
+      pxs = new int[size];
+      int src = 0;
+      int dst = 0;
+      int last = w * (h-1);
+      for(int y=0;y<h;y++) {
+        dst = (w-1) - y + last;
+        for(int x=0;x<w;x++) {
+          px = spxs[src++];
+          pxs[dst] = px;
+          dst -= w;
+        }
       }
+      //swap w, h
+      int tw = w;
+      int th = h;
+      w = th;
+      h = tw;
+    } else {
+      //use pixels as is
+      pxs = spxs;
     }
-    //swap w, h
-    int tw = w;
-    int th = h;
-    w = th;
-    h = tw;
     RenderBuffers bufs = dest.getBuffers(0);
     bufs.reset();
     float d = 1.0f / ((float)w);  //size of each voxel
