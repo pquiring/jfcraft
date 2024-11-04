@@ -1,7 +1,11 @@
 ChangeLog
 =========
 
-Oct 25, 2025 : v0.31 released!
+Nov 3, 2024 : v0.32 released!
+  - more item rendering improvements
+  - fixed shield text coords
+
+Oct 25, 2024 : v0.31 released!
   - render item in hand on Inventory screen
     - and on other players in multi-player server mode
 
