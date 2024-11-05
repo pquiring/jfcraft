@@ -22,6 +22,7 @@ public class BlockChest extends BlockBase {
     isDirXZ = true;
     isComplex = true;
     isSolid = false;
+    reverseDir = true;
   }
   public void getIDs(World world) {
     super.getIDs(world);
@@ -38,6 +39,7 @@ public class BlockChest extends BlockBase {
     chest.needCopyBuffers = true;
   }
   public boolean place(Client client, Coords c) {
+    super.place(client, c);  //this will reverse side
     World world = Static.server.world;
     Static.log("chest place");
     ExtraChest extra = new ExtraChest(c.gx, c.gy, c.gz, 3*9);
@@ -56,7 +58,7 @@ public class BlockChest extends BlockBase {
     c.chunk.addEntity(chest);
     world.addEntity(chest);
     Static.server.broadcastEntitySpawn(chest);
-    return super.place(client, c);
+    return true;
   }
   public void useBlock(Client client, Coords c) {
     synchronized(client.lock) {
