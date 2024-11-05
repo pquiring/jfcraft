@@ -1128,12 +1128,7 @@ public class Blocks {
           //also create voxel for render in hand
           block.createVoxel(var);
         } else {
-          Static.data.x = 0;
-          Static.data.y = 0;
-          Static.data.z = 0;
-          Static.data.sl[X] = 1.0f;
-          Static.data.bl[X] = 0.0f;
-          Static.data.crack = -1;
+          Static.data.reset();
           Static.data.dir[X] = block.getPreferredDir();
           Static.data.var[X] = block.isVar ? var : 0;
           block.buildBuffers(block.bufs[var]);
