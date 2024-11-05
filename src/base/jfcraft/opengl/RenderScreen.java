@@ -554,6 +554,7 @@ public abstract class RenderScreen {
   private void renderItem(Item item, int x, int y) {
     if (item.id == 0) return;
     Static.data.reset();
+    Static.data.var[X] = item.var;
     Static.data.inventory = true;
     ItemBase itembase = Static.getItemBase(item.id);
     if (itembase.renderAsEntity) {

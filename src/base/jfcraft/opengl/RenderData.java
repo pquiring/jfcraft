@@ -42,12 +42,12 @@ public class RenderData {
 
   public int bits;
 
-  public char[] id = new char[11];  //IDs of adjacent sides
-//  public int bits[] = new int[11];
+  //block1 layer data
+    public char[] id = new char[11];  //IDs of adjacent sides
     public int[] var = new int[11];  //from bits
     public int[] dir = new int[11];  //from bits
 
-  //block2 data
+  //block2 layer data
     public char[] id2 = new char[11];
     public int[] var2 = new int[11];  //from bits2
     public int[] dir2 = new int[11];  //from bits2
@@ -76,6 +76,8 @@ public class RenderData {
   public void reset() {
     crack = -1;
     sl[X] = 1;
+    bl[X] = 0;
+    var[X] = 0;
     side = 0;
     x = y = z = 0;
     isDir = false;
