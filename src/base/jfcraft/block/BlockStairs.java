@@ -124,6 +124,7 @@ public class BlockStairs extends BlockBase {
       }
     }
     Static.data.isDir = false;  //do not allow rotation
+    Static.data.isDirXZ = false;  //do not allow rotation
     Static.data.dir[X] = N;  //do not allow rotation
     SubTexture st = getTexture();
     for(int a=0;a<8;a++) {
@@ -172,5 +173,8 @@ public class BlockStairs extends BlockBase {
       case SW2: list.add(new Box( 0, y1, 8,  8, y2,16)); break;
     }
     return list;
+  }
+  public int getPreferredDir() {
+    return N;
   }
 }

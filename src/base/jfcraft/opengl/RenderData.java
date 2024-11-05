@@ -78,6 +78,7 @@ public class RenderData {
     sl[X] = 1;
     bl[X] = 0;
     var[X] = 0;
+    dir[X] = 0;
     clr = null;
     side = 0;
     x = y = z = 0;
