@@ -19,9 +19,6 @@
   </target>
 
   <target name="depjars" depends="depnatives,jar-javaforce">
-    <copy todir=".">
-      <fileset dir="${home}/native" includes="*"/>
-    </copy>
   </target>
 
   <target name="compile" depends="depjars" description="compile the source">
