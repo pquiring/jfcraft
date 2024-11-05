@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+Nov 5, 2024 : v0.33 released!
+  - fixed more item/block rendering issues
+
 Nov 3, 2024 : v0.32 released!
   - more item rendering improvements
   - fixed shield text coords

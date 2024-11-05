@@ -21,7 +21,7 @@ import jfcraft.plugin.PluginLoader;
 import jfcraft.server.*;
 
 public class Static {
-  public static String version = "0.32";
+  public static String version = "0.33";
 
   public static RenderEngine video;
   public static RenderData data = new RenderData();
