@@ -355,6 +355,26 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
         if (z > 15) z = 15;
       }
     }
+
+    //deepslate
+    for(int a=0;a<32;a++) {
+      x = r.nextInt(16);
+      y = r.nextInt(100)+1;
+      z = r.nextInt(16);
+      c = r.nextInt(5) + 5;
+      for(int b=0;b<c;b++) {
+        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.DEEPSLATE, 0);
+        x += r.nextInt(3)-1;
+        if (x < 0) x = 0;
+        if (x > 15) x = 15;
+        y += r.nextInt(3)-1;
+        if (y < 1) y = 1;
+        if (y > 255) y = 255;
+        z += r.nextInt(3)-1;
+        if (z < 0) z = 0;
+        if (z > 15) z = 15;
+      }
+    }
   }
 
   public boolean hasOcean() {

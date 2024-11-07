@@ -14,8 +14,14 @@
   <import file="${home}/base.xml"/>
 
   <available property="have_base" file="base.zip"/>
-  <target name="baseassets" unless="have_base" depends="">
+  <target name="get-base" unless="have_base" depends="">
     <download url="http://jfcraft.sourceforge.net/base.zip" dest="base.zip"/>
+  </target>
+
+  <target name="zip-base">
+    <zip destfile="base.zip">
+      <fileset dir="base" includes="**/*"/>
+    </zip>
   </target>
 
   <target name="depjars" depends="depnatives,jar-javaforce">
@@ -30,18 +36,13 @@
   </target>
 
   <target name="jfassets">
+    <!-- zip jfassets into jfassets.zip -->
     <zip destfile="jfassets.zip">
       <fileset dir="jfassets" includes="**/*"/>
     </zip>
   </target>
 
-  <target name="base">
-    <zip destfile="base.zip">
-      <fileset dir="base" includes="**/*"/>
-    </zip>
-  </target>
-
-  <target name="jar" depends="compile,depjars,jfassets,baseassets" description="build jar file">
+  <target name="jar" depends="compile,depjars,jfassets,get-base" description="build jar file">
     <!-- Build jar file from class files -->
     <jar destfile="jfcraft.jar" includes="**/*.class" basedir="${build}">
       <fileset dir="." includes="jfcraft.png"/>

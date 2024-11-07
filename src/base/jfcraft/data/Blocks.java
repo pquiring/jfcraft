@@ -88,6 +88,7 @@ public class Blocks {
   public static char GRAVEL;
   public static char STONE;
   public static char COBBLESTONE;
+  public static char DEEPSLATE;
   public static char PLANKS;
   public static char SAPLING;
   public static char BEDROCK;
@@ -233,6 +234,7 @@ public class Blocks {
     GRAVEL = world.getBlockID("GRAVEL");
     STONE = world.getBlockID("STONE");
     COBBLESTONE = world.getBlockID("COBBLESTONE");
+    DEEPSLATE = world.getBlockID("DEEPSLATE");
     PLANKS = world.getBlockID("PLANKS");
     SAPLING = world.getBlockID("SAPLING");
     BEDROCK = world.getBlockID("BEDROCK");
@@ -426,6 +428,8 @@ public class Blocks {
     registerBlock(new BlockAir("AIR"));
     registerBlock(new BlockOpaque("STONE", new String[] {"Stone"}, new String[] {"stone"})
       .setDrop("COBBLESTONE").setSmooth("STEPSTONE").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("DEEPSLATE", new String[] {"DeepSlate"}, new String[] {"deepslate"})
+      .setDrop("AIR").setHardness(3f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockGrass("GRASS", new String[] {"Grass"}, new String[] {"grass_block_top", "grass_block_top", "dirt"})
       .setGreenTopSide().setSupportsPlant().setSmooth("STEPGRASS").setDrop("DIRT").setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
     registerBlock(new BlockGrass("GRASSBANK", new String[] {"Grass"}, new String[] {"grass_block_top", "grass_block_side", "dirt"})
