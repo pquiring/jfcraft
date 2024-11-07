@@ -496,7 +496,8 @@ public class Game extends RenderScreen {
     Static.dims.dims[dim].getEnvironment().postRender(world.time, sunLight, Static.client, Static.camera_pos, chunks);
 
     if (showControls) {
-      depth(false);
+      depth(true);
+      clearZBuffer(0, 0, width, height);
       if (Static.camview == Static.CameraView.normal) {
         Static.client.player.renderPlayer();
       }
@@ -510,6 +511,7 @@ public class Game extends RenderScreen {
       glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, Static.identity.m);  //view matrix
       glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
 
+      depth(false);
       t_widgets.bind();
       o_slots.bindBuffers();
       o_slots.render();

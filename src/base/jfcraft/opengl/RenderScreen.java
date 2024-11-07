@@ -590,6 +590,7 @@ public abstract class RenderScreen {
     }
     setOrtho();
     Static.items.stitched.bind();
+    depth(true);
     for(int a=0;a<slots.length;a++) {
       item = slots[a].item;
       if (item == null || item.id == 0) continue;
@@ -635,6 +636,7 @@ public abstract class RenderScreen {
     setOrtho();
     t_white.bind();
     o_box.bindBuffers();
+    depth(false);
     for(int a=0;a<slots.length;a++) {
       item = slots[a].item;
       if (item == null || item.id == 0) continue;
@@ -1045,6 +1047,11 @@ public abstract class RenderScreen {
     glViewport(x, y, width, height);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+  }
+
+  public static void clearZBuffer(int x, int y, int width, int height) {
+    glViewport(x, y, width, height);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
   }
 
   public String toString() {

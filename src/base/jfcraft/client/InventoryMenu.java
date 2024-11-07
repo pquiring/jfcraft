@@ -165,8 +165,6 @@ public class InventoryMenu extends RenderScreen {
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
-    depth(false);
-
     setOrtho();
 
     //inventory slots
