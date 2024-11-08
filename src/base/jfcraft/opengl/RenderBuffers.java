@@ -361,18 +361,22 @@ public class RenderBuffers implements Cloneable {
     f.x[1] = fx2;
     f.x[2] = fx2;
     f.x[3] = fx1;
+
     f.y[0] = fy1;
     f.y[1] = fy1;
     f.y[2] = fy2;
     f.y[3] = fy2;
+
     f.z[0] = fz1;
     f.z[1] = fz2;
     f.z[2] = fz2;
     f.z[3] = fz1;
+
     f.u1[0] = u1;
     f.v1[0] = v1;
     f.u1[1] = u2;
     f.v1[1] = v1;
+
     f.u1[2] = u2;
     f.v1[2] = v2;
     f.u1[3] = u1;

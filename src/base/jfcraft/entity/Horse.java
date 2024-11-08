@@ -32,6 +32,9 @@ public class Horse extends VehicleBase {
   public ExtraHorse inventory;
 
   private static Model model;
+  private static boolean enable_chest = false;
+  private static boolean debugParts = false;
+  private static boolean debugTexture = false;
 
   public int hearts;
 
@@ -161,7 +164,11 @@ public class Horse extends VehicleBase {
     for(int a=0;a<textureNames.length;a++) {
       if (a == PATTERN_BLACKDOTS) unit = 2;  //markings
       if (a == ARMOR_IRON) unit = 3;  //armor
-      textures[a] = Textures.getTexture(textureNames[a], unit);
+      if (debugTexture) {
+        textures[a] = Textures.getTexture("block/arrow", unit);
+      } else {
+        textures[a] = Textures.getTexture(textureNames[a], unit);
+      }
     }
   }
 
@@ -196,7 +203,19 @@ public class Horse extends VehicleBase {
     , "L_EAR_SHORT", "R_EAR_SHORT", "L_EAR_LONG", "R_EAR_LONG"
     , "TAIL_1", "TAIL_2", "TAIL_3"
     , "MANE", "NECK", "JAW_LOWER", "JAW_UPPER"
-    , "CHEST", "SADDLE_SEAT", "SADDLE_HEAD"
+    , "SADDLE_SEAT", "SADDLE_HEAD"
+//    , "CHEST"
+  };
+
+  private static String org_parts[] = {
+    "HEAD", "BODY", "LEG1A", "LEG2A", "LEG3A", "LEG4A"
+    , "LEG1B", "LEG2B", "LEG1C", "LEG2C"
+    , "LEG3B", "LEG4B", "LEG3C", "LEG4C"
+    , "EAR1", "EAR2", "MULEEARL", "MULEEARR"
+    , "TAILA", "TAILB", "TAILC"
+    , "MANE", "NECK", "LMOUTH", "UMOUTH"
+    , "SADDLE", "HEADSADDLE"
+//    , "CHEST"
   };
 
   //0-5 = HEAD, BODY, ARMs, LEGs
@@ -219,9 +238,9 @@ public class Horse extends VehicleBase {
   private static final int NECK = 22;
   private static final int JAW_LOWER = 23;
   private static final int JAW_UPPER = 24;
-  private static final int CHEST = 25;
-  private static final int SADDLE_SEAT = 26;
-  private static final int SADDLE_HEAD = 27;
+  private static final int SADDLE_SEAT = 25;
+  private static final int SADDLE_HEAD = 26;
+  private static final int CHEST = 27;
 
   private static int commonParts[] = {
     HEAD,BODY,NECK,JAW_LOWER,JAW_UPPER
@@ -407,7 +426,7 @@ public class Horse extends VehicleBase {
     }
     glUniform1i(Static.uniformEnableHorsePattern, 0);
     glUniform1i(Static.uniformEnableHorseArmor, 0);
-    if (haveChest()) {
+    if (haveChest() && enable_chest) {
       int part = CHEST;
       RenderBuffers buf = dest.getBuffers(part);
       setMatrixModel(part, buf);
@@ -677,6 +696,18 @@ public class Horse extends VehicleBase {
       hearts = 3 * 20;
     }
     super.setFlags(newFlags);
+  }
+
+  public String convertBody(String part) {
+    part = part.toUpperCase();
+    for(int idx = 0; idx < org_parts.length; idx ++) {
+      if (org_parts[idx].equals(part)) {
+        part = parts[idx];
+        break;
+      }
+    }
+    if (debugParts) Static.log("part=" + part);
+    return part;
   }
 
   private static final byte ver = 0;

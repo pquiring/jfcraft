@@ -172,8 +172,13 @@ public class Assets {
       case MODEL:
         AssetModel model = new AssetModel();
         model.name = name;
-        GL_JF3D loader = new GL_JF3D();
-        model.model = loader.load(is);
+        if (filename.endsWith(".geo.json")) {
+          JSONModel loader = new JSONModel();
+          model.model = loader.load(is);
+        } else {
+          GL_JF3D loader = new GL_JF3D();
+          model.model = loader.load(is);
+        }
         assets.add(model);
         return model;
       case BLUEPRINT:
@@ -189,6 +194,24 @@ public class Assets {
     }
     //TODO more formats (ie: ogg, mp3, etc.)
     return null;
+  }
+
+  private static boolean exists(String filename) {
+    ZipEntry ze = null;
+    InputStream is = null;
+    String file = Static.getBasePath() + filename;
+    //check %APPDATA%\.jfcraft\assets
+    if (new File(file).exists()) {
+      return true;
+    }
+    //search zip files
+    for(int a=0;a<zips.size();a++) {
+      ze = zips.get(a).getEntry(filename);
+      if (ze != null) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public static AssetImage getImage(String name) {
@@ -207,7 +230,10 @@ public class Assets {
 
   public static AssetModel getModel(String name) {
     String filename;
-    filename = "assets/minecraft/models/" + name + ".jf3d";
+    filename = "assets/minecraft/models/" + name + ".geo.json";
+    if (!exists(filename)) {
+      filename = "assets/minecraft/models/" + name + ".jf3d";
+    }
     AssetModel asset = (AssetModel)getAsset(name, Type.MODEL, filename);
     return asset;
   }

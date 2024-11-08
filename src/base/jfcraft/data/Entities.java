@@ -210,4 +210,22 @@ public class Entities implements SerialCreator {
     JFLog.log("Error:Entity ID not found:" + id);
     return null;
   }
+
+  public EntityBase getEntity(String name) {
+    name = name.toLowerCase();
+    for(int a=0;a<regEntities.length;a++) {
+      EntityBase entity = regEntities[a];
+      if (entity == null) continue;
+      String ename = entity.getClass().getName().toLowerCase();
+      int idx = ename.lastIndexOf('.');
+      if (idx != -1) {
+        ename = ename.substring(idx + 1);
+      }
+      if (ename.equals(name)) {
+        return entity;
+      }
+    }
+    JFLog.log("Error:Entity not found:" + name);
+    return null;
+  }
 }
