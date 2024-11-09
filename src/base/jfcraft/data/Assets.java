@@ -172,8 +172,8 @@ public class Assets {
       case MODEL:
         AssetModel model = new AssetModel();
         model.name = name;
-        if (filename.endsWith(".geo.json")) {
-          JSONModel loader = new JSONModel();
+        if (filename.endsWith(".json")) {
+          ModelJSON loader = new ModelJSON(16.0f);
           model.model = loader.load(is);
         } else {
           ModelJF3D loader = new ModelJF3D();
@@ -230,7 +230,7 @@ public class Assets {
 
   public static AssetModel getModel(String name) {
     String filename;
-    filename = "assets/minecraft/models/" + name + ".geo.json";
+    filename = "assets/minecraft/models/" + name + ".json";
     if (!exists(filename)) {
       filename = "assets/minecraft/models/" + name + ".jf3d";
     }

@@ -1263,9 +1263,4 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public String toString() {
     return "EntityBase:" + getName();
   }
-
-  /** Convert JSON model body parts to jfCraft names. */
-  public String convertBody(String part) {
-    return part;
-  }
 }

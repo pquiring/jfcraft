@@ -24,6 +24,7 @@ public class Horse extends VehicleBase {
   public float walkAngle;  //angle of legs/arms as walking
   public float walkAngleDelta;
   public static RenderDest dest;
+  public static int version;
 
   public int type;
   public int pattern;
@@ -154,7 +155,8 @@ public class Horse extends VehicleBase {
   public void initStatic() {
     super.initStatic();
     dest = new RenderDest(parts.length);
-    model = loadModel("horse");
+    model = loadModel("horse_v3");
+    version = model.getObject("TAIL_2") != null ? 1 : 3;
   }
 
   public void initStaticGL() {
@@ -201,21 +203,22 @@ public class Horse extends VehicleBase {
     , "L_ARM_LOWER", "R_ARM_LOWER", "L_ARM_HOOVE", "R_ARM_HOOVE"
     , "L_LEG_LOWER", "R_LEG_LOWER", "L_LEG_HOOVE", "R_LEG_HOOVE"
     , "L_EAR_SHORT", "R_EAR_SHORT", "L_EAR_LONG", "R_EAR_LONG"
-    , "TAIL_1", "TAIL_2", "TAIL_3"
-    , "MANE", "NECK", "JAW_LOWER", "JAW_UPPER"
-    , "SADDLE_SEAT", "SADDLE_HEAD"
-//    , "CHEST"
-  };
+    , "MANE", "NECK"
 
-  private static String org_parts[] = {
-    "HEAD", "BODY", "LEG1A", "LEG2A", "LEG3A", "LEG4A"
-    , "LEG1B", "LEG2B", "LEG1C", "LEG2C"
-    , "LEG3B", "LEG4B", "LEG3C", "LEG4C"
-    , "EAR1", "EAR2", "MULEEARL", "MULEEARR"
-    , "TAILA", "TAILB", "TAILC"
-    , "MANE", "NECK", "LMOUTH", "UMOUTH"
-    , "SADDLE", "HEADSADDLE"
-//    , "CHEST"
+    , "TAIL_1"
+    , "TAIL_2", "TAIL_3"  //v1
+
+    , "JAW_LOWER", "JAW_UPPER"  //v1
+    , "MUZZLE"  //v3
+
+    , "CHEST"  //v1
+    , "L_BAG", "R_BAG"  //v3
+
+    , "SADDLE_SEAT", "SADDLE_HEAD"  //v1
+    , "SADDLE"  //v3
+    , "BRIDLE"  //v3
+    , "L_BIT", "R_BIT"  //v3
+    , "L_LEADS", "R_LEADS"  //v3
   };
 
   //0-5 = HEAD, BODY, ARMs, LEGs
@@ -231,21 +234,33 @@ public class Horse extends VehicleBase {
   private static final int R_EAR_SHORT = 15;
   private static final int L_EAR_LONG = 16;
   private static final int R_EAR_LONG = 17;
-  private static final int TAIL_1 = 18;
-  private static final int TAIL_2 = 19;
-  private static final int TAIL_3 = 20;
-  private static final int MANE = 21;
-  private static final int NECK = 22;
+  private static final int MANE = 18;
+  private static final int NECK = 19;
+  private static final int TAIL_1 = 20;
+  private static final int TAIL_2 = 21;
+  private static final int TAIL_3 = 22;
   private static final int JAW_LOWER = 23;
   private static final int JAW_UPPER = 24;
-  private static final int SADDLE_SEAT = 25;
-  private static final int SADDLE_HEAD = 26;
-  private static final int CHEST = 27;
+  private static final int MUZZLE = 25;
+  private static final int CHEST = 26;
+  private static final int L_BAG = 27;
+  private static final int R_BAG = 28;
+  private static final int SADDLE_SEAT = 29;
+  private static final int SADDLE_HEAD = 30;
+  private static final int SADDLE = 31;
+  private static final int BRIDLE = 32;
+  private static final int L_BIT = 33;
+  private static final int R_BIT = 34;
+  private static final int L_LEADS = 35;
+  private static final int R_LEADS = 36;
 
   private static int commonParts[] = {
-    HEAD,BODY,NECK,JAW_LOWER,JAW_UPPER
-    , L_ARM,R_ARM,L_LEG,R_LEG,L_ARM_LOWER,R_ARM_LOWER,L_LEG_LOWER,R_LEG_LOWER
-    , L_ARM_HOOVE,R_ARM_HOOVE,L_LEG_HOOVE,R_LEG_HOOVE,
+    HEAD,BODY, NECK
+    , JAW_LOWER, JAW_UPPER  //v1
+    , L_ARM, R_ARM, L_LEG, R_LEG
+    , L_ARM_LOWER, R_ARM_LOWER, L_LEG_LOWER, R_LEG_LOWER  //v1
+    , L_ARM_HOOVE, R_ARM_HOOVE, L_LEG_HOOVE, R_LEG_HOOVE  //v1
+    , MUZZLE //v3
   };
 
   private static int extraParts[][] = {
@@ -266,8 +281,9 @@ public class Horse extends VehicleBase {
     org = new Vertex3[parts.length];
     //transfer data into dest
     for(int a=0;a<parts.length;a++) {
-      RenderBuffers buf = dest.getBuffers(a);
       Object3 obj = model.getObject(parts[a]);
+      if (obj == null) continue;
+      RenderBuffers buf = dest.getBuffers(a);
       buf.addVertex(obj.vpl.toArray());
       buf.addPoly(obj.vil.toArray());
       int cnt = obj.vpl.size();
@@ -342,6 +358,7 @@ public class Horse extends VehicleBase {
       case HEAD:
       case NECK:
       case MANE:
+      case MUZZLE:
       case SADDLE_HEAD:
         mat.addTranslate2(org[NECK].x, org[NECK].y, org[NECK].z);
         mat.addRotate2(-ang.x, 1, 0, 0);
@@ -379,9 +396,11 @@ public class Horse extends VehicleBase {
         mat.addTranslate2(-org[L_LEG].x, -org[L_LEG].y, -org[L_LEG].z);
         break;
       case TAIL_1:
-        mat.addTranslate2(org[TAIL_1].x, org[TAIL_1].y, org[TAIL_1].z);
-        mat.addRotate2(+30, 1, 0, 0);
-        mat.addTranslate2(-org[TAIL_1].x, -org[TAIL_1].y, -org[TAIL_1].z);
+        if (version == 1) {
+          mat.addTranslate2(org[TAIL_1].x, org[TAIL_1].y, org[TAIL_1].z);
+          mat.addRotate2(+30, 1, 0, 0);
+          mat.addTranslate2(-org[TAIL_1].x, -org[TAIL_1].y, -org[TAIL_1].z);
+        }
         break;
       case TAIL_2:
         mat.addTranslate2(org[TAIL_1].x, org[TAIL_1].y, org[TAIL_1].z);
@@ -407,43 +426,44 @@ public class Horse extends VehicleBase {
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
+  private void renderPart(int part) {
+    if (!dest.exists(part)) return;
+    if (org[part] == null) return;
+    RenderBuffers buf = dest.getBuffers(part);
+    setMatrixModel(part, buf);
+    buf.bindBuffers();
+    buf.render();
+  }
+
   public void render() {
     for(int a=0;a<commonParts.length;a++) {
-      int part = commonParts[a];
-      RenderBuffers buf = dest.getBuffers(part);
-      setMatrixModel(part, buf);
-      buf.bindBuffers();
-      buf.render();
+      renderPart(commonParts[a]);
     }
     int ep[] = extraParts[type];
     int cnt = ep.length;
     for(int a=0;a<cnt;a++) {
-      int part = ep[a];
-      RenderBuffers buf = dest.getBuffers(part);
-      setMatrixModel(part, buf);
-      buf.bindBuffers();
-      buf.render();
+      renderPart(ep[a]);
     }
     glUniform1i(Static.uniformEnableHorsePattern, 0);
     glUniform1i(Static.uniformEnableHorseArmor, 0);
     if (haveChest() && enable_chest) {
-      int part = CHEST;
-      RenderBuffers buf = dest.getBuffers(part);
-      setMatrixModel(part, buf);
-      buf.bindBuffers();
-      buf.render();
+      //v1
+      renderPart(CHEST);
+      //v3
+      renderPart(L_BAG);
+      renderPart(R_BAG);
     }
     if (haveSaddle()) {
-      int part = SADDLE_SEAT;
-      RenderBuffers buf = dest.getBuffers(part);
-      setMatrixModel(part, buf);
-      buf.bindBuffers();
-      buf.render();
-      part = SADDLE_HEAD;
-      buf = dest.getBuffers(part);
-      setMatrixModel(part, buf);
-      buf.bindBuffers();
-      buf.render();
+      //v1
+      renderPart(SADDLE_SEAT);
+      renderPart(SADDLE_HEAD);
+      //v3
+      renderPart(SADDLE);
+      renderPart(BRIDLE);
+      renderPart(L_BIT);
+      renderPart(R_BIT);
+      renderPart(L_LEADS);
+      renderPart(R_LEADS);
     }
   }
 
@@ -696,18 +716,6 @@ public class Horse extends VehicleBase {
       hearts = 3 * 20;
     }
     super.setFlags(newFlags);
-  }
-
-  public String convertBody(String part) {
-    part = part.toUpperCase();
-    for(int idx = 0; idx < org_parts.length; idx ++) {
-      if (org_parts[idx].equals(part)) {
-        part = parts[idx];
-        break;
-      }
-    }
-    if (debugParts) Static.log("part=" + part);
-    return part;
   }
 
   private static final byte ver = 0;
