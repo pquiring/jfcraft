@@ -28,7 +28,7 @@ public class AudioEngine {
 
   public void registerSound(int idx, AssetAudio audio) {
     sounds[idx] = audio;
-    audio.idx = music.soundLoad(audio.wav.samples16, -1, -1, -1, -1, 0, 0);
+    audio.idx = music.soundLoad(audio.samples, -1, -1, -1, -1, 0, 0);
   }
 
   public void registerDefault() {

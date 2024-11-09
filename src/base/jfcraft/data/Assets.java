@@ -15,19 +15,21 @@ import javaforce.gl.*;
 import javaforce.gl.model.*;
 import javaforce.media.*;
 
+import jfcraft.audio.*;
+
 public class Assets {
-  private static ArrayList<Asset> pngs = new ArrayList<Asset>();
-  private static ArrayList<Asset> wavs = new ArrayList<Asset>();
+  private static ArrayList<Asset> images = new ArrayList<Asset>();
+  private static ArrayList<Asset> audios = new ArrayList<Asset>();
   private static ArrayList<Asset> models = new ArrayList<Asset>();
   private static ArrayList<Asset> prints = new ArrayList<Asset>();
   private static ArrayList<Asset> songs = new ArrayList<Asset>();
   private static ArrayList<ZipFile> zips = new ArrayList<ZipFile>();
 
-  private enum Type {PNG, WAV, MODEL, BLUEPRINT, MUSIC};
+  private enum Type {IMAGE, AUDIO, MODEL, BLUEPRINT, MUSIC};
 
   public static void reset() {
-    pngs.clear();
-    wavs.clear();
+    images.clear();
+    audios.clear();
     models.clear();
     prints.clear();
     songs.clear();
@@ -64,8 +66,8 @@ public class Assets {
     }
     ArrayList<Asset> assets;
     switch (type) {
-      case PNG: assets = pngs; break;
-      case WAV: assets = wavs; break;
+      case IMAGE: assets = images; break;
+      case AUDIO: assets = audios; break;
       case MODEL: assets = models; break;
       case BLUEPRINT: assets = prints; break;
       case MUSIC: assets = songs; break;
@@ -112,16 +114,15 @@ public class Assets {
       //should not happen
       Static.log("Asset not found:" + filename);
       switch (type) {
-        case PNG:
+        case IMAGE:
           AssetImage png = new AssetImage();
           png.name = name;
           png.image = makeImage();
           return png;
-        case WAV:
+        case AUDIO:
           AssetAudio wav = new AssetAudio();
           wav.name = name;
-          wav.wav = new Wav();
-          wav.wav.samples16 = new short[0];
+          wav.samples = new short[0];
           return wav;
         case MODEL:
           AssetModel model = new AssetModel();
@@ -141,7 +142,7 @@ public class Assets {
       return null;
     }
     switch (type) {
-      case PNG:
+      case IMAGE:
         AssetImage png = new AssetImage();
         png.name = name;
         png.image = new JFImage();
@@ -154,21 +155,27 @@ public class Assets {
         }
         assets.add(png);
         return png;
-      case WAV:
-        AssetAudio wav = new AssetAudio();
-        wav.name = name;
-        wav.wav = new Wav();
-        if (!wav.wav.load(is)) {
-          Static.log("Asset load failed:" + filename);
-          wav.wav.samples16 = new short[0];
-        } else {
-          wav.wav.readAllSamples();
+      case AUDIO:
+        AssetAudio audio = new AssetAudio();
+        audio.name = name;
+        if (filename.endsWith(".wav")) {
+          Wav wav = new Wav();
+          if (!wav.load(is)) {
+            Static.log("Asset load failed:" + filename);
+            audio.samples = new short[0];
+          } else {
+            wav.readAllSamples();
+            audio.samples = wav.samples16;
+          }
+        } else if (filename.endsWith(".mp3")) {
+          MediaReader reader = new MediaReader();
+          audio.samples = reader.read(is);
         }
-        if (wav.name == null) {
+        if (audio.name == null) {
           Static.logTrace("getAsset:add name=null");
         }
-        assets.add(wav);
-        return wav;
+        assets.add(audio);
+        return audio;
       case MODEL:
         AssetModel model = new AssetModel();
         model.name = name;
@@ -198,7 +205,6 @@ public class Assets {
 
   private static boolean exists(String filename) {
     ZipEntry ze = null;
-    InputStream is = null;
     String file = Static.getBasePath() + filename;
     //check %APPDATA%\.jfcraft\assets
     if (new File(file).exists()) {
@@ -217,14 +223,17 @@ public class Assets {
   public static AssetImage getImage(String name) {
     String filename;
     filename = "assets/minecraft/textures/" + name + ".png";
-    AssetImage asset = (AssetImage)getAsset(name, Type.PNG, filename);
+    AssetImage asset = (AssetImage)getAsset(name, Type.IMAGE, filename);
     return asset;
   }
 
   public static AssetAudio getAudio(String name) {
     String filename;
-    filename = "assets/minecraft/audio/" + name + ".wav";
-    AssetAudio asset = (AssetAudio)getAsset(name, Type.WAV, filename);
+    filename = "assets/minecraft/audio/" + name + ".mp3";
+    if (!exists(filename)) {
+      filename = "assets/minecraft/audio/" + name + ".wav";
+    }
+    AssetAudio asset = (AssetAudio)getAsset(name, Type.AUDIO, filename);
     return asset;
   }
 
