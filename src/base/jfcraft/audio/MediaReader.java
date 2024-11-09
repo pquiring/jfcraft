@@ -15,21 +15,28 @@ import javaforce.voip.*;
 
 public class MediaReader implements MediaIO {
 
-  public JFArrayShort buffer = new JFArrayShort();
+  private JFArrayShort buffer = new JFArrayShort();
+  private InputStream is;
+
 
   public int read(MediaCoder mc, byte[] bytes) {
-    return 0;
+    try {
+      return is.read(bytes);
+    } catch (Exception e) {
+      return 0;
+    }
   }
 
   public int write(MediaCoder mc, byte[] bytes) {
     return 0;
   }
 
-  public long seek(MediaCoder mc, long l, int i) {
+  public long seek(MediaCoder mc, long pos, int from) {
     return 0;
   }
 
   public short[] read(InputStream is) {
+    this.is = is;
     MediaInput media = new MediaInput();
     media.open(this);
     MediaAudioDecoder decoder = media.createAudioDecoder(1, 44100);
