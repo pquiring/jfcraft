@@ -44,6 +44,18 @@ auxiliary.show.customizer.message=<message>
                     <location>src/plugins/marioworld</location>
                     <encoding>windows-1252</encoding>
                 </source-folder>
+                <source-folder>
+                    <label>blender</label>
+                    <type>java</type>
+                    <location>blender</location>
+                    <encoding>windows-1252</encoding>
+                </source-folder>
+                <source-folder>
+                    <label>jfassets</label>
+                    <type>java</type>
+                    <location>jfassets</location>
+                    <encoding>windows-1252</encoding>
+                </source-folder>
             </folders>
             <ide-actions>
                 <action name="build">
@@ -75,6 +87,14 @@ auxiliary.show.customizer.message=<message>
                         <label>src\plugins\marioworld</label>
                         <location>src/plugins/marioworld</location>
                     </source-folder>
+                    <source-folder style="packages">
+                        <label>blender</label>
+                        <location>blender</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>jfassets</label>
+                        <location>jfassets</location>
+                    </source-folder>
                     <source-file>
                         <location>build.xml</location>
                     </source-file>
@@ -91,22 +111,30 @@ auxiliary.show.customizer.message=<message>
             <compilation-unit>
                 <package-root>src/base</package-root>
                 <classpath mode="compile">javaforce.jar;lwjgl.jar</classpath>
-                <source-level>11</source-level>
+                <source-level>17</source-level>
             </compilation-unit>
             <compilation-unit>
                 <package-root>src/plugins/creeper</package-root>
                 <classpath mode="compile">javaforce.jar;jfcraft.jar</classpath>
-                <source-level>11</source-level>
+                <source-level>17</source-level>
             </compilation-unit>
             <compilation-unit>
                 <package-root>src/plugins/domino</package-root>
                 <classpath mode="compile">javaforce.jar;jfcraft.jar</classpath>
-                <source-level>11</source-level>
+                <source-level>17</source-level>
             </compilation-unit>
             <compilation-unit>
                 <package-root>src/plugins/marioworld</package-root>
                 <classpath mode="compile">javaforce.jar;jfcraft.jar</classpath>
-                <source-level>11</source-level>
+                <source-level>17</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>blender</package-root>
+                <source-level>17</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>jfassets</package-root>
+                <source-level>17</source-level>
             </compilation-unit>
         </java-data>
     </configuration>

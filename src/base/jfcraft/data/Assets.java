@@ -176,7 +176,7 @@ public class Assets {
           JSONModel loader = new JSONModel();
           model.model = loader.load(is);
         } else {
-          GL_JF3D loader = new GL_JF3D();
+          ModelJF3D loader = new ModelJF3D();
           model.model = loader.load(is);
         }
         assets.add(model);
