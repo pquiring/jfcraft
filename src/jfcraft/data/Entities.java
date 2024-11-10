@@ -30,6 +30,9 @@ public class Entities implements SerialCreator {
   public static int ZOMBIE_PIGMAN;
   public static int SLIME;
 
+  //npcs
+  public static int VILLAGER;
+
   //animals (spawn with world generator)
   public static int PIG;
   public static int COW;
@@ -59,6 +62,7 @@ public class Entities implements SerialCreator {
     ENDERMAN = world.getEntityID("ENDERMAN");
     ZOMBIE_PIGMAN = world.getEntityID("ZOMBIE_PIGMAN");
     SLIME = world.getEntityID("SLIME");
+    VILLAGER = world.getEntityID("VILLAGER");
     PIG = world.getEntityID("PIG");
     COW = world.getEntityID("COW");
     SHEEP = world.getEntityID("SHEEP");
@@ -101,6 +105,7 @@ public class Entities implements SerialCreator {
     registerEntity(new Enderman());
     registerEntity(new ZombiePigman());
     registerEntity(new Slime());
+    registerEntity(new Villager());
     registerEntity(new Chest());
     registerEntity(new EnderChest());
     registerEntity(new Piston());
