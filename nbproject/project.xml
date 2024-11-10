@@ -6,10 +6,10 @@
             <name>jfcraft</name>
         </general-data>
         <general-data xmlns="http://www.netbeans.org/ns/freeform-project/2">
-            <!-- Do not use Project Properties customizer when editing this file manually. 
- To prevent the customizer from showing, create nbproject/project.properties file and enter 
-auxiliary.show.customizer=false 
-property there. Adding 
+            <!-- Do not use Project Properties customizer when editing this file manually.
+ To prevent the customizer from showing, create nbproject/project.properties file and enter
+auxiliary.show.customizer=false
+property there. Adding
 auxiliary.show.customizer.message=<message>
  will show your customized message when someone attempts to open the customizer.  -->
             <name>jfcraft</name>
@@ -21,39 +21,27 @@ auxiliary.show.customizer.message=<message>
                     <encoding>windows-1252</encoding>
                 </source-folder>
                 <source-folder>
-                    <label>src\base</label>
+                    <label>src</label>
                     <type>java</type>
-                    <location>src/base</location>
+                    <location>src</location>
                     <encoding>windows-1252</encoding>
                 </source-folder>
                 <source-folder>
-                    <label>src\plugins\creeper</label>
+                    <label>plugins\creeper</label>
                     <type>java</type>
-                    <location>src/plugins/creeper</location>
+                    <location>plugins/creeper/src</location>
                     <encoding>windows-1252</encoding>
                 </source-folder>
                 <source-folder>
-                    <label>src\plugins\domino</label>
+                    <label>plugins\domino</label>
                     <type>java</type>
-                    <location>src/plugins/domino</location>
+                    <location>plugins/domino/src</location>
                     <encoding>windows-1252</encoding>
                 </source-folder>
                 <source-folder>
-                    <label>src\plugins\marioworld</label>
+                    <label>plugins\marioworld</label>
                     <type>java</type>
-                    <location>src/plugins/marioworld</location>
-                    <encoding>windows-1252</encoding>
-                </source-folder>
-                <source-folder>
-                    <label>blender</label>
-                    <type>java</type>
-                    <location>blender</location>
-                    <encoding>windows-1252</encoding>
-                </source-folder>
-                <source-folder>
-                    <label>jfassets</label>
-                    <type>java</type>
-                    <location>jfassets</location>
+                    <location>plugins/marioworld/src</location>
                     <encoding>windows-1252</encoding>
                 </source-folder>
             </folders>
@@ -72,28 +60,20 @@ auxiliary.show.customizer.message=<message>
             <view>
                 <items>
                     <source-folder style="packages">
-                        <label>src\base</label>
-                        <location>src/base</location>
+                        <label>src</label>
+                        <location>src</location>
                     </source-folder>
                     <source-folder style="packages">
-                        <label>src\plugins\creeper</label>
-                        <location>src/plugins/creeper</location>
+                        <label>plugins\creeper</label>
+                        <location>plugins/creeper/src</location>
                     </source-folder>
                     <source-folder style="packages">
-                        <label>src\plugins\domino</label>
-                        <location>src/plugins/domino</location>
+                        <label>plugins\domino</label>
+                        <location>plugins/domino/src</location>
                     </source-folder>
                     <source-folder style="packages">
-                        <label>src\plugins\marioworld</label>
-                        <location>src/plugins/marioworld</location>
-                    </source-folder>
-                    <source-folder style="packages">
-                        <label>blender</label>
-                        <location>blender</location>
-                    </source-folder>
-                    <source-folder style="packages">
-                        <label>jfassets</label>
-                        <location>jfassets</location>
+                        <label>plugins\marioworld</label>
+                        <location>plugins/marioworld/src</location>
                     </source-folder>
                     <source-file>
                         <location>build.xml</location>
@@ -109,31 +89,23 @@ auxiliary.show.customizer.message=<message>
         </general-data>
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/5">
             <compilation-unit>
-                <package-root>src/base</package-root>
+                <package-root>src</package-root>
                 <classpath mode="compile">javaforce.jar;lwjgl.jar</classpath>
                 <source-level>17</source-level>
             </compilation-unit>
             <compilation-unit>
-                <package-root>src/plugins/creeper</package-root>
+                <package-root>plugins/creeper/src</package-root>
                 <classpath mode="compile">javaforce.jar;jfcraft.jar</classpath>
                 <source-level>17</source-level>
             </compilation-unit>
             <compilation-unit>
-                <package-root>src/plugins/domino</package-root>
+                <package-root>plugins/domino/src</package-root>
                 <classpath mode="compile">javaforce.jar;jfcraft.jar</classpath>
                 <source-level>17</source-level>
             </compilation-unit>
             <compilation-unit>
-                <package-root>src/plugins/marioworld</package-root>
+                <package-root>plugins/marioworld/src</package-root>
                 <classpath mode="compile">javaforce.jar;jfcraft.jar</classpath>
-                <source-level>17</source-level>
-            </compilation-unit>
-            <compilation-unit>
-                <package-root>blender</package-root>
-                <source-level>17</source-level>
-            </compilation-unit>
-            <compilation-unit>
-                <package-root>jfassets</package-root>
                 <source-level>17</source-level>
             </compilation-unit>
         </java-data>
