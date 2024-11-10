@@ -505,7 +505,7 @@ public class Blocks {
     );
     registerBlock(new BlockX("WEEDS"
       , new String[] {"Weeds"}
-      , new String[] {"grass"}
+      , new String[] {"grass_block_top"}
       )
       .setGreenAllSides().setDrop("SEEDS").setSupported().setDropVar(false).setCanReplace()
       .addBox(0, 0, 0, 15, 15, 15,BlockHitTest.Type.SELECTION).setMaterial(MAT_WOOD)
