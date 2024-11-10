@@ -24,7 +24,7 @@ public class Horse extends VehicleBase {
   public float walkAngle;  //angle of legs/arms as walking
   public float walkAngleDelta;
   public static RenderDest dest;
-  public static int version;
+  public static final int version = 3;  //1 or 3
 
   public int type;
   public int pattern;
@@ -155,8 +155,7 @@ public class Horse extends VehicleBase {
   public void initStatic() {
     super.initStatic();
     dest = new RenderDest(parts.length);
-    model = loadModel("horse_v3");
-    version = model.getObject("TAIL_2") != null ? 1 : 3;
+    model = loadModel("horse_v" + version);
   }
 
   public void initStaticGL() {
