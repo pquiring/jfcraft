@@ -7,7 +7,7 @@
   <property name="ico" value="jfcraft.ico"/>
   <property name="jre" location="${home}/jre_base_desktop"/>
   <property name="msi" value="jfcraft"/>
-  <property name="src" location="src/base"/>
+  <property name="src" location="src"/>
   <property name="build" location="classes"/>
   <property name="version" value="0.33"/>
 
@@ -54,9 +54,9 @@
       </manifest>
     </jar>
     <!-- build example plugins -->
-    <ant antfile="pluginCreeper.xml" inheritAll="false"/>
-    <ant antfile="pluginDomino.xml" inheritAll="false"/>
-    <ant antfile="pluginMarioWorld.xml" inheritAll="false"/>
+    <ant antfile="plugins/creeper/build.xml" inheritAll="false"/>
+    <ant antfile="plugins/domino/build.xml" inheritAll="false"/>
+    <ant antfile="plugins/marioworld/build.xml" inheritAll="false"/>
   </target>
 
   <!-- sudo ant install -->
