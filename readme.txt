@@ -5,6 +5,7 @@ Yet another implementation of the MineCraft game.
 Written in Java.
 Includes 0% Minecraft source or resources.
 Uses the Faithful Texture pack (x32).
+  http://faithfulpack.net
 Is not compatible with the official game in anyway.
 
 The server includes a VoIP push to talk (PTT) communications system.
