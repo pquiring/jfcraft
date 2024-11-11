@@ -85,7 +85,11 @@ public class Villager extends HumaniodBase {
     texture = Textures.getTexture(textureName, 0);
   }
 
-  private static String parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG", "C_ARM", "NOSE"};  //BRIM?
+  private static String parts[] = {"HEAD", "BODY", "L_ARM", "R_ARM", "L_LEG", "R_LEG", "C_ARM", "NOSE", "BRIM"};
+
+  private static final int C_ARM = 6;
+  private static final int NOSE = 7;
+  private static final int BRIM = 8;
 
   public void buildBuffers(RenderDest dest) {
     //transfer data into dest
@@ -131,18 +135,11 @@ public class Villager extends HumaniodBase {
       case BODY:
         break;
       case L_ARM:
-/*
-        mat.addTranslate(0, buf.org.y, 0);
-        mat.addRotate2(90.0f, 1, 0, 0);
-        mat.addTranslate2(0, -buf.org.y, 0);
-*/
-        break;
       case R_ARM:
-/*
+      case C_ARM:
         mat.addTranslate(0, buf.org.y, 0);
-        mat.addRotate2(90.0f, 1, 0, 0);
+        mat.addRotate2(45.0f, 1, 0, 0);
         mat.addTranslate2(0, -buf.org.y, 0);
-*/
         break;
       case L_LEG:
         mat.addTranslate(0, buf.org.y, 0);
