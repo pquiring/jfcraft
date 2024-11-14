@@ -25,6 +25,7 @@ public class PacketCraftAll extends Packet {
       do {
         if (client.menu == Client.INVENTORY) crafted = Static.recipes.make2x2(client.craft);
         if (client.menu == Client.CRAFTTABLE) crafted = Static.recipes.make3x3(client.craft);
+        if (client.menu == Client.VILLAGER) crafted = Static.client.villager.getOffer(Static.client.craft);
         if (crafted == null) break;
         if (craftedFirst == null) {
           craftedFirst = crafted;

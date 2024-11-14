@@ -24,8 +24,11 @@ import static jfcraft.data.Direction.*;
 import static jfcraft.entity.EntityBase.*;
 
 public abstract class RenderScreen {
-  public float gui_height = 512;
   public float gui_width = 512;
+  public float gui_height = 512;
+
+  public float gui_width_max = 512;
+  public float gui_height_max = 512;
 
   public static TextureMap t_widgets;
   public static TextureMap t_icons;
@@ -346,9 +349,9 @@ public abstract class RenderScreen {
     RenderBuffers o_menu = new RenderBuffers();
     //create vertex data
     o_menu.addVertex(new float[] {0,0,0}, new float[] {0,0});
-    o_menu.addVertex(new float[] {1,0,0}, new float[] {tc(512.0f, gui_width),0});
-    o_menu.addVertex(new float[] {1,1,0}, new float[] {tc(512.0f, gui_width),tc(512.0f, gui_height)});
-    o_menu.addVertex(new float[] {0,1,0}, new float[] {0,tc(512.0f, gui_height)});
+    o_menu.addVertex(new float[] {1,0,0}, new float[] {tc(gui_width_max, gui_width),0});
+    o_menu.addVertex(new float[] {1,1,0}, new float[] {tc(gui_width_max, gui_width),tc(gui_height_max, gui_height)});
+    o_menu.addVertex(new float[] {0,1,0}, new float[] {0,tc(gui_height_max, gui_height)});
     o_menu.addPoly(new int[] {3,2,1,0});
     for(int a=0;a<4;a++) {
       o_menu.addDefault();
@@ -371,14 +374,14 @@ public abstract class RenderScreen {
     //create vertex data
     float fsw = width / gui_width;
     float fsh = height / gui_height;
-    float ftw = width / 512.0f;
-    float fth = height / 512.0f;
+    float ftw = width / gui_width_max;
+    float fth = height / gui_height_max;
     float fsx1 = sx1 / gui_width;
     float fsy1 = sy1 / gui_height;
     float fsx2 = fsx1 + fsw;
     float fsy2 = fsy1 + fsh;
-    float ftx1 = tx1 / 512.0f;
-    float fty1 = ty1 / 512.0f;
+    float ftx1 = tx1 / gui_width_max;
+    float fty1 = ty1 / gui_height_max;
     float ftx2 = ftx1 + ftw;
     float fty2 = fty1 + fth;
     o_menu.addVertex(new float[] {fsx1,fsy1,0.0f}, new float[] {ftx1,fty1});
@@ -404,14 +407,14 @@ public abstract class RenderScreen {
     //create vertex data
     float fsw = swidth / gui_width;
     float fsh = sheight / gui_height;
-    float ftw = twidth / 512.0f;
-    float fth = theight / 512.0f;
+    float ftw = twidth / gui_width_max;
+    float fth = theight / gui_height_max;
     float fsx1 = sx1 / gui_width;
     float fsy1 = sy1 / gui_height;
     float fsx2 = fsx1 + fsw;
     float fsy2 = fsy1 + fsh;
-    float ftx1 = tx1 / 512.0f;
-    float fty1 = ty1 / 512.0f;
+    float ftx1 = tx1 / gui_width_max;
+    float fty1 = ty1 / gui_height_max;
     float ftx2 = ftx1 + ftw;
     float fty2 = fty1 + fth;
     o_menu.addVertex(new float[] {fsx1,fsy1,0.0f}, new float[] {ftx1,fty1});
@@ -431,14 +434,14 @@ public abstract class RenderScreen {
     //create vertex data
     float fsw = width / gui_width;
     float fsh = height / gui_height;
-    float ftw = width / 512.0f;
-    float fth = height / 512.0f;
+    float ftw = width / gui_width_max;
+    float fth = height / gui_height_max;
     float fsx1 = sx1 / gui_width;
     float fsy1 = sy1 / gui_height;
     float fsx2 = fsx1 + fsw;
     float fsy2 = fsy1 + fsh;
-    float ftx1 = tx1 / 512.0f;
-    float fty1 = ty1 / 512.0f;
+    float ftx1 = tx1 / gui_width_max;
+    float fty1 = ty1 / gui_height_max;
     float ftx2 = ftx1 + ftw;
     float fty2 = fty1 + fth;
     o_menu.addVertex(new float[] {fsx1,fsy1,0}, new float[] {ftx1,fty1});
@@ -994,7 +997,7 @@ public abstract class RenderScreen {
     sb.width = width;
     sb.height = height;
     sb.back = new RenderBuffers();
-    sb.back.addFace2D(x1 / 512.0f, y1 / 512.0f, x2 / 512.0f, y2 / 512.0f, 0,0,1,1,Static.black);
+    sb.back.addFace2D(x1 / gui_width_max, y1 / gui_height_max, x2 / gui_width_max, y2 / gui_height_max, 0,0,1,1,Static.black);
     sb.button = new RenderBuffers();
     sb.totalSize = size;
     sb.scale = (((float)height) / ((float)size));
@@ -1012,7 +1015,7 @@ public abstract class RenderScreen {
     t_white.bind();
     for(int a=0;a<scrolls.size();a++) {
       ScrollBar sb = scrolls.get(a);
-      sb.button.addFace2D(sb.x1 / 512.0f, sb.y1 / 512.0f, sb.x2 / 512.0f, sb.y2 / 512.0f, 0,0,1,1,Static.white);
+      sb.button.addFace2D(sb.x1 / gui_width_max, sb.y1 / gui_height_max, sb.x2 / gui_width_max, sb.y2 / gui_height_max, 0,0,1,1,Static.white);
       sb.back.bindBuffers();
       sb.back.render();
       sb.button.copyBuffers();

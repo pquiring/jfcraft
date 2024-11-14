@@ -105,6 +105,7 @@ public class Packets implements SerialCreator {
     registerPacket(new PacketShield(), "SHIELD");
     registerPacket(new PacketBow(), "BOW");
     registerPacket(new PacketSetInvDmg(), "SETINVDMG");
+    registerPacket(new PacketVillager(), "VILLAGER");
   }
 
   public static byte RIDING;
@@ -183,6 +184,7 @@ public class Packets implements SerialCreator {
   public static byte SHIELD;
   public static byte BOW;
   public static byte SETINVDMG;
+  public static byte VILLAGER;
 
   public void setID(String name, byte cmd) {
     switch (name) {
@@ -262,6 +264,7 @@ public class Packets implements SerialCreator {
       case "SHIELD": SHIELD = cmd; break;
       case "BOW": BOW = cmd; break;
       case "SETINVDMG": SETINVDMG = cmd; break;
+      case "VILLAGER": VILLAGER = cmd; break;
     }
   }
 

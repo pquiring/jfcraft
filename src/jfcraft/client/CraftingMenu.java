@@ -189,7 +189,7 @@ public class CraftingMenu extends RenderScreen {
         by += 36;
       }
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
-        Static.client.clickCraftlInput(a, button == 1);
+        Static.client.clickCraftInput(a, button == 1);
       }
       bx += 36;
     }

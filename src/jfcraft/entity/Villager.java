@@ -2,6 +2,8 @@ package jfcraft.entity;
 
 /** Villager entity
  *
+ * http://minecraft.fandom.com/wiki/Villager
+ *
  * @author pquiring
  *
  * Created : Nov 10, 2024
@@ -14,6 +16,7 @@ import javaforce.gl.*;
 import static javaforce.gl.GL.*;
 
 import jfcraft.audio.*;
+import jfcraft.client.*;
 import jfcraft.data.*;
 import jfcraft.item.*;
 import jfcraft.opengl.*;
@@ -32,9 +35,37 @@ public class Villager extends HumaniodBase {
   private static int initHealth = 20;
   private static int initArmor = 2;
 
+  public int job;  //profession
+  public int level;  //profession level
+  public int biome;  //variant of trade : see Biomes.{type}
+  //biomes : DESERT, JUNGLE, PLAINS, SAVANNA, SNOW, SWAMP, TAIGA
+
+  public static final int JOB_NONE = 0;
+  public static final int JOB_NITWIT = 1;
+  public static final int JOB_ARMORER = 2;
+  public static final int JOB_BITCHER = 3;
+  public static final int JOB_CARTOGRAPHER = 4;
+  public static final int JOB_CLERIC = 5;
+  public static final int JOB_FARMER = 6;
+  public static final int JOB_FISHERMAN = 7;
+  public static final int JOB_FLETCHER = 8;
+  public static final int JOB_LEATHERWORKER = 9;
+  public static final int JOB_LIBRARIAN = 10;
+  public static final int JOB_MASON = 11;
+  public static final int JOB_SHEPHERD = 12;
+  public static final int JOB_TOOLSMITH = 13;
+  public static final int JOB_WEAPONSMITH = 14;
+
+  public static final int LEVEL_NOVICE = 0;
+  public static final int LEVEL_APPRENTICE = 1;
+  public static final int LEVEL_JOURNEYMAN = 2;
+  public static final int LEVEL_EXPERT = 3;
+  public static final int LEVEL_MASTER = 4;
+
   public Villager() {
     super(1, 4);
     id = Entities.VILLAGER;
+    job = JOB_MASON;  //test
   }
 
   public RenderDest getDest() {
@@ -232,5 +263,85 @@ public class Villager extends HumaniodBase {
   }
   public int[] getSpawnDims() {
     return new int[] {Dims.EARTH};
+  }
+  public void useEntity(Client client, boolean sneak) {
+    if (job == JOB_NONE || job == JOB_NITWIT) {
+      //nope - shake head
+      Static.log("Villager.useEntity():nope");
+      return;
+    }
+    Static.log("Villager.useEntity():trade");
+    //open villager menu
+    client.villager = this;
+    client.serverTransport.sendVillager(this);
+    client.serverTransport.enterMenu(Client.VILLAGER);
+    client.menu = Client.VILLAGER;
+  }
+  public boolean useTool(Client client, Coords c) {
+    useEntity(client, false);
+    return true;
+  }
+
+  private static String[][] noOffers = new String[0][0];
+
+  //TODO : this will be a massive table
+  private static String[][][][] offers = new String[][][][] {
+    {  //UNEMPLOYED
+      {}
+    },
+    {  //NITWIT
+      {}
+    },
+    {  //ARMORER
+      {  //NOVICE
+        {"APPLE", "APPLE", "EMERALD"}
+        , {}
+      }, {  //APPRENTICE
+        {}, {}
+      }
+    }, {  //BUTCHER
+      {  //NOVICE
+        {}, {}
+      }, {  //APPRENTICE
+        {}, {}
+      }
+    }
+  };
+
+  //0-1 = input : 2 = output
+  public Item[][] getOfferings() {
+    if (job == JOB_NONE || job == JOB_NITWIT) return Static.getItems(noOffers);
+    if (true) return Static.getItems(noOffers);  //test (table incomplete)
+    return Static.getItems(offers[job][level]);
+  }
+
+  public Item getOffer(Item[] items) {
+    Item[][] offers = getOfferings();
+    char item0 = items[0].id;
+    char item1 = items[1].id;
+    for(int idx=0;idx<offers.length;idx++) {
+      char offer0 = offers[idx][0].id;
+      char offer1 = offers[idx][1].id;
+      if ((item0 == offer0 || item0 == offer1) && (item1 == offer0 || item1 == offer1)) {
+        return offers[idx][2];
+      }
+    }
+    return null;
+  }
+
+  private static final byte ver = 0;
+
+  /** Method can be over written to write extra data. */
+  public void writeExtra(SerialBuffer buffer, boolean file) {
+    buffer.writeByte(ver);
+    buffer.writeInt(job);
+    buffer.writeInt(biome);
+  }
+
+  /** Method can be over written to read extra data. */
+  public void readExtra(SerialBuffer buffer, boolean file) {
+    byte ver = buffer.readByte();
+    job = buffer.readInt();
+    biome = buffer.readInt();
   }
 }

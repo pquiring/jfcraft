@@ -538,7 +538,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   }
 
   /** Returns amount of dmg done.
-   * see http://minecraft.gamepedia.com/Breaking
+   * see http://minecraft.fandom.com/wiki/Breaking
    */
   public float dmg(Item item) {
     ItemBase tool = Static.items.items[item.id];

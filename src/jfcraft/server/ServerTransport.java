@@ -151,6 +151,11 @@ public abstract class ServerTransport extends Transport {
     addUpdate(packet);
   }
 
+  public void sendVillager(Villager villager) {
+    Packet packet = new PacketVillager(Packets.VILLAGER, villager.uid);
+    addUpdate(packet);
+  }
+
   public void sendHealth(Player player) {
     Packet packet = new PacketHealth(Packets.HEALTH, player.uid, player.health);
     addUpdate(packet);

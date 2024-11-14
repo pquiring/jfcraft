@@ -24,12 +24,16 @@ public class Items {
   public static final int MAX_ID = 65536;
   public static final char FIRST_ID = 32768;
   public int itemCount = 0;
-  public ItemBase[] items;  //items (ordered by id)
+  public ItemBase[] items;  //items (ordered by id) [NOTE : includes blocks]
   public ItemBase[] regItems = new ItemBase[MAX_ID];  //registered items (not ordered by id)
   public boolean valid;
 
   public static char getItemID(String name) {
     return Static.server.world.getItemID(name);
+  }
+
+  public static Item getItem(String name) {
+    return new Item(Static.server.world.getItemID(name));
   }
 
   private ArrayList<AssetImage> tiles = new ArrayList<AssetImage>();  //main stitched images
@@ -383,7 +387,7 @@ public class Items {
     KELP = world.getItemID("KELP");
   }
 
-  //color (dye) VARs of "COLOR" item (see http://minecraft.gamepedia.com/Dye)
+  //color (dye) VARs of "COLOR" item, see http://minecraft.fandom.com/wiki/Dye
   public final static byte VAR_INK = 0;  //black (ink sack)
   public final static byte VAR_RED = 1;  //red (flower)
   public final static byte VAR_GREEN = 2;  //green (cactus)

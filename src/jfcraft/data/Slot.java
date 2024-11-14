@@ -9,6 +9,6 @@ import jfcraft.item.*;
 
 public class Slot {
   public Item item;
-  public int x,y;
+  public int x,y;  //bottom left pixel
   public boolean renderName;
 }

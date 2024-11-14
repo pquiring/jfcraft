@@ -1123,7 +1123,9 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return false;
   }
   /** Use entity. */
-  public void useEntity(Client c, boolean sneak) {}
+  public void useEntity(Client client, boolean sneak) {
+    Static.log("Entity.useEntity");
+  }
   /** Use tool on entity. */
   public boolean useTool(Client client, Coords c) {
     Static.log("Entity.useTool");
@@ -1193,7 +1195,17 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return (float)Math.sqrt(dx * dx + dy * dy + dz * dz);
   }
 
-  private static final byte ver = 0;
+  /** Method can be over written to write extra data. */
+  public void writeExtra(SerialBuffer buffer, boolean file) {
+
+  }
+
+  /** Method can be over written to read extra data. */
+  public void readExtra(SerialBuffer buffer, boolean file) {
+
+  }
+
+  private static final byte ver = 1;
 
   public boolean write(SerialBuffer buffer, boolean file) {
     buffer.writeByte(ver);
@@ -1216,6 +1228,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     } else {
       buffer.writeInt(uid);
     }
+    writeExtra(buffer, file);
     return true;
   }
 
@@ -1239,6 +1252,9 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
       cid = buffer.readInt();
     } else {
       uid = buffer.readInt();
+    }
+    if (ver > 0) {
+      readExtra(buffer, file);
     }
     return true;
   }

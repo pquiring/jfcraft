@@ -89,6 +89,7 @@ public class Client {
   public static byte DISPENSER = 22;
   public static byte SIGN = 23;
   public static byte HORSE = 24;
+  public static byte VILLAGER = 25;
 
   public byte menu = GAME;  //current menu
 
@@ -99,8 +100,10 @@ public class Client {
   public boolean active;  //LOGIN/LOGOUT
   public Exception error;  //error to quit game
   public int spawnAreaDonePercent;
+  public Villager villager;
 
-  public Item hand, craft[] = new Item[9], crafted;
+  public Item hand;  //item in hand in menus
+  public Item craft[] = new Item[9], crafted;  //crafting table slots
 
   public ExtraCrack crack = new ExtraCrack();
   public int crack_cx, crack_cz;
@@ -545,7 +548,7 @@ public class Client {
       clientTransport.invGet(Player.shield_idx, (byte)1);
     }
   }
-  public void clickCraftlInput(byte idx, boolean first) {
+  public void clickCraftInput(byte idx, boolean first) {
     if (craft[idx].count == 0) {
       if (hand == null) {
         return;

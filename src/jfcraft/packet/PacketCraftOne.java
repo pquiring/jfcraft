@@ -24,6 +24,7 @@ public class PacketCraftOne extends Packet {
       Item crafted = null;
       if (client.menu == Client.INVENTORY) crafted = Static.recipes.make2x2(client.craft);
       if (client.menu == Client.CRAFTTABLE) crafted = Static.recipes.make3x3(client.craft);
+        if (client.menu == Client.VILLAGER) crafted = Static.client.villager.getOffer(Static.client.craft);
       if (crafted == null) {
         Static.log(":nothing to craft");
         return;

@@ -151,6 +151,34 @@ public class Static {
     }
   }
 
+  public static Item getItem(char id, byte cnt) {
+    return new Item(id, cnt);
+  }
+
+  public static Item getItem(String name) {
+    return new Item(Static.items.getItemID(name));
+  }
+
+  public static Item[] getItems(String[] names) {
+    if (names == null) return null;
+    int len = names.length;
+    Item[] items = new Item[len];
+    for(int a=0;a<len;a++) {
+      items[a] = getItem(names[a]);
+    }
+    return items;
+  }
+
+  public static Item[][] getItems(String[][] names) {
+    if (names == null) return null;
+    int len = names.length;
+    Item[][] items = new Item[len][];
+    for(int a=0;a<len;a++) {
+      items[a] = getItems(names[a]);
+    }
+    return items;
+  }
+
   //gui
   public static float width;
   public static float height;
