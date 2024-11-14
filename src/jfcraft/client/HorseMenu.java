@@ -18,8 +18,8 @@ import jfcraft.block.*;
 import jfcraft.item.*;
 
 public class HorseMenu extends RenderScreen {
-  private TextureMap t_menu;
-  private static RenderBuffers o_menu, o_15, o_armor;
+  private TextureMap t_menu, t_chest_slots, t_armor_slot, t_saddle_slot;
+  private static RenderBuffers o_menu, o_chest_slots, o_armor_slot, o_saddle_slot;
   private int mx, my;
   private Slot slots[];
 
@@ -53,11 +53,13 @@ public class HorseMenu extends RenderScreen {
       x += 36;
     }
 
-    //2 slots
+    //saddle slot
     slots[p] = new Slot();
     slots[p].x = 16;
     slots[p].y = 36 + 36;
     p++;
+    
+    //armor slot
     slots[p] = new Slot();
     slots[p].x = 16;
     slots[p].y = 36*2 + 36;
@@ -96,17 +98,33 @@ public class HorseMenu extends RenderScreen {
     if (t_menu == null) {
       t_menu = Textures.getTexture("gui/container/horse", 0);
     }
+    if (t_chest_slots == null) {
+      t_chest_slots = Textures.getTexture( "gui/sprites/container/horse/chest_slots", 0);
+    }
+    if (t_armor_slot == null) {
+      t_armor_slot = Textures.getTexture( "gui/sprites/container/horse/armor_slot", 0);
+    }
+    if (t_saddle_slot == null) {
+      t_saddle_slot = Textures.getTexture( "gui/sprites/container/horse/saddle_slot", 0);
+    }
 
     if (o_menu == null) {
       o_menu = createMenu();
     }
 
-    if (o_15 == null) {
-      o_15 = createMenu(160,36, 0,332, 180,108);
+    if (o_chest_slots == null) {
+      o_chest_slots = new RenderBuffers();
+      createSprite(o_chest_slots, 160,36, 180,108, 0,0, 180,108);
     }
 
-    if (o_armor == null) {
-      o_armor = createMenu(14,70, 0,440, 36,36);
+    if (o_saddle_slot == null) {
+      o_saddle_slot = new RenderBuffers();
+      createSprite(o_saddle_slot, 14,36, 36,36, 0,0, 36,36);
+    }
+    
+    if (o_armor_slot == null) {
+      o_armor_slot = new RenderBuffers();
+      createSprite(o_armor_slot, 14,70, 36,36, 0,0, 36,36);
     }
 
     ExtraHorse container = (ExtraHorse)Static.client.container;
@@ -124,14 +142,19 @@ public class HorseMenu extends RenderScreen {
     o_menu.render();
     if (container != null) {
       if (container.items.length > 2) {
-        o_15.bindBuffers();
-        o_15.render();
+        t_chest_slots.bind();
+        o_chest_slots.bindBuffers();
+        o_chest_slots.render();
       }
       if (container.items[1].id != Blocks.OBSIDIAN) {
         //mule & donkey have OBSIDIAN where the armor would be placed
-        o_armor.bindBuffers();
-        o_armor.render();
+        t_armor_slot.bind();
+        o_armor_slot.bindBuffers();
+        o_armor_slot.render();
       }
+      t_saddle_slot.bind();
+      o_saddle_slot.bindBuffers();
+      o_saddle_slot.render();
     }
 
     //inventory blocks
