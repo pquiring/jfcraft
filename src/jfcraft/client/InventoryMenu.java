@@ -217,57 +217,55 @@ public class InventoryMenu extends RenderScreen {
 
   public void mousePressed(int x, int y, int button) {
     //check inventory
-    int bx = 16, by = ((int)(gui_height - 131)) - 36;
+    int p = 0;
+    int bx;
+    int by;
     for(byte a=9;a<4*9;a++) {
-      if (a != 9 && a % 9 == 0) {
-        bx = 16;
-        by += 36;
-      }
+      bx = slots[p].x;
+      by = slots[p].y - 36;
+      p++;
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
         Static.client.clickInventory(a, button == 1);
       }
-      bx += 36;
     }
     //check active slots
-    bx = 16;
-    by = (int)(gui_height - 11) - 36;
     for(byte a=0;a<9;a++) {
+      bx = slots[p].x;
+      by = slots[p].y - 36;
+      p++;
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
         Static.client.clickInventory(a, button == 1);
       }
-      bx += 36;
     }
     //check armor
-    bx = 15;
-    by = 15;
     for(byte a=0;a<4;a++) {
+      bx = slots[p].x;
+      by = slots[p].y - 36;
+      p++;
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
         Static.client.clickArmor(a, button == 1);
       }
-      by += 36;
     }
     //check shield
-    bx = 154;
-    by = 124;
+    bx = slots[p].x;
+    by = slots[p].y - 36;
+    p++;
     if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
       Static.client.clickShield();
     }
     //check crafting area (4)
-    bx = 196;
-    by = 36;
     for(byte a=0;a<4;a++) {
-      if (a != 0 && a % 2 == 0) {
-        bx = 196;
-        by += 36;
-      }
+      bx = slots[p].x;
+      by = slots[p].y - 36;
+      p++;
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
         Static.client.clickCraftInput(a, button == 1);
       }
-      bx += 36;
     }
     //check craft output
-    bx = 308;
-    by = 56;
+    bx = slots[p].x;
+    by = slots[p].y - 36;
+    p++;
     if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
       Static.client.clickCraftOutput(button == 1);
     }

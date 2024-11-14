@@ -455,6 +455,32 @@ public abstract class RenderScreen {
     o_menu.copyBuffers();
   }
 
+  public void createSprite(RenderBuffers o_sprite, float sx1,float sy1,float sw,float sh, float tx1,float ty1,float tw,float th) {
+    o_sprite.reset();
+    //create vertex data
+    float fsw = sw / gui_width;
+    float fsh = sh / gui_height;
+    float ftw = tw / 100f;
+    float fth = th / 100f;
+    float fsx1 = sx1 / gui_width;
+    float fsy1 = sy1 / gui_height;
+    float fsx2 = fsx1 + fsw;
+    float fsy2 = fsy1 + fsh;
+    float ftx1 = tx1 / 100f;
+    float fty1 = ty1 / 100f;
+    float ftx2 = ftx1 + ftw;
+    float fty2 = fty1 + fth;
+    o_sprite.addVertex(new float[] {fsx1,fsy1,0}, new float[] {ftx1,fty1});
+    o_sprite.addVertex(new float[] {fsx2,fsy1,0}, new float[] {ftx2,fty1});
+    o_sprite.addVertex(new float[] {fsx2,fsy2,0}, new float[] {ftx2,fty2});
+    o_sprite.addVertex(new float[] {fsx1,fsy2,0}, new float[] {ftx1,fty2});
+    o_sprite.addPoly(new int[] {3,2,1,0});
+    for(int a=0;a<4;a++) {
+      o_sprite.addDefault();
+    }
+    o_sprite.copyBuffers();
+  }
+
   public void clearUI() {
     buttons.clear();
     fields.clear();

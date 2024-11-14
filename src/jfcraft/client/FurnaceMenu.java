@@ -17,7 +17,7 @@ import jfcraft.block.*;
 import jfcraft.item.*;
 
 public class FurnaceMenu extends RenderScreen {
-  private TextureMap t_menu;
+  private TextureMap t_menu, t_flame, t_arrow;
   private static RenderBuffers o_menu, o_flame, o_arrow;
   private int mx, my;
   private Slot slots[];
@@ -86,6 +86,12 @@ public class FurnaceMenu extends RenderScreen {
     if (t_menu == null) {
       t_menu = Textures.getTexture( "gui/container/furnace", 0);
     }
+    if (t_flame == null) {
+      t_flame = Textures.getTexture( "gui/sprites/container/furnace/lit_progress", 0);
+    }
+    if (t_arrow == null) {
+      t_arrow = Textures.getTexture( "gui/sprites/container/furnace/burn_progress", 0);
+    }
 
     if (o_menu == null) {
       o_menu = createMenu();
@@ -102,17 +108,16 @@ public class FurnaceMenu extends RenderScreen {
 
     flame_height = heatMax == 0 ? 0 : (heat * 100 / heatMax) * 28 / 100;
     if (o_flame == null) {
-      o_flame = createMenu( 111,70 + 28 - flame_height, 352,0 + 28 - flame_height, 28,flame_height);
-    } else {
-      recreateMenu( o_flame, 111,70 + 28 - flame_height, 352,0 + 28 - flame_height, 28,flame_height);
+      o_flame = new RenderBuffers();
     }
+    // 111,70 + 28 - flame_height, 352,0 + 28 - flame_height, 28,flame_height -- FIX ME !!!
+    createSprite(o_flame, 111,70 + 28 - flame_height, 28,flame_height, 0,(28 - flame_height) * 100 / 28, 100f,flame_height * 100 / 28);
 
     arrow_width = timer == 0 ? 0 : ((200-timer) * 100 / 200) * 48 / 100;
     if (o_arrow == null) {
-      o_arrow = createMenu( 160,67, 352,28, arrow_width,32);
-    } else {
-      recreateMenu( o_arrow, 160,67, 352,28, arrow_width,32);
+      o_arrow = new RenderBuffers();
     }
+    createSprite(o_arrow, 160,67, arrow_width,32, 0,0, arrow_width * 100 / 48,100f);
 
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
@@ -127,12 +132,13 @@ public class FurnaceMenu extends RenderScreen {
     o_menu.render();
 
     //flames and arrow
-    t_menu.bind();
     if (flame_height > 0) {
+      t_flame.bind();
       o_flame.bindBuffers();
       o_flame.render();
     }
     if (arrow_width > 0) {
+      t_arrow.bind();
       o_arrow.bindBuffers();
       o_arrow.render();
     }
@@ -182,39 +188,42 @@ public class FurnaceMenu extends RenderScreen {
 
   public void mousePressed(int x, int y, int button) {
     //check inventory
-    int bx = 16, by = ((int)(gui_height - 131)) - 36;
+    int p = 0;
+    int bx;
+    int by;
     for(byte a=9;a<4*9;a++) {
-      if (a != 9 && a % 9 == 0) {
-        bx = 16;
-        by += 36;
-      }
+      bx = slots[p].x;
+      by = slots[p].y - 36;
+      p++;
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
         Static.client.clickInventory(a, button == 1);
       }
-      bx += 36;
     }
     //check active slots
-    bx = 16;
-    by = (int)(gui_height - 11) - 36;
     for(byte a=0;a<9;a++) {
+      bx = slots[p].x;
+      by = slots[p].y - 36;
+      p++;
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
         Static.client.clickInventory(a, button == 1);
       }
-      bx += 36;
     }
     //check furnace
-    bx = 111;
-    by = 32;
+    bx = slots[p].x;
+    by = slots[p].y - 36;
+    p++;
     if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
       Static.client.clickContainer((byte)ExtraFurnace.INPUT, button == 1);
     }
-    bx = 111;
-    by = 105;
+    bx = slots[p].x;
+    by = slots[p].y - 36;
+    p++;
     if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
       Static.client.clickContainer((byte)ExtraFurnace.FUEL, button == 1);
     }
-    bx = 225;
-    by = 63;
+    bx = slots[p].x;
+    by = slots[p].y - 36;
+    p++;
     if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
       Static.client.clickContainer((byte)ExtraFurnace.OUTPUT, button == 1);
     }

@@ -188,55 +188,55 @@ public class HorseMenu extends RenderScreen {
 
   public void mousePressed(int x, int y, int button) {
     //check inventory
-    int bx = 16, by = ((int)(gui_height - 131)) - 36;
+    int p = 0;
+    int bx;
+    int by;
     for(byte a=9;a<4*9;a++) {
-      if (a != 9 && a % 9 == 0) {
-        bx = 16;
-        by += 36;
-      }
+      bx = slots[p].x;
+      by = slots[p].y - 36;
+      p++;
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
         Static.client.clickInventory(a, button == 1);
       }
-      bx += 36;
     }
     //check active slots
-    bx = 16;
-    by = (int)(gui_height - 11) - 36;
     for(byte a=0;a<9;a++) {
+      bx = slots[p].x;
+      by = slots[p].y - 36;
+      p++;
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
         Static.client.clickInventory(a, button == 1);
-      }
-      bx += 36;
-    }
-    //check horse chest
-    ExtraHorse container = (ExtraHorse)Static.client.container;
-    if (container != null && container.items.length > 2) {
-      bx = 160;
-      by = 36;
-      byte idx = 2;
-      for(int a=0;a<15;a++) {
-        if (a > 0 && a % 5 == 0) {
-          bx = 160;
-          by += 36;
-        }
-        if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
-          Static.client.clickContainer(idx, button == 1);
-        }
-        bx += 36;
-        idx++;
       }
     }
 
     //check horse slots
-    bx = 16;
-    by = 36;
+    bx = slots[p].x;
+    by = slots[p].y - 36;
+    p++;
     if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
       Static.client.clickContainer((byte)ExtraHorse.SADDLE, button == 1);
     }
-    bx = 16;
-    by = 36+36;
+
+    bx = slots[p].x;
+    by = slots[p].y - 36;
+    p++;
     if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
       Static.client.clickContainer((byte)ExtraHorse.ARMOR, button == 1);
+    }
+
+    //check horse chest
+    ExtraHorse container = (ExtraHorse)Static.client.container;
+    if (container != null && container.items.length > 2) {
+      byte idx = 2;
+      for(int a=0;a<15;a++) {
+        bx = slots[p].x;
+        by = slots[p].y - 36;
+        p++;
+        if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
+          Static.client.clickContainer(idx, button == 1);
+        }
+        idx++;
+      }
     }
   }
 
