@@ -18,6 +18,7 @@ public class ItemRef {
   
   public Item toItem() {
     Item item = Static.getItem(name);
+    if (item == null) return null;
     item.count = count;
     return item;
   }
@@ -27,7 +28,9 @@ public class ItemRef {
     int len = refs.length;
     Item[] items = new Item[len];
     for(int a=0;a<len;a++) {
-      items[a] = refs[a].toItem();
+      if (refs[a] != null) {
+        items[a] = refs[a].toItem();
+      }
     }
     return items;
   }
@@ -37,7 +40,9 @@ public class ItemRef {
     int len = refs.length;
     Item[][] items = new Item[len][];
     for(int a=0;a<len;a++) {
-      items[a] = getItems(refs[a]);
+      if (refs[a] != null) {
+        items[a] = getItems(refs[a]);
+      }
     }
     return items;
   }

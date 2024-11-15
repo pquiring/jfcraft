@@ -42,6 +42,8 @@ public class Villager extends HumaniodBase {
   public int level;  //profession level
   public int biome;  //variant of trade : see Biomes.{type}
   //biomes : DESERT, JUNGLE, PLAINS, SAVANNA, SNOW, SWAMP, TAIGA
+  
+  public int trade_index;
 
   public static final int JOB_NONE = 0;
   public static final int JOB_NITWIT = 1;
@@ -58,12 +60,14 @@ public class Villager extends HumaniodBase {
   public static final int JOB_SHEPHERD = 12;
   public static final int JOB_TOOLSMITH = 13;
   public static final int JOB_WEAPONSMITH = 14;
+  public static final int JOB_MAX = 14;
 
   public static final int LEVEL_NOVICE = 0;
   public static final int LEVEL_APPRENTICE = 1;
   public static final int LEVEL_JOURNEYMAN = 2;
   public static final int LEVEL_EXPERT = 3;
   public static final int LEVEL_MASTER = 4;
+  public static final int LEVEL_MAX = 4;
 
   public Villager() {
     super(1, 4);
@@ -245,6 +249,9 @@ public class Villager extends HumaniodBase {
         e.pos.y = py;
         e.pos.z = pz;
         e.ang.y = r.nextInt(360);
+        e.job = r.nextInt(JOB_MAX + 1);
+        e.level = r.nextInt(LEVEL_MAX + 1);
+        e.biome = r.nextInt(5);
         return e;
       }
     }
@@ -524,20 +531,26 @@ public class Villager extends HumaniodBase {
   //0-1 = input : 2 = output
   public Item[][] getOfferings() {
     if (job == JOB_NONE || job == JOB_NITWIT) return ItemRef.getItems(noOffers);
-    if (true) return ItemRef.getItems(noOffers);  //test (table incomplete)
+    if (debug) {
+      Static.log("Villager.job=" + job);
+      Static.log("Villager.level=" + level);
+    }
     return ItemRef.getItems(offers[job][level]);
   }
 
   public Item getOffer(Item[] items) {
-    Item[][] offers = getOfferings();
-    char item0 = items[0].id;
-    char item1 = items[1].id;
-    for(int idx=0;idx<offers.length;idx++) {
-      char offer0 = offers[idx][0].id;
-      char offer1 = offers[idx][1].id;
-      if ((item0 == offer0 || item0 == offer1) && (item1 == offer0 || item1 == offer1)) {
-        return offers[idx][2];
-      }
+    if (trade_index == -1) return null;
+    Item[][] trade_offers = getOfferings();
+    if (trade_offers == null) return null;
+    if (trade_index >= trade_offers.length) return null;
+    char give0 = items[0].id;
+    char give1 = items[1].id;
+    Item item0 = trade_offers[trade_index][0];
+    Item item1 = trade_offers[trade_index][1];
+    char offer0 = item0 != null ? item0.id : 0;
+    char offer1 = item1 != null ? item1.id : 0;
+    if ((give0 == offer0 || give0 == offer1) && (give1 == offer0 || give1 == offer1)) {
+      return trade_offers[trade_index][2];
     }
     return null;
   }

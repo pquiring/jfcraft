@@ -187,6 +187,12 @@ public abstract class ClientTransport extends Transport {
       packets.add(packet);
     }
   }
+  public void craftSelect(byte idx) {
+    Packet packet = new PacketCraftSelect(Packets.CRAFTSELECT, idx);
+    synchronized(packets) {
+      packets.add(packet);
+    }
+  }
   public void changeActiveSlot(byte idx) {
     Packet packet = new PacketSetActiveSlot(Packets.SETACTIVESLOT, idx);
     synchronized(packets) {

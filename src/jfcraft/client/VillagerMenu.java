@@ -22,6 +22,9 @@ public class VillagerMenu extends RenderScreen {
   private static RenderBuffers o_menu;
   private int mx, my;
   private Slot slots[];
+  private Slot trade_slots[];
+  private int trade_slot;
+  private int trade_index;
 
   public VillagerMenu() {
     id = Client.VILLAGER;
@@ -66,6 +69,7 @@ public class VillagerMenu extends RenderScreen {
     slots[p].y = 74 + 36;
     p++;
 
+    trade_slot = p;
     slots[p] = new Slot();
     slots[p].x = 440;
     slots[p].y = 74 + 36;
@@ -80,6 +84,46 @@ public class VillagerMenu extends RenderScreen {
 
   public void setup() {
     setCursor(true);
+    clearUI();
+    trade_slots = null;
+    trade_index = -1;
+    Item[][] offers = Static.client.villager.getOfferings();
+    Slot slot;
+    if (offers != null) {
+      int len = offers.length;
+      trade_slots = new Slot[len * 3];
+      int p = 0;
+      int x = 10;
+      int y = 36;
+      int width = 177;
+      for(int a=0;a<len;a++) {
+        Item trade = offers[a][2];
+        int trade_index = a;
+        addButton("", x, y, width, new Runnable() {public void run() {
+          //change item shown
+          slots[trade_slot].item = trade;
+          //tell server trade index
+          Static.client.clientTransport.craftSelect((byte)trade_index);
+          //update client index
+          Static.client.villager.trade_index = trade_index;
+        }});
+        y += 36;
+        //setup slots to render items
+        slot = trade_slots[p++] = new Slot();
+        slot.x = x;
+        slot.y = y;
+        slot.item = offers[a][0];
+        slot = trade_slots[p++] = new Slot();
+        slot.x = x + 36;
+        slot.y = y;
+        slot.item = offers[a][1];
+        slot = trade_slots[p++] = new Slot();
+        slot.x = x + 141;
+        slot.y = y;
+        slot.item = offers[a][2];
+        y += 4;  //buttons are 40 px high
+      }
+    }
   }
 
   public void render(int width, int height) {
@@ -111,9 +155,6 @@ public class VillagerMenu extends RenderScreen {
       return;
     }
 
-    //render offerings
-    renderOfferings(Static.client.villager.getOfferings());
-
     //inventory slots
     int p = 0;
     for(int a=9;a<4*9;a++) {
@@ -134,10 +175,12 @@ public class VillagerMenu extends RenderScreen {
     slots[p].y = my;
 
     renderItems(slots);
-  }
 
-  private void renderOfferings(Item[][] offerings) {
-    //TODO
+    renderButtons();
+    
+    if (trade_slots != null) {
+      renderItems(trade_slots);
+    }
   }
 
   public void keyPressed(int vk) {

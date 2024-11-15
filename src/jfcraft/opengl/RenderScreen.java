@@ -586,6 +586,7 @@ public abstract class RenderScreen {
     Static.data.var[X] = item.var;
     Static.data.inventory = true;
     ItemBase itembase = Static.getItemBase(item.id);
+    if (itembase == null) return;
     if (itembase.renderAsEntity) {
       Static.data.pos.x = 0.5f;
       Static.data.pos.y = 0.5f;
@@ -646,6 +647,7 @@ public abstract class RenderScreen {
       if (item == null || item.id == 0) continue;
       if (Static.isBlock(item.id)) {
         blockbase = Static.blocks.blocks[item.id];
+        if (blockbase == null) continue;
         if (blockbase.renderAsEntity || blockbase.renderAsItem) continue;
         renderItem(item, slots[a].x, slots[a].y);
       }
@@ -656,6 +658,7 @@ public abstract class RenderScreen {
       if (item == null || item.id == 0) continue;
       if (Static.isBlock(item.id)) {
         blockbase = Static.blocks.blocks[item.id];
+        if (blockbase == null) continue;
         if (blockbase.renderAsEntity) {
           renderItem(item, slots[a].x, slots[a].y);
         }
@@ -671,6 +674,7 @@ public abstract class RenderScreen {
       if (item == null || item.id == 0) continue;
       if (Static.isBlock(item.id)) continue;
       itembase = Static.items.items[item.id];
+      if (itembase == null) continue;
       if (itembase.isDamaged) {
         if (item.dmg != 1.0f) {
           renderDmg(slots[a].x,slots[a].y-2,item.dmg);

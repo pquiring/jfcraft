@@ -57,6 +57,7 @@ public class Packets implements SerialCreator {
     registerPacket(new PacketCraftExchange(), "CRAFTEXCHANGE");
     registerPacket(new PacketCraftOne(), "CRAFTONE");
     registerPacket(new PacketCraftAll(), "CRAFTALL");
+    registerPacket(new PacketCraftSelect(), "CRAFTSELECT");
     registerPacket(new PacketContainerPut(), "CONTAINERPUT");
     registerPacket(new PacketContainerGet(), "CONTAINERGET");
     registerPacket(new PacketContainerExchange(), "CONTAINEREXCHANGE");
@@ -151,6 +152,7 @@ public class Packets implements SerialCreator {
   public static byte HEALTH;
   public static byte KNOCKBACK;
   public static byte CRAFTALL;
+  public static byte CRAFTSELECT;
   public static byte POS;
   public static byte CLEARBLOCK;
   public static byte MOVEBLOCK;
@@ -231,6 +233,7 @@ public class Packets implements SerialCreator {
       case "HEALTH": HEALTH = cmd; break;
       case "KNOCKBACK": KNOCKBACK = cmd; break;
       case "CRAFTALL": CRAFTALL = cmd; break;
+      case "CRAFTSELECT": CRAFTSELECT = cmd; break;
       case "POS": POS = cmd; break;
       case "CLEARBLOCK": CLEARBLOCK = cmd; break;
       case "MOVEBLOCK": MOVEBLOCK = cmd; break;
