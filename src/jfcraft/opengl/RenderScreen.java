@@ -29,6 +29,8 @@ public abstract class RenderScreen {
 
   public float gui_width_max = 512;
   public float gui_height_max = 512;
+  
+  public static boolean debug = false;
 
   public static TextureMap t_widgets;
   public static TextureMap t_icons;
@@ -216,7 +218,9 @@ public abstract class RenderScreen {
     }
   }
 
-  /** Setup anything need to show menu each time. */
+  /** Setup anything need to show menu each time. 
+   * NOTE : This does NOT run on the OpenGL Thread.
+   */
   public void setup() {}
 
   public void init() {
@@ -910,6 +914,9 @@ public abstract class RenderScreen {
   }
 
   public Button addButton(String txt,int x1,int y1,int width, Runnable r) {
+    if (debug) {
+      Static.log("addButton(" + x1 + "," + y1 + "," + width);
+    }
     int sl = txt.length();  //TODO : calc font chars
     Button button = new Button();
     button.r = r;

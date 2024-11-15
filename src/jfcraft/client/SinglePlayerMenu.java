@@ -89,7 +89,7 @@ public class SinglePlayerMenu extends RenderScreen {
         //show highlight under this world
         renderBar(x,y + fontSize * 3,512-100,fontSize*4,Static.blue4);
       }
-      renderText(x, y, clampText(wi.name, 30));
+      renderText(x, y, clampText(wi.name, 35));
       y += fontSize;
       renderText(x, y, wi.date);
       y += fontSize;

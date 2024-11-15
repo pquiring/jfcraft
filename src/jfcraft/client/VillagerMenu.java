@@ -85,49 +85,8 @@ public class VillagerMenu extends RenderScreen {
 
   public void setup() {
     setCursor(true);
-    clearUI();
     trade_slots = null;
-    if (Static.client.villager == null) return;
-    Item[][] offers = Static.client.villager.getOfferings();
-    Slot slot;
-    if (offers != null) {
-      int len = offers.length;
-      trade_slots = new Slot[len * 3];
-      int p = 0;
-      int x = 10;
-      int y = 36;
-      int width = 177;
-      for(int a=0;a<len;a++) {
-        Item trade = offers[a][2];
-        int trade_index = a;
-        addButton("->", x, y, width, new Runnable() {public void run() {
-          if (debug) {
-            Static.log("client:villager index=" + trade_index);
-          }
-          //change item shown
-          slots[trade_slot].item = trade;
-          //tell server trade index
-          Static.client.clientTransport.craftSelect((byte)trade_index);
-          //update client index
-          Static.client.villager.trade_index = trade_index;
-        }});
-        y += 36;
-        //setup slots to render items
-        slot = trade_slots[p++] = new Slot();
-        slot.x = x;
-        slot.y = y;
-        slot.item = offers[a][0];
-        slot = trade_slots[p++] = new Slot();
-        slot.x = x + 36;
-        slot.y = y;
-        slot.item = offers[a][1];
-        slot = trade_slots[p++] = new Slot();
-        slot.x = x + 141;
-        slot.y = y;
-        slot.item = offers[a][2];
-        y += 4;  //buttons are 40 px high
-      }
-    }
+    clearUI();
   }
 
   public void render(int width, int height) {
@@ -155,8 +114,52 @@ public class VillagerMenu extends RenderScreen {
     o_menu.render();
 
     if (Static.client.villager == null) {
+      Static.log("VillagerMenu:Error:villager == null");
       Static.client.clientTransport.leaveMenu();
       return;
+    }
+    
+    if (trade_slots == null) {
+      Item[][] offers = Static.client.villager.getOfferings();
+      Slot slot;
+      if (offers != null) {
+        int len = offers.length;
+        trade_slots = new Slot[len * 3];
+        int p = 0;
+        int x = 10;
+        int y = 36;
+        int button_width = 177;
+        for(int a=0;a<len;a++) {
+          Item trade = offers[a][2];
+          int trade_index = a;
+          addButton("->", x, y, button_width, new Runnable() {public void run() {
+            if (debug) {
+              Static.log("client:villager index=" + trade_index);
+            }
+            //change item shown
+            slots[trade_slot].item = trade;
+            //tell server trade index
+            Static.client.clientTransport.craftSelect((byte)trade_index);
+            //update client index
+            Static.client.villager.trade_index = trade_index;
+          }});
+          y += 36;
+          //setup slots to render items
+          slot = trade_slots[p++] = new Slot();
+          slot.x = x;
+          slot.y = y;
+          slot.item = offers[a][0];
+          slot = trade_slots[p++] = new Slot();
+          slot.x = x + 36;
+          slot.y = y;
+          slot.item = offers[a][1];
+          slot = trade_slots[p++] = new Slot();
+          slot.x = x + 141;
+          slot.y = y;
+          slot.item = offers[a][2];
+          y += 4;  //buttons are 40 px high
+        }
+      }
     }
     
     renderButtons();
