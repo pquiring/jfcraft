@@ -24,6 +24,7 @@ public class PacketMenuLeave extends Packet {
     client.leavebed = true;
     client.container = null;
     client.villager = null;
+    client.crafted = null;
   }
 
   //process on server side
