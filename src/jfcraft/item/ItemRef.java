@@ -18,7 +18,10 @@ public class ItemRef {
   
   public Item toItem() {
     Item item = Static.getItem(name);
-    if (item == null) return null;
+    if (item == null) {
+      Static.log("ItemRef:item not found:" + name);
+      return null;
+    }
     item.count = count;
     item.dmg = 1f;
     return item;

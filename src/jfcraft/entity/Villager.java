@@ -312,223 +312,223 @@ public class Villager extends HumaniodBase {
     {  //ARMORER
       {  //NOVICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //APPRENTICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //JOURNEYMAN
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //EXPERT
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //MASTER
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }
     }, {  //BUTCHER
       {  //NOVICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //APPRENTICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //JOURNEYMAN
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //EXPERT
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //MASTER
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }
     }, {  //CARTOGRAPHER
       {  //NOVICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //APPRENTICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //JOURNEYMAN
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //EXPERT
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //MASTER
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }
     }, {  //CLERIC
       {  //NOVICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //APPRENTICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //JOURNEYMAN
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //EXPERT
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //MASTER
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }
     }, {  //FARMER
       {  //NOVICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //APPRENTICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //JOURNEYMAN
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //EXPERT
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //MASTER
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }
     }, {  //FISHERMAN
       {  //NOVICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //APPRENTICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //JOURNEYMAN
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //EXPERT
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //MASTER
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }
     }, {  //FLETCHER
       {  //NOVICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //APPRENTICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //JOURNEYMAN
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //EXPERT
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //MASTER
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }
     }, {  //LEATHERWORKER
       {  //NOVICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //APPRENTICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //JOURNEYMAN
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //EXPERT
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //MASTER
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }
     }, {  //LIBRARIAN
       {  //NOVICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //APPRENTICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //JOURNEYMAN
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //EXPERT
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //MASTER
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }
     }, {  //MASON
       {  //NOVICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //APPRENTICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //JOURNEYMAN
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //EXPERT
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //MASTER
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }
     }, {  //SHEPARD
       {  //NOVICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //APPRENTICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //JOURNEYMAN
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //EXPERT
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //MASTER
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }
     }, {  //TOOLSMITH
       {  //NOVICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //APPRENTICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //JOURNEYMAN
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //EXPERT
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //MASTER
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }
     }, {  //WEAPONSMITH
       {  //NOVICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //APPRENTICE
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //JOURNEYMAN
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //EXPERT
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }, {  //MASTER
           {new ItemRef("COAL", 15), null, new ItemRef("EMERALD", 1)}
-        , {new ItemRef("EMERAL", 5), null, new ItemRef("IRON_HELMET", 1)}
+        , {new ItemRef("EMERALD", 5), null, new ItemRef("IRON_HELMET", 1)}
       }
     }
   };
