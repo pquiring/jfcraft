@@ -411,14 +411,14 @@ public abstract class RenderScreen {
     //create vertex data
     float fsw = swidth / gui_width;
     float fsh = sheight / gui_height;
-    float ftw = twidth / gui_width_max;
-    float fth = theight / gui_height_max;
+    float ftw = twidth / 512f;
+    float fth = theight / 512f;
     float fsx1 = sx1 / gui_width;
     float fsy1 = sy1 / gui_height;
     float fsx2 = fsx1 + fsw;
     float fsy2 = fsy1 + fsh;
-    float ftx1 = tx1 / gui_width_max;
-    float fty1 = ty1 / gui_height_max;
+    float ftx1 = tx1 / 512f;
+    float fty1 = ty1 / 512f;
     float ftx2 = ftx1 + ftw;
     float fty2 = fty1 + fth;
     o_menu.addVertex(new float[] {fsx1,fsy1,0.0f}, new float[] {ftx1,fty1});
@@ -918,17 +918,19 @@ public abstract class RenderScreen {
       Static.log("addButton(" + x1 + "," + y1 + "," + width);
     }
     int sl = txt.length();  //TODO : calc font chars
+    int width_2 = width/2;
     Button button = new Button();
     button.r = r;
     button.x1 = x1;
     button.y1 = y1;
     button.x2 = x1 + width - 1;
     button.y2 = y1 + 40 - 1;
-    button.tx = x1 + width/2 - (sl * fontSize)/2;
+    button.tx = x1 + width_2 - (sl * fontSize)/2;
     button.ty = y1 + 40/2 + fontSize/2;
     button.txt = txt;
-    button.left = createMenu(x1, y1, 0, 133, width/2, 40, width/2, 40);
-    button.right = createMenu(x1 + width/2, y1, 400 - width/2, 133, width/2, 40, width/2, 40);
+    //createMenu(int sx1,int sy1,int tx1,int ty1,int swidth,int sheight,int twidth, int theight)
+    button.left = createMenu(x1, y1, 0, 133, width_2, 40, width_2, 40);
+    button.right = createMenu(x1 + width_2, y1, 400 - width_2, 133, width_2, 40, width_2, 40);
     buttons.add(button);
     return button;
   }
