@@ -276,6 +276,11 @@ public class Villager extends HumaniodBase {
   public int[] getSpawnDims() {
     return new int[] {Dims.EARTH};
   }
+  
+  public boolean canUse() {
+    return true;
+  }
+  
   public void useEntity(Client client, boolean sneak) {
     if (job == JOB_NONE || job == JOB_NITWIT) {
       //nope - shake head
