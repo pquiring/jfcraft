@@ -37,6 +37,8 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
     chunk.dirty = true;
 
     data.setChunk(chunk);
+    
+    if (Static.server.world.options.doFlatWorld) return;
 
     if ((chunk.cx !=0 && chunk.cz !=0) && (data.c1 ^ data.c3) % 10033 == 0) {
       if (chunk.biome[0] == Biomes.OCEAN) {
@@ -50,6 +52,7 @@ public class GeneratorPhase2Earth implements GeneratorPhase2Base {
 
   private void addBlueprint(String name, int elevMin, int elevMax) {
     BluePrint print = chunk.world.getBluePrint(name);
+    if (print == null) return;
     int elev = (int)chunk.elev[8 * 16 + 8] + 1;
     if (elev + print.Y > elevMax) return;
     if (elev < elevMin) return;

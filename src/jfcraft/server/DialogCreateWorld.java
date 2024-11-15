@@ -8,7 +8,7 @@ import javaforce.awt.*;
 
 import jfcraft.data.*;
 
-/**
+/** Dialog to create world for server out of game.
  *
  * @author pquiring
  */
@@ -40,6 +40,8 @@ public class DialogCreateWorld extends javax.swing.JDialog {
     seed = new javax.swing.JTextField();
     random = new javax.swing.JButton();
     doSteps = new javax.swing.JCheckBox();
+    doGrassBank = new javax.swing.JCheckBox();
+    doFlatWorld = new javax.swing.JCheckBox();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     setTitle("Create New World");
@@ -73,7 +75,11 @@ public class DialogCreateWorld extends javax.swing.JDialog {
       }
     });
 
-    doSteps.setText("Smooth Steps");
+    doSteps.setText("Generate Smooth Steps");
+
+    doGrassBank.setText("Generate Grass Banks");
+
+    doFlatWorld.setText("Generate Flat World");
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -98,7 +104,10 @@ public class DialogCreateWorld extends javax.swing.JDialog {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(random))
           .addGroup(layout.createSequentialGroup()
-            .addComponent(doSteps)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addComponent(doSteps)
+              .addComponent(doGrassBank)
+              .addComponent(doFlatWorld))
             .addGap(0, 0, Short.MAX_VALUE)))
         .addContainerGap())
     );
@@ -116,6 +125,10 @@ public class DialogCreateWorld extends javax.swing.JDialog {
           .addComponent(random))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(doSteps)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(doGrassBank)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(doFlatWorld)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(ok)
@@ -140,6 +153,8 @@ public class DialogCreateWorld extends javax.swing.JDialog {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton cancel;
+  private javax.swing.JCheckBox doFlatWorld;
+  private javax.swing.JCheckBox doGrassBank;
   private javax.swing.JCheckBox doSteps;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
@@ -163,6 +178,8 @@ public class DialogCreateWorld extends javax.swing.JDialog {
     world.type = "default";
     world.options.seed = Long.valueOf(seed.getText());
     world.options.doSteps = doSteps.isSelected();
+    world.options.doGrassBank = doGrassBank.isSelected();
+    world.options.doFlatWorld = doFlatWorld.isSelected();
     String folderName = world.createFolderName(worldName);
     new File(folderName).mkdirs();
     world.save(folderName + "/world.dat");

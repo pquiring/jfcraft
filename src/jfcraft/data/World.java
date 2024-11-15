@@ -606,6 +606,7 @@ public class World implements SerialClass, SerialCreator {
     BluePrint blueprint = blueprints.get(name);
     if (blueprint != null) return blueprint;
     blueprint = Assets.getBluePrint(name).blueprint;
+    if (blueprint == null) return null;
     blueprint.convertIDs(this);
     blueprints.put(name, blueprint);
     return blueprint;

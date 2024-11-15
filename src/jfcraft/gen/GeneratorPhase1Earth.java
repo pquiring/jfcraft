@@ -36,7 +36,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
 
     fillStone();
 
-    if (!hasOcean()) {
+    if (!hasOcean() && !Static.server.world.options.doFlatWorld) {
       float features = Static.noiseFloat(Static.N_ELEV3, cx*16, cz*16) * 100.0f;
 
       if (features > 50f) {
@@ -163,6 +163,10 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
             //add clay later
             chunk.river[p] = true;
           }
+        }
+        
+        if (Static.server.world.options.doFlatWorld) {
+          elev = Static.SEALEVEL + 1;
         }
 
         chunk.temp[p] = temp;

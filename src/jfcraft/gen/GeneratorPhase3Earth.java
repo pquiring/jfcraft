@@ -39,7 +39,7 @@ public class GeneratorPhase3Earth implements GeneratorPhase3Base {
 
     if (Static.server.world.options.doSteps) smoothSteps();
 
-    addBiomeFeatures();
+    if (!Static.server.world.options.doFlatWorld) addBiomeFeatures();
   }
 
   private void setBlock(int x, int y, int z, char id, int dir, int var) {

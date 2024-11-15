@@ -45,8 +45,12 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="random" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="doSteps" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="doSteps" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="doGrassBank" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="doFlatWorld" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -70,6 +74,10 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="doSteps" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="doGrassBank" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="doFlatWorld" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="ok" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -127,7 +135,17 @@
     </Component>
     <Component class="javax.swing.JCheckBox" name="doSteps">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Smooth Steps"/>
+        <Property name="text" type="java.lang.String" value="Generate Smooth Steps"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="doGrassBank">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Generate Grass Banks"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="doFlatWorld">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Generate Flat World"/>
       </Properties>
     </Component>
   </SubComponents>
