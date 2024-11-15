@@ -354,4 +354,14 @@ public class Recipes {
     }
     return null;
   }
+  
+  public void take(Item[] items) {
+    for(int a=0;a<9;a++) {
+      if (items[a].count == 0) continue;
+      items[a].count--;
+      if (items[a].count == 0) {
+        items[a].clear();
+      }
+    }
+  }
 }

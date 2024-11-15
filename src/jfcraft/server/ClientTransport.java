@@ -21,6 +21,8 @@ public abstract class ClientTransport extends Transport {
   //put client commands here
   public Client client;
   private ArrayList<Packet> packets = new ArrayList<Packet>();
+  
+  public static boolean debug = true;
 
   public void init(Client client) {
     this.client = client;
@@ -85,6 +87,9 @@ public abstract class ClientTransport extends Transport {
       packetArray = new Packet[size];
       for(int a=0;a<size-1;a++) {
         packetArray[a+1] = packets.remove(0);
+        if (debug) {
+          Static.log("send:" + packetArray[a+1]);
+        }
       }
     }
     int bits = 0;

@@ -109,6 +109,7 @@ public class InventoryMenu extends RenderScreen {
     player.ang.y = 180.0f;  //face the "real" player
     player.armors = Static.client.player.armors;
     player.items = Static.client.player.items;
+    Static.client.crafted = null;
   }
 
   public void render(int width, int height) {

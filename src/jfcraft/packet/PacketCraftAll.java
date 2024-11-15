@@ -25,7 +25,7 @@ public class PacketCraftAll extends Packet {
       do {
         if (client.menu == Client.INVENTORY) crafted = Static.recipes.make2x2(client.craft);
         if (client.menu == Client.CRAFTTABLE) crafted = Static.recipes.make3x3(client.craft);
-        if (client.menu == Client.VILLAGER) crafted = Static.client.villager.getOffer(Static.client.craft);
+        if (client.menu == Client.VILLAGER) crafted = Static.client.villager.getOffer(client.craft, false);
         if (crafted == null) break;
         if (craftedFirst == null) {
           craftedFirst = crafted;
@@ -42,12 +42,10 @@ public class PacketCraftAll extends Packet {
             if (!client.addItem(crafted, false)) break;
           }
         }
-        for(int a=0;a<9;a++) {
-          if (client.craft[a].count == 0) continue;
-          client.craft[a].count--;
-          if (client.craft[a].count == 0) {
-            client.craft[a].clear();
-          }
+        if (client.menu == Client.VILLAGER) {
+          Static.client.villager.getOffer(client.craft, true);
+        } else {
+          Static.recipes.take(client.craft);
         }
       } while (true);
       if (craftedFirst == null) return;  //nothing crafted

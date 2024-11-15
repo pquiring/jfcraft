@@ -537,21 +537,90 @@ public class Villager extends HumaniodBase {
     }
     return ItemRef.getItems(offers[job][level]);
   }
-
-  public Item getOffer(Item[] items) {
-    if (trade_index == -1) return null;
+  
+  public Item getOffer(Item[] giving, boolean trade) {
+    if (trade_index == -1) {
+      Static.log("trade_index==-1");
+      return null;
+    }
     Item[][] trade_offers = getOfferings();
-    if (trade_offers == null) return null;
-    if (trade_index >= trade_offers.length) return null;
-    char give0 = items[0].id;
-    char give1 = items[1].id;
+    if (trade_offers == null) {
+      Static.log("trade_offers==null");
+      return null;
+    }
+    if (trade_index >= trade_offers.length) {
+      Static.log("invalid trade_index");
+      return null;
+    }
+    char give0 = giving[0].id;
+    byte give0count = giving[0].count;
+    char give1 = giving[1].id;
+    byte give1count = giving[1].count;
+    if (debug) {
+      Static.log("give0=" + (int)give0);
+      Static.log("give1=" + (int)give1);
+    }
     Item item0 = trade_offers[trade_index][0];
     Item item1 = trade_offers[trade_index][1];
-    char offer0 = item0 != null ? item0.id : 0;
-    char offer1 = item1 != null ? item1.id : 0;
-    if ((give0 == offer0 || give0 == offer1) && (give1 == offer0 || give1 == offer1)) {
+    char want0 = item0 != null ? item0.id : 0;
+    byte want0count = item0 != null ? item0.count : 0;
+    char want1 = item1 != null ? item1.id : 0;
+    byte want1count = item1 != null ? item1.count : 0;
+    if (debug) {
+      Static.log("want0=" + (int)want0);
+      Static.log("want1=" + (int)want1);
+    }
+    boolean ok = true;
+    int cnt0 = 0;
+    int cnt1 = 0;
+    if (want0 != 0) {
+      if (want0 == give0) {
+        if (give0count < want0count) {
+          ok = false;
+        } else {
+          cnt0 = want0count;
+        }
+      } else if (want0 == give1) {
+        if (give1count < want0count) {
+          ok = false;
+        } else {
+          cnt1 = want0count;
+        }
+      } else {
+        ok = false;
+      }
+    }
+    if (want1 != 0) {
+      if (want1 == give0) {
+        if (give0count < want1count) {
+          ok = false;
+        } else {
+          cnt0 = want1count;
+        }
+      } else if (want1 == give1) {
+        if (give1count < want1count) {
+          ok = false;
+        } else {
+          cnt1 = want1count;
+        }
+      } else {
+        ok = false;
+      }
+    }
+    if (ok) {
+      if (trade) {
+        giving[0].count -= cnt0;
+        if (giving[0].count == 0) {
+          giving[0].clear();
+        }
+        giving[1].count -= cnt1;
+        if (giving[1].count == 0) {
+          giving[1].clear();
+        }
+      }
       return trade_offers[trade_index][2];
     }
+    Static.log("nothing to offer:" + trade_index);
     return null;
   }
 

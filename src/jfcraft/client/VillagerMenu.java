@@ -24,7 +24,8 @@ public class VillagerMenu extends RenderScreen {
   private Slot slots[];
   private Slot trade_slots[];
   private int trade_slot;
-  private int trade_index;
+  
+  public static boolean debug = true;
 
   public VillagerMenu() {
     id = Client.VILLAGER;
@@ -86,7 +87,7 @@ public class VillagerMenu extends RenderScreen {
     setCursor(true);
     clearUI();
     trade_slots = null;
-    trade_index = -1;
+    if (Static.client.villager == null) return;
     Item[][] offers = Static.client.villager.getOfferings();
     Slot slot;
     if (offers != null) {
@@ -100,6 +101,9 @@ public class VillagerMenu extends RenderScreen {
         Item trade = offers[a][2];
         int trade_index = a;
         addButton("", x, y, width, new Runnable() {public void run() {
+          if (debug) {
+            Static.log("client:villager index=" + trade_index);
+          }
           //change item shown
           slots[trade_slot].item = trade;
           //tell server trade index
@@ -167,7 +171,11 @@ public class VillagerMenu extends RenderScreen {
     //give, give, output
     slots[p++].item = Static.client.craft[0];
     slots[p++].item = Static.client.craft[1];
-    slots[p++].item = Static.client.crafted;
+    if (false) {
+      slots[p++].item = Static.client.crafted;
+    } else {
+      p++;
+    }
 
     //item in hand
     slots[p].item = Static.client.hand;
@@ -199,6 +207,7 @@ public class VillagerMenu extends RenderScreen {
   }
 
   public void mousePressed(int x, int y, int button) {
+    super.mousePressed(x, y, button);  //buttons
     //check inventory
     int p = 0;
     int bx = 0;
@@ -226,18 +235,21 @@ public class VillagerMenu extends RenderScreen {
     by = slots[p].y - 36;
     p++;
     if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
+      Static.log("input1");
       Static.client.clickCraftInput((byte)0, button == 1);
     }
     bx = slots[p].x;
     by = slots[p].y - 36;
     p++;
     if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
+      Static.log("input2");
       Static.client.clickCraftInput((byte)1, button == 1);
     }
     bx = slots[p].x;
     by = slots[p].y - 36;
     p++;
     if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
+      Static.log("output");
       Static.client.clickCraftOutput(button == 1);
     }
   }
