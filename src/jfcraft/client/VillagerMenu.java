@@ -100,7 +100,7 @@ public class VillagerMenu extends RenderScreen {
       for(int a=0;a<len;a++) {
         Item trade = offers[a][2];
         int trade_index = a;
-        addButton("", x, y, width, new Runnable() {public void run() {
+        addButton("->", x, y, width, new Runnable() {public void run() {
           if (debug) {
             Static.log("client:villager index=" + trade_index);
           }
@@ -158,7 +158,9 @@ public class VillagerMenu extends RenderScreen {
       Static.client.clientTransport.leaveMenu();
       return;
     }
-
+    
+    renderButtons();
+    
     //inventory slots
     int p = 0;
     for(int a=9;a<4*9;a++) {
@@ -183,9 +185,7 @@ public class VillagerMenu extends RenderScreen {
     slots[p].y = my;
 
     renderItems(slots);
-
-    renderButtons();
-    
+   
     if (trade_slots != null) {
       renderItems(trade_slots);
     }

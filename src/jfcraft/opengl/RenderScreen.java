@@ -493,6 +493,15 @@ public abstract class RenderScreen {
     buf.bindBuffers();
     buf.render();
   }
+  
+  /** Text over length has ... added to end. */
+  public String clampText(String txt, int length) {
+    if (length < 3) return txt;
+    if (txt.length() > length) {
+      return txt.substring(0, length-3) + "...";
+    }
+    return txt;
+  }
 
   public void renderText(int x,int y,String text, float clr[]) {
     setOrtho();
@@ -908,7 +917,7 @@ public abstract class RenderScreen {
     button.y1 = y1;
     button.x2 = x1 + width - 1;
     button.y2 = y1 + 40 - 1;
-    button.tx = x1 + width/2 - (sl * fontSize)/2;  //fontSize-1 ???
+    button.tx = x1 + width/2 - (sl * fontSize)/2;
     button.ty = y1 + 40/2 + fontSize/2;
     button.txt = txt;
     button.left = createMenu(x1, y1, 0, 133, width/2, 40, width/2, 40);
