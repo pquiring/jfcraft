@@ -301,7 +301,7 @@ public class Villager extends HumaniodBase {
 
   private static ItemRef[][] noOffers = new ItemRef[0][0];
 
-  //TODO : this will be a massive table
+  //NOTE : max 7 trades since scrolling panel for buttons is not implemented yet
   private static ItemRef[][][][] offers = new ItemRef[][][][] {
     {  //UNEMPLOYED
       {}
