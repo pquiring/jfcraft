@@ -104,7 +104,7 @@ public class InventoryMenu extends RenderScreen {
 
   public void setup() {
     setCursor(true);
-    Static.client.clientTransport.enterInvMenu();
+    Static.client.clientTransport.enterMenu(Client.INVENTORY);  //TODO : move to server side
     player = (Player)Static.entities.entities[Entities.PLAYER];
     player.ang.y = 180.0f;  //face the "real" player
     player.armors = Static.client.player.armors;

@@ -734,7 +734,11 @@ public class Game extends RenderScreen {
             return;
           }
         }
-        menu = Static.screens.screens[Client.INVENTORY];
+        if (Static.client.player.creative) {
+          menu = Static.screens.screens[Client.CREATIVE];
+        } else {
+          menu = Static.screens.screens[Client.INVENTORY];
+        }
         menu.setup();
         Static.video.setScreen(menu);
         Static.inGame = false;

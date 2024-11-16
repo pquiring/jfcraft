@@ -55,6 +55,28 @@ public abstract class RenderScreen {
   private static RenderBuffers o_chars[];
 
   public static Matrix identity = new Matrix();
+  
+  /** TextureMap / RenderBuffers combo. 
+   * Sprites are full image textures.
+   */
+  public class Sprite {
+    public TextureMap texture;
+    public RenderBuffers buffers;
+    public int x1, y1;
+    public int width, height;
+
+    public Sprite(String txt, int x1, int y1, int width, int height) {
+      texture = Textures.getTexture(txt, 0);
+      buffers = new RenderBuffers();
+      createSprite(buffers, x1, y1, width, height, 0f, 0f, 100f, 100f);
+    }  
+
+    public void render() {
+      texture.bind();
+      buffers.bindBuffers();
+      buffers.render();
+    }
+  }
 
   public byte id;
   public byte getID() {
@@ -252,7 +274,26 @@ public abstract class RenderScreen {
     }
     glViewport((int)offsetX, (int)vpy, (int)(gui_width * Static.scale), (int)(gui_height * Static.scale));
   }
+  
+  public static final int tab_width = 52;
+  public static final int tab_height = 64;
 
+  /** Sets viewport for tabs row on top. */
+  public void setViewportTabTop() {
+    float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
+    float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
+    offsetY -= (gui_height * Static.scale);
+    glViewport((int)offsetX, (int)offsetY, (int)(gui_width * Static.scale), (int)(tab_height * Static.scale));
+  }
+
+  /** Sets viewport for tabs row on bottom. */
+  public void setViewportTabBottom() {
+    float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
+    float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
+    offsetY += (tab_height * Static.scale);
+    glViewport((int)offsetX, (int)offsetY, (int)(gui_width * Static.scale), (int)(tab_height * Static.scale));
+  }
+  
   /** Sets a viewport for a single char. */
   public void setViewportChar(int x, int y, int fontSize) {
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;

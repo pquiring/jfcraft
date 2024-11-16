@@ -164,6 +164,13 @@ public class ItemBase implements RenderSource {
     return null;
   }
 
+  public Item toItem(int count) {
+    Item item = new Item(id);
+    item.count = (byte)count;
+    if (isDamaged) item.dmg = 1f;
+    return item;
+  }
+  
   public char getBlockID() {
     return blockID;
   }

@@ -64,7 +64,6 @@ public class Packets implements SerialCreator {
     registerPacket(new PacketDrop(), "DROP");
     registerPacket(new PacketMenuEnter(), "MENUENTER");
     registerPacket(new PacketMenuLeave(), "MENULEAVE");
-    registerPacket(new PacketMenuInv(), "MENUINV");
     registerPacket(new PacketOpenToLan(), "OPENTOLAN");
     registerPacket(new PacketToggleGameMode(), "TOGGLEGAMEMODE");
     registerPacket(new PacketSetBlock(), "SETBLOCK");
@@ -107,6 +106,8 @@ public class Packets implements SerialCreator {
     registerPacket(new PacketBow(), "BOW");
     registerPacket(new PacketSetInvDmg(), "SETINVDMG");
     registerPacket(new PacketVillager(), "VILLAGER");
+    registerPacket(new PacketTrashHand(), "TRASHHAND");
+    registerPacket(new PacketCreativeGetItem(), "CREATIVEGETITEM");
   }
 
   public static byte RIDING;
@@ -142,7 +143,6 @@ public class Packets implements SerialCreator {
   public static byte SETFLAGS;
   public static byte LOGIN_REQUEST;
   public static byte INVGET;
-  public static byte MENUINV;
   public static byte SETCONTAINER;
   public static byte INVPUT;
   public static byte AIR;
@@ -187,6 +187,8 @@ public class Packets implements SerialCreator {
   public static byte BOW;
   public static byte SETINVDMG;
   public static byte VILLAGER;
+  public static byte TRASHHAND;
+  public static byte CREATIVEGETITEM;
 
   public void setID(String name, byte cmd) {
     switch (name) {
@@ -223,7 +225,6 @@ public class Packets implements SerialCreator {
       case "SETFLAGS": SETFLAGS = cmd; break;
       case "LOGIN_REQUEST": LOGIN_REQUEST = cmd; break;
       case "INVGET": INVGET = cmd; break;
-      case "MENUINV": MENUINV = cmd; break;
       case "SETCONTAINER": SETCONTAINER = cmd; break;
       case "INVPUT": INVPUT = cmd; break;
       case "AIR": AIR = cmd; break;
@@ -268,6 +269,9 @@ public class Packets implements SerialCreator {
       case "BOW": BOW = cmd; break;
       case "SETINVDMG": SETINVDMG = cmd; break;
       case "VILLAGER": VILLAGER = cmd; break;
+      case "TRASHHAND": TRASHHAND = cmd; break;
+      case "CREATIVEGETITEM": CREATIVEGETITEM = cmd; break;
+      default: Static.log("ERROR:Packet Name Unknown:" + name); break;
     }
   }
 

@@ -7,7 +7,7 @@ package jfcraft.packet;
 
 import jfcraft.client.Client;
 import jfcraft.data.*;
-import jfcraft.opengl.*;
+import jfcraft.server.Server;
 
 public class PacketMenuEnter extends Packet {
   public byte b1;
@@ -28,6 +28,13 @@ public class PacketMenuEnter extends Packet {
     Static.game.enterMenu(b1);
   }
 
+  //process on server side
+  public void process(Server server, Client client) {
+    synchronized(client.lock) {
+      client.menu = b1;
+    }
+  }
+  
   @Override
   public boolean write(SerialBuffer buffer, boolean file) {
     super.write(buffer, file);

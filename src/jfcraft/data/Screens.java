@@ -47,6 +47,7 @@ public class Screens {
     registerScreen(new SignMenu());
     registerScreen(new HorseMenu());
     registerScreen(new VillagerMenu());
+    registerScreen(new CreativeMenu());
   }
 
   public void init() {

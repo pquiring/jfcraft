@@ -131,8 +131,9 @@ public abstract class ClientTransport extends Transport {
       packets.add(packet);
     }
   }
-  public void enterInvMenu() {
-    Packet packet = new PacketMenuInv(Packets.MENUINV);
+  public void enterMenu(byte menu) {
+    //TODO : remove this packet - do on server side
+    Packet packet = new PacketMenuEnter(Packets.MENUENTER, menu);
     synchronized(packets) {
       packets.add(packet);
     }
@@ -218,6 +219,18 @@ public abstract class ClientTransport extends Transport {
   }
   public void containerExchange(byte idx) {
     Packet packet = new PacketContainerExchange(Packets.CONTAINEREXCHANGE, idx);
+    synchronized(packets) {
+      packets.add(packet);
+    }
+  }
+  public void trashHand() {
+    Packet packet = new PacketTrashHand(Packets.TRASHHAND);
+    synchronized(packets) {
+      packets.add(packet);
+    }
+  }
+  public void creativeGetItem(char id, byte count) {
+    Packet packet = new PacketCreativeGetItem(Packets.CREATIVEGETITEM, id, count);
     synchronized(packets) {
       packets.add(packet);
     }

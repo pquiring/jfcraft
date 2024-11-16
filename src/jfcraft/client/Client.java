@@ -90,6 +90,7 @@ public class Client {
   public static byte SIGN = 23;
   public static byte HORSE = 24;
   public static byte VILLAGER = 25;
+  public static byte CREATIVE = 26;
 
   public byte menu = GAME;  //current menu
 
@@ -643,6 +644,22 @@ public class Client {
         }
       }
     }
+  }
+  public void clickTrash() {
+    if (hand == null || hand.count == 0) return;
+    clientTransport.trashHand();
+  }
+  public void clickCreative(char id, boolean first) {
+    if (hand != null && hand.id != id) {
+      return;
+    }
+    ItemBase itembase = Static.items.items[id];
+    if (itembase == null) return;
+    byte count = 1;
+    if (!first) {
+      count = (byte)itembase.maxStack;
+    }
+    clientTransport.creativeGetItem(id, count);
   }
   /** Adds item to player's inventory (returns false if no room) (server-side) */
   public boolean addItem(Item item, boolean update) {

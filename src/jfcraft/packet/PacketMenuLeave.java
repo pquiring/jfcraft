@@ -45,6 +45,7 @@ public class PacketMenuLeave extends Packet {
       client.container = null;
       client.chunk = null;
       client.villager = null;
+      client.crafted = null;
       client.menu = Client.GAME;
     }
   }
