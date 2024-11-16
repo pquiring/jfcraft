@@ -36,6 +36,9 @@ public class PacketCreativeGetItem extends Packet {
         Static.log("CreativeGetItem:invalid item:" + (int)b1);
         return;
       }
+      if (client.hand == null) {
+        client.hand = new Item();
+      }
       client.hand.id = b1;
       if (itembase.isDamaged) {
         client.hand.dmg = 1f;

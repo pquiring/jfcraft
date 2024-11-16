@@ -29,7 +29,10 @@ public abstract class RenderScreen {
 
   public float gui_width_max = 512;
   public float gui_height_max = 512;
-  
+
+  public float sprite_width = 512;
+  public float sprite_height = 512;
+
   public static boolean debug = false;
 
   public static TextureMap t_widgets;
@@ -55,8 +58,8 @@ public abstract class RenderScreen {
   private static RenderBuffers o_chars[];
 
   public static Matrix identity = new Matrix();
-  
-  /** TextureMap / RenderBuffers combo. 
+
+  /** TextureMap / RenderBuffers combo.
    * Sprites are full image textures.
    */
   public class Sprite {
@@ -69,7 +72,7 @@ public abstract class RenderScreen {
       texture = Textures.getTexture(txt, 0);
       buffers = new RenderBuffers();
       createSprite(buffers, x1, y1, width, height, 0f, 0f, 100f, 100f);
-    }  
+    }
 
     public void render() {
       texture.bind();
@@ -240,7 +243,7 @@ public abstract class RenderScreen {
     }
   }
 
-  /** Setup anything need to show menu each time. 
+  /** Setup anything need to show menu each time.
    * NOTE : This does NOT run on the OpenGL Thread.
    */
   public void setup() {}
@@ -274,7 +277,7 @@ public abstract class RenderScreen {
     }
     glViewport((int)offsetX, (int)vpy, (int)(gui_width * Static.scale), (int)(gui_height * Static.scale));
   }
-  
+
   public static final int tab_width = 52;
   public static final int tab_height = 64;
 
@@ -282,7 +285,7 @@ public abstract class RenderScreen {
   public void setViewportTabTop() {
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
-    offsetY -= (gui_height * Static.scale);
+    offsetY += (gui_height * Static.scale);
     glViewport((int)offsetX, (int)offsetY, (int)(gui_width * Static.scale), (int)(tab_height * Static.scale));
   }
 
@@ -290,10 +293,10 @@ public abstract class RenderScreen {
   public void setViewportTabBottom() {
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
-    offsetY += (tab_height * Static.scale);
+    offsetY -= (tab_height * Static.scale);
     glViewport((int)offsetX, (int)offsetY, (int)(gui_width * Static.scale), (int)(tab_height * Static.scale));
   }
-  
+
   /** Sets a viewport for a single char. */
   public void setViewportChar(int x, int y, int fontSize) {
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
@@ -503,12 +506,12 @@ public abstract class RenderScreen {
   public void createSprite(RenderBuffers o_sprite, float sx1,float sy1,float sw,float sh, float tx1,float ty1,float tw,float th) {
     o_sprite.reset();
     //create vertex data
-    float fsw = sw / gui_width;
-    float fsh = sh / gui_height;
+    float fsw = sw / sprite_width;
+    float fsh = sh / sprite_height;
     float ftw = tw / 100f;
     float fth = th / 100f;
-    float fsx1 = sx1 / gui_width;
-    float fsy1 = sy1 / gui_height;
+    float fsx1 = sx1 / sprite_width;
+    float fsy1 = sy1 / sprite_height;
     float fsx2 = fsx1 + fsw;
     float fsy2 = fsy1 + fsh;
     float ftx1 = tx1 / 100f;
@@ -538,7 +541,7 @@ public abstract class RenderScreen {
     buf.bindBuffers();
     buf.render();
   }
-  
+
   /** Text over length has ... added to end. */
   public String clampText(String txt, int length) {
     if (length < 3) return txt;

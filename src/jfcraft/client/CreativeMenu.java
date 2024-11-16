@@ -28,13 +28,13 @@ public class CreativeMenu extends RenderScreen {
   private int mx, my;
   private Player player;
   private int tab = 1;  //or 7 for now
-  
+
   private Slot slots_tab_1[];  //tab 1
-  
+
   private Slot slots_tab_7[];  //tab 7
   private TextField search;
   private ScrollBar scroll;
-  
+
   private static final int[] armor_x = {108, 108, 216, 216};
   private static final int[] armor_y = {12,  66,  12,  66};
 
@@ -42,11 +42,14 @@ public class CreativeMenu extends RenderScreen {
     id = Client.CREATIVE;
     gui_width = 390;
     gui_height = 270;
-    setup_tab_1();
-    setup_tab_7();
-  }  
-  
-  public void setup_tab_1() {
+    sprite_width = 390;
+    sprite_height = tab_height;
+    tab = 1;
+    init_tab_1();
+    init_tab_7();
+  }
+
+  private void init_tab_1() {
     slots_tab_1 = new Slot[4*9 + 4 + 1 + 1];  //slots(4*9), armor(4), shield(1), hand(1)
     //inventory blocks
     int p = 0;
@@ -96,15 +99,15 @@ public class CreativeMenu extends RenderScreen {
     slots_tab_1[p].renderName = true;
   }
 
-  public void setup_tab_7() {
+  private void init_tab_7() {
     //add text field
     search = addTextField("", 162, 10, 176, null, 14, false, 1);
-    
+
     //add scroll bar
     int rows = (Static.items.itemCount + Static.blocks.blockCount + 8) / 9;
     int size = rows * 36;
-    addScrollBar(350, 36, 24, 220, size);
-    
+    scroll = addScrollBar(350, 36, 24, 220, size);
+
     slots_tab_7 = new Slot[6*9 + 1];  //slots(6*9), hand(1)
     //inventory blocks
     int p = 0;
@@ -137,7 +140,7 @@ public class CreativeMenu extends RenderScreen {
     slots_tab_7[p].y = my;
     slots_tab_7[p].renderName = true;
   }
-  
+
   public void setup() {
     setCursor(true);
     Static.client.clientTransport.enterMenu(Client.CREATIVE);
@@ -146,6 +149,7 @@ public class CreativeMenu extends RenderScreen {
     player.armors = Static.client.player.armors;
     player.items = Static.client.player.items;
     Static.client.crafted = null;
+    tab = 1;
   }
 
   public void render(int width, int height) {
@@ -167,7 +171,7 @@ public class CreativeMenu extends RenderScreen {
     if (o_menu == null) {
       o_menu = createMenu();
     }
-    
+
     if (tab_1 == null) {
       tab_1 = new Sprite("gui/sprites/container/creative_inventory/tab_top_selected_1", 0,0, tab_width,tab_height);
     }
@@ -175,34 +179,35 @@ public class CreativeMenu extends RenderScreen {
     if (tab_7 == null) {
       tab_7 = new Sprite("gui/sprites/container/creative_inventory/tab_top_selected_7", (int)gui_width - tab_width,0, tab_width,tab_height);
     }
-    
+
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     renderShade();
 
     setOrtho();
-    
+
     setViewportMenu();
 
-    t_menu_inv.bind();
+    switch (tab) {
+      case 1: t_menu_inv.bind(); break;
+      case 7: t_menu_search.bind(); break;
+    }
     o_menu.bindBuffers();
     o_menu.render();
-    
+
     setViewportTabTop();
-    
+
     tab_1.render();
     tab_7.render();
 
     setViewportMenu();
-    
+
     switch (tab) {
       case 1:
-        tab_1.render();
         renderSlots_tab_1();
         break;
       case 7:
-        tab_7.render();
         renderFields();
         renderScrollBars();
         renderSlots_tab_7();
@@ -240,7 +245,7 @@ public class CreativeMenu extends RenderScreen {
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     setOrtho();
-  }  
+  }
 
   private void renderSlots_tab_1() {
     //inventory slots
@@ -286,11 +291,11 @@ public class CreativeMenu extends RenderScreen {
           }
           item = itembase.toItem(1);
           break;
-        }      
+        }
       }
       slots_tab_7[p++].item = item;
     }
-    
+
     //active slot
     for(int a=0;a<9;a++) {
       slots_tab_7[p++].item = Static.client.player.items[a];
@@ -303,7 +308,7 @@ public class CreativeMenu extends RenderScreen {
 
     renderItems(slots_tab_7);
   }
-  
+
   public void keyPressed(int vk) {
     super.keyPressed(vk);
     switch (vk) {
@@ -320,9 +325,31 @@ public class CreativeMenu extends RenderScreen {
   }
 
   public void mousePressed(int x, int y, int button) {
-    switch (tab) {
-      case 1: mousePressed_tab_1(x,y,button); break;
-      case 7: mousePressed_tab_7(x,y,button); break;
+    if (x < 0 || x > gui_width) return;
+    if (y < 0) {
+      //clicked top tab
+      if (x > tab_width * 5) {
+        x -= 26;  //mind the gap
+      }
+      int new_tab = 1 + (x / tab_width);
+      switch (new_tab) {
+        case 1:
+        case 7:
+          tab = new_tab;
+          break;
+      }
+    } else if (y > gui_height) {
+      //clicked bottom tab
+      if (x > tab_width * 5) {
+        x -= 26;  //mind the gap
+      }
+      int new_tab = 8 + (x / tab_width);
+      //not in use yet
+    } else {
+      switch (tab) {
+        case 1: mousePressed_tab_1(x,y,button); break;
+        case 7: mousePressed_tab_7(x,y,button); break;
+      }
     }
   }
 
@@ -378,10 +405,10 @@ public class CreativeMenu extends RenderScreen {
     int p = 0;
     int bx;
     int by;
-    for(byte a=9;a<4*9;a++) {
-      Item item = slots_tab_1[p].item;
-      bx = slots_tab_1[p].x;
-      by = slots_tab_1[p].y - 36;
+    for(byte a=0;a<5*9;a++) {
+      Item item = slots_tab_7[p].item;
+      bx = slots_tab_7[p].x;
+      by = slots_tab_7[p].y - 36;
       p++;
       if (item == null) continue;
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
@@ -390,15 +417,15 @@ public class CreativeMenu extends RenderScreen {
     }
     //check active slots
     for(byte a=0;a<9;a++) {
-      bx = slots_tab_1[p].x;
-      by = slots_tab_1[p].y - 36;
+      bx = slots_tab_7[p].x;
+      by = slots_tab_7[p].y - 36;
       p++;
       if (x >= bx && x <= bx+36 && y >= by && y <= by+36) {
         Static.client.clickInventory(a, button == 1);
       }
     }
   }
-  
+
   public void mouseReleased(int x, int y, int button) {
     Static.game.mouseReleased(x, y, button);
   }
