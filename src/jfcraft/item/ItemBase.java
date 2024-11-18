@@ -170,7 +170,7 @@ public class ItemBase implements RenderSource {
     if (isDamaged) item.dmg = 1f;
     return item;
   }
-  
+
   public char getBlockID() {
     return blockID;
   }
@@ -584,6 +584,14 @@ public class ItemBase implements RenderSource {
       entity.bindTexture();
       entity.render();
     } else {
+      if (bufs == null || bufs.length == 0) {
+        Static.log("ERROR:ItemBase.render() no bufs:name=" + getName());
+        return;
+      }
+      if (textures == null || textures.length == 0) {
+        Static.log("ERROR:ItemBase.render() no textures:name=" + getName());
+        return;
+      }
       Static.data.dir[X] = getPreferredDir();
       bindTexture();
       if (voxel != null && !Static.data.inventory) {

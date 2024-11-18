@@ -647,6 +647,7 @@ public class Client {
   }
   public void clickTrash() {
     if (hand == null || hand.count == 0) return;
+    hand = null;
     clientTransport.trashHand();
   }
   public void clickCreative(char id, boolean first) {

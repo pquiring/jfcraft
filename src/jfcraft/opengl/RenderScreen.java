@@ -281,6 +281,9 @@ public abstract class RenderScreen {
   public static final int tab_width = 52;
   public static final int tab_height = 64;
 
+  public static final int item_width = 36;
+  public static final int item_height = 36;
+
   /** Sets viewport for tabs row on top. */
   public void setViewportTabTop() {
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
@@ -651,6 +654,7 @@ public abstract class RenderScreen {
       Static.data.ang.y = -90;
     }
     setViewportItem(x, y);
+    clearZBuffer(0,0, 36,36);
     //TODO : itembase.setMatrixModel() : see Chest.java
     itembase.render();
   }
@@ -1089,7 +1093,7 @@ public abstract class RenderScreen {
     sb.width = width;
     sb.height = height;
     sb.back = new RenderBuffers();
-    sb.back.addFace2D(x1 / gui_width_max, y1 / gui_height_max, x2 / gui_width_max, y2 / gui_height_max, 0,0,1,1,Static.black);
+    sb.back.addFace2D(x1 / gui_width, y1 / gui_height, x2 / gui_width, y2 / gui_height, 0,0,1,1,Static.black);
     sb.button = new RenderBuffers();
     sb.totalSize = size;
     sb.scale = (((float)height) / ((float)size));
@@ -1107,9 +1111,14 @@ public abstract class RenderScreen {
     t_white.bind();
     for(int a=0;a<scrolls.size();a++) {
       ScrollBar sb = scrolls.get(a);
-      sb.button.addFace2D(sb.x1 / gui_width_max, sb.y1 / gui_height_max, sb.x2 / gui_width_max, sb.y2 / gui_height_max, 0,0,1,1,Static.white);
       sb.back.bindBuffers();
       sb.back.render();
+      sb.button.reset();
+      float x1 = sb.x1 / gui_width;
+      float y1 = (sb.y1 + sb.pos) / gui_height;
+      float x2 = sb.x2 / gui_width;
+      float y2 = (sb.y1 + sb.pos + sb.barSize) / gui_height;
+      sb.button.addFace2D(x1, y1, x2, y2, 0,0,1,1, Static.white);
       sb.button.copyBuffers();
       sb.button.bindBuffers();
       sb.button.render();
@@ -1145,7 +1154,6 @@ public abstract class RenderScreen {
   }
 
   public static void clearZBuffer(int x, int y, int width, int height) {
-    glViewport(x, y, width, height);
     glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
   }
 

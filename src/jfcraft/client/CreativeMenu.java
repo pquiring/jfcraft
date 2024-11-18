@@ -29,6 +29,7 @@ public class CreativeMenu extends RenderScreen {
   private Player player;
   private int tab = 1;  //or 7 for now
 
+  private Slot slots_tabs[];
   private Slot slots_tab_1[];  //tab 1
 
   private Slot slots_tab_7[];  //tab 7
@@ -45,8 +46,28 @@ public class CreativeMenu extends RenderScreen {
     sprite_width = 390;
     sprite_height = tab_height;
     tab = 1;
+    init_tabs();
     init_tab_1();
     init_tab_7();
+  }
+
+  private void init_tabs() {
+    int off = 24;  //???
+    slots_tabs = new Slot[2];  //only 2 tabs for now
+    int ox = (tab_width - item_width) / 2;
+    int oy = (tab_height - item_height) / 2;
+    int p = 0;
+    int x = ox;
+    int y = oy;
+    slots_tabs[p] = new Slot();
+    slots_tabs[p].x = x;
+    slots_tabs[p].y = y - off;
+    p++;
+    x = (int)(gui_width - tab_width + ox);
+    y = oy;
+    slots_tabs[p] = new Slot();
+    slots_tabs[p].x = x;
+    slots_tabs[p].y = y - off;
   }
 
   private void init_tab_1() {
@@ -200,6 +221,9 @@ public class CreativeMenu extends RenderScreen {
 
     tab_1.render();
     tab_7.render();
+    slots_tabs[0].item = Static.getItem("CHEST");
+    slots_tabs[1].item = Static.getItem("DIAMOND");  //should be COMPASS but not rendering
+    renderItems(slots_tabs);
 
     setViewportMenu();
 
@@ -209,6 +233,7 @@ public class CreativeMenu extends RenderScreen {
         break;
       case 7:
         renderFields();
+        setViewportMenu();
         renderScrollBars();
         renderSlots_tab_7();
         break;
@@ -276,8 +301,8 @@ public class CreativeMenu extends RenderScreen {
   private void renderSlots_tab_7() {
     //inventory slots
     int p = 0;
-    int ii = scroll.getPosition();
-    String txt = search.getText();
+    int ii = scroll.getPosition() * 9;
+    String txt = search.getText().toLowerCase();
     boolean doSearch = txt.length() > 0;
     //available items (5 rows)
     for(int a=0;a<5*9;a++) {
@@ -287,7 +312,7 @@ public class CreativeMenu extends RenderScreen {
         if (itembase != null) {
           if (doSearch) {
             String name = itembase.getName();
-            if (!name.contains(txt)) continue;
+            if (!name.toLowerCase().contains(txt)) continue;
           }
           item = itembase.toItem(1);
           break;
@@ -325,7 +350,9 @@ public class CreativeMenu extends RenderScreen {
   }
 
   public void mousePressed(int x, int y, int button) {
+    super.mousePressed(x, y, button);  //search box, scroll bar
     if (x < 0 || x > gui_width) return;
+    Static.log("pressed:" + x + "," + y);
     if (y < 0) {
       //clicked top tab
       if (x > tab_width * 5) {

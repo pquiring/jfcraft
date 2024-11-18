@@ -29,8 +29,7 @@ public class PacketTrashHand extends Packet {
         Static.log("TrashHand:Player cheat:not in creative mode");
         return;
       }
-      client.hand.clear();
-      client.serverTransport.setHand(client.hand);
+      client.hand = null;
     }
   }
 }

@@ -497,6 +497,7 @@ public class Game extends RenderScreen {
 
     if (showControls) {
       depth(true);
+      setViewportFull();
       clearZBuffer(0, 0, width, height);
       if (Static.camview == Static.CameraView.normal) {
         Static.client.player.renderPlayer();

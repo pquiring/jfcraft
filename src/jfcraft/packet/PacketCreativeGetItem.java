@@ -39,6 +39,9 @@ public class PacketCreativeGetItem extends Packet {
       if (client.hand == null) {
         client.hand = new Item();
       }
+      if (!client.hand.isEmpty() && client.hand.id != b1) {
+        return;
+      }
       client.hand.id = b1;
       if (itembase.isDamaged) {
         client.hand.dmg = 1f;
