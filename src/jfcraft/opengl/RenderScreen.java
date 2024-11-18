@@ -68,10 +68,25 @@ public abstract class RenderScreen {
     public int x1, y1;
     public int width, height;
 
+    public Sprite(String txt) {
+      texture = Textures.getTexture(txt, 0);
+      buffers = new RenderBuffers();
+    }
+
     public Sprite(String txt, int x1, int y1, int width, int height) {
       texture = Textures.getTexture(txt, 0);
       buffers = new RenderBuffers();
       createSprite(buffers, x1, y1, width, height, 0f, 0f, 100f, 100f);
+    }
+
+    public Sprite(String txt, int x1, int y1, int width, int height, float tx, float ty, float tw, float th) {
+      texture = Textures.getTexture(txt, 0);
+      buffers = new RenderBuffers();
+      createSprite(buffers, x1, y1, width, height, tx, ty, tw, th);
+    }
+
+    public void recreate(int x1, int y1, int width, int height, float tx, float ty, float tw, float th) {
+      createSprite(buffers, x1, y1, width, height, tx, ty, tw, th);
     }
 
     public void render() {
@@ -506,7 +521,7 @@ public abstract class RenderScreen {
     o_menu.copyBuffers();
   }
 
-  public void createSprite(RenderBuffers o_sprite, float sx1,float sy1,float sw,float sh, float tx1,float ty1,float tw,float th) {
+  private void createSprite(RenderBuffers o_sprite, float sx1,float sy1,float sw,float sh, float tx1,float ty1,float tw,float th) {
     o_sprite.reset();
     //create vertex data
     float fsw = sw / sprite_width;

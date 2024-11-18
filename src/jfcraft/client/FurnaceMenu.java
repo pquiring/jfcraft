@@ -17,8 +17,10 @@ import jfcraft.block.*;
 import jfcraft.item.*;
 
 public class FurnaceMenu extends RenderScreen {
-  private TextureMap t_menu, t_flame, t_arrow;
-  private static RenderBuffers o_menu, o_flame, o_arrow;
+  private TextureMap t_menu;
+  private RenderBuffers o_menu;
+  private Sprite o_flame;
+  private Sprite o_arrow;
   private int mx, my;
   private Slot slots[];
 
@@ -86,12 +88,6 @@ public class FurnaceMenu extends RenderScreen {
     if (t_menu == null) {
       t_menu = Textures.getTexture( "gui/container/furnace", 0);
     }
-    if (t_flame == null) {
-      t_flame = Textures.getTexture( "gui/sprites/container/furnace/lit_progress", 0);
-    }
-    if (t_arrow == null) {
-      t_arrow = Textures.getTexture( "gui/sprites/container/furnace/burn_progress", 0);
-    }
 
     if (o_menu == null) {
       o_menu = createMenu();
@@ -108,16 +104,16 @@ public class FurnaceMenu extends RenderScreen {
 
     flame_height = heatMax == 0 ? 0 : (heat * 100 / heatMax) * 28 / 100;
     if (o_flame == null) {
-      o_flame = new RenderBuffers();
+      o_flame = new Sprite("gui/sprites/container/furnace/lit_progress");
     }
     // 111,70 + 28 - flame_height, 352,0 + 28 - flame_height, 28,flame_height -- FIX ME !!!
-    createSprite(o_flame, 111,70 + 28 - flame_height, 28,flame_height, 0,(28 - flame_height) * 100 / 28, 100f,flame_height * 100 / 28);
+    o_flame.recreate(111,70 + 28 - flame_height, 28,flame_height, 0,(28 - flame_height) * 100 / 28, 100f,flame_height * 100 / 28);
 
     arrow_width = timer == 0 ? 0 : ((200-timer) * 100 / 200) * 48 / 100;
     if (o_arrow == null) {
-      o_arrow = new RenderBuffers();
+      o_arrow = new Sprite("gui/sprites/container/furnace/burn_progress");
     }
-    createSprite(o_arrow, 160,67, arrow_width,32, 0,0, arrow_width * 100 / 48,100f);
+    o_arrow.recreate(160,67, arrow_width,32, 0,0, arrow_width * 100 / 48,100f);
 
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
@@ -133,13 +129,9 @@ public class FurnaceMenu extends RenderScreen {
 
     //flames and arrow
     if (flame_height > 0) {
-      t_flame.bind();
-      o_flame.bindBuffers();
       o_flame.render();
     }
     if (arrow_width > 0) {
-      t_arrow.bind();
-      o_arrow.bindBuffers();
       o_arrow.render();
     }
 
