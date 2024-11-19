@@ -26,7 +26,7 @@ import jfcraft.move.*;
 public class Villager extends HumaniodBase {
   private float walkAngle;  //angle of legs/arms as walking
   private float walkAngleDelta;
-  
+
   private static boolean debug = true;
 
   //render assets
@@ -42,8 +42,6 @@ public class Villager extends HumaniodBase {
   public int level;  //profession level
   public int biome;  //variant of trade : see Biomes.{type}
   //biomes : DESERT, JUNGLE, PLAINS, SAVANNA, SNOW, SWAMP, TAIGA
-  
-  public int trade_index;
 
   public static final int JOB_NONE = 0;
   public static final int JOB_NITWIT = 1;
@@ -276,11 +274,11 @@ public class Villager extends HumaniodBase {
   public int[] getSpawnDims() {
     return new int[] {Dims.EARTH};
   }
-  
+
   public boolean canUse() {
     return true;
   }
-  
+
   public void useEntity(Client client, boolean sneak) {
     if (job == JOB_NONE || job == JOB_NITWIT) {
       //nope - shake head
@@ -290,6 +288,7 @@ public class Villager extends HumaniodBase {
     Static.log("Villager.useEntity():trade");
     //open villager menu
     client.villager = this;
+    client.villager_trade_index = -1;
     client.serverTransport.sendVillager(this);
     client.serverTransport.enterMenu(Client.VILLAGER);
     client.menu = Client.VILLAGER;
@@ -542,9 +541,9 @@ public class Villager extends HumaniodBase {
     }
     return ItemRef.getItems(offers[job][level]);
   }
-  
-  public Item getOffer(Item[] giving, boolean trade) {
-    if (trade_index == -1) {
+
+  public Item getOffer(Client client, Item[] giving, boolean trade) {
+    if (client.villager_trade_index == -1) {
       Static.log("trade_index==-1");
       return null;
     }
@@ -553,7 +552,7 @@ public class Villager extends HumaniodBase {
       Static.log("trade_offers==null");
       return null;
     }
-    if (trade_index >= trade_offers.length) {
+    if (client.villager_trade_index >= trade_offers.length) {
       Static.log("invalid trade_index");
       return null;
     }
@@ -565,8 +564,8 @@ public class Villager extends HumaniodBase {
       Static.log("give0=" + (int)give0);
       Static.log("give1=" + (int)give1);
     }
-    Item item0 = trade_offers[trade_index][0];
-    Item item1 = trade_offers[trade_index][1];
+    Item item0 = trade_offers[client.villager_trade_index][0];
+    Item item1 = trade_offers[client.villager_trade_index][1];
     char want0 = item0 != null ? item0.id : 0;
     byte want0count = item0 != null ? item0.count : 0;
     char want1 = item1 != null ? item1.id : 0;
@@ -623,9 +622,9 @@ public class Villager extends HumaniodBase {
           giving[1].clear();
         }
       }
-      return trade_offers[trade_index][2];
+      return trade_offers[client.villager_trade_index][2];
     }
-    Static.log("nothing to offer:" + trade_index);
+    Static.log("nothing to offer:" + client.villager_trade_index);
     return null;
   }
 

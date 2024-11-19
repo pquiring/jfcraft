@@ -781,6 +781,7 @@ public abstract class RenderScreen {
     Static.video.setScreen(Static.game);
     setCursor(false);
     Static.inGame = true;
+    Static.client.leaveMenuReset();
   }
 
   private static RenderBuffers o_shade = null;

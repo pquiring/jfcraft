@@ -24,7 +24,7 @@ public class VillagerMenu extends RenderScreen {
   private Slot slots[];
   private Slot trade_slots[];
   private int trade_slot;
-  
+
   public static boolean debug = true;
 
   public VillagerMenu() {
@@ -86,6 +86,7 @@ public class VillagerMenu extends RenderScreen {
   public void setup() {
     setCursor(true);
     trade_slots = null;
+    slots[trade_slot].item = null;
     clearUI();
   }
 
@@ -118,7 +119,7 @@ public class VillagerMenu extends RenderScreen {
       Static.client.clientTransport.leaveMenu();
       return;
     }
-    
+
     if (trade_slots == null) {
       Item[][] offers = Static.client.villager.getOfferings();
       Slot slot;
@@ -141,7 +142,7 @@ public class VillagerMenu extends RenderScreen {
             //tell server trade index
             Static.client.clientTransport.craftSelect((byte)trade_index);
             //update client index
-            Static.client.villager.trade_index = trade_index;
+            Static.client.villager_trade_index = trade_index;
           }});
           y += 36;
           //setup slots to render items
@@ -161,9 +162,9 @@ public class VillagerMenu extends RenderScreen {
         }
       }
     }
-    
+
     renderButtons();
-    
+
     //inventory slots
     int p = 0;
     for(int a=9;a<4*9;a++) {
@@ -188,7 +189,7 @@ public class VillagerMenu extends RenderScreen {
     slots[p].y = my;
 
     renderItems(slots);
-   
+
     if (trade_slots != null) {
       renderItems(trade_slots);
     }

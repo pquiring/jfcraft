@@ -102,6 +102,7 @@ public class Client {
   public Exception error;  //error to quit game
   public int spawnAreaDonePercent;
   public Villager villager;
+  public int villager_trade_index;
 
   public Item hand;  //item in hand in menus
   public Item craft[] = new Item[9], crafted;  //crafting table slots
@@ -752,5 +753,15 @@ public class Client {
     for(int a=0;a<chunks.length;a++) {
       chunkBuilder.add(chunks[a]);
     }
+  }
+
+  public void leaveMenuReset() {
+    chunk = null;
+    bedtime = 0;
+    leavebed = true;
+    container = null;
+    villager = null;
+    villager_trade_index = -1;
+    crafted = null;
   }
 }

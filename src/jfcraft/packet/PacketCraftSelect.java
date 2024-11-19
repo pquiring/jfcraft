@@ -23,7 +23,7 @@ public class PacketCraftSelect extends Packet {
   public void process(Server server, Client client) {
     if (client.villager != null) {
       Static.log("server:villger.trade_index=" + b1);
-      client.villager.trade_index = (int)b1;
+      client.villager_trade_index = (int)b1;
     }
   }
 

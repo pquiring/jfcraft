@@ -20,11 +20,7 @@ public class PacketMenuLeave extends Packet {
 
   //process on client side
   public void process(Client client) {
-    client.bedtime = 0;
-    client.leavebed = true;
-    client.container = null;
-    client.villager = null;
-    client.crafted = null;
+    client.leaveMenuReset();
   }
 
   //process on server side
@@ -42,10 +38,7 @@ public class PacketMenuLeave extends Packet {
         client.serverTransport.setCraftItem(a, client.craft[a]);
       }
       server.updateCrafted(client);
-      client.container = null;
-      client.chunk = null;
-      client.villager = null;
-      client.crafted = null;
+      client.leaveMenuReset();
       client.menu = Client.GAME;
     }
   }
