@@ -513,7 +513,7 @@ public class Game extends RenderScreen {
       glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
 
       depth(false);
-      t_widgets.bind();
+      t_widgets.bind();  //TODO : remove this - use individual images
       o_slots.bindBuffers();
       o_slots.render();
       o_active.bindBuffers();

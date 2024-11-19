@@ -108,6 +108,7 @@ public class ChestMenu extends RenderScreen {
       if (chest.items.length == 6*9) {
         o_menu = createMenu();
       } else {
+        //TODO : can this be removed?
         o_menu = createMenu(0,0, 0,0, 351,34);
         o_menu2 = createMenu(0,34, 0,34 + 3*36, 351,443 - 3*36);
       }

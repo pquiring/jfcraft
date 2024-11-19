@@ -19,8 +19,7 @@ public class SignMenu extends RenderScreen {
     id = Client.SIGN;
   }
 
-  private TextureMap t_board;
-  private RenderBuffers b_board;
+  private Sprite b_board;
 
   public void init() {
     super.init();
@@ -36,8 +35,6 @@ public class SignMenu extends RenderScreen {
     for(int a=0;a<4;a++) {
       addTextField("", 52, 40 + a * fontSize * 2, 408, null, 15, true, 2);
     }
-    t_board = Textures.getTexture("block/oak_planks", 0);
-    b_board = createMenu(76, 40, 0, 0, 360, fontSize * 2 * 4);
   }
 
   public void setup() {
@@ -50,14 +47,16 @@ public class SignMenu extends RenderScreen {
   }
 
   public void render(int width, int height) {
+    if (b_board == null) {
+      b_board = new Sprite("block/oak_planks");
+      b_board.recreate(76, 40, 360, fontSize * 2 * 4, 0,0,1,1);
+    }
     Static.game.render(width, height);
     depth(false);
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, Static.identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
     renderShade();
     setOrtho();
-    t_board.bind();
-    b_board.bindBuffers();
     b_board.render();
     renderButtons();
     renderFields();
