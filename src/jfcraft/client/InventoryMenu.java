@@ -137,7 +137,7 @@ public class InventoryMenu extends RenderScreen {
     o_menu.render();
 
     setOrthoPlayer();
-    setViewportPlayer();
+    setViewportPlayer(52,15+140, 104,140);
 
     depth(true);
 

@@ -229,6 +229,7 @@ public class CreativeMenu extends RenderScreen {
 
     switch (tab) {
       case 1:
+        renderPlayer();
         renderSlots_tab_1();
         break;
       case 7:
@@ -242,7 +243,7 @@ public class CreativeMenu extends RenderScreen {
 
   void renderPlayer() {
     setOrthoPlayer();
-    setViewportPlayer();
+    setViewportPlayer(146,12+86, 64,86);
     depth(true);
     glClear(GL_DEPTH_BUFFER_BIT);
     player.bindTexture();

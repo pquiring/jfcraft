@@ -377,11 +377,7 @@ public abstract class RenderScreen {
     glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, orthoPlayer.m);  //perspective matrix
   }
 
-  public void setViewportPlayer() {
-    float x = 52;
-    float y = 155;
-    float w = 104;
-    float h = 140;
+  public void setViewportPlayer(int x,int y,int w,int h) {
     //left right bottom top near far
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
