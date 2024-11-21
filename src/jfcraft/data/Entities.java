@@ -190,6 +190,7 @@ public class Entities implements SerialCreator {
 
   public SerialClass create(SerialBuffer buffer, EntityBase[] entities) {
     int type = buffer.peekInt(1);
+    if (type >= entities.length) return null;
     EntityBase base = entities[type];
     if (base == null) {
       Static.logTrace("Error:Entity not registered:" + type);

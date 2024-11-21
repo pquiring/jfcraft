@@ -187,7 +187,7 @@ public class BluePrint implements SerialClass, SerialCreator {
   }
 
   public void readInit(int w,int h,int d, World world) {
-    Static.log("initRead:" + w + "," + h + "," + d);
+    Static.log("BluePrint:initRead:" + w + "," + h + "," + d);
     X = w;
     Y = h;
     Z = d;
@@ -227,9 +227,9 @@ public class BluePrint implements SerialClass, SerialCreator {
   }
 
   public void readChunk(Chunk chunk, int sx, int sy, int sz, int dx, int dy, int dz, int w, int h, int d) {
-    Static.log("readChunk ?:" + w + "," + h + "," + d);
-    Static.log("readChunk s:" + sx + "," + sy + "," + sz);
-    Static.log("readChunk d:" + dx + "," + dy + "," + dz);
+    Static.log("BluePrint:readChunk ?:" + w + "," + h + "," + d);
+    Static.log("BluePrint:readChunk s:" + sx + "," + sy + "," + sz);
+    Static.log("BluePrint:readChunk d:" + dx + "," + dy + "," + dz);
 //    synchronized(chunk.lock) {
       for(int y=0;y<h;y++) {
         for(int z=0;z<d;z++) {
@@ -341,9 +341,9 @@ public class BluePrint implements SerialClass, SerialCreator {
   }
 
   public void writeChunk(Chunk chunk, int sx, int sy, int sz, int dx, int dy, int dz, int w, int h, int d) {
-    Static.log("writeChunk ?:" + w + "," + h + "," + d);
-    Static.log("writeChunk s:" + sx + "," + sy + "," + sz);
-    Static.log("writeChunk d:" + dx + "," + dy + "," + dz);
+    Static.log("BluePrint:writeChunk ?:" + w + "," + h + "," + d);
+    Static.log("BluePrint:writeChunk s:" + sx + "," + sy + "," + sz);
+    Static.log("BluePrint:writeChunk d:" + dx + "," + dy + "," + dz);
 //    synchronized(chunk.lock) {
       for(int y=0;y<h;y++) {
         for(int z=0;z<d;z++) {

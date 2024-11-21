@@ -60,9 +60,10 @@ public class Extras implements SerialCreator {
 
   public SerialClass create(SerialBuffer buffer, ExtraBase[] extras) {
     int type = buffer.peekByte(1);
+    if (type >= extras.length) return null;
     ExtraBase base = extras[type];
     if (base == null) {
-      Static.log("Error:Extra not registered:" + type);
+      Static.logTrace("Error:Extra not registered:" + type);
       return null;
     }
     try {

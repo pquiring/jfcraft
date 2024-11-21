@@ -19,6 +19,9 @@ import jfcraft.entity.*;
 import jfcraft.opengl.*;
 
 public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreator {
+
+  public static boolean debug = false;
+
   public int dim,cx,cz;
   //Blocks order : Y Z X
   //char is 16bits unsigned which allows full usage
@@ -1690,9 +1693,16 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     return "Chunk:" + cx + "," + cz;
   }
 
-  private static final byte ver = 1;
+  private static final byte ver = 2;
+  private static final byte min_ver = 2;
 
-  private static final int magic = 0x12345678;
+  private static final int mark_blocks = 0x12345600;
+  private static final int mark_bits = 0x12345601;
+  private static final int mark_lights = 0x12345602;
+  private static final int mark_biomes = 0x12345603;
+  private static final int mark_entities = 0x12345604;
+  private static final int mark_extras = 0x12345605;
+  private static final int mark_end = 0x12345678;
 
   public boolean write(SerialBuffer buffer, boolean file) {
     synchronized(lock) {
@@ -1713,6 +1723,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         buffer.writeInt(readOnly2);
       }
 
+      buffer.writeInt(mark_blocks);
 
       //blocks
       int cnt1 = 0, cnt2 = 0;
@@ -1730,6 +1741,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       if (cnt1 != cnt2) {
         Static.log("Chunk.write() failed : data changed : need locks");
       }
+
+      buffer.writeInt(mark_bits);
+
       //bits
       int cnt3 = 0, cnt4 = 0;
       for(int a=0;a<256;a++) {
@@ -1746,6 +1760,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       if (cnt3 != cnt4) {
         Static.log("Chunk.write() failed : data changed : need locks");
       }
+
+      buffer.writeInt(mark_blocks);
+
       //blocks2
       int cnt5 = 0, cnt6 = 0;
       for(int a=0;a<256;a++) {
@@ -1762,6 +1779,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       if (cnt5 != cnt6) {
         Static.log("Chunk.write() failed : data changed : need locks");
       }
+
+      buffer.writeInt(mark_bits);
+
       //bits2
       int cnt7 = 0, cnt8 = 0;
       for(int a=0;a<256;a++) {
@@ -1778,6 +1798,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       if (cnt7 != cnt8) {
         Static.log("Chunk.write() failed : data changed : need locks");
       }
+
+      buffer.writeInt(mark_lights);
+
       //lights
       int cnt9 = 0, cnt10 = 0;
       for(int a=0;a<256;a++) {
@@ -1795,12 +1818,16 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         Static.log("Chunk.write() failed : data changed : need locks");
       }
 
+      buffer.writeInt(mark_biomes);
+
       //biome data
       buffer.writeBytes(biome);
       buffer.writeFloats(temp);
       buffer.writeFloats(rain);
       buffer.writeFloats(elev);
       buffer.writeFloats(depth);
+
+      buffer.writeInt(mark_entities);
 
       //entities
       int entity_size = entities.size();
@@ -1822,6 +1849,9 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
           ticks.get(a).write(buffer, file);
         }
       }
+
+      buffer.writeInt(mark_extras);
+
       //extra data
       int extra_size = extras.size();
       buffer.writeInt(extra_size);
@@ -1831,7 +1861,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
 
       //future stuff here
 
-      buffer.writeInt(magic);
+      buffer.writeInt(mark_end);
 //      Static.log("chunk.write():" + cx + "," + cz + ":" + entity_size +","+ tick_size + "," + extra_size + ",pos=" + buffer.pos + ",file=" + file);
 //      Static.log("write.cnts:" + cnt1 + "," + cnt3 + "," + cnt5 + "," + cnt7 + "," + cnt9);
     }
@@ -1840,6 +1870,10 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
 
   public boolean read(SerialBuffer buffer, boolean file) {
     byte ver = buffer.readByte();
+    if (ver < min_ver) {
+      Static.log("Chunk:read() : old chunk (data lost)");
+      return false;
+    }
     dim = buffer.readInt();
     cx = buffer.readInt();
     cz = buffer.readInt();
@@ -1857,6 +1891,12 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       }
     }
 
+    int mark = buffer.readInt();
+    if (mark != mark_blocks) {
+      Static.log("Chunk.read() : corruption (blocks)");
+      return false;
+    }
+
     //blocks
     int idx;
     int cnt1 = buffer.readShort();
@@ -1865,6 +1905,13 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       blocks[idx] = new char[16*16];
       buffer.readChars(blocks[idx]);
     }
+
+    mark = buffer.readInt();
+    if (mark != mark_bits) {
+      Static.log("Chunk.read() : corruption (bits)");
+      return false;
+    }
+
     //bits
     int cnt3 = buffer.readShort();
     for(int a=0;a<cnt3;a++) {
@@ -1872,6 +1919,13 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       bits[idx] = new byte[16*16];
       buffer.readBytes(bits[idx]);
     }
+
+    mark = buffer.readInt();
+    if (mark != mark_blocks) {
+      Static.log("Chunk.read() : corruption (blocks2)");
+      return false;
+    }
+
     //blocks2
     int cnt5 = buffer.readShort();
     for(int a=0;a<cnt5;a++) {
@@ -1879,6 +1933,13 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       blocks2[idx] = new char[16*16];
       buffer.readChars(blocks2[idx]);
     }
+
+    mark = buffer.readInt();
+    if (mark != mark_bits) {
+      Static.log("Chunk.read() : corruption (bits2)");
+      return false;
+    }
+
     //bits2
     int cnt7 = buffer.readShort();
     for(int a=0;a<cnt7;a++) {
@@ -1886,6 +1947,13 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       bits2[idx] = new byte[16*16];
       buffer.readBytes(bits2[idx]);
     }
+
+    mark = buffer.readInt();
+    if (mark != mark_lights) {
+      Static.log("Chunk.read() : corruption (lights)");
+      return false;
+    }
+
     //lights
     int cnt9 = buffer.readShort();
     for(int a=0;a<cnt9;a++) {
@@ -1894,12 +1962,24 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       buffer.readBytes(lights[idx]);
     }
 
+    mark = buffer.readInt();
+    if (mark != mark_biomes) {
+      Static.log("Chunk.read() : corruption (biome data)");
+      return false;
+    }
+
     //biome data
     buffer.readBytes(biome);
     buffer.readFloats(temp);
     buffer.readFloats(rain);
     buffer.readFloats(elev);
     buffer.readFloats(depth);
+
+    mark = buffer.readInt();
+    if (mark != mark_entities) {
+      Static.log("Chunk.read() : corruption (entities)");
+      return false;
+    }
 
     //entities
     int entity_size;
@@ -1926,6 +2006,13 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         ticks.add(tick);
       }
     }
+
+    mark = buffer.readInt();
+    if (mark != mark_extras) {
+      Static.log("Chunk.read() : corruption (extras)");
+      return false;
+    }
+
     //extra data
     int extra_size = buffer.readInt();
     for(int a=0;a<extra_size;a++) {
@@ -1940,11 +2027,11 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       //future stuff
     }
 
-    int test = buffer.readInt();
+    mark = buffer.readInt();
 //    Static.log("chunk.read():" + cx + "," + cz + ":" + entity_size +","+ tick_size + "," + extra_size + ",pos=" + buffer.pos + ",len=" + buffer.length + ",file=" + file);
 //    Static.log("read.cnts:" + cnt1 + "," + cnt3 + "," + cnt5 + "," + cnt7 + "," + cnt9);
-    if (test != magic) {
-      Static.logTrace("Chunk corrupt !!!");
+    if (mark != mark_end) {
+      Static.logTrace("Chunk.read() : corruption (end)");
       return false;
     }
     return true;
