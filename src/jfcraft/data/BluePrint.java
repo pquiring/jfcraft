@@ -92,6 +92,8 @@ public class BluePrint implements SerialClass, SerialCreator {
       }
     }
 
+/*
+    //entity IDs are converted in read() already
     int ecnt1 = entityIDs.length;
     int ecnt2 = world.entityMap.size();
     for(int a=0;a<ecnt1;a++) {
@@ -111,6 +113,7 @@ public class BluePrint implements SerialClass, SerialCreator {
       }
     }
 
+    //extra IDs are converted in read() already
     int xcnt1 = extraIDs.length;
     int xcnt2 = world.extraMap.size();
     for(int a=0;a<xcnt1;a++) {
@@ -129,6 +132,7 @@ public class BluePrint implements SerialClass, SerialCreator {
 //        return false;
       }
     }
+*/
 
     //convert block IDs
     for(int y=0;y<Y;y++) {
@@ -154,18 +158,16 @@ public class BluePrint implements SerialClass, SerialCreator {
       }
     }
 
-    //convert extra IDs (and their contents if instanceof ExtraContainer)
+    //convert extra internal IDs (if any)
     int xcnt = extras.size();
     for(int a=0;a<xcnt;a++) {
       ExtraBase extra = extras.get(a);
-      extra.id = extraIDs[extra.id];
       extra.convertIDs(blockIDs, itemIDs);
     }
-    //convert entities (and any items they are carrying)
+    //convert entities internal IDs (if any)
     int ecnt = entities.size();
     for(int a=0;a<ecnt;a++) {
       EntityBase entity = entities.get(a);
-      entity.id = extraIDs[entity.id];
       entity.convertIDs(blockIDs, itemIDs);
     }
 
@@ -862,7 +864,7 @@ public class BluePrint implements SerialClass, SerialCreator {
 
   private static final int magic = 0x12345678;
   private static final int min_ver = 3;
-  private static final int ver = 4;
+  private static final int ver = 3;
 
   public boolean write(SerialBuffer buffer, boolean file) {
     {

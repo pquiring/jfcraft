@@ -245,7 +245,10 @@ public abstract class HumaniodBase extends CreatureBase {
       }
     } else {
       //only send entity active slot
-      items[activeSlot].write(buffer, file);
+      if (items.length > 0) {
+        buffer.writeByte((byte)1);
+        items[activeSlot].write(buffer, file);
+      }
     }
     byte cnt = (byte)armors.length;
     buffer.writeByte(cnt);
@@ -268,9 +271,14 @@ public abstract class HumaniodBase extends CreatureBase {
       }
     } else {
       //only read activeSlot
-      items = new Item[1];
-      items[0] = new Item();
-      items[0].read(buffer, file);
+      int cnt = buffer.readByte();
+      if (cnt > 0) {
+        items = new Item[1];
+        items[0] = new Item();
+        items[0].read(buffer, file);
+      } else {
+        items = new Item[0];
+      }
     }
     int cnt = buffer.readByte();
     armors = new Item[cnt];
