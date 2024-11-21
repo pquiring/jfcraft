@@ -18,6 +18,7 @@ import jfcraft.server.*;
 import jfcraft.entity.*;
 
 public class Chunks {
+  public static boolean debug = true;
   //cache of all chunks
   private HashMap<ChunkKey, Chunk> cache = new HashMap<ChunkKey, Chunk>();
   private static class Lock {};
@@ -105,7 +106,7 @@ public class Chunks {
 
   public synchronized void addChunk(Chunk chunk) {
     ChunkKey key = ChunkKey.alloc(chunk.dim, chunk.cx, chunk.cz);
-//    Static.log("addChunk:" + cid);
+    if (debug) Static.log("addChunk:" + chunk);
     synchronized(lock) {
       Chunk old = cache.get(key);
       if (old != null) {
@@ -268,11 +269,12 @@ public class Chunks {
     key.free();
   }
   private void unlinkChunk(Chunk chunk) {
+    chunk.adjCount = 0;
     //remove all links
-    if (chunk.N != null) {chunk.N.S = null; chunk.N.adjCount--; chunk.N = null;}
-    if (chunk.E != null) {chunk.E.W = null; chunk.E.adjCount--; chunk.E = null;}
-    if (chunk.S != null) {chunk.S.N = null; chunk.S.adjCount--; chunk.S = null;}
-    if (chunk.W != null) {chunk.W.E = null; chunk.W.adjCount--; chunk.W = null;}
+    if (chunk.N != null) {chunk.N.adjCount--; chunk.N.S = null; chunk.N = null;}
+    if (chunk.E != null) {chunk.E.adjCount--; chunk.E.W = null; chunk.E = null;}
+    if (chunk.S != null) {chunk.S.adjCount--; chunk.S.N = null; chunk.S = null;}
+    if (chunk.W != null) {chunk.W.adjCount--; chunk.W.E = null; chunk.W = null;}
     //check corners
     Chunk NE = getChunk(chunk.dim, chunk.cx + 1, chunk.cz - 1);
     if (NE != null) {

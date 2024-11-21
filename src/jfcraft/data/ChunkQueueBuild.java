@@ -65,6 +65,7 @@ public class ChunkQueueBuild extends Thread {
             try {
               chunk.buildBuffers();
             } catch (Exception e) {
+              Static.log(chunk + ":buildBuffers() failed");
               Static.log(e);
             }
             if (chunk.needRelight && Static.debugChunkThreads) {

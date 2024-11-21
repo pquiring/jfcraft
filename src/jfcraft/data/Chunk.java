@@ -74,7 +74,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   public Lock lock = new Lock();
   public RenderDest dest;
   public Matrix mat;
-  public int adjCount;  //# of adj chunks to render (0-6)
+  public int adjCount;  //# of adj chunks to render (0-8)
   public ArrayList<ExtraCrack> cracks = new ArrayList<ExtraCrack>();
 
   //render dest buffers
@@ -1702,6 +1702,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   private static final int mark_biomes = 0x12345603;
   private static final int mark_entities = 0x12345604;
   private static final int mark_extras = 0x12345605;
+  private static final int mark_ticks = 0x12345606;
   private static final int mark_end = 0x12345678;
 
   public boolean write(SerialBuffer buffer, boolean file) {
@@ -1739,7 +1740,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         buffer.writeChars(blocks[a]);
       }
       if (cnt1 != cnt2) {
-        Static.log("Chunk.write() failed : data changed : need locks");
+        Static.log(this + ":write() failed : data changed : need locks");
       }
 
       buffer.writeInt(mark_bits);
@@ -1758,7 +1759,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         buffer.writeBytes(bits[a]);
       }
       if (cnt3 != cnt4) {
-        Static.log("Chunk.write() failed : data changed : need locks");
+        Static.log(this + ":write() failed : data changed : need locks");
       }
 
       buffer.writeInt(mark_blocks);
@@ -1777,7 +1778,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         buffer.writeChars(blocks2[a]);
       }
       if (cnt5 != cnt6) {
-        Static.log("Chunk.write() failed : data changed : need locks");
+        Static.log(this + ":write() failed : data changed : need locks");
       }
 
       buffer.writeInt(mark_bits);
@@ -1796,7 +1797,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         buffer.writeBytes(bits2[a]);
       }
       if (cnt7 != cnt8) {
-        Static.log("Chunk.write() failed : data changed : need locks");
+        Static.log(this + ":write() failed : data changed : need locks");
       }
 
       buffer.writeInt(mark_lights);
@@ -1815,7 +1816,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         buffer.writeBytes(lights[a]);
       }
       if (cnt9 != cnt10) {
-        Static.log("Chunk.write() failed : data changed : need locks");
+        Static.log(this + ":write() failed : data changed : need locks");
       }
 
       buffer.writeInt(mark_biomes);
@@ -1840,15 +1841,6 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         EntityBase entity = entities.get(a);
         entity.write(buffer, file);
       }
-      int tick_size = 0;
-      if (file) {
-        //ticks (client does not need to know)
-        tick_size = ticks.size();
-        buffer.writeInt(tick_size);
-        for(int a=0;a<tick_size;a++) {
-          ticks.get(a).write(buffer, file);
-        }
-      }
 
       buffer.writeInt(mark_extras);
 
@@ -1859,19 +1851,28 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
         extras.get(a).write(buffer, file);
       }
 
+      if (file) {
+        buffer.writeInt(mark_ticks);
+        //ticks (client does not need to know)
+        int tick_size = ticks.size();
+        buffer.writeInt(tick_size);
+        for(int a=0;a<tick_size;a++) {
+          ticks.get(a).write(buffer, file);
+        }
+      }
+
       //future stuff here
 
       buffer.writeInt(mark_end);
-//      Static.log("chunk.write():" + cx + "," + cz + ":" + entity_size +","+ tick_size + "," + extra_size + ",pos=" + buffer.pos + ",file=" + file);
-//      Static.log("write.cnts:" + cnt1 + "," + cnt3 + "," + cnt5 + "," + cnt7 + "," + cnt9);
     }
+    if (debug) Static.log(this + ":write() : Okay");
     return true;
   }
 
   public boolean read(SerialBuffer buffer, boolean file) {
     byte ver = buffer.readByte();
     if (ver < min_ver) {
-      Static.log("Chunk:read() : old chunk (data lost)");
+      Static.log(this + ":read() : old chunk (data lost)");
       return false;
     }
     dim = buffer.readInt();
@@ -1893,7 +1894,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
 
     int mark = buffer.readInt();
     if (mark != mark_blocks) {
-      Static.log("Chunk.read() : corruption (blocks)");
+      Static.log(this + ":read() : corruption (blocks)");
       return false;
     }
 
@@ -1908,7 +1909,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
 
     mark = buffer.readInt();
     if (mark != mark_bits) {
-      Static.log("Chunk.read() : corruption (bits)");
+      Static.log(this + ":read() : corruption (bits)");
       return false;
     }
 
@@ -1922,7 +1923,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
 
     mark = buffer.readInt();
     if (mark != mark_blocks) {
-      Static.log("Chunk.read() : corruption (blocks2)");
+      Static.log(this + ":read() : corruption (blocks2)");
       return false;
     }
 
@@ -1936,7 +1937,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
 
     mark = buffer.readInt();
     if (mark != mark_bits) {
-      Static.log("Chunk.read() : corruption (bits2)");
+      Static.log(this + ":read() : corruption (bits2)");
       return false;
     }
 
@@ -1950,7 +1951,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
 
     mark = buffer.readInt();
     if (mark != mark_lights) {
-      Static.log("Chunk.read() : corruption (lights)");
+      Static.log(this + ":read() : corruption (lights)");
       return false;
     }
 
@@ -1964,7 +1965,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
 
     mark = buffer.readInt();
     if (mark != mark_biomes) {
-      Static.log("Chunk.read() : corruption (biome data)");
+      Static.log(this + ":read() : corruption (biome data)");
       return false;
     }
 
@@ -1977,7 +1978,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
 
     mark = buffer.readInt();
     if (mark != mark_entities) {
-      Static.log("Chunk.read() : corruption (entities)");
+      Static.log(this + ":read() : corruption (entities)");
       return false;
     }
 
@@ -1996,20 +1997,10 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       EntityBase eb = entities.get(a);
       eb.setupLinks(this, file);
     }
-    int tick_size = 0;
-    if (file) {
-      //ticks (client does not need to know)
-      tick_size = buffer.readInt();
-      for(int a=0;a<tick_size;a++) {
-        Tick tick = new Tick();
-        tick.read(buffer, file);
-        ticks.add(tick);
-      }
-    }
 
     mark = buffer.readInt();
     if (mark != mark_extras) {
-      Static.log("Chunk.read() : corruption (extras)");
+      Static.log(this + ":read() : corruption (extras)");
       return false;
     }
 
@@ -2023,17 +2014,31 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       }
     }
 
+    if (file) {
+      mark = buffer.readInt();
+      if (mark != mark_ticks) {
+        Static.log(this + ":read() : corruption (ticks)");
+        return false;
+      }
+      //ticks (client does not need to know)
+      int tick_size = buffer.readInt();
+      for(int a=0;a<tick_size;a++) {
+        Tick tick = new Tick();
+        tick.read(buffer, file);
+        ticks.add(tick);
+      }
+    }
+
     if (ver > 0) {
       //future stuff
     }
 
     mark = buffer.readInt();
-//    Static.log("chunk.read():" + cx + "," + cz + ":" + entity_size +","+ tick_size + "," + extra_size + ",pos=" + buffer.pos + ",len=" + buffer.length + ",file=" + file);
-//    Static.log("read.cnts:" + cnt1 + "," + cnt3 + "," + cnt5 + "," + cnt7 + "," + cnt9);
     if (mark != mark_end) {
-      Static.logTrace("Chunk.read() : corruption (end)");
+      Static.logTrace(this + ":read() : corruption (end)");
       return false;
     }
+    if (debug) Static.log(this + ":read() : Okay");
     return true;
   }
 
