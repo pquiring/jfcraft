@@ -5,7 +5,7 @@ package jfcraft.data;
  * @author pquiring
  */
 
-public abstract class ExtraBase implements SerialClass {
+public abstract class ExtraBase implements SerialClass, Cloneable {
   public byte id;
   public short x,y,z;
 
@@ -34,6 +34,15 @@ public abstract class ExtraBase implements SerialClass {
     y = buffer.readShort();
     z = buffer.readShort();
     return true;
+  }
+
+  public ExtraBase clone() {
+    try {
+      return (ExtraBase)super.clone();
+    } catch (Exception e) {
+      Static.log(e);
+      return null;
+    }
   }
 
   public String toString() {

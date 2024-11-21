@@ -233,4 +233,10 @@ public class Entities implements SerialCreator {
     JFLog.log("Error:Entity not found:" + name);
     return null;
   }
+
+  public EntityBase cloneEntity(String name) {
+    EntityBase eb = getEntity(name);
+    if (eb == null) return null;
+    return eb.clone();
+  }
 }

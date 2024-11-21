@@ -5,7 +5,7 @@ package jfcraft.data;
  * @author pquiring
  */
 
-public class XYZ {
+public class XYZ implements Cloneable {
   public float x,y,z;
   public XYZ() {}
   public XYZ(float x,float y,float z) {
@@ -31,5 +31,13 @@ public class XYZ {
   }
   public String toString() {
     return "{" + x + "," + y + "," + z + "}";
+  }
+  public XYZ clone() {
+    try {
+      return (XYZ)super.clone();
+    } catch (Exception e) {
+      Static.log(e);
+      return null;
+    }
   }
 }

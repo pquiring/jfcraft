@@ -103,4 +103,10 @@ public class Extras implements SerialCreator {
     Static.log("Error:Extra not found:" + name);
     return null;
   }
+
+  public ExtraBase cloneExtra(String name) {
+    ExtraBase eb = getExtra(name);
+    if (eb == null) return null;
+    return eb.clone();
+  }
 }

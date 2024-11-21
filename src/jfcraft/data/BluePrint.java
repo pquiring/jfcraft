@@ -4,8 +4,6 @@ package jfcraft.data;
  * Exported Region (BluePrints).
  *   Similar to .schematic for MC.
  *
- * TODO : Do not store registered ID numbers.  They can change.
- *
  * @author pquiring
  */
 
@@ -269,6 +267,7 @@ public class BluePrint implements SerialClass, SerialCreator {
           if (x >= sx1 && x <= sx2) {
             if (y >= sy1 && y <= sy2) {
               if (z >= sz1 && z <= sz2) {
+                //TODO : use clone() instead
                 buffer.reset();
                 e.write(buffer, true);
                 buffer.rewind();
@@ -298,6 +297,7 @@ public class BluePrint implements SerialClass, SerialCreator {
           if (x >= sx1 && x <= sx2) {
             if (y >= sy1 && y <= sy2) {
               if (z >= sz1 && z <= sz2) {
+                //TODO : use clone() instead
                 buffer.reset();
                 e.write(buffer, true);
                 buffer.rewind();
@@ -378,6 +378,7 @@ public class BluePrint implements SerialClass, SerialCreator {
           if (x >= sx1 && x <= sx2) {
             if (y >= sy1 && y <= sy2) {
               if (z >= sz1 && z <= sz2) {
+                //TODO : use clone() instead
                 buffer.reset();
                 e.write(buffer, true);
                 buffer.rewind();
@@ -418,6 +419,7 @@ public class BluePrint implements SerialClass, SerialCreator {
           if (x >= sx1 && x <= sx2) {
             if (y >= sy1 && y <= sy2) {
               if (z >= sz1 && z <= sz2) {
+                //TODO : use clone() instead
                 buffer.reset();
                 e.write(buffer, true);
                 buffer.rewind();
@@ -1107,7 +1109,7 @@ public class BluePrint implements SerialClass, SerialCreator {
     for(int a=0;a<entity_size;a++) {
       int id = buffer.peekInt(1);
       String name = entityMap.get(id);
-      EntityBase eb = (EntityBase)Static.entities.getEntity(name);
+      EntityBase eb = (EntityBase)Static.entities.cloneEntity(name);
       if (eb == null) {
         Static.log("BluePrint:entity not found:" + name);
         return false;
@@ -1135,7 +1137,7 @@ public class BluePrint implements SerialClass, SerialCreator {
     for(int a=0;a<extra_size;a++) {
       int id = buffer.peekByte(1);
       String name = extraMap.get(id);
-      ExtraBase eb = (ExtraBase)Static.extras.getExtra(name);
+      ExtraBase eb = (ExtraBase)Static.extras.cloneExtra(name);
       if (eb == null) {
         Static.log("BluePrint:extra not found:" + name);
         return false;

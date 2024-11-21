@@ -23,7 +23,7 @@ import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 import static javaforce.gl.GL.*;
 
-public abstract class EntityBase implements EntityHitTest, RenderSource, SerialClass {
+public abstract class EntityBase implements EntityHitTest, RenderSource, SerialClass, Cloneable {
   public XYZ pos = new XYZ();  //position
   public XYZ ang = new XYZ();  //angle
   public XYZ vel = new XYZ();  //velocity
@@ -54,8 +54,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public float jumpPos, jumpStart;  //for debug only I think (max height of last jump)
   public float attackDmg, attackRange;
   public boolean wasInLiquid;
-  private static class Lock {};
-  private Lock lock;
   public boolean offline;  //player only
   public int attackCount, attackDelay;
   public boolean isBlock;
@@ -81,7 +79,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public void init(World world) {
     //init values
     this.world = world;
-    lock = new Lock();
     maxAge = -1;
     if (!isStatic) {
       dirty = true;
@@ -1274,6 +1271,22 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
 
   public boolean isFlying() {
     return mode == MODE_FLYING;
+  }
+
+  public EntityBase clone() {
+    try {
+      EntityBase eb = (EntityBase)super.clone();  //shallow copy
+      //deep copy other fields
+      eb.pos = (XYZ)pos.clone();
+      eb.ang = (XYZ)ang.clone();
+      eb.vel = (XYZ)vel.clone();
+      eb.world = null;
+      eb.target = null;
+      return eb;
+    } catch (Exception e) {
+      Static.log(e);
+      return null;
+    }
   }
 
   public String toString() {
