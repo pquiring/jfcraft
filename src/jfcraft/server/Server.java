@@ -1532,7 +1532,14 @@ public class Server {
       int y1 = Integer.valueOf(p[2]);
       int z1 = Integer.valueOf(p[3]);
       String filename = p[4];
-      BluePrint blueprint = BluePrint.read(Static.getBasePath() + "/blueprints/" + filename + ".blueprint");
+      String path = Static.getBasePath() + "/blueprints/" + filename + ".blueprint";
+      BluePrint blueprint = null;
+      if (new File(path).exists()) {
+        blueprint = BluePrint.read(path);
+      } else {
+        AssetBluePrint assetblueprint = Assets.getBluePrint(filename);
+        blueprint = assetblueprint.blueprint;
+      }
       if (blueprint == null) {
         client.serverTransport.sendMsg("BluePrint not found");
         return;

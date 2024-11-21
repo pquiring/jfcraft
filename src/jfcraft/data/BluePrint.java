@@ -4,6 +4,8 @@ package jfcraft.data;
  * Exported Region (BluePrints).
  *   Similar to .schematic for MC.
  *
+ * TODO : Do not store registered ID numbers.  They can change.
+ *
  * @author pquiring
  */
 
@@ -24,6 +26,8 @@ public class BluePrint implements SerialClass, SerialCreator {
   private byte bits2[][];  //dir:4 var:4
 
   public int X, Y, Z;
+
+  public static boolean debug = true;
 
   private static SerialBuffer buffer = new SerialBuffer();
   private static SerialCoder coder = new SerialCoder();
@@ -858,7 +862,7 @@ public class BluePrint implements SerialClass, SerialCreator {
 
   private static final int magic = 0x12345678;
   private static final int min_ver = 3;
-  private static final int ver = 3;
+  private static final int ver = 4;
 
   public boolean write(SerialBuffer buffer, boolean file) {
     {
@@ -978,11 +982,19 @@ public class BluePrint implements SerialClass, SerialCreator {
   public boolean read(SerialBuffer buffer, boolean file) {
     int ver = buffer.readInt();
 
+    if (debug) {
+      Static.log("BluePrint:ver=" + ver);
+    }
+
     if (ver < min_ver) return false;
 
     X = buffer.readInt();
     Y = buffer.readInt();
     Z = buffer.readInt();
+
+    if (debug) {
+      Static.log("BluePrint:size=" + X + "," + Y + "," + Z);
+    }
 
     blocks = new char[Y][];
     bits = new byte[Y][];
@@ -992,6 +1004,9 @@ public class BluePrint implements SerialClass, SerialCreator {
     //read ID assignments
     //blocks
     int blockCnt = buffer.readInt();
+    if (debug) {
+      Static.log("BluePrint:blocks=" + blockCnt);
+    }
     if (blockCnt > 32767) return false;
     for(int a=0;a<blockCnt;a++) {
       int sl = buffer.readByte() & 0xff;
@@ -1001,6 +1016,9 @@ public class BluePrint implements SerialClass, SerialCreator {
     }
     //items
     int itemCnt = buffer.readInt();
+    if (debug) {
+      Static.log("BluePrint:items=" + itemCnt);
+    }
     if (itemCnt > 32767) return false;
     for(int a=0;a<itemCnt;a++) {
       int sl = buffer.readByte() & 0xff;
@@ -1010,6 +1028,9 @@ public class BluePrint implements SerialClass, SerialCreator {
     }
     //entities
     int entityCnt = buffer.readInt();
+    if (debug) {
+      Static.log("BluePrint:entities=" + entityCnt);
+    }
     if (entityCnt > 65535) return false;
     for(int a=0;a<entityCnt;a++) {
       int sl = buffer.readByte() & 0xff;
@@ -1019,6 +1040,9 @@ public class BluePrint implements SerialClass, SerialCreator {
     }
     //extras
     int extraCnt = buffer.readInt();
+    if (debug) {
+      Static.log("BluePrint:extras=" + extraCnt);
+    }
     if (extraCnt > 128) return false;
     for(int a=0;a<extraCnt;a++) {
       int sl = buffer.readByte() & 0xff;
@@ -1027,9 +1051,13 @@ public class BluePrint implements SerialClass, SerialCreator {
       extraMap.add(new String(name));
     }
 
+    //read actual data
     //blocks
     int idx;
     int cnt1 = buffer.readShort();
+    if (debug) {
+      Static.log("BluePrint:block layers=" + cnt1);
+    }
     for(int a=0;a<cnt1;a++) {
       idx = buffer.readByte() & 0xff;
       blocks[idx] = new char[X*Z];
@@ -1037,6 +1065,9 @@ public class BluePrint implements SerialClass, SerialCreator {
     }
     //bits
     int cnt3 = buffer.readShort();
+    if (debug) {
+      Static.log("BluePrint:bits layers=" + cnt3);
+    }
     for(int a=0;a<cnt3;a++) {
       idx = buffer.readByte() & 0xff;
       bits[idx] = new byte[X*Z];
@@ -1044,6 +1075,9 @@ public class BluePrint implements SerialClass, SerialCreator {
     }
     //blocks2
     int cnt5 = buffer.readShort();
+    if (debug) {
+      Static.log("BluePrint:block2 layers=" + cnt5);
+    }
     for(int a=0;a<cnt5;a++) {
       idx = buffer.readByte() & 0xff;
       blocks2[idx] = new char[X*Z];
@@ -1051,36 +1085,64 @@ public class BluePrint implements SerialClass, SerialCreator {
     }
     //bits2
     int cnt7 = buffer.readShort();
+    if (debug) {
+      Static.log("BluePrint:bits2 layers=" + cnt7);
+    }
     for(int a=0;a<cnt7;a++) {
       idx = buffer.readByte() & 0xff;
       bits2[idx] = new byte[X*Z];
       buffer.readBytes(bits2[idx]);
     }
 
+    EntityBase[] entity_array = (EntityBase[])entities.toArray(new EntityBase[0]);
+
     //entities
     int entity_size;
     entity_size = buffer.readInt();
+    if (debug) {
+      Static.log("BluePrint:entities=" + entity_size);
+    }
     for(int a=0;a<entity_size;a++) {
-      EntityBase eb = (EntityBase)Static.entities.create(buffer);
-      if (eb != null) {
-        eb.init(Static.server.world);
-        eb.read(buffer, file);
-        entities.add(eb);
+      int id = buffer.peekInt(1);
+      String name = entityMap.get(id);
+      EntityBase eb = (EntityBase)Static.entities.getEntity(name);
+      if (eb == null) {
+        Static.log("BluePrint:entity not found:" + name);
+        return false;
       }
+      if (debug) {
+        Static.log("BluePrint:entity=" + eb.getName());
+      }
+      eb.init(Static.server.world);
+      eb.read(buffer, file);
+      entities.add(eb);
     }
     entity_size = entities.size();
     for(int a=0;a<entity_size;a++) {
       EntityBase eb = entities.get(a);
 //      eb.setupLinks(this, file);
     }
+
+    ExtraBase[] extra_array = (ExtraBase[])extras.toArray(new ExtraBase[0]);
+
     //extra data
     int extra_size = buffer.readInt();
+    if (debug) {
+      Static.log("BluePrint:extras=" + extra_size);
+    }
     for(int a=0;a<extra_size;a++) {
-      ExtraBase eb = (ExtraBase)Static.extras.create(buffer);
-      if (eb != null) {
-        eb.read(buffer, file);
-        extras.add(eb);
+      int id = buffer.peekByte(1);
+      String name = extraMap.get(id);
+      ExtraBase eb = (ExtraBase)Static.extras.getExtra(name);
+      if (eb == null) {
+        Static.log("BluePrint:extra not found:" + name);
+        return false;
       }
+      if (debug) {
+        Static.log("BluePrint:extra=" + eb.getName());
+      }
+      eb.read(buffer, file);
+      extras.add(eb);
     }
 
     if (ver > 0) {
@@ -1089,6 +1151,7 @@ public class BluePrint implements SerialClass, SerialCreator {
 
     int test = buffer.readInt();
     if (test != magic) {
+      Static.log("BluePrint:magic=0x" + Integer.toString(test, 16) + ":pos=0x" + Integer.toString(buffer.pos, 16));
       Static.log("BluePrint corrupt !!!");
       return false;
     }

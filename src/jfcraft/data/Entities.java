@@ -188,9 +188,9 @@ public class Entities implements SerialCreator {
     return mobs.toArray(new EntityBase[0]);
   }
 
-  public SerialClass create(SerialBuffer buffer) {
+  public SerialClass create(SerialBuffer buffer, EntityBase[] entities) {
     int type = buffer.peekInt(1);
-    EntityBase base = Static.entities.entities[type];
+    EntityBase base = entities[type];
     if (base == null) {
       Static.logTrace("Error:Entity not registered:" + type);
       return null;
@@ -204,6 +204,10 @@ public class Entities implements SerialCreator {
       e.printStackTrace();
       return null;
     }
+  }
+
+  public SerialClass create(SerialBuffer buffer) {
+    return create(buffer, Static.entities.entities);
   }
 
   public EntityBase getEntity(int id) {
@@ -221,11 +225,7 @@ public class Entities implements SerialCreator {
     for(int a=0;a<regEntities.length;a++) {
       EntityBase entity = regEntities[a];
       if (entity == null) continue;
-      String ename = entity.getClass().getName().toLowerCase();
-      int idx = ename.lastIndexOf('.');
-      if (idx != -1) {
-        ename = ename.substring(idx + 1);
-      }
+      String ename = entity.getName().toLowerCase();
       if (ename.equals(name)) {
         return entity;
       }

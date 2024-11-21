@@ -58,9 +58,9 @@ public class Extras implements SerialCreator {
     registerExtra(new ExtraHorse());
   }
 
-  public SerialClass create(SerialBuffer buffer) {
+  public SerialClass create(SerialBuffer buffer, ExtraBase[] extras) {
     int type = buffer.peekByte(1);
-    ExtraBase base = Static.extras.extras[type];
+    ExtraBase base = extras[type];
     if (base == null) {
       Static.log("Error:Extra not registered:" + type);
       return null;
@@ -74,5 +74,33 @@ public class Extras implements SerialCreator {
       e.printStackTrace();
       return null;
     }
+  }
+
+  public SerialClass create(SerialBuffer buffer) {
+    return create(buffer, Static.extras.extras);
+  }
+
+  public ExtraBase getExtra(int id) {
+    for(int a=0;a<extras.length;a++) {
+      if (extras[a].id == id) {
+        return extras[a];
+      }
+    }
+    Static.log("Error:Extra ID not found:" + id);
+    return null;
+  }
+
+  public ExtraBase getExtra(String name) {
+    name = name.toLowerCase();
+    for(int a=0;a<extras.length;a++) {
+      ExtraBase extra = extras[a];
+      if (extra == null) continue;
+      String ename = extra.getName().toLowerCase();
+      if (ename.equals(name)) {
+        return extra;
+      }
+    }
+    Static.log("Error:Extra not found:" + name);
+    return null;
   }
 }

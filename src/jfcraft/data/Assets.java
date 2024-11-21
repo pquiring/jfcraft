@@ -130,6 +130,7 @@ public class Assets {
           model.model = new Model();
           return model;
         case BLUEPRINT:
+          if (true) return null;  //do not return empty blueprint
           AssetBluePrint blueprint = new AssetBluePrint();
           blueprint.name = name;
           blueprint.blueprint = new BluePrint();
