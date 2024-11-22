@@ -1694,7 +1694,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
   }
 
   private static final byte ver = 2;
-  private static final byte min_ver = 2;
+  private static final byte min_ver = 1;
 
   private static final int mark_blocks = 0x12345600;
   private static final int mark_bits = 0x12345601;
@@ -1879,6 +1879,8 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     cx = buffer.readInt();
     cz = buffer.readInt();
 
+    boolean markers = ver >= 2;
+
     if (file) {
       seed = buffer.readLong();
       int bits = buffer.readInt();
@@ -1892,10 +1894,12 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       }
     }
 
-    int mark = buffer.readInt();
-    if (mark != mark_blocks) {
-      Static.log(this + ":read() : corruption (blocks)");
-      return false;
+    if (markers) {
+      int mark = buffer.readInt();
+      if (mark != mark_blocks) {
+        Static.log(this + ":read() : corruption (blocks)");
+        return false;
+      }
     }
 
     //blocks
@@ -1907,10 +1911,12 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       buffer.readChars(blocks[idx]);
     }
 
-    mark = buffer.readInt();
-    if (mark != mark_bits) {
-      Static.log(this + ":read() : corruption (bits)");
-      return false;
+    if (markers) {
+      int mark = buffer.readInt();
+      if (mark != mark_bits) {
+        Static.log(this + ":read() : corruption (bits)");
+        return false;
+      }
     }
 
     //bits
@@ -1921,10 +1927,12 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       buffer.readBytes(bits[idx]);
     }
 
-    mark = buffer.readInt();
-    if (mark != mark_blocks) {
-      Static.log(this + ":read() : corruption (blocks2)");
-      return false;
+    if (markers) {
+      int mark = buffer.readInt();
+      if (mark != mark_blocks) {
+        Static.log(this + ":read() : corruption (blocks2)");
+        return false;
+      }
     }
 
     //blocks2
@@ -1935,10 +1943,12 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       buffer.readChars(blocks2[idx]);
     }
 
-    mark = buffer.readInt();
-    if (mark != mark_bits) {
-      Static.log(this + ":read() : corruption (bits2)");
-      return false;
+    if (markers) {
+      int mark = buffer.readInt();
+      if (mark != mark_bits) {
+        Static.log(this + ":read() : corruption (bits2)");
+        return false;
+      }
     }
 
     //bits2
@@ -1949,10 +1959,12 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       buffer.readBytes(bits2[idx]);
     }
 
-    mark = buffer.readInt();
-    if (mark != mark_lights) {
-      Static.log(this + ":read() : corruption (lights)");
-      return false;
+    if (markers) {
+      int mark = buffer.readInt();
+      if (mark != mark_lights) {
+        Static.log(this + ":read() : corruption (lights)");
+        return false;
+      }
     }
 
     //lights
@@ -1963,10 +1975,12 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       buffer.readBytes(lights[idx]);
     }
 
-    mark = buffer.readInt();
-    if (mark != mark_biomes) {
-      Static.log(this + ":read() : corruption (biome data)");
-      return false;
+    if (markers) {
+      int mark = buffer.readInt();
+      if (mark != mark_biomes) {
+        Static.log(this + ":read() : corruption (biome data)");
+        return false;
+      }
     }
 
     //biome data
@@ -1976,10 +1990,12 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     buffer.readFloats(elev);
     buffer.readFloats(depth);
 
-    mark = buffer.readInt();
-    if (mark != mark_entities) {
-      Static.log(this + ":read() : corruption (entities)");
-      return false;
+    if (markers) {
+      int mark = buffer.readInt();
+      if (mark != mark_entities) {
+        Static.log(this + ":read() : corruption (entities)");
+        return false;
+      }
     }
 
     //entities
@@ -1998,10 +2014,12 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       eb.setupLinks(this, file);
     }
 
-    mark = buffer.readInt();
-    if (mark != mark_extras) {
-      Static.log(this + ":read() : corruption (extras)");
-      return false;
+    if (markers) {
+      int mark = buffer.readInt();
+      if (mark != mark_extras) {
+        Static.log(this + ":read() : corruption (extras)");
+        return false;
+      }
     }
 
     //extra data
@@ -2015,10 +2033,12 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     }
 
     if (file) {
-      mark = buffer.readInt();
-      if (mark != mark_ticks) {
-        Static.log(this + ":read() : corruption (ticks)");
-        return false;
+      if (markers) {
+        int mark = buffer.readInt();
+        if (mark != mark_ticks) {
+          Static.log(this + ":read() : corruption (ticks)");
+          return false;
+        }
       }
       //ticks (client does not need to know)
       int tick_size = buffer.readInt();
@@ -2033,7 +2053,7 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
       //future stuff
     }
 
-    mark = buffer.readInt();
+    int mark = buffer.readInt();
     if (mark != mark_end) {
       Static.logTrace(this + ":read() : corruption (end)");
       return false;

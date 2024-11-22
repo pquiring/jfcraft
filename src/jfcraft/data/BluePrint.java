@@ -866,9 +866,14 @@ public class BluePrint implements SerialClass, SerialCreator {
     Z = newZ;
   }
 
-  private static final int magic = 0x12345678;
   private static final int min_ver = 3;
-  private static final int ver = 3;
+  private static final int ver = 4;
+
+  private static final int mark_blocks = 0x12345600;
+  private static final int mark_bits = 0x12345601;
+  private static final int mark_entities = 0x12345604;
+  private static final int mark_extras = 0x12345605;
+  private static final int mark_end = 0x12345678;
 
   public boolean write(SerialBuffer buffer, boolean file) {
     {
@@ -912,6 +917,8 @@ public class BluePrint implements SerialClass, SerialCreator {
         buffer.writeBytes(name.getBytes());
       }
 
+      buffer.writeInt(mark_blocks);
+
       //blocks
       int cnt1 = 0;
       for(int a=0;a<Y;a++) {
@@ -924,6 +931,9 @@ public class BluePrint implements SerialClass, SerialCreator {
         buffer.writeByte((byte)a);
         buffer.writeChars(blocks[a]);
       }
+
+      buffer.writeInt(mark_bits);
+
       //bits
       int cnt3 = 0;
       for(int a=0;a<Y;a++) {
@@ -936,6 +946,9 @@ public class BluePrint implements SerialClass, SerialCreator {
         buffer.writeByte((byte)a);
         buffer.writeBytes(bits[a]);
       }
+
+      buffer.writeInt(mark_blocks);
+
       //blocks2
       int cnt5 = 0;
       for(int a=0;a<Y;a++) {
@@ -948,6 +961,9 @@ public class BluePrint implements SerialClass, SerialCreator {
         buffer.writeByte((byte)a);
         buffer.writeChars(blocks2[a]);
       }
+
+      buffer.writeInt(mark_bits);
+
       //bits2
       int cnt7 = 0;
       for(int a=0;a<Y;a++) {
@@ -961,6 +977,8 @@ public class BluePrint implements SerialClass, SerialCreator {
         buffer.writeBytes(bits2[a]);
       }
 
+      buffer.writeInt(mark_entities);
+
       //entities
       int entity_size = entities.size();
       buffer.writeInt(entity_size);
@@ -971,6 +989,9 @@ public class BluePrint implements SerialClass, SerialCreator {
       for(int a=0;a<entity_size;a++) {
         entities.get(a).write(buffer, file);
       }
+
+      buffer.writeInt(mark_extras);
+
       //extra data
       int extra_size = extras.size();
       buffer.writeInt(extra_size);
@@ -980,7 +1001,7 @@ public class BluePrint implements SerialClass, SerialCreator {
 
       //future stuff here
 
-      buffer.writeInt(magic);
+      buffer.writeInt(mark_end);
     }
     return true;
   }
@@ -993,6 +1014,8 @@ public class BluePrint implements SerialClass, SerialCreator {
     }
 
     if (ver < min_ver) return false;
+
+    boolean markers = ver >= 4;
 
     X = buffer.readInt();
     Y = buffer.readInt();
@@ -1058,6 +1081,15 @@ public class BluePrint implements SerialClass, SerialCreator {
     }
 
     //read actual data
+
+    if (markers) {
+      int mark = buffer.readInt();
+      if (mark != mark_blocks) {
+        Static.log(this + ":read() : corruption (blocks)");
+        return false;
+      }
+    }
+
     //blocks
     int idx;
     int cnt1 = buffer.readShort();
@@ -1069,6 +1101,15 @@ public class BluePrint implements SerialClass, SerialCreator {
       blocks[idx] = new char[X*Z];
       buffer.readChars(blocks[idx]);
     }
+
+    if (markers) {
+      int mark = buffer.readInt();
+      if (mark != mark_bits) {
+        Static.log(this + ":read() : corruption (bits)");
+        return false;
+      }
+    }
+
     //bits
     int cnt3 = buffer.readShort();
     if (debug) {
@@ -1079,6 +1120,15 @@ public class BluePrint implements SerialClass, SerialCreator {
       bits[idx] = new byte[X*Z];
       buffer.readBytes(bits[idx]);
     }
+
+    if (markers) {
+      int mark = buffer.readInt();
+      if (mark != mark_blocks) {
+        Static.log(this + ":read() : corruption (blocks2)");
+        return false;
+      }
+    }
+
     //blocks2
     int cnt5 = buffer.readShort();
     if (debug) {
@@ -1089,6 +1139,15 @@ public class BluePrint implements SerialClass, SerialCreator {
       blocks2[idx] = new char[X*Z];
       buffer.readChars(blocks2[idx]);
     }
+
+    if (markers) {
+      int mark = buffer.readInt();
+      if (mark != mark_bits) {
+        Static.log(this + ":read() : corruption (bits2)");
+        return false;
+      }
+    }
+
     //bits2
     int cnt7 = buffer.readShort();
     if (debug) {
@@ -1098,6 +1157,14 @@ public class BluePrint implements SerialClass, SerialCreator {
       idx = buffer.readByte() & 0xff;
       bits2[idx] = new byte[X*Z];
       buffer.readBytes(bits2[idx]);
+    }
+
+    if (markers) {
+      int mark = buffer.readInt();
+      if (mark != mark_entities) {
+        Static.log(this + ":read() : corruption (entities)");
+        return false;
+      }
     }
 
     EntityBase[] entity_array = (EntityBase[])entities.toArray(new EntityBase[0]);
@@ -1130,6 +1197,14 @@ public class BluePrint implements SerialClass, SerialCreator {
 //      eb.setupLinks(this, file);
     }
 
+    if (markers) {
+      int mark = buffer.readInt();
+      if (mark != mark_extras) {
+        Static.log(this + ":read() : corruption (extras)");
+        return false;
+      }
+    }
+
     ExtraBase[] extra_array = (ExtraBase[])extras.toArray(new ExtraBase[0]);
 
     //extra data
@@ -1157,10 +1232,9 @@ public class BluePrint implements SerialClass, SerialCreator {
       //future stuff
     }
 
-    int test = buffer.readInt();
-    if (test != magic) {
-      Static.log("BluePrint:magic=0x" + Integer.toString(test, 16) + ":pos=0x" + Integer.toString(buffer.pos, 16));
-      Static.log("BluePrint corrupt !!!");
+    int mark = buffer.readInt();
+    if (mark != mark_end) {
+      Static.log(this + ":read() : corruption (end)");
       return false;
     }
     return true;
