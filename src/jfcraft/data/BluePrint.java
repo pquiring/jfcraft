@@ -46,6 +46,15 @@ public class BluePrint implements SerialClass, SerialCreator {
 
   public String missingID;
 
+  public String filename;
+
+  public BluePrint() {
+  }
+
+  public BluePrint(String filename) {
+    this.filename = filename;
+  }
+
   public boolean convertIDs(World world) {
     char blockIDs[] = new char[blockMap.size()];
     char itemIDs[] = new char[itemMap.size()];
@@ -465,6 +474,7 @@ public class BluePrint implements SerialClass, SerialCreator {
         byte data[] = JF.readAll(fis);
         fis.close();
         BluePrint xchunk = (BluePrint)coder.decodeObject(data, creator, true);
+        xchunk.filename = filename;
         return xchunk;
       } catch (Exception e) {
         e.printStackTrace();
@@ -866,8 +876,8 @@ public class BluePrint implements SerialClass, SerialCreator {
     Z = newZ;
   }
 
-  private static final int min_ver = 3;
   private static final int ver = 4;
+  private static final int min_ver = 3;
 
   private static final int mark_blocks = 0x12345600;
   private static final int mark_bits = 0x12345601;
@@ -1242,5 +1252,9 @@ public class BluePrint implements SerialClass, SerialCreator {
 
   public SerialClass create(SerialBuffer buffer) {
     return new BluePrint();
+  }
+
+  public String toString() {
+    return "BluePrint:" + filename;
   }
 }

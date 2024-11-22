@@ -1446,7 +1446,7 @@ public class Server {
         client.serverTransport.sendMsg("Export failed : area too large (max 256x256x256)");
         return;
       }
-      BluePrint blueprint = new BluePrint();
+      BluePrint blueprint = new BluePrint(filename);
       blueprint.readInit(w, h, d, world);
       //chunk coords
       int cx1 = (int)Math.floor(x1 / 16f);

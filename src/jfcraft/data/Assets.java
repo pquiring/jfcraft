@@ -133,7 +133,7 @@ public class Assets {
           if (true) return null;  //do not return empty blueprint
           AssetBluePrint blueprint = new AssetBluePrint();
           blueprint.name = name;
-          blueprint.blueprint = new BluePrint();
+          blueprint.blueprint = new BluePrint(name);
           return blueprint;
         case MUSIC:
           AssetMusic song = new AssetMusic();
