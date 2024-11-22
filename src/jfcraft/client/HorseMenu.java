@@ -30,6 +30,8 @@ public class HorseMenu extends RenderScreen {
     id = Client.HORSE;
     gui_width = 350;
     gui_height = 330;
+    sprite_width = gui_width;
+    sprite_height = gui_height;
     slots = new Slot[4*9 + 1 + 1 + 15 + 1];  //slots(4*9), saddle(1), armor(1), chest(15), hand(1)
     //inventory blocks
     int p = 0;
@@ -107,15 +109,15 @@ public class HorseMenu extends RenderScreen {
     }
 
     if (o_chest_slots == null) {
-      o_chest_slots = new Sprite("gui/sprites/container/horse/chest_slots", 160,36, 180,108, 0,0, 180,108);
+      o_chest_slots = new Sprite("gui/sprites/container/horse/chest_slots", 160,36, 180,108);
     }
 
     if (o_saddle_slot == null) {
-      o_saddle_slot = new Sprite("gui/sprites/container/horse/armor_slot", 14,36, 36,36, 0,0, 36,36);
+      o_saddle_slot = new Sprite("gui/sprites/container/horse/saddle_slot", 14,36, 36,36);
     }
 
     if (o_armor_slot == null) {
-      o_armor_slot = new Sprite("gui/sprites/container/horse/saddle_slot", 14,70, 36,36, 0,0, 36,36);
+      o_armor_slot = new Sprite("gui/sprites/container/horse/armor_slot", 14,70, 36,36);
     }
 
     ExtraHorse container = (ExtraHorse)Static.client.container;
