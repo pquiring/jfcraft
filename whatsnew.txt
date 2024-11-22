@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+Nov 21, 2024 : v0.35 released!
+  - fixed BluePrint issues
+  - added Flat World option
+  - added creative mode inventory screen
+
 Nov 15, 2024 : v0.34 released!
   - fixed item rendering, horse_v3
   - added Villager and trading (incomplete)
