@@ -18,7 +18,7 @@ import jfcraft.server.*;
 import jfcraft.entity.*;
 
 public class Chunks {
-  public static boolean debug = true;
+  public static boolean debug = false;
   //cache of all chunks
   private HashMap<ChunkKey, Chunk> cache = new HashMap<ChunkKey, Chunk>();
   private static class Lock {};
