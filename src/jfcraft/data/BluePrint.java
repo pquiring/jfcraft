@@ -25,7 +25,7 @@ public class BluePrint implements SerialClass, SerialCreator {
 
   public int X, Y, Z;
 
-  public static boolean debug = true;
+  public static boolean debug = false;
 
   private static SerialBuffer buffer = new SerialBuffer();
   private static SerialCoder coder = new SerialCoder();

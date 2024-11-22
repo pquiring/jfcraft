@@ -248,6 +248,8 @@ public abstract class HumaniodBase extends CreatureBase {
       if (items.length > 0) {
         buffer.writeByte((byte)1);
         items[activeSlot].write(buffer, file);
+      } else {
+        buffer.writeByte((byte)0);
       }
     }
     byte cnt = (byte)armors.length;
