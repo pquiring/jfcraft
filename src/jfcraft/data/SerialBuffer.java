@@ -138,6 +138,22 @@ public class SerialBuffer {
     return LE.getuint32(data, pos + off);
   }
 
+  public void setByte(byte value) {
+    data[pos] = value;
+  }
+
+  public void setByte(byte value, int off) {
+    data[pos + off] = value;
+  }
+
+  public void setInt(int value) {
+    LE.setuint32(data, pos, value);
+  }
+
+  public void setInt(int value, int off) {
+    LE.setuint32(data, pos + off, value);
+  }
+
   public boolean readBoolean() {
     return readByte() == TRUE;
   }

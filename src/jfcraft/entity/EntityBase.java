@@ -1290,6 +1290,6 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   }
 
   public String toString() {
-    return "EntityBase:" + getName();
+    return "EntityBase:" + getName() + ":id=" + id;
   }
 }

@@ -380,9 +380,11 @@ public class BluePrint implements SerialClass, SerialCreator {
               if (z >= sz1 && z <= sz2) {
                 //TODO : use clone() instead
                 buffer.reset();
+                if (debug) Static.log("BluePrint:writeChunk():write entity=" + e);
                 e.write(buffer, true);
                 buffer.rewind();
                 e = (EntityBase)Static.entities.create(buffer);
+                if (debug) Static.log("BluePrint:writeChunk(): read entity=" + e);
                 if (e != null) {
                   e.init(Static.server.world);
                   e.read(buffer, true);
@@ -1114,6 +1116,7 @@ public class BluePrint implements SerialClass, SerialCreator {
         Static.log("BluePrint:entity not found:" + name);
         return false;
       }
+      buffer.setInt(eb.id, 1);  //patch new ID
       if (debug) {
         Static.log("BluePrint:entity=" + eb.getName());
       }
@@ -1142,6 +1145,7 @@ public class BluePrint implements SerialClass, SerialCreator {
         Static.log("BluePrint:extra not found:" + name);
         return false;
       }
+      buffer.setByte(eb.id, 1);  //patch new ID
       if (debug) {
         Static.log("BluePrint:extra=" + eb.getName());
       }
