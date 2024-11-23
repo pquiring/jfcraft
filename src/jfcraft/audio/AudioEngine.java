@@ -27,6 +27,7 @@ public class AudioEngine {
   private AssetMusic songs[] = new AssetMusic[127];
 
   public void registerSound(int idx, AssetAudio audio) {
+    if (audio == null) return;
     sounds[idx] = audio;
     audio.idx = music.soundLoad(audio.samples, -1, -1, -1, -1, 0, 0);
   }
@@ -41,6 +42,7 @@ public class AudioEngine {
     registerSound(SOUND_PIG, Assets.getAudio("pig"));
     registerSound(SOUND_SHEEP, Assets.getAudio("sheep"));
     registerSound(SOUND_ZOMBIE, Assets.getAudio("zombie"));
+    registerSound(SOUND_INTRO, Assets.getAudio("intro"));
     songs[FUR_ELISE] = Assets.getMusic("FurElise");
   }
 
@@ -58,13 +60,22 @@ public class AudioEngine {
     music.soundPlay(sounds[idx].idx, volL, volR, 0);
   }
 
-  public void playMusic(int idx) {
+  public void playMusic(int idx, int vol) {
     if (!Static.optionMusic) return;
     music.load(songs[idx].song);
+    float volL = vol;
+    volL /= 100.0f;
+    float volR = vol;
+    volR /= 100.0f;
+    music.setMasterMusicVolume(volL, volR);
     music.playSong(true);
   }
 
   public void stopMusic() {
     music.stopMusic();
+  }
+
+  public boolean soundExists(int idx) {
+    return sounds[idx] != null;
   }
 }

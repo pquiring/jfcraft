@@ -42,7 +42,7 @@ public class MediaReader implements MediaIO {
     MediaAudioDecoder decoder = media.createAudioDecoder(1, 44100);
     while (true) {
       Packet packet = media.readPacket();
-      if (packet == null) break;
+      if (packet == null || packet.length == 0) break;
       short[] samples = decoder.decode(packet);
       if (samples != null) {
         buffer.append(samples);

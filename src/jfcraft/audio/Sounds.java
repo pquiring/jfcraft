@@ -17,4 +17,5 @@ public class Sounds {
   public static int SOUND_PIG = 7;
   public static int SOUND_SHEEP = 8;
   public static int SOUND_ZOMBIE = 9;
+  public static int SOUND_INTRO = 10;
 }

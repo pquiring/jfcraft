@@ -34,7 +34,11 @@ public class MainMenu extends RenderScreen {
   }
 
   public void setup() {
-    Static.audio.playMusic(Songs.FUR_ELISE);
+    if (Static.audio.soundExists(Sounds.SOUND_INTRO)) {
+      Static.audio.addSound(Sounds.SOUND_INTRO, 1, 50);
+    } else {
+      Static.audio.playMusic(Songs.FUR_ELISE, 10);
+    }
   }
 
   public void init() {

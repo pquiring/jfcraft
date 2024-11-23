@@ -10,6 +10,7 @@ import jfcraft.data.*;
 
 import javaforce.ui.*;
 import javaforce.gl.*;
+import javaforce.media.*;
 
 import jfcraft.opengl.*;
 
@@ -59,6 +60,7 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
       window.setIcon("jfcraft.ico", 16, 16);
     }
     current = window;
+    MediaCoder.init();
     GL.init();
   }
 
