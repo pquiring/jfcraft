@@ -110,4 +110,7 @@ public class BlockFire extends BlockBase {
     chunk.clearBlock2(gx, gy, gz);
     Static.server.broadcastClearBlock2(chunk.dim, x, y, z);
   }
+  public int getPreferredDir() {
+    return B;
+  }
 }

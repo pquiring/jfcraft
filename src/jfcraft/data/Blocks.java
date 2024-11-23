@@ -1164,8 +1164,11 @@ public class Blocks {
           block.createVoxel(var);
         } else {
           Static.data.reset();
-          Static.data.dir[X] = block.getPreferredDir();
+          int dir = block.getPreferredDir();
+          Static.data.dir[X] = dir;
+          Static.data.dir2[X] = dir;
           Static.data.var[X] = block.isVar ? var : 0;
+          Static.data.var2[X] = block.isVar ? var : 0;
           block.buildBuffers(block.bufs[var]);
           block.bufs[var].preferedIdx = block.buffersIdx;
         }
