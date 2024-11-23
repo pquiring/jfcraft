@@ -18,7 +18,6 @@
         <File Id="base.zip" Source="base.zip" />
         <File Id="jfassets.zip" Source="jfassets.zip" />
         <File Id="readme.txt" Source="readme.txt" />
-        <File Id="todo.txt" Source="todo.txt" />
         <File Id="whatsnew.txt" Source="whatsnew.txt" />
         <File Id="jfcraft_client.exe" Source="jfcraft-client.exe" />
         <File Id="jfcraft_server.exe" Source="jfcraft-server.exe" />
