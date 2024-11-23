@@ -392,6 +392,7 @@ public class Client {
         e[a].ctick();
       }
     }
+    Static.client.player.ctick();  //player is NOT in Chunk entity lists
     //do hand item animation
     Item item = player.items[player.activeSlot];
     ItemBase itembase = Static.items.items[item.id];
