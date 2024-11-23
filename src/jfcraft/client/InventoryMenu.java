@@ -112,6 +112,9 @@ public class InventoryMenu extends RenderScreen {
     Static.client.crafted = null;
   }
 
+  private static final int eyes_x = 104;
+  private static final int eyes_y = 52;
+
   public void render(int width, int height) {
     Static.game.render(width, height);
     depth(false);
@@ -144,7 +147,7 @@ public class InventoryMenu extends RenderScreen {
     glClear(GL_DEPTH_BUFFER_BIT);
     player.bindTexture();
     //rotate player to point head towards mouse coords
-    float ey = my - 52;
+    float ey = my - eyes_y;
     ey /= 2.0f;
     if (ey < -45.0f) {
       ey = -45.0f;
@@ -152,7 +155,7 @@ public class InventoryMenu extends RenderScreen {
       ey = 45.0f;
     }
     player.ang.x = ey;
-    float ex = mx - 104;
+    float ex = mx - eyes_x;
     ex /= 2.0f;
     if (ex < -45.0f) {
       ex = -45.0f;

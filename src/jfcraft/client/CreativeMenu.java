@@ -241,6 +241,9 @@ public class CreativeMenu extends RenderScreen {
     }
   }
 
+  private static final int eyes_x = 146 + 32;
+  private static final int eyes_y = 32;
+
   void renderPlayer() {
     setOrthoPlayer();
     setViewportPlayer(146,12+86, 64,86);
@@ -248,7 +251,7 @@ public class CreativeMenu extends RenderScreen {
     glClear(GL_DEPTH_BUFFER_BIT);
     player.bindTexture();
     //rotate player to point head towards mouse coords
-    float ey = my - 52;
+    float ey = my - eyes_y;
     ey /= 2.0f;
     if (ey < -45.0f) {
       ey = -45.0f;
@@ -256,7 +259,7 @@ public class CreativeMenu extends RenderScreen {
       ey = 45.0f;
     }
     player.ang.x = ey;
-    float ex = mx - 104;
+    float ex = mx - eyes_x;
     ex /= 2.0f;
     if (ex < -45.0f) {
       ex = -45.0f;
