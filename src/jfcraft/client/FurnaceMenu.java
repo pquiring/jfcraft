@@ -28,6 +28,8 @@ public class FurnaceMenu extends RenderScreen {
     id = Client.FURNACE;
     gui_width = 350;
     gui_height = 330;
+    sprite_width = 350;
+    sprite_height = 330;
     slots = new Slot[4*9 + 1 + 1 + 1 + 1];  //slots(4*9), fuel(1), input(1), output(1), hand(1)
     //inventory blocks
     int p = 0;
