@@ -36,8 +36,7 @@ public class BlockTrapDoor extends BlockBase {
     if (Static.data.chunk != null) {
       ExtraRedstone er = (ExtraRedstone)Static.data.chunk.getExtra((int)Static.data.x, (int)Static.data.y, (int)Static.data.z, Extras.REDSTONE);
       if (er == null) {
-        Static.log("BlockTrapDoor.buildBuffers():Error:Can not find extra data");
-        return;
+        er = new ExtraRedstone();
       }
       opened = er.active;
     }
