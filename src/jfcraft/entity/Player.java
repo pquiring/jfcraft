@@ -301,7 +301,7 @@ public class Player extends HumaniodBase {
       }
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
-    if (!is_item && scale != 1.0f) {
+    if (!is_item && scale != 1.0f && buf.center != null) {
       mat.addTranslate2(buf.center.x, buf.center.y, buf.center.z);
       mat.addScale(scale, scale, scale);
       mat.addTranslate2(-buf.center.x, -buf.center.y, -buf.center.z);

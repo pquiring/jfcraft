@@ -177,4 +177,43 @@ public class BlockStairs extends BlockBase {
   public int getPreferredDir() {
     return N;
   }
+  public boolean place(Client client, Coords c) {
+    //check if creating corner stairs and change dir as required
+    World world = Static.server.world;
+    char id_n = world.getID(client.player.dim, c.x, c.y, c.z - 1);
+    char id_e = world.getID(client.player.dim, c.x + 1, c.y, c.z);
+    char id_s = world.getID(client.player.dim, c.x, c.y, c.z + 1);
+    char id_w = world.getID(client.player.dim, c.x - 1, c.y, c.z);
+    switch (c.dir_xz) {
+      case N:
+        if (id_e == id) {
+          c.dir_xz = NE2;
+        } else if (id_w == id) {
+          c.dir_xz = NW2;
+        }
+        break;
+      case E:
+        if (id_n == id) {
+          c.dir_xz = NE2;
+        } else if (id_s == id) {
+          c.dir_xz = SE2;
+        }
+        break;
+      case S:
+        if (id_e == id) {
+          c.dir_xz = SE2;
+        } else if (id_w == id) {
+          c.dir_xz = SW2;
+        }
+        break;
+      case W:
+        if (id_n == id) {
+          c.dir_xz = NW2;
+        } else if (id_s == id) {
+          c.dir_xz = SW2;
+        }
+        break;
+    }
+    return super.place(client, c);
+  }
 }
