@@ -23,6 +23,7 @@ public class BlockStairs extends BlockBase {
     isDir = true;
     isDirXZ = true;
     isVar = true;
+    varMask = 0x7;
   }
   public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
@@ -213,6 +214,10 @@ public class BlockStairs extends BlockBase {
           c.dir_xz = SW2;
         }
         break;
+    }
+    if (c.dir_y == A) {
+      //add upper flag to var
+      c.var |= VAR_UPPER;
     }
     return super.place(client, c);
   }
