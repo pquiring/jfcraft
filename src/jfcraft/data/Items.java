@@ -68,6 +68,7 @@ public class Items {
   public static char DIAMOND;
   public static char IRON_INGOT;
   public static char GOLD_INGOT;
+  public static char COPPER_INGOT;
   public static char IRON_SWORD;
   public static char WOOD_SWORD;
   public static char WOOD_SHOVEL;
@@ -233,6 +234,7 @@ public class Items {
     DIAMOND = world.getItemID("DIAMOND");
     IRON_INGOT = world.getItemID("IRON_INGOT");
     GOLD_INGOT = world.getItemID("GOLD_INGOT");
+    COPPER_INGOT = world.getItemID("COPPER_INGOT");
     IRON_SWORD = world.getItemID("IRON_SWORD");
     WOOD_SWORD = world.getItemID("WOOD_SWORD");
     WOOD_SHOVEL = world.getItemID("WOOD_SHOVEL");
@@ -430,6 +432,7 @@ public class Items {
     registerItem(new ItemBase("DIAMOND", new String[]{"Diamond"}, new String[]{"diamond"}));
     registerItem(new ItemBase("IRON_INGOT", new String[]{"Iron Ingot"}, new String[]{"iron_ingot"}));
     registerItem(new ItemBase("GOLD_INGOT", new String[]{"Gold Ingot"}, new String[]{"gold_ingot"}));
+    registerItem(new ItemBase("COPPER_INGOT", new String[]{"Copper Ingot"}, new String[]{"copper_ingot"}));
     registerItem(new ItemBase("IRON_SWORD", new String[]{"Iron Sword"}, new String[]{"iron_sword"}).setWeapon(WEAPON_SWORD).setDmg(7).setTool(TOOL_SWORD).setMaterial(MAT_IRON));
     registerItem(new ItemBase("WOOD_SWORD", new String[]{"Wood Sword"}, new String[]{"wooden_sword"}).setWeapon(WEAPON_SWORD).setFuel(10).setMaterial(MAT_WOOD).setDmg(5).setTool(TOOL_SWORD));
     registerItem(new ItemBase("WOOD_SHOVEL", new String[]{"Wood Shovel"}, new String[]{"wooden_shovel"})

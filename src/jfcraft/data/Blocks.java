@@ -94,6 +94,7 @@ public class Blocks {
   public static char BEDROCK;
   public static char GOLDORE;
   public static char IRONORE;
+  public static char COPPERORE;
   public static char COALORE;
   public static char WOOD;
   public static char LEAVES;
@@ -240,6 +241,7 @@ public class Blocks {
     BEDROCK = world.getBlockID("BEDROCK");
     GOLDORE = world.getBlockID("GOLDORE");
     IRONORE = world.getBlockID("IRONORE");
+    COPPERORE = world.getBlockID("COPPERORE");
     COALORE = world.getBlockID("COALORE");
     WOOD = world.getBlockID("WOOD");
     LEAVES = world.getBlockID("LEAVES");
@@ -467,6 +469,7 @@ public class Blocks {
     registerBlock(new BlockFalling("GRAVEL", new String[] {"Gravel"}, new String[] {"gravel"}).setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
     registerBlock(new BlockOpaque("GOLDORE", new String[] {"Gold Ore"}, new String[] {"gold_ore"}).setBake("GOLD_INGOT").setHardness(3f, TOOL_PICKAXE, CLS_IRON));
     registerBlock(new BlockOpaque("IRONORE", new String[] {"Iron Ore"}, new String[] {"iron_ore"}).setBake("IRON_INGOT").setHardness(3f, TOOL_PICKAXE, CLS_STONE));
+    registerBlock(new BlockOpaque("COPPERORE", new String[] {"Copper Ore"}, new String[] {"copper_ore"}).setBake("COPPER_INGOT").setHardness(3f, TOOL_PICKAXE, CLS_STONE));
     registerBlock(new BlockOpaque("COALORE", new String[] {"Coal Ore"}, new String[] {"coal_ore"}).setDrop("COAL").setHardness(3f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaqueVar("WOOD"
       , new String[] {"Oak Wood", "Spruce Wood", "Birch Wood", "Jungle Wood", "Acacia Wood", "Dark Oak Wood"}

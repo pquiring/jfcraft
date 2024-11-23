@@ -164,7 +164,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
             chunk.river[p] = true;
           }
         }
-        
+
         if (Static.server.world.options.doFlatWorld) {
           elev = Static.SEALEVEL + 1;
         }
@@ -268,6 +268,26 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       c = r.nextInt(2) + 4;
       for(int b=0;b<c;b++) {
         if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.IRONORE, 0);
+        x += r.nextInt(3)-1;
+        if (x < 0) x = 0;
+        if (x > 15) x = 15;
+        y += r.nextInt(3)-1;
+        if (y < 1) y = 1;
+        if (y > Static.SEALEVEL) y = Static.SEALEVEL;
+        z += r.nextInt(3)-1;
+        if (z < 0) z = 0;
+        if (z > 15) z = 15;
+      }
+    }
+
+    //copper
+    for(int a=0;a<16;a++) {
+      x = r.nextInt(16);
+      y = r.nextInt(64)+1;
+      z = r.nextInt(16);
+      c = r.nextInt(2) + 4;
+      for(int b=0;b<c;b++) {
+        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.COPPERORE, 0);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
