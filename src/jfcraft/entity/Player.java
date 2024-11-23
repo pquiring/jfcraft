@@ -165,6 +165,7 @@ public class Player extends HumaniodBase {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);  //rotation to face direction
     scale = Static.data.scale;
+    boolean is_item = false;
     switch (bodyPart) {
       case HEAD:
         mat.addTranslate(0, buf.org.y, 0);
@@ -175,6 +176,7 @@ public class Player extends HumaniodBase {
         break;
       case L_ITEM:
         //shield
+        is_item = true;
         break;
       case L_ARM:
         mat.addTranslate(0, buf.org.y, 0);
@@ -182,6 +184,7 @@ public class Player extends HumaniodBase {
         mat.addTranslate2(0, -buf.org.y, 0);
         break;
       case R_ITEM:
+        is_item = true;
         if (Static.data.isRenderAsEntity) {
           mat.addScale(scale, scale, scale);
         } else if (Static.data.isBlock) {
@@ -298,7 +301,7 @@ public class Player extends HumaniodBase {
       }
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
-    if (false && scale != 1.0f) {
+    if (!is_item && scale != 1.0f) {
       mat.addTranslate2(buf.center.x, buf.center.y, buf.center.z);
       mat.addScale(scale, scale, scale);
       mat.addTranslate2(-buf.center.x, -buf.center.y, -buf.center.z);

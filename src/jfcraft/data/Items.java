@@ -502,87 +502,87 @@ public class Items {
     );
 
     registerItem(new ItemBase("LEATHER_CAP", new String[]{"Leather Cap"}, new String[]{"leather_helmet"}).setArmor(ARMOR_HEAD)
-      .setArmorTextures(new String[] {"models/armor/leather_layer_1", "models/armor/leather_layer_2"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/leather", "entity/equipment/humanoid_leggings/leather"}
         , new float[] {1.2f}
         , new int[][] {{EntityBase.HEAD}}));
     registerItem(new ItemBase("LEATHER_CHEST", new String[]{"Leather Chest"}, new String[]{"leather_chestplate"}).setArmor(ARMOR_CHEST)
-      .setArmorTextures(new String[] {"models/armor/leather_layer_1", "models/armor/leather_layer_2"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/leather", "entity/equipment/humanoid_leggings/leather"}
         , new float[] {1.2f}
         , new int[][] {{EntityBase.BODY, EntityBase.L_ARM, EntityBase.R_ARM}}));
     registerItem(new ItemBase("LEATHER_PANTS", new String[]{"Leather Pants"}, new String[]{"leather_leggings"}).setArmor(ARMOR_LEGS)
-      .setArmorTextures(new String[] {"models/armor/leather_layer_1", "models/armor/leather_layer_2"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/leather", "entity/equipment/humanoid_leggings/leather"}
         , new float[] {1.1f}
         , new int[][] {{EntityBase.BODY, EntityBase.L_LEG, EntityBase.R_LEG}}));
     registerItem(new ItemBase("LEATHER_BOOTS", new String[]{"Leather Boots"}, new String[]{"leather_boots"}).setArmor(ARMOR_FEET)
-      .setArmorTextures(new String[] {"models/armor/leather_layer_1", "models/armor/leather_layer_2"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/leather", "entity/equipment/humanoid_leggings/leather"}
         , new float[] {1.2f}
         , new int[][] {{EntityBase.L_LEG, EntityBase.R_LEG}}));
 
     registerItem(new ItemBase("CHAIN_HELMET", new String[]{"Chainmail Cap"}, new String[]{"chainmail_helmet"}).setArmor(ARMOR_HEAD)
-      .setArmorTextures(new String[] {"models/armor/chainmail_layer_1"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/chainmail"}
         , new float[] {1.2f}
         , new int[][] {{EntityBase.HEAD}}));
     registerItem(new ItemBase("CHAIN_CHEST", new String[]{"Chainmail Chest"}, new String[]{"chainmail_chestplate"}).setArmor(ARMOR_CHEST)
-      .setArmorTextures(new String[] {"models/armor/chainmail_layer_1"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/chainmail"}
         , new float[] {1.2f}
         , new int[][] {{EntityBase.BODY, EntityBase.L_ARM, EntityBase.R_ARM}}));
     registerItem(new ItemBase("CHAIN_PANTS", new String[]{"Chainmail Pants"}, new String[]{"chainmail_leggings"}).setArmor(ARMOR_LEGS)
-      .setArmorTextures(new String[] {"models/armor/chainmail_layer_2"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid_leggings/chainmail"}
         , new float[] {1.1f}
         , new int[][] {{EntityBase.BODY, EntityBase.L_LEG, EntityBase.R_LEG}}));
     registerItem(new ItemBase("CHAIN_BOOTS", new String[]{"Chainmail Boots"}, new String[]{"chainmail_boots"}).setArmor(ARMOR_FEET)
-      .setArmorTextures(new String[] {"models/armor/chainmail_layer_1"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/chainmail"}
         , new float[] {1.2f}
         , new int[][] {{EntityBase.L_LEG, EntityBase.R_LEG}}));
 
     registerItem(new ItemBase("IRON_HELMET", new String[]{"Iron Helmet"}, new String[]{"iron_helmet"}).setArmor(ARMOR_HEAD)
-      .setArmorTextures(new String[] {"models/armor/iron_layer_1"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/iron"}
         , new float[] {1.2f}
         , new int[][] {{EntityBase.HEAD}}));
     registerItem(new ItemBase("IRON_CHEST", new String[]{"Iron Chest"}, new String[]{"iron_chestplate"}).setArmor(ARMOR_CHEST)
-      .setArmorTextures(new String[] {"models/armor/iron_layer_1"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/iron"}
         , new float[] {1.2f}
         , new int[][] {{EntityBase.BODY, EntityBase.L_ARM, EntityBase.R_ARM}}));
     registerItem(new ItemBase("IRON_PANTS", new String[]{"Iron Pants"}, new String[]{"iron_leggings"}).setArmor(ARMOR_LEGS)
-      .setArmorTextures(new String[] {"models/armor/iron_layer_2"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid_leggings/iron"}
         , new float[] {1.1f}
         , new int[][] {{EntityBase.BODY, EntityBase.L_LEG, EntityBase.R_LEG}}));
     registerItem(new ItemBase("IRON_BOOTS", new String[]{"Iron Boots"}, new String[]{"iron_boots"}).setArmor(ARMOR_FEET)
-      .setArmorTextures(new String[] {"models/armor/iron_layer_1"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/iron"}
         , new float[] {1.2f}
         , new int[][] {{EntityBase.L_LEG, EntityBase.R_LEG}}));
 
     registerItem(new ItemBase("DIAMOND_HELMET", new String[]{"Diamond Helmet"}, new String[]{"diamond_helmet"}).setArmor(ARMOR_HEAD)
-      .setArmorTextures(new String[] {"models/armor/diamond_layer_1"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/diamond"}
         , new float[] {1.2f}
         , new int[][] {{EntityBase.HEAD}}));
     registerItem(new ItemBase("DIAMOND_CHEST", new String[]{"Diamond Chest"}, new String[]{"diamond_chestplate"}).setArmor(ARMOR_CHEST)
-      .setArmorTextures(new String[] {"models/armor/diamond_layer_1"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/diamond"}
         , new float[] {1.2f}
         , new int[][] {{EntityBase.BODY, EntityBase.L_ARM, EntityBase.R_ARM}}));
     registerItem(new ItemBase("DIAMOND_PANTS", new String[]{"Diamond Pants"}, new String[]{"diamond_leggings"}).setArmor(ARMOR_LEGS)
-      .setArmorTextures(new String[] {"models/armor/diamond_layer_2"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid_leggings/diamond"}
         , new float[] {1.1f}
         , new int[][] {{EntityBase.BODY, EntityBase.L_LEG, EntityBase.R_LEG}}));
     registerItem(new ItemBase("DIAMOND_BOOTS", new String[]{"Diamond Boots"}, new String[]{"diamond_boots"}).setArmor(ARMOR_FEET)
-      .setArmorTextures(new String[] {"models/armor/diamond_layer_1"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/diamond"}
         , new float[] {1.2f}
         , new int[][] {{EntityBase.L_LEG, EntityBase.R_LEG}}));
 
     registerItem(new ItemBase("GOLD_HELMET", new String[]{"Gold Helmet"}, new String[]{"golden_helmet"}).setArmor(ARMOR_HEAD)
-      .setArmorTextures(new String[] {"models/armor/gold_layer_1"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/gold"}
         , new float[] {1.2f}
         , new int[][] {{EntityBase.HEAD}}));
     registerItem(new ItemBase("GOLD_CHEST", new String[]{"Gold Chest"}, new String[]{"golden_chestplate"}).setArmor(ARMOR_CHEST)
-      .setArmorTextures(new String[] {"models/armor/gold_layer_1"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/gold"}
         , new float[] {1.2f}
         , new int[][] {{EntityBase.BODY, EntityBase.L_ARM, EntityBase.R_ARM}}));
     registerItem(new ItemBase("GOLD_PANTS", new String[]{"Gold Pants"}, new String[]{"golden_leggings"}).setArmor(ARMOR_LEGS)
-      .setArmorTextures(new String[] {"models/armor/gold_layer_2"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid_leggings/gold"}
         , new float[] {1.1f}
         , new int[][] {{EntityBase.BODY, EntityBase.L_LEG, EntityBase.R_LEG}}));
     registerItem(new ItemBase("GOLD_BOOTS", new String[]{"Gold Boots"}, new String[]{"golden_boots"}).setArmor(ARMOR_FEET)
-      .setArmorTextures(new String[] {"models/armor/gold_layer_1"}
+      .setArmorTextures(new String[] {"entity/equipment/humanoid/gold"}
         , new float[] {1.2f}
         , new int[][] {{EntityBase.L_LEG, EntityBase.R_LEG}}));
 

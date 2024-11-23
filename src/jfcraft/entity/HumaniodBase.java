@@ -43,7 +43,7 @@ public abstract class HumaniodBase extends CreatureBase {
   }
 
   public void buildBuffers(RenderDest dest) {
-    //BUG : some derived classes to DOT call this base method
+    //BUG : some derived classes to NOT call this base method
     //transfer data into dest
     for(int a=0;a<body_parts.length;a++) {
       RenderBuffers buf = body_dest.getBuffers(a);
@@ -112,6 +112,7 @@ public abstract class HumaniodBase extends CreatureBase {
     }
     renderArmor();
     //render items
+    Static.data.scale = scale = 1.0f;
     renderItemInHand(getRightItem(), 1.0f, R_ITEM);
     renderItemInHand(getLeftItem(), 1.0f, L_ITEM);
   }
@@ -145,7 +146,7 @@ public abstract class HumaniodBase extends CreatureBase {
       for(int layer=0;layer<layers;layer++) {
         int parts = item.getArmorParts(layer);
         item.bindArmorTexture(layer);
-        scale = item.getArmorScale(layer);
+        Static.data.scale = scale = item.getArmorScale(layer);
         for(int partidx=0;partidx<parts;partidx++) {
           int part = item.getArmorPart(layer, partidx);
           RenderBuffers buf = body_dest.getBuffers(part);
