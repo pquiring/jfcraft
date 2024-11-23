@@ -89,6 +89,14 @@ public class Blocks {
   public static char STONE;
   public static char COBBLESTONE;
   public static char DEEPSLATE;
+  public static char DEEPSLATE_COAL_ORE;
+  public static char DEEPSLATE_IRON_ORE;
+  public static char DEEPSLATE_COPPER_ORE;
+  public static char DEEPSLATE_GOLD_ORE;
+  public static char DEEPSLATE_DIAMOND_ORE;
+  public static char DEEPSLATE_EMERALD_ORE;
+  public static char DEEPSLATE_LAPIS_ORE;
+  public static char DEEPSLATE_REDSTONE_ORE;
   public static char PLANKS;
   public static char SAPLING;
   public static char BEDROCK;
@@ -236,6 +244,14 @@ public class Blocks {
     STONE = world.getBlockID("STONE");
     COBBLESTONE = world.getBlockID("COBBLESTONE");
     DEEPSLATE = world.getBlockID("DEEPSLATE");
+    DEEPSLATE_COAL_ORE = world.getBlockID("DEEPSLATE_COAL_ORE");
+    DEEPSLATE_IRON_ORE = world.getBlockID("DEEPSLATE_IRON_ORE");
+    DEEPSLATE_COPPER_ORE = world.getBlockID("DEEPSLATE_COPPER_ORE");
+    DEEPSLATE_GOLD_ORE = world.getBlockID("DEEPSLATE_GOLD_ORE");
+    DEEPSLATE_DIAMOND_ORE = world.getBlockID("DEEPSLATE_DIAMOND_ORE");
+    DEEPSLATE_EMERALD_ORE = world.getBlockID("DEEPSLATE_EMERALD_ORE");
+    DEEPSLATE_LAPIS_ORE = world.getBlockID("DEEPSLATE_LAPIS_ORE");
+    DEEPSLATE_REDSTONE_ORE = world.getBlockID("DEEPSLATE_REDSTONE_ORE");
     PLANKS = world.getBlockID("PLANKS");
     SAPLING = world.getBlockID("SAPLING");
     BEDROCK = world.getBlockID("BEDROCK");
@@ -432,6 +448,18 @@ public class Blocks {
       .setDrop("COBBLESTONE").setSmooth("STEPSTONE").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("DEEPSLATE", new String[] {"DeepSlate"}, new String[] {"deepslate"})
       .setDrop("AIR").setHardness(3f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("DEEPSLATE_COAL_ORE", new String[] {"DeepSlate Iron Ore"}, new String[] {"deepslate_coal_ore"})
+      .setDrop("COAL").setHardness(3f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("DEEPSLATE_IRON_ORE", new String[] {"DeepSlate Iron Ore"}, new String[] {"deepslate_iron_ore"})
+      .setBake("IRON_INGOT").setHardness(3f, TOOL_PICKAXE, CLS_STONE));
+    registerBlock(new BlockOpaque("DEEPSLATE_GOLD_ORE", new String[] {"DeepSlate Gold Ore"}, new String[] {"deepslate_gold_ore"})
+      .setBake("IRON_INGOT").setHardness(3f, TOOL_PICKAXE, CLS_IRON));
+    registerBlock(new BlockOpaque("DEEPSLATE_EMERALD_ORE", new String[] {"DeepSlate Emerald Ore"}, new String[] {"deepslate_gold_ore"})
+      .setDrop("EMERALD").setHardness(3f, TOOL_PICKAXE, CLS_IRON));
+    registerBlock(new BlockOpaque("DEEPSLATE_LAPIS_ORE", new String[] {"DeepSlate Lapis Ore"}, new String[] {"deepslate_lapis_ore"})
+      .setDrop("LAPIS_LAZULI").setHardness(3f, TOOL_PICKAXE, CLS_IRON));
+    registerBlock(new BlockOpaque("DEEPSLATE_REDSTONE_ORE", new String[] {"DeepSlate RedStone Ore"}, new String[] {"deepslate_redstone_ore"})
+      .setDrop("REDSTONE").setHardness(3f, TOOL_PICKAXE, CLS_IRON));
     registerBlock(new BlockGrass("GRASS", new String[] {"Grass"}, new String[] {"grass_block_top", "grass_block_top", "dirt"})
       .setGreenTopSide().setSupportsPlant().setSmooth("STEPGRASS").setDrop("DIRT").setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
     registerBlock(new BlockGrass("GRASSBANK", new String[] {"Grass"}, new String[] {"grass_block_top", "grass_block_side", "dirt"})
@@ -489,7 +517,7 @@ public class Blocks {
     ).setGreenAllSides().setPerf().setDrop("AIR").setHardness(0.2f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockOpaque("SPONGE", new String[] {"Sponge"}, new String[] {"sponge"}).setHardness(0.6f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockTrans("GLASSBLOCK", new String[] {"Glass Block"}, new String[] {"glass"}).setHardness(0.3f, TOOL_NONE, CLS_NONE));
-    registerBlock(new BlockOpaque("LAPIS_ORE", new String[] {"Lapis Ore"}, new String[] {"lapis_ore"}).setHardness(3f, TOOL_PICKAXE, CLS_STONE));
+    registerBlock(new BlockOpaque("LAPIS_ORE", new String[] {"Lapis Ore"}, new String[] {"lapis_ore"}).setDrop("LAPIS_LAZULI").setHardness(3f, TOOL_PICKAXE, CLS_STONE));
     registerBlock(new BlockOpaque("LAPIS_BLOCK", new String[] {"Lapis Block"}, new String[] {"lapis_block"}).setHardness(3f, TOOL_PICKAXE, CLS_STONE));
     registerBlock(new BlockDispenser("DISPENSER", new String[] {"Dispenser"}
       , new String[] {"dispenser_front", "dispenser_front_vertical", "piston_bottom"}).setHardness(3.5f, TOOL_PICKAXE, CLS_NONE));
@@ -629,7 +657,7 @@ public class Blocks {
     registerBlock(new BlockLever("LEVER", new String[] {"Lever"}, new String[] {"lever", "stone"}).setHardness(0.5f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockPressurePlate("PRESSURE_PLATE", new String[] {"Wood Pressure Plate", "Stone Pressure Plate"}, new String[] {"oak_planks", "stone"}).setHardness(0.5f, TOOL_PICKAXE, CLS_NONE));  //fix me : hardness prefered tool varies
     registerBlock(new BlockOpaque("REDSTONE_ORE", new String[] {"Red Stone Ore"}, new String[] {"redstone_ore"})
-      .setBake("RED_STONE").setHardness(3f, TOOL_PICKAXE, CLS_IRON)
+      .setDrop("RED_STONE").setHardness(3f, TOOL_PICKAXE, CLS_IRON)
     );
     registerBlock(new BlockRedStoneTorch("REDSTONE_TORCH", new String[] {"Red Stone Torch"}, new String[] {"redstone_torch"}));
     registerBlock(new BlockButton("BUTTON", new String[] {"Wood Button", "Stone Button"}, new String[] {"oak_planks", "stone"}).setHardness(0.5f, TOOL_NONE, CLS_NONE));
@@ -713,7 +741,7 @@ public class Blocks {
     registerBlock(new BlockEndFrame("END_PORTAL_FRAME", new String[] {"End Portal"}, new String[] {"end_portal_frame_top", "end_portal_frame_side", "end_stone", "end_portal_frame_eye"}).setHardness(-1f, TOOL_NONE, CLS_NONE));
     registerBlock(new BlockOpaque("END_STONE", new String[] {"End Stone"}, new String[] {"end_stone"}).setHardness(3f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("COCOA", new String[] {"Cocoa", "Cocoa", "Cocoa"}, new String[] {"cocoa_stage0", "cocoa_stage1", "cocoa_stage2"}));  //fix me
-    registerBlock(new BlockOpaque("EMERALD_ORE", new String[] {"Emerald Ore"}, new String[] {"emerald_ore"}).setHardness(3f, TOOL_PICKAXE, CLS_IRON));
+    registerBlock(new BlockOpaque("EMERALD_ORE", new String[] {"Emerald Ore"}, new String[] {"emerald_ore"}).setDrop("EMERALD").setHardness(3f, TOOL_PICKAXE, CLS_IRON));
     registerBlock(new BlockEnderChest("ENDER_CHEST").setHardness(22.5f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockFace("TRIP_HOOK", new String[] {"Trip Line"}, new String[] {"tripwire_hook"}));
     registerBlock(new BlockOpaque("EMERALD_BLOCK", new String[] {"Emerald Block"}, new String[] {"emerald_block"}).setHardness(5f, TOOL_PICKAXE, CLS_IRON));
