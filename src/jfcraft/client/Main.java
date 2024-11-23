@@ -60,7 +60,9 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
       window.setIcon("jfcraft.ico", 16, 16);
     }
     current = window;
-    MediaCoder.init();
+    if (Static.optionMedia) {
+      MediaCoder.init();
+    }
     GL.init();
   }
 
@@ -130,6 +132,7 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
           String value = arg.substring(idx + 1);
           switch (key) {
             case "-music": Static.optionMusic = value.equals("true"); break;
+            case "-media": Static.optionMedia = value.equals("true"); break;
             case "-creative": Settings.current.creativeMode = value.equals("true"); break;
           }
       }

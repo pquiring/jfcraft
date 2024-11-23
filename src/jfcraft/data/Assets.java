@@ -169,6 +169,7 @@ public class Assets {
             audio.samples = wav.samples16;
           }
         } else if (filename.endsWith(".mp3")) {
+          if (!Static.optionMedia) return null;
           MediaReader reader = new MediaReader();
           audio.samples = reader.read(is);
         }

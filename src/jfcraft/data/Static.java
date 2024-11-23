@@ -70,7 +70,8 @@ public class Static {
   public static float debugX;
   public static float debugY;
 
-  public static boolean optionMusic = true;
+  public static boolean optionMusic = true;  //do not play music (for testing)
+  public static boolean optionMedia = true;  //do not load ffmpeg (for testing)
 
   public static ServerInterface iface;
 
