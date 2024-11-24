@@ -48,6 +48,7 @@ public class MediaReader implements MediaIO {
         buffer.append(samples);
       }
     }
+    media.close();
     return buffer.toArray();
   }
 }
