@@ -14,6 +14,8 @@ public class PacketWorldItemSetCount extends Packet {
   public int i1;
   public byte b1;
 
+  public static boolean debug = false;
+
   public PacketWorldItemSetCount() {}
 
   public PacketWorldItemSetCount(byte cmd) {
@@ -34,7 +36,7 @@ public class PacketWorldItemSetCount extends Packet {
       Static.log("Entity not found:" + uid);
       return;
     }
-    Static.log("worlditem.count=" + b1);
+    if (debug) Static.log("worlditem.count=" + b1);
     e.item.count = b1;
   }
 
