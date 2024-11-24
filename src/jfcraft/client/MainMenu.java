@@ -19,6 +19,8 @@ public class MainMenu extends RenderScreen {
   private TextureMap t_menu;
   private RenderBuffers o_menu;
 
+  private int music_channel = -1;
+
   public MainMenu() {
     id = Client.MAIN;
   }
@@ -30,12 +32,17 @@ public class MainMenu extends RenderScreen {
   private void reset() {
     Static.client = null;
     Static.server = null;
-    Static.audio.stopMusic();
+    if (music_channel != -1) {
+      Static.audio.channelStop(music_channel);
+    } else {
+      Static.audio.stopMusic();
+    }
   }
 
   public void setup() {
     if (Static.audio.soundExists(Sounds.SOUND_INTRO)) {
-      Static.audio.addSound(Sounds.SOUND_INTRO, 1, 50);
+      music_channel = Static.audio.soundPlay(Sounds.SOUND_INTRO, 1, 50);
+      Static.log("snd=" + music_channel);
     } else {
       Static.audio.playMusic(Songs.FUR_ELISE, 10);
     }

@@ -168,7 +168,7 @@ public class Assets {
             wav.readAllSamples();
             audio.samples = wav.samples16;
           }
-        } else if (filename.endsWith(".mp3")) {
+        } else if (filename.endsWith(".mp3") || filename.endsWith(".ogg")) {
           if (!Static.optionMedia) return null;
           MediaReader reader = new MediaReader();
           audio.samples = reader.read(is);
@@ -231,9 +231,12 @@ public class Assets {
 
   public static AssetAudio getAudio(String name) {
     String filename;
-    filename = "assets/minecraft/audio/" + name + ".mp3";
+    filename = "assets/minecraft/sounds/" + name + ".ogg";
     if (!exists(filename)) {
-      filename = "assets/minecraft/audio/" + name + ".wav";
+      filename = "assets/minecraft/sounds/" + name + ".mp3";
+      if (!exists(filename)) {
+        filename = "assets/minecraft/sounds/" + name + ".wav";
+      }
     }
     AssetAudio asset = (AssetAudio)getAsset(name, Type.AUDIO, filename);
     return asset;

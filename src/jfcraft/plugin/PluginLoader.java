@@ -33,6 +33,10 @@ public class PluginLoader {
       JFAWT.showError("Error", "Failed to load base.zip");
       System.exit(0);
     }
+    if (!Assets.addZip("audio.zip")) {  //Enhanced audio resource pack
+      JFAWT.showError("Error", "Failed to load audio.zip");
+      System.exit(0);
+    }
     if (!Assets.addZip("jfassets.zip")) {
       JFAWT.showError("Error", "Failed to load jfassets.zip");
       System.exit(0);

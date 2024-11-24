@@ -41,7 +41,7 @@ public class PacketSound extends Packet {
     int vol = 100 - (int)dist;
     if (vol > 100) vol = 100;
     if (vol < 0) return;
-    Static.audio.addSound(idx, freq, vol);
+    Static.audio.soundPlay(idx, freq, vol);
   }
 
   @Override
