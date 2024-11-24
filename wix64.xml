@@ -16,6 +16,7 @@
         <File Id="jfcraft.jar" Source="jfcraft.jar" KeyPath="yes" />
         <File Id="javaforce.jar" Source="javaforce.jar" />
         <File Id="base.zip" Source="base.zip" />
+        <File Id="audio.zip" Source="audio.zip" />
         <File Id="jfassets.zip" Source="jfassets.zip" />
         <File Id="readme.txt" Source="readme.txt" />
         <File Id="whatsnew.txt" Source="whatsnew.txt" />
