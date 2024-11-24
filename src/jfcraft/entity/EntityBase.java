@@ -910,7 +910,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     return v;
   }
 
-  /** Used when placing a block. */
+  /** Used when placing a block if isDir = true. */
   public void getDir(Coords c) {
     c.dir_xz = -1;
     c.dir_y = -1;

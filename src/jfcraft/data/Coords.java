@@ -25,7 +25,12 @@ public class Coords implements Cloneable {
   public float sx,sy,sz;  //selection in AIR just before selecting block/entity
   public int bits;
   public   int var;
-  public   int dir/*side*/, dir_xz, dir_y;  //block dir or player direction
+  public   int dir;
+  public   int dir_xz;
+  public   int dir_y;  //block dir or player direction
+  public   int face;
+  public   int face_xz;
+  public   int face_y;
   public int powerLevel;  //only valid in BlockBase.powerOn()
   public BlockBase block;
   public EntityBase entity;

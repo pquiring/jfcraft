@@ -215,7 +215,7 @@ public class BlockStairs extends BlockBase {
         }
         break;
     }
-    if (c.dir_y == A) {
+    if (c.face_y == A) {
       //add upper flag to var
       c.var |= VAR_UPPER;
     }

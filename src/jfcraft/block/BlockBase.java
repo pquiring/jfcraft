@@ -435,7 +435,7 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   }
   public Item[] drop(Coords c, int var) {
     if (dropID == 0) return new Item[0];
-    return new Item[] {new Item(dropID, isVar && dropVar ? var : 0, dropCount)};
+    return new Item[] {new Item(dropID, isVar && dropVar ? var & varMask : 0, dropCount)};
   }
   public BlockBase setFuel(int heat) {
     super.setFuel(heat);

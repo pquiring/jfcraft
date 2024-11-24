@@ -116,7 +116,7 @@ public abstract class CreatureBase extends EntityBase {
 
   /** Find block or entity in this entities line of sight (ray tracing)
    *
-   * @param tid = block id to find (-1 any solid block)
+   * @param tid = block id to find (-1 any solid block) (-2 any blocks2)
    * @param type = Entity or Selection
    * @param veh = Entity to NOT select
    * @param c = coords to fill in
@@ -241,7 +241,14 @@ public abstract class CreatureBase extends EntityBase {
       c.sz = 0;
     }
 
+    //direction, can be overrided by player direction if isDir : see EntityBase.getDir()
     c.dir = side;
+    c.dir_xz = side;
+    c.dir_y = side;
+    //face of cube (not changed)
+    c.face = side;
+    c.face_xz = side;
+    c.face_y = side;
   }
 
   public void getTarget() {

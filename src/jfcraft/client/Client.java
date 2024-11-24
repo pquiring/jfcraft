@@ -35,7 +35,8 @@ public class Client {
   public ServerTransport serverTransport;
   public ClientTransport clientTransport;
   public Coords selection = new Coords();  //selection under mouse cursor
-  public Coords s1 = new Coords(), s2 = new Coords();  //server side
+  public Coords s1 = new Coords();  //server side (blocks)
+  public Coords s2 = new Coords();  //server side (blocks2)
   public ArrayList<String> chat = new ArrayList<String>();
   public int chatTime;
   public int itemTextTime;

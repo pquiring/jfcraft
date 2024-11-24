@@ -20,35 +20,59 @@ import static jfcraft.entity.EntityBase.*;
 
 public class ItemBase implements RenderSource {
   public char id;
-  public String blockName;
-  public char blockID;  //item id -> block id
-  public String seedPlantedName;
-  public char seedPlantedID;
   public int maxStack = 64;
-  public boolean isDamaged, isTool, isArmor, isFood, isVar, isDir, isDirXZ, isDirFace, isWeapon;
-  public boolean isFuel, canBake, isSeeds, isGreen;
-  public boolean canPlace, canPlaceInWater;
+
+  //item id -> block id when placed
+  public String blockName;
+  public char blockID;  //looked up from blockName
+
+  //item id -> block id when planted
+  public String seedPlantedName;
+  public char seedPlantedID;  //lookup up from seedPlantedName
+
+  public boolean isDamaged;
+  public boolean isTool;
+  public boolean isArmor;
+  public boolean isFood;
+  public boolean isWeapon;
+  public boolean isVar;  //has variations
+  public boolean isFuel;
+  public boolean canBake;
+  public boolean isSeeds;
+  public boolean isGreen;
+  public boolean canPlace;
+  public boolean canPlaceInWater;
   public boolean canUseLiquids;
   public boolean cantGive;  //do not give with /give command
-  public boolean reverseDir;
-  public int tool, weapon, armor, heat;
+
+  public boolean isDir;  //is placed based on angle player is facing (player XYZ) (wood)
+  public boolean isDirXZ;  //is placed based on angle player is facing (player XZ only) (furnace)
+  public boolean isDirFace;  //is placed based on face (face XYZ) (torch)
+  public boolean isDirXZ_FaceY;  //is placed based on angle player is facing (player XZ only) except for A or B (face Y) (stairs)
+  public boolean reverseDir;  //placed on opposite side
+
+  public int tool;
+  public int weapon;
+  public int armor;
+  public int heat;
   public String bakeName;
   public char bakeID;
   public String name;  //base name
-  public String names[], images[];
+  public String names[];
+  public String images[];
   public AssetImage ai[];
   public SubTexture textures[];
   public float attackDmg = 1;
   public boolean useRelease;  //activate on release (bow)
   public int material;
-  public RenderDest bufs[];  //inventory (vars)
+  public RenderDest bufs[];  //inventory (per variant)
   public boolean renderAsEntity;
   public boolean renderAsArmor;
   public boolean renderAsItem;
   public int entityID;
   public float durability = 0.01f;  //good for 100 uses
-  public int varMask = 0xf;
-  public Voxel voxel[];  //items only
+  public int varMask = 0xf;  //variant mask (4 bits)
+  public Voxel voxel[];  //items only (per variant)
 
   //armor info
   public TextureMap armorTextures[];
@@ -548,13 +572,13 @@ public class ItemBase implements RenderSource {
       entity.bindTexture();
     } else {
       if (voxel != null && !Static.data.inventory) {
-        voxel[isVar ? Static.data.var[X] : 0].bindTexture();
+        voxel[isVar ? Static.data.var[X] & varMask : 0].bindTexture();
       } else {
         if (textures.length == 0) {
           Static.logTrace("Error:ItemBase.bindTexture() : no textures");
           return;
         }
-        textures[isVar ? Static.data.var[X] : 0].texture.bind();
+        textures[isVar ? Static.data.var[X] & varMask : 0].texture.bind();
       }
     }
   }
