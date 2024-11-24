@@ -24,6 +24,11 @@
     </zip>
   </target>
 
+  <available property="have_audio" file="audio.zip"/>
+  <target name="get-audio" unless="have_audio" depends="">
+    <download url="http://jfcraft.sourceforge.net/audio.zip" dest="audio.zip"/>
+  </target>
+
   <target name="depjars" depends="depnatives,jar-javaforce">
   </target>
 
@@ -42,7 +47,7 @@
     </zip>
   </target>
 
-  <target name="jar" depends="compile,depjars,jfassets,get-base" description="build jar file">
+  <target name="jar" depends="compile,depjars,jfassets,get-base,get-audio" description="build jar file">
     <!-- Build jar file from class files -->
     <jar destfile="jfcraft.jar" includes="**/*.class" basedir="${build}">
       <fileset dir="." includes="jfcraft.png"/>
