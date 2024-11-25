@@ -33,7 +33,7 @@ public class AudioEngine {
   }
 
   public void registerDefault() {
-    registerSound(SOUND_BREAK, Assets.getAudio("digbreak/stone1"));
+    registerSound(SOUND_BREAK, Assets.getAudio("dig/stone1"));
     registerSound(SOUND_STEP, Assets.getAudio("step/grass1"));
     registerSound(SOUND_GET, Assets.getAudio("get"));
     registerSound(SOUND_DOOR, Assets.getAudio("door"));
