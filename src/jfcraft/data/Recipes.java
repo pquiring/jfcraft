@@ -78,6 +78,7 @@ public class Recipes {
     registerRecipe(new RecipePressurePlate());
     registerRecipe(new RecipeRedstoneTorch());
     registerRecipe(new RecipeButton());
+    registerRecipe(new RecipeSlab());
     registerRecipe(new RecipeFence());
     registerRecipe(new RecipeGate());
     registerRecipe(new RecipeBars());
@@ -354,7 +355,7 @@ public class Recipes {
     }
     return null;
   }
-  
+
   public void take(Item[] items) {
     for(int a=0;a<9;a++) {
       if (items[a].count == 0) continue;

@@ -530,6 +530,12 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     return false;
   }
 
+  /** Sets blocks hardness.
+   *
+   * @param hardness = hardness (high takes longer to break)
+   * @param preferredTool = TOOL_... to break faster
+   * @param cls = CLS_... type of tool material to drop item (else nothing drops)
+   */
   public BlockBase setHardness(float hardness, int preferedTool, int cls) {
     this.hardness = hardness;
     this.preferedTool = preferedTool;
