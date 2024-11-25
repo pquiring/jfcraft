@@ -20,11 +20,11 @@ public class RecipeSlab extends Recipe {
   public Item make(Item items[]) {
     char id = items[0].id;
     byte var = items[0].var;
-    if (id != Blocks.STONE) return null;
+    if (id != Blocks.STONE && id != Blocks.PLANKS) return null;
     if (items[1].id != id) return null;
     if (items[1].var != var) return null;
     if (items[2].id != id) return null;
     if (items[2].var != var) return null;
-    return new Item(Blocks.SLAB, items[0].var, 6);
+    return new Item(Blocks.STONE_SLAB, items[0].var, 6);
   }
 }

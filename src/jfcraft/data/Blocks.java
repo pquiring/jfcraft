@@ -130,7 +130,8 @@ public class Blocks {
   public static char GOLD_BLOCK;
   public static char IRON_BLOCK;
   public static char STONE_VARS;
-  public static char SLAB;
+  public static char STONE_SLAB;
+  public static char WOOD_SLAB;
   public static char BRICK;
   public static char TNT;
   public static char BOOKSHELF;
@@ -285,7 +286,7 @@ public class Blocks {
     GOLD_BLOCK = world.getBlockID("GOLD_BLOCK");
     IRON_BLOCK = world.getBlockID("IRON_BLOCK");
     STONE_VARS = world.getBlockID("STONE_VARS");
-    SLAB = world.getBlockID("SLAB");
+    STONE_SLAB = world.getBlockID("SLAB");
     BRICK = world.getBlockID("BRICK");
     TNT = world.getBlockID("TNT");
     BOOKSHELF = world.getBlockID("BOOKSHELF");
@@ -617,7 +618,11 @@ public class Blocks {
     registerBlock(new BlockX("MUSHROOM_RED", new String[] {"Red Mushroom"}, new String[] {"red_mushroom"}).setShowAsItem().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION));
     registerBlock(new BlockOpaque("GOLD_BLOCK", new String[] {"Gold Block"}, new String[] {"gold_block"}).setHardness(3f, TOOL_PICKAXE, CLS_IRON));
     registerBlock(new BlockOpaque("IRON_BLOCK", new String[] {"Iron Block"}, new String[] {"iron_block"}).setHardness(5f, TOOL_PICKAXE, CLS_STONE));
-    registerBlock(new BlockSlab("SLAB", new String[] {"Slab"}, new String[] {"stone_slab_top", "stone_slab_side"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockSlab("STONE_SLAB", new String[] {"Stone Slab"}, new String[] {"stone_slab_top", "stone_slab_side"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockSlab("WOOD_SLAB"
+      , new String[] {"Oak Wood Slab", "Spruce Wood Slab", "Birch Wood Slab", "Jungle Wood Slab", "Acacia Wood Slab", "Dark Oak Wood Slab"}
+      , new String[] {"oak_planks", "spruce_planks", "birch_planks", "jungle_planks", "acacia_planks", "dark_oak_planks"})
+    .setHardness(2f, TOOL_AXE, CLS_NONE));
     registerBlock(new BlockOpaque("BRICK", new String[] {"Brick"}, new String[] {"bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("TNT", new String[] {"TNT"}, new String[] {"tnt_top", "tnt_side", "tnt_bottom"}));
     registerBlock(new BlockOpaque("BOOKSHELF", new String[] {"Book Shelf"}, new String[] {"bookshelf"}).setHardness(1.5f, TOOL_AXE, CLS_NONE));

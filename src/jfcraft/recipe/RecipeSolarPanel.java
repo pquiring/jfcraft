@@ -24,9 +24,9 @@ public class RecipeSolarPanel extends Recipe {
     if (items[4].id != Items.QUARTZ) return null;
     if (items[5].id != Items.QUARTZ) return null;
 
-    if (items[6].id != Blocks.SLAB) return null;
-    if (items[7].id != Blocks.SLAB) return null;
-    if (items[8].id != Blocks.SLAB) return null;
+    if (items[6].id != Blocks.STONE_SLAB) return null;
+    if (items[7].id != Blocks.STONE_SLAB) return null;
+    if (items[8].id != Blocks.STONE_SLAB) return null;
 
     return new Item(Blocks.SOLAR_PANEL);
   }
