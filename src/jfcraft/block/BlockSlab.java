@@ -2,6 +2,8 @@ package jfcraft.block;
 
 /** Slab
  *
+ * https://minecraft.fandom.com/wiki/Slab
+ *
  * @author pquiring
  */
 
@@ -30,22 +32,23 @@ public class BlockSlab extends BlockBase {
   }
 
   //dir bits
-  private static final int AB = 0x1;
-  private static final int BB = 0x2;
+  private static final int UPPER = 0x1;
+  private static final int LOWER = 0x2;
 
   public void buildBuffers(RenderDest dest) {
     RenderBuffers buf = dest.getBuffers(buffersIdx);
     int dir = Static.data.dir[X];
     if (dir == 0) {
-      dir = BB;  //inventory
+      dir = LOWER;  //inventory
     }
-    if ((dir & AB) != 0) {
-      buildBuffers(model.getObject("UPPER_AB"), buf, textures[0]);
-      buildBuffers(model.getObject("UPPER_SIDES"), buf, textures[1]);
+    int var = Static.data.var[X];
+    if ((dir & UPPER) != 0) {
+      buildBuffers(model.getObject("UPPER_AB"), buf, textures[var]);
+      buildBuffers(model.getObject("UPPER_SIDES"), buf, textures[var]);
     }
-    if ((dir & BB) != 0) {
-      buildBuffers(model.getObject("LOWER_AB"), buf, textures[0]);
-      buildBuffers(model.getObject("LOWER_SIDES"), buf, textures[1]);
+    if ((dir & LOWER) != 0) {
+      buildBuffers(model.getObject("LOWER_AB"), buf, textures[var]);
+      buildBuffers(model.getObject("LOWER_SIDES"), buf, textures[var]);
     }
   }
 
@@ -59,10 +62,10 @@ public class BlockSlab extends BlockBase {
       if (y < 0) y = 1.0f - y;
       if (y >= 0.5f) {
         //place upper
-        if ((dir & AB) != 0) return false;  //already have upper
+        if ((dir & UPPER) != 0) return false;  //already have upper
       } else {
         //place lower
-        if ((dir & BB) != 0) return false;  //already have lower
+        if ((dir & LOWER) != 0) return false;  //already have lower
       }
       return true;
     }
@@ -75,12 +78,12 @@ public class BlockSlab extends BlockBase {
     if (y < 0) y = 1.0f - y;
     if (y >= 0.5f) {
       //place upper
-      if ((dir & AB) != 0) return false;  //already have upper
-      dir |= AB;
+      if ((dir & UPPER) != 0) return false;  //already have upper
+      dir |= UPPER;
     } else {
       //place lower
-      if ((dir & BB) != 0) return false;  //already have lower
-      dir |= BB;
+      if ((dir & LOWER) != 0) return false;  //already have lower
+      dir |= LOWER;
     }
     int bits = Chunk.makeBits(dir, c.var);
     c.chunk.setBlock(c.gx,c.gy,c.gz,id,bits);
@@ -94,10 +97,10 @@ public class BlockSlab extends BlockBase {
     int x1 = 0, x2 = 16;
     int y1 = 8, y2 = 8;
     int z1 = 0, z2 = 16;
-    if ((dir & AB) != 0) {
+    if ((dir & UPPER) != 0) {
       y2 = 16;
     }
-    if ((dir & BB) != 0) {
+    if ((dir & LOWER) != 0) {
       y1 = 0;
     }
     if (dir == 0) {
@@ -111,8 +114,8 @@ public class BlockSlab extends BlockBase {
     int bits = c.chunk.getBits(c.gx, c.gy, c.gz);
     int dir = Chunk.getDir(bits);
     int cnt = 0;
-    if ((dir & AB) != 0) cnt++;
-    if ((dir & BB) != 0) cnt++;
+    if ((dir & UPPER) != 0) cnt++;
+    if ((dir & LOWER) != 0) cnt++;
     return new Item[] {new Item(dropID, var, cnt)};
   }
 }
