@@ -40,11 +40,13 @@ public class MainMenu extends RenderScreen {
   }
 
   public void setup() {
-    if (Static.audio.soundExists(Sounds.SOUND_INTRO)) {
-      music_channel = Static.audio.soundPlay(Sounds.SOUND_INTRO, 1, 50);
-      Static.log("snd=" + music_channel);
-    } else {
-      Static.audio.playMusic(Songs.FUR_ELISE, 10);
+    if (Static.optionMusic) {
+      if (Static.audio.soundExists(Sounds.SOUND_INTRO)) {
+        music_channel = Static.audio.soundPlay(Sounds.SOUND_INTRO, 1, 50);
+        Static.log("snd=" + music_channel);
+      } else {
+        Static.audio.playMusic(Songs.FUR_ELISE, 10);
+      }
     }
   }
 

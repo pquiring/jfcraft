@@ -19,6 +19,6 @@ public class RecipeBrickBlock extends Recipe {
     for(int a=0;a<4;a++) {
       if (items[a].id != Items.BRICK_ITEM) return null;
     }
-    return new Item(Blocks.BRICK);
+    return new Item(Blocks.BRICKS);
   }
 }

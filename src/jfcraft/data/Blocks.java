@@ -89,6 +89,7 @@ public class Blocks {
   public static char STONE;
   public static char COBBLESTONE;
   public static char STONE_BRICKS;
+  public static char BRICKS;
   public static char DEEPSLATE;
   public static char DEEPSLATE_COAL_ORE;
   public static char DEEPSLATE_IRON_ORE;
@@ -130,12 +131,11 @@ public class Blocks {
   public static char MUSHROOM_RED;
   public static char GOLD_BLOCK;
   public static char IRON_BLOCK;
-  public static char STONE_VARS;
   public static char STONE_SLAB;
   public static char COBBLESTONE_SLAB;
   public static char STONE_BRICKS_SLAB;
+  public static char BRICKS_SLAB;
   public static char WOOD_SLAB;
-  public static char BRICK;
   public static char TNT;
   public static char BOOKSHELF;
   public static char OBSIDIAN;
@@ -181,7 +181,7 @@ public class Blocks {
   public static char GATE;
   public static char MYCELIUM;
   public static char LILLYPAD;
-  public static char NETHER_BRICK;
+  public static char NETHER_BRICKS;
   public static char NETHER_FENCE;
   public static char ENCHANTING_TABLE;
   public static char END_PORTAL;
@@ -247,6 +247,7 @@ public class Blocks {
     GRAVEL = world.getBlockID("GRAVEL");
     STONE = world.getBlockID("STONE");
     COBBLESTONE = world.getBlockID("COBBLESTONE");
+    BRICKS = world.getBlockID("BRICKS");
     STONE_BRICKS = world.getBlockID("STONE_BRICKS");
     DEEPSLATE = world.getBlockID("DEEPSLATE");
     DEEPSLATE_COAL_ORE = world.getBlockID("DEEPSLATE_COAL_ORE");
@@ -289,12 +290,11 @@ public class Blocks {
     MUSHROOM_RED = world.getBlockID("MUSHROOM_RED");
     GOLD_BLOCK = world.getBlockID("GOLD_BLOCK");
     IRON_BLOCK = world.getBlockID("IRON_BLOCK");
-    STONE_VARS = world.getBlockID("STONE_VARS");
     STONE_SLAB = world.getBlockID("STONE_SLAB");
     COBBLESTONE_SLAB = world.getBlockID("COBBLESTONE_SLAB");
     STONE_BRICKS_SLAB = world.getBlockID("STONE_BRICKS_SLAB");
+    BRICKS_SLAB = world.getBlockID("BRICKS_SLAB");
     WOOD_SLAB = world.getBlockID("WOOD_SLAB");
-    BRICK = world.getBlockID("BRICK");
     TNT = world.getBlockID("TNT");
     BOOKSHELF = world.getBlockID("BOOKSHELF");
     OBSIDIAN = world.getBlockID("OBSIDIAN");
@@ -340,7 +340,7 @@ public class Blocks {
     GATE = world.getBlockID("GATE");
     MYCELIUM = world.getBlockID("MYCELIUM");
     LILLYPAD = world.getBlockID("LILLYPAD");
-    NETHER_BRICK = world.getBlockID("NETHER_BRICK");
+    NETHER_BRICKS = world.getBlockID("NETHER_BRICKS");
     NETHER_FENCE = world.getBlockID("NETHER_FENCE");
     ENCHANTING_TABLE = world.getBlockID("ENCHANTING_TABLE");
     END_PORTAL = world.getBlockID("END_PORTAL");
@@ -487,6 +487,7 @@ public class Blocks {
       .setHardness(2.0f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("STONE_BRICKS", new String[] {"Stone Bricks"}, new String[] {"stone_bricks"})
       .setDrop("COBBLESTONE").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("BRICKS", new String[] {"Bricks"}, new String[] {"bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaqueVar("PLANKS"
       , new String[] {"Oak Wood Planks", "Spruce Wood Planks", "Birch Wood Planks", "Jungle Wood Planks", "Acacia Wood Planks", "Dark Oak Wood Planks"}
       , new String[] {"oak_planks", "spruce_planks", "birch_planks", "jungle_planks", "acacia_planks", "dark_oak_planks"})
@@ -630,11 +631,11 @@ public class Blocks {
     registerBlock(new BlockSlab("STONE_SLAB", new String[] {"Stone Slab"}, new String[] {"stone"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockSlab("COBBLESTONE_SLAB", new String[] {"Cobble Stone Slab"}, new String[] {"cobblestone"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockSlab("STONE_BRICKS_SLAB", new String[] {"Stone Bricks Slab"}, new String[] {"stone_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockSlab("BRICKS_SLAB", new String[] {"Bricks Slab"}, new String[] {"bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockSlab("WOOD_SLAB"
       , new String[] {"Oak Wood Slab", "Spruce Wood Slab", "Birch Wood Slab", "Jungle Wood Slab", "Acacia Wood Slab", "Dark Oak Wood Slab"}
       , new String[] {"oak_planks", "spruce_planks", "birch_planks", "jungle_planks", "acacia_planks", "dark_oak_planks"})
       .setHardness(2f, TOOL_AXE, CLS_NONE));
-    registerBlock(new BlockOpaque("BRICK", new String[] {"Brick"}, new String[] {"bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("TNT", new String[] {"TNT"}, new String[] {"tnt_top", "tnt_side", "tnt_bottom"}));
     registerBlock(new BlockOpaque("BOOKSHELF", new String[] {"Book Shelf"}, new String[] {"bookshelf"}).setHardness(1.5f, TOOL_AXE, CLS_NONE));
     registerBlock(new BlockObsidian("OBSIDIAN", new String[] {"Obsidian"}, new String[] {"obsidian"}).setHardness(50f, TOOL_PICKAXE, CLS_DIAMOND));
@@ -749,8 +750,8 @@ public class Blocks {
     registerBlock(new BlockStairs("STAIRS_BLOCK", new String[] {"Stairs"}, new String[] {"oak_planks"}));
     registerBlock(new BlockOpaque("MYCELIUM", new String[] {"Mycelium"}, new String[] {"mycelium_top", "mycelium_side", "dirt"}));
     registerBlock(new BlockFace("LILLYPAD", new String[] {"Lilypad"}, new String[] {"lily_pad"}).setGreenAllSides().setShowAsItem().setHardness(0f, TOOL_NONE, CLS_NONE).setDrop("AIR"));
-    registerBlock(new BlockOpaque("NETHER_BRICK", new String[] {"Nether Brick"}, new String[] {"nether_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockOpaque("NETHER_FENCE", new String[] {"Nether Fence"}, new String[] {"nether_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("NETHER_BRICKS", new String[] {"Nether Bricks"}, new String[] {"nether_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockFence("NETHER_FENCE", new String[] {"Nether Fence"}, new String[] {"nether_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockStairs("STAIRS_NETHER", new String[] {"Nether Stairs"}, new String[] {"nether_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("ENCHANTING_TABLE", new String[] {"Enchanting Table"}, new String[] {"enchanting_table_top", "enchanting_table_side", "enchanting_table_bottom"}).setHardness(5f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockEndPortal("END_PORTAL", new String[] {"End Portal"}, new String[] {}).setHardness(-1f, TOOL_NONE, CLS_NONE));

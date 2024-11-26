@@ -29,6 +29,7 @@ public class RecipeSlab extends Recipe {
     if (id == Blocks.STONE) return new Item(Blocks.STONE_SLAB, 0, 6);
     if (id == Blocks.COBBLESTONE) return new Item(Blocks.COBBLESTONE_SLAB, 0, 6);
     if (id == Blocks.STONE_BRICKS) return new Item(Blocks.STONE_BRICKS_SLAB, 0, 6);
+    if (id == Blocks.BRICKS) return new Item(Blocks.BRICKS_SLAB, 0, 6);
     return null;
   }
 }
