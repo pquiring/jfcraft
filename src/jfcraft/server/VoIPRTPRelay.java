@@ -3,6 +3,8 @@ package jfcraft.server;
 import javaforce.*;
 import javaforce.voip.*;
 
+import jfcraft.data.*;
+
 /** Relays RTP packets between calling parties or from one party to local service (VM, IVR). */
 
 public class VoIPRTPRelay implements RTPInterface {
@@ -244,10 +246,10 @@ public class VoIPRTPRelay implements RTPInterface {
           rtp_src.getDefaultChannel().writeRTP(data, off, len);
         }
       } else {
-        JFLog.log("Error: Unknown RTP Packet:" + channel.rtp);
+        Static.log("Error: Unknown RTP Packet:" + channel.rtp);
       }
     } catch (Exception e) {
-      JFLog.log(e);
+      Static.log(e);
     }
   }
 

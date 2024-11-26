@@ -217,7 +217,7 @@ public class Entities implements SerialCreator {
         return entities[a];
       }
     }
-    JFLog.log("Error:Entity ID not found:" + id);
+    Static.log("Error:Entity ID not found:" + id);
     return null;
   }
 
@@ -231,7 +231,7 @@ public class Entities implements SerialCreator {
         return entity;
       }
     }
-    JFLog.log("Error:Entity not found:" + name);
+    Static.log("Error:Entity not found:" + name);
     return null;
   }
 

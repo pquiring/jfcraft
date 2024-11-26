@@ -773,13 +773,13 @@ public class Game extends RenderScreen {
       case KeyCode.VK_F7:
         //dec fov
         fov -= 1.0f;
-        JFLog.log("fov=" + fov);
+        Static.log("fov=" + fov);
         perspective = null;
         break;
       case KeyCode.VK_F8:
         //inc fov
         fov += 1.0f;
-        JFLog.log("fov=" + fov);
+        Static.log("fov=" + fov);
         perspective = null;
         break;
       case '/':
