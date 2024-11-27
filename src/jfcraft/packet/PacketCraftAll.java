@@ -51,7 +51,7 @@ public class PacketCraftAll extends Packet {
       if (craftedFirst == null) return;  //nothing crafted
       client.serverTransport.setHand(client.hand);
       for(byte a=0;a<4*9;a++) {
-        if (client.player.items[a].equals(craftedFirst.id)) {
+        if (client.player.items[a].equals(craftedFirst)) {
           client.serverTransport.setInvItem(a, client.player.items[a]);
         }
       }
