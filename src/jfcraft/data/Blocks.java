@@ -497,7 +497,7 @@ public class Blocks {
       .setBake("IRON_INGOT").setHardness(3f, TOOL_PICKAXE, CLS_STONE));
     registerBlock(new BlockOpaque("DEEPSLATE_GOLD_ORE", new String[] {"DeepSlate Gold Ore"}, new String[] {"deepslate_gold_ore"})
       .setBake("IRON_INGOT").setHardness(3f, TOOL_PICKAXE, CLS_IRON));
-    registerBlock(new BlockOpaque("DEEPSLATE_EMERALD_ORE", new String[] {"DeepSlate Emerald Ore"}, new String[] {"deepslate_gold_ore"})
+    registerBlock(new BlockOpaque("DEEPSLATE_EMERALD_ORE", new String[] {"DeepSlate Emerald Ore"}, new String[] {"deepslate_emerald_ore"})
       .setDrop("EMERALD").setHardness(3f, TOOL_PICKAXE, CLS_IRON));
     registerBlock(new BlockOpaque("DEEPSLATE_LAPIS_ORE", new String[] {"DeepSlate Lapis Ore"}, new String[] {"deepslate_lapis_ore"})
       .setDrop("LAPIS_LAZULI").setHardness(3f, TOOL_PICKAXE, CLS_IRON));
