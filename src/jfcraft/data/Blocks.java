@@ -77,7 +77,6 @@ public class Blocks {
   public static char DIRT;
   public static char GRASS;
   public static char GRASSBANK;
-  public static char WEEDS;
   public static char SNOW;
   public static char WATER;
   public static char LAVA;
@@ -127,6 +126,7 @@ public class Blocks {
   public static char FERN;
   public static char TALLGRASS;
   public static char TALLPLANT;
+  public static char WEEDS;
   public static char DEADBUSH;
   public static char PISTON;
   public static char WOOL;
@@ -236,8 +236,8 @@ public class Blocks {
   public static char RED_STONE;
   public static char WHEAT;
   public static char SOLID;  //solid color block
-  public static char KELPPLANT;
   public static char TEST_ARROW;
+  public static char KELPPLANT;
   public static char SEAWEEDS;
   public static char TALLSEAWEEDS;
 
@@ -246,7 +246,6 @@ public class Blocks {
     DIRT = world.getBlockID("DIRT");
     GRASS = world.getBlockID("GRASS");
     GRASSBANK = world.getBlockID("GRASSBANK");
-    WEEDS = world.getBlockID("WEEDS");
     SNOW = world.getBlockID("SNOW");
     WATER = world.getBlockID("WATER");
     LAVA = world.getBlockID("LAVA");
@@ -259,11 +258,11 @@ public class Blocks {
     COBBLESTONE = world.getBlockID("COBBLESTONE");
     MOSSY_COBBLESTONE = world.getBlockID("MOSSY_COBBLESTONE");
     SMOOTH_STONE = world.getBlockID("SMOOTH_STONE");
-    BRICKS = world.getBlockID("BRICKS");
     STONE_BRICKS = world.getBlockID("STONE_BRICKS");
     MOSSY_STONE_BRICKS = world.getBlockID("MOSSY_STONE_BRICKS");
     CRACKED_STONE_BRICKS = world.getBlockID("CRACKED_STONE_BRICKS");
     CHISELED_STONE_BRICKS = world.getBlockID("CHISELED_STONE_BRICKS");
+    BRICKS = world.getBlockID("BRICKS");
     DEEPSLATE = world.getBlockID("DEEPSLATE");
     DEEPSLATE_COAL_ORE = world.getBlockID("DEEPSLATE_COAL_ORE");
     DEEPSLATE_IRON_ORE = world.getBlockID("DEEPSLATE_IRON_ORE");
@@ -296,6 +295,7 @@ public class Blocks {
     FERN = world.getBlockID("FERN");
     TALLGRASS = world.getBlockID("TALLGRASS");
     TALLPLANT = world.getBlockID("TALLPLANT");
+    WEEDS = world.getBlockID("WEEDS");
     DEADBUSH = world.getBlockID("DEADBUSH");
     PISTON = world.getBlockID("PISTON");
     WOOL = world.getBlockID("WOOL");
@@ -472,6 +472,21 @@ public class Blocks {
 
   public void registerDefault() {
     registerBlock(new BlockAir("AIR"));
+    registerBlock(new BlockDirt("DIRT", new String[] {"Dirt", "Podzol", "Farmland", "Farmland"}
+      , new String[] {
+        "dirt", "dirt", "dirt",
+        "podzol_top", "podzol_side", "dirt",
+        "farmland", "dirt", "dirt",
+        "farmland_moist", "dirt", "dirt"
+      })
+      .setSupportsPlant().setSmooth("STEPDIRT").setVar().setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
+    registerBlock(new BlockGrass("GRASS", new String[] {"Grass"}, new String[] {"grass_block_top", "grass_block_top", "dirt"})
+      .setGreenTopSide().setSupportsPlant().setSmooth("STEPGRASS").setDrop("DIRT").setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
+    registerBlock(new BlockGrass("GRASSBANK", new String[] {"Grass"}, new String[] {"grass_block_top", "grass_block_side", "dirt"})
+      .setGreenTop().setSupportsPlant().setDrop("DIRT").setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
+    registerBlock(new BlockCarpet("SNOW", new String[] {"Snow"}, new String[] {"snow"})
+      .setDrop("AIR").setSupported().setBlocks2().setCanReplace().setHardness(0.2f, TOOL_SHOVEL, CLS_NONE)
+    );
     registerBlock(new BlockOpaque("STONE", new String[] {"Stone"}, new String[] {"stone"})
       .setDrop("COBBLESTONE").setSmooth("STEPSTONE").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("DEEPSLATE", new String[] {"DeepSlate"}, new String[] {"deepslate"})
@@ -488,21 +503,6 @@ public class Blocks {
       .setDrop("LAPIS_LAZULI").setHardness(3f, TOOL_PICKAXE, CLS_IRON));
     registerBlock(new BlockOpaque("DEEPSLATE_REDSTONE_ORE", new String[] {"DeepSlate RedStone Ore"}, new String[] {"deepslate_redstone_ore"})
       .setDrop("REDSTONE").setHardness(3f, TOOL_PICKAXE, CLS_IRON));
-    registerBlock(new BlockGrass("GRASS", new String[] {"Grass"}, new String[] {"grass_block_top", "grass_block_top", "dirt"})
-      .setGreenTopSide().setSupportsPlant().setSmooth("STEPGRASS").setDrop("DIRT").setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
-    registerBlock(new BlockGrass("GRASSBANK", new String[] {"Grass"}, new String[] {"grass_block_top", "grass_block_side", "dirt"})
-      .setGreenTop().setSupportsPlant().setDrop("DIRT").setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
-    registerBlock(new BlockCarpet("SNOW", new String[] {"Snow"}, new String[] {"snow"})
-      .setDrop("AIR").setSupported().setBlocks2().setCanReplace().setHardness(0.2f, TOOL_SHOVEL, CLS_NONE)
-    );
-    registerBlock(new BlockDirt("DIRT", new String[] {"Dirt", "Podzol", "Farmland", "Farmland"}
-      , new String[] {
-        "dirt", "dirt", "dirt",
-        "podzol_top", "podzol_side", "dirt",
-        "farmland", "dirt", "dirt",
-        "farmland_moist", "dirt", "dirt"
-      })
-      .setSupportsPlant().setSmooth("STEPDIRT").setVar().setHardness(0.6f, TOOL_SHOVEL, CLS_NONE));
     registerBlock(new BlockOpaque("COBBLESTONE", new String[] {"Cobblestone"}, new String[] {"cobblestone"})
       .setHardness(2.0f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("MOSSY_COBBLESTONE", new String[] {"Mossy Cobblestone"}, new String[] {"mossy_cobblestone"})
