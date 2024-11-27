@@ -41,14 +41,19 @@ public class BlockSlab extends BlockBase {
     if (dir == 0) {
       dir = LOWER;  //inventory
     }
-    int var = Static.data.var[X];
+    int var_ab = Static.data.var[X];
+    int var_sides = var_ab;
+    if (names.length == 1 && images.length == 2) {
+      var_ab = 0;
+      var_sides = 1;
+    }
     if ((dir & UPPER) != 0) {
-      buildBuffers(model.getObject("UPPER_AB"), buf, textures[var]);
-      buildBuffers(model.getObject("UPPER_SIDES"), buf, textures[var]);
+      buildBuffers(model.getObject("UPPER_AB"), buf, textures[var_ab]);
+      buildBuffers(model.getObject("UPPER_SIDES"), buf, textures[var_sides]);
     }
     if ((dir & LOWER) != 0) {
-      buildBuffers(model.getObject("LOWER_AB"), buf, textures[var]);
-      buildBuffers(model.getObject("LOWER_SIDES"), buf, textures[var]);
+      buildBuffers(model.getObject("LOWER_AB"), buf, textures[var_ab]);
+      buildBuffers(model.getObject("LOWER_SIDES"), buf, textures[var_sides]);
     }
   }
 

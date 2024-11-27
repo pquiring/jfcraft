@@ -89,6 +89,7 @@ public class Blocks {
   public static char STONE;
   public static char COBBLESTONE;
   public static char MOSSY_COBBLESTONE;
+  public static char SMOOTH_STONE;
   public static char STONE_BRICKS;
   public static char MOSSY_STONE_BRICKS;
   public static char CRACKED_STONE_BRICKS;
@@ -138,6 +139,7 @@ public class Blocks {
   public static char STONE_SLAB;
   public static char COBBLESTONE_SLAB;
   public static char MOSSY_COBBLESTONE_SLAB;
+  public static char SMOOTH_STONE_SLAB;
   public static char STONE_BRICKS_SLAB;
   public static char MOSSY_STONE_BRICKS_SLAB;
   public static char CRACKED_STONE_BRICKS_SLAB;
@@ -256,6 +258,7 @@ public class Blocks {
     STONE = world.getBlockID("STONE");
     COBBLESTONE = world.getBlockID("COBBLESTONE");
     MOSSY_COBBLESTONE = world.getBlockID("MOSSY_COBBLESTONE");
+    SMOOTH_STONE = world.getBlockID("SMOOTH_STONE");
     BRICKS = world.getBlockID("BRICKS");
     STONE_BRICKS = world.getBlockID("STONE_BRICKS");
     MOSSY_STONE_BRICKS = world.getBlockID("MOSSY_STONE_BRICKS");
@@ -305,6 +308,7 @@ public class Blocks {
     STONE_SLAB = world.getBlockID("STONE_SLAB");
     COBBLESTONE_SLAB = world.getBlockID("COBBLESTONE_SLAB");
     MOSSY_COBBLESTONE_SLAB = world.getBlockID("MOSSY_COBBLESTONE_SLAB");
+    SMOOTH_STONE_SLAB = world.getBlockID("SMOOTH_STONE_SLAB");
     STONE_BRICKS_SLAB = world.getBlockID("STONE_BRICKS_SLAB");
     MOSSY_STONE_BRICKS_SLAB = world.getBlockID("MOSSY_STONE_BRICKS_SLAB");
     CRACKED_STONE_BRICKS_SLAB = world.getBlockID("CRACKED_STONE_BRICKS_SLAB");
@@ -503,6 +507,8 @@ public class Blocks {
       .setHardness(2.0f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("MOSSY_COBBLESTONE", new String[] {"Mossy Cobblestone"}, new String[] {"mossy_cobblestone"})
       .setHardness(2.0f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("SMOOTH_STONE", new String[] {"Smooth Stone"}, new String[] {"smooth_stone"})
+      .setHardness(2.0f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("STONE_BRICKS", new String[] {"Stone Bricks"}, new String[] {"stone_bricks"})
       .setDrop("COBBLESTONE").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("MOSSY_STONE_BRICKS", new String[] {"Mossy Stone Bricks"}, new String[] {"mossy_stone_bricks"})
@@ -655,6 +661,7 @@ public class Blocks {
     registerBlock(new BlockSlab("STONE_SLAB", new String[] {"Stone Slab"}, new String[] {"stone"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockSlab("COBBLESTONE_SLAB", new String[] {"Cobblestone Slab"}, new String[] {"cobblestone"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockSlab("MOSSY_COBBLESTONE_SLAB", new String[] {"Mossy Cobblestone Slab"}, new String[] {"mossy_cobblestone"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockSlab("SMOOTH_STONE_SLAB", new String[] {"Smooth Stone Slab"}, new String[] {"smooth_stone", "smooth_stone_slab_side"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockSlab("STONE_BRICKS_SLAB", new String[] {"Stone Bricks Slab"}, new String[] {"stone_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockSlab("MOSSY_STONE_BRICKS_SLAB", new String[] {"Mossy Stone Bricks Slab"}, new String[] {"mossy_stone_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockSlab("CRACKED_STONE_BRICKS_SLAB", new String[] {"Cracked Stone Bricks Slab"}, new String[] {"cracked_stone_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
