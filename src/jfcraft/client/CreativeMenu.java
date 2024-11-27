@@ -341,7 +341,7 @@ public class CreativeMenu extends RenderScreen {
   public void keyPressed(int vk) {
     super.keyPressed(vk);
     switch (vk) {
-      case KeyCode.VK_E:
+//      case KeyCode.VK_E:
       case KeyCode.VK_ESCAPE:
         Static.client.clientTransport.leaveMenu();
         leaveMenu();
@@ -354,7 +354,6 @@ public class CreativeMenu extends RenderScreen {
   }
 
   public void mousePressed(int x, int y, int button) {
-    super.mousePressed(x, y, button);  //search box, scroll bar
     if (x < 0 || x > gui_width) return;
     Static.log("pressed:" + x + "," + y);
     if (y < 0) {
@@ -378,8 +377,13 @@ public class CreativeMenu extends RenderScreen {
       //not in use yet
     } else {
       switch (tab) {
-        case 1: mousePressed_tab_1(x,y,button); break;
-        case 7: mousePressed_tab_7(x,y,button); break;
+        case 1:
+          mousePressed_tab_1(x,y,button);
+          break;
+        case 7:
+          super.mousePressed(x, y, button);  //search box, scroll bar
+          mousePressed_tab_7(x,y,button);
+          break;
       }
     }
   }
