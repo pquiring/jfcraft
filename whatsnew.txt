@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+Nov 27, 2024 : v0.37 released!
+  - added ogg support for audio
+  - added audio.zip (Enhanced audio resource pack)
+  - added more blocks (and slabs)
+  - more bug fixes
+
 Nov 23, 2024 : v0.36 released!
   - added new music to main menu
   - fixed player arms/legs swinging
