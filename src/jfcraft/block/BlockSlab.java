@@ -78,7 +78,13 @@ public class BlockSlab extends BlockBase {
   }
 
   public boolean place(Client client, Coords c) {
-    int dir = Chunk.getDir(c.chunk.getBits(c.gx, c.gy, c.gz));
+    BlockBase block1 = Static.blocks.blocks[c.chunk.getBlock(c.gx,c.gy,c.gz)];
+    int bits = c.chunk.getBits(c.gx, c.gy, c.gz);
+    int dir = Chunk.getDir(bits);
+    int var = Chunk.getVar(bits);
+    if (block1.id == id) {
+      if (var != c.var) return false;
+    }
     float y = c.sy % 1.0f;
     if (y < 0) y = 1.0f - y;
     if (y >= 0.5f) {
@@ -90,7 +96,7 @@ public class BlockSlab extends BlockBase {
       if ((dir & LOWER) != 0) return false;  //already have lower
       dir |= LOWER;
     }
-    int bits = Chunk.makeBits(dir, c.var);
+    bits = Chunk.makeBits(dir, c.var);
     c.chunk.setBlock(c.gx,c.gy,c.gz,id,bits);
     Static.server.broadcastSetBlock(c.chunk.dim,c.x,c.y,c.z,id,bits);
     return true;
@@ -102,14 +108,15 @@ public class BlockSlab extends BlockBase {
     int x1 = 0, x2 = 16;
     int y1 = 8, y2 = 8;
     int z1 = 0, z2 = 16;
+    if (dir == 0) {
+      Static.log("BlockSlab:Error:dir=0");
+      dir = UPPER | LOWER;
+    }
     if ((dir & UPPER) != 0) {
       y2 = 16;
     }
     if ((dir & LOWER) != 0) {
       y1 = 0;
-    }
-    if (dir == 0) {
-      Static.log("BlockSlab:Error:dir=0");
     }
     list.add(new Box(x1,y1,z1, x2,y2,z2));
     return list;
@@ -121,6 +128,10 @@ public class BlockSlab extends BlockBase {
     int cnt = 0;
     if ((dir & UPPER) != 0) cnt++;
     if ((dir & LOWER) != 0) cnt++;
+    if (cnt == 0) {
+      Static.log("BlockSlab:Error:dir=0");
+      cnt = 1;
+    }
     return new Item[] {new Item(dropID, var, cnt)};
   }
 }

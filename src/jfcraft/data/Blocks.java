@@ -38,8 +38,36 @@ public class Blocks {
     return Static.server.world.getBlockID(name);
   }
 
+  private String[] addSlabNames(String[] names) {
+    int len = names.length;
+    String[] slab_names = new String[len];
+    for(int i=0;i<len;i++) {
+      String name = names[i];
+      if (name.endsWith(" Planks")) {
+        name = name.substring(0, name.length() - 7);
+      }
+      slab_names[i] = name + " Slab";
+    }
+    return slab_names;
+  }
+
   public BlockBase registerBlock(BlockBase block) {
     regBlocks[blockCount++] = block;
+    if (block.regSlab) {
+      String name = block.name + "_SLAB";
+      if (block.regSlabName != null) {
+        name = block.regSlabName;
+      }
+      String[] names = addSlabNames(block.names);
+      if (block.regSlabNames != null) {
+        names = block.regSlabNames;
+      }
+      String[] images = block.images;
+      if (block.regSlabImages != null) {
+        images = block.regSlabImages;
+      }
+      registerBlock(new BlockSlab(name, names, images).setHardness(block));
+    }
     return block;
   }
 
@@ -86,14 +114,23 @@ public class Blocks {
   public static char OIL;
   public static char GRAVEL;
   public static char STONE;
+  public static char STONE_SLAB;
   public static char COBBLESTONE;
+  public static char COBBLESTONE_SLAB;
   public static char MOSSY_COBBLESTONE;
+  public static char MOSSY_COBBLESTONE_SLAB;
   public static char SMOOTH_STONE;
+  public static char SMOOTH_STONE_SLAB;
   public static char STONE_BRICKS;
+  public static char STONE_BRICKS_SLAB;
   public static char MOSSY_STONE_BRICKS;
+  public static char MOSSY_STONE_BRICKS_SLAB;
   public static char CRACKED_STONE_BRICKS;
+  public static char CRACKED_STONE_BRICKS_SLAB;
   public static char CHISELED_STONE_BRICKS;
+  public static char CHISELED_STONE_BRICKS_SLAB;
   public static char BRICKS;
+  public static char BRICKS_SLAB;
   public static char DEEPSLATE;
   public static char DEEPSLATE_COAL_ORE;
   public static char DEEPSLATE_IRON_ORE;
@@ -104,6 +141,7 @@ public class Blocks {
   public static char DEEPSLATE_LAPIS_ORE;
   public static char DEEPSLATE_REDSTONE_ORE;
   public static char PLANKS;
+  public static char WOOD_SLAB;
   public static char SAPLING;
   public static char BEDROCK;
   public static char GOLDORE;
@@ -136,16 +174,6 @@ public class Blocks {
   public static char MUSHROOM_RED;
   public static char GOLD_BLOCK;
   public static char IRON_BLOCK;
-  public static char STONE_SLAB;
-  public static char COBBLESTONE_SLAB;
-  public static char MOSSY_COBBLESTONE_SLAB;
-  public static char SMOOTH_STONE_SLAB;
-  public static char STONE_BRICKS_SLAB;
-  public static char MOSSY_STONE_BRICKS_SLAB;
-  public static char CRACKED_STONE_BRICKS_SLAB;
-  public static char CHISELED_STONE_BRICKS_SLAB;
-  public static char BRICKS_SLAB;
-  public static char WOOD_SLAB;
   public static char TNT;
   public static char BOOKSHELF;
   public static char OBSIDIAN;
@@ -255,14 +283,23 @@ public class Blocks {
     OIL = world.getBlockID("OIL");
     GRAVEL = world.getBlockID("GRAVEL");
     STONE = world.getBlockID("STONE");
+    STONE_SLAB = world.getBlockID("STONE_SLAB");
     COBBLESTONE = world.getBlockID("COBBLESTONE");
+    COBBLESTONE_SLAB = world.getBlockID("COBBLESTONE_SLAB");
     MOSSY_COBBLESTONE = world.getBlockID("MOSSY_COBBLESTONE");
+    MOSSY_COBBLESTONE_SLAB = world.getBlockID("MOSSY_COBBLESTONE_SLAB");
     SMOOTH_STONE = world.getBlockID("SMOOTH_STONE");
+    SMOOTH_STONE_SLAB = world.getBlockID("SMOOTH_STONE_SLAB");
     STONE_BRICKS = world.getBlockID("STONE_BRICKS");
+    STONE_BRICKS_SLAB = world.getBlockID("STONE_BRICKS_SLAB");
     MOSSY_STONE_BRICKS = world.getBlockID("MOSSY_STONE_BRICKS");
+    MOSSY_STONE_BRICKS_SLAB = world.getBlockID("MOSSY_STONE_BRICKS_SLAB");
     CRACKED_STONE_BRICKS = world.getBlockID("CRACKED_STONE_BRICKS");
+    CRACKED_STONE_BRICKS_SLAB = world.getBlockID("CRACKED_STONE_BRICKS_SLAB");
     CHISELED_STONE_BRICKS = world.getBlockID("CHISELED_STONE_BRICKS");
+    CHISELED_STONE_BRICKS_SLAB = world.getBlockID("CHISELED_STONE_BRICKS_SLAB");
     BRICKS = world.getBlockID("BRICKS");
+    BRICKS_SLAB = world.getBlockID("BRICKS_SLAB");
     DEEPSLATE = world.getBlockID("DEEPSLATE");
     DEEPSLATE_COAL_ORE = world.getBlockID("DEEPSLATE_COAL_ORE");
     DEEPSLATE_IRON_ORE = world.getBlockID("DEEPSLATE_IRON_ORE");
@@ -273,6 +310,7 @@ public class Blocks {
     DEEPSLATE_LAPIS_ORE = world.getBlockID("DEEPSLATE_LAPIS_ORE");
     DEEPSLATE_REDSTONE_ORE = world.getBlockID("DEEPSLATE_REDSTONE_ORE");
     PLANKS = world.getBlockID("PLANKS");
+    WOOD_SLAB = world.getBlockID("WOOD_SLAB");
     SAPLING = world.getBlockID("SAPLING");
     BEDROCK = world.getBlockID("BEDROCK");
     GOLDORE = world.getBlockID("GOLDORE");
@@ -305,16 +343,6 @@ public class Blocks {
     MUSHROOM_RED = world.getBlockID("MUSHROOM_RED");
     GOLD_BLOCK = world.getBlockID("GOLD_BLOCK");
     IRON_BLOCK = world.getBlockID("IRON_BLOCK");
-    STONE_SLAB = world.getBlockID("STONE_SLAB");
-    COBBLESTONE_SLAB = world.getBlockID("COBBLESTONE_SLAB");
-    MOSSY_COBBLESTONE_SLAB = world.getBlockID("MOSSY_COBBLESTONE_SLAB");
-    SMOOTH_STONE_SLAB = world.getBlockID("SMOOTH_STONE_SLAB");
-    STONE_BRICKS_SLAB = world.getBlockID("STONE_BRICKS_SLAB");
-    MOSSY_STONE_BRICKS_SLAB = world.getBlockID("MOSSY_STONE_BRICKS_SLAB");
-    CRACKED_STONE_BRICKS_SLAB = world.getBlockID("CRACKED_STONE_BRICKS_SLAB");
-    CHISELED_STONE_BRICKS_SLAB = world.getBlockID("CHISELED_STONE_BRICKS_SLAB");
-    BRICKS_SLAB = world.getBlockID("BRICKS_SLAB");
-    WOOD_SLAB = world.getBlockID("WOOD_SLAB");
     TNT = world.getBlockID("TNT");
     BOOKSHELF = world.getBlockID("BOOKSHELF");
     OBSIDIAN = world.getBlockID("OBSIDIAN");
@@ -488,7 +516,7 @@ public class Blocks {
       .setDrop("AIR").setSupported().setBlocks2().setCanReplace().setHardness(0.2f, TOOL_SHOVEL, CLS_NONE)
     );
     registerBlock(new BlockOpaque("STONE", new String[] {"Stone"}, new String[] {"stone"})
-      .setDrop("COBBLESTONE").setSmooth("STEPSTONE").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+      .addSlab().setDrop("COBBLESTONE").setSmooth("STEPSTONE").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("DEEPSLATE", new String[] {"DeepSlate"}, new String[] {"deepslate"})
       .setDrop("AIR").setHardness(3f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("DEEPSLATE_COAL_ORE", new String[] {"DeepSlate Iron Ore"}, new String[] {"deepslate_coal_ore"})
@@ -504,11 +532,11 @@ public class Blocks {
     registerBlock(new BlockOpaque("DEEPSLATE_REDSTONE_ORE", new String[] {"DeepSlate RedStone Ore"}, new String[] {"deepslate_redstone_ore"})
       .setDrop("REDSTONE").setHardness(3f, TOOL_PICKAXE, CLS_IRON));
     registerBlock(new BlockOpaque("COBBLESTONE", new String[] {"Cobblestone"}, new String[] {"cobblestone"})
-      .setHardness(2.0f, TOOL_PICKAXE, CLS_NONE));
+      .addSlab().setHardness(2.0f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("MOSSY_COBBLESTONE", new String[] {"Mossy Cobblestone"}, new String[] {"mossy_cobblestone"})
-      .setHardness(2.0f, TOOL_PICKAXE, CLS_NONE));
+      .addSlab().setHardness(2.0f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("SMOOTH_STONE", new String[] {"Smooth Stone"}, new String[] {"smooth_stone"})
-      .setHardness(2.0f, TOOL_PICKAXE, CLS_NONE));
+      .addSlab(null, null, new String[] {"smooth_stone", "smooth_stone_slab_side"}).setHardness(2.0f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("STONE_BRICKS", new String[] {"Stone Bricks"}, new String[] {"stone_bricks"})
       .setDrop("COBBLESTONE").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("MOSSY_STONE_BRICKS", new String[] {"Mossy Stone Bricks"}, new String[] {"mossy_stone_bricks"})
@@ -521,7 +549,7 @@ public class Blocks {
     registerBlock(new BlockOpaqueVar("PLANKS"
       , new String[] {"Oak Wood Planks", "Spruce Wood Planks", "Birch Wood Planks", "Jungle Wood Planks", "Acacia Wood Planks", "Dark Oak Wood Planks"}
       , new String[] {"oak_planks", "spruce_planks", "birch_planks", "jungle_planks", "acacia_planks", "dark_oak_planks"})
-      .setFuel(15).setMaterial(MAT_WOOD).setHardness(2.0f, TOOL_AXE, CLS_NONE)
+      .addSlab("WOOD_SLAB").setFuel(15).setMaterial(MAT_WOOD).setHardness(2.0f, TOOL_AXE, CLS_NONE)
     );
     registerBlock(new BlockXVar("SAPLING"
       , new String[] {"Oak Wood Sapling", "Spruce Wood Sapling", "Birch Wood Sapling", "Jungle Wood Sapling", "Acacia Wood Sapling", "Dark Oak Wood Sapling"}
@@ -658,19 +686,6 @@ public class Blocks {
     registerBlock(new BlockX("MUSHROOM_RED", new String[] {"Red Mushroom"}, new String[] {"red_mushroom"}).setShowAsItem().addBox(6, 0, 6, 10, 10, 10,BlockHitTest.Type.SELECTION));
     registerBlock(new BlockOpaque("GOLD_BLOCK", new String[] {"Gold Block"}, new String[] {"gold_block"}).setHardness(3f, TOOL_PICKAXE, CLS_IRON));
     registerBlock(new BlockOpaque("IRON_BLOCK", new String[] {"Iron Block"}, new String[] {"iron_block"}).setHardness(5f, TOOL_PICKAXE, CLS_STONE));
-    registerBlock(new BlockSlab("STONE_SLAB", new String[] {"Stone Slab"}, new String[] {"stone"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockSlab("COBBLESTONE_SLAB", new String[] {"Cobblestone Slab"}, new String[] {"cobblestone"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockSlab("MOSSY_COBBLESTONE_SLAB", new String[] {"Mossy Cobblestone Slab"}, new String[] {"mossy_cobblestone"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockSlab("SMOOTH_STONE_SLAB", new String[] {"Smooth Stone Slab"}, new String[] {"smooth_stone", "smooth_stone_slab_side"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockSlab("STONE_BRICKS_SLAB", new String[] {"Stone Bricks Slab"}, new String[] {"stone_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockSlab("MOSSY_STONE_BRICKS_SLAB", new String[] {"Mossy Stone Bricks Slab"}, new String[] {"mossy_stone_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockSlab("CRACKED_STONE_BRICKS_SLAB", new String[] {"Cracked Stone Bricks Slab"}, new String[] {"cracked_stone_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockSlab("CHISELED_STONE_BRICKS_SLAB", new String[] {"Chiseled Stone Bricks Slab"}, new String[] {"chiseled_stone_bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockSlab("BRICKS_SLAB", new String[] {"Bricks Slab"}, new String[] {"bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockSlab("WOOD_SLAB"
-      , new String[] {"Oak Wood Slab", "Spruce Wood Slab", "Birch Wood Slab", "Jungle Wood Slab", "Acacia Wood Slab", "Dark Oak Wood Slab"}
-      , new String[] {"oak_planks", "spruce_planks", "birch_planks", "jungle_planks", "acacia_planks", "dark_oak_planks"})
-      .setHardness(2f, TOOL_AXE, CLS_NONE));
     registerBlock(new BlockOpaque("TNT", new String[] {"TNT"}, new String[] {"tnt_top", "tnt_side", "tnt_bottom"}));
     registerBlock(new BlockOpaque("BOOKSHELF", new String[] {"Book Shelf"}, new String[] {"bookshelf"}).setHardness(1.5f, TOOL_AXE, CLS_NONE));
     registerBlock(new BlockObsidian("OBSIDIAN", new String[] {"Obsidian"}, new String[] {"obsidian"}).setHardness(50f, TOOL_PICKAXE, CLS_DIAMOND));

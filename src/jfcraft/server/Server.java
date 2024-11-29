@@ -1166,9 +1166,9 @@ public class Server {
   public void doCommand(Client client, String cmd) {
     String p[] = cmd.split(" ");
     if (p[0].equals("/give")) {
-      // /give who what [count]
+      // /give who what [count] [var]
       if (p.length < 3) {
-        client.serverTransport.sendMsg("/give who what [count]");
+        client.serverTransport.sendMsg("/give who what [count] [variant]");
         return;
       }
       int cnt = 1;
@@ -1176,10 +1176,16 @@ public class Server {
         cnt = JF.atoi(p[3]);
         if (cnt < 1 || cnt > 64) cnt = 1;
       }
+      int var = 0;
+      if (p.length >= 5) {
+        var = JF.atoi(p[4]);
+        if (var < 0 || var > 7) var = 0;
+      }
       Item item = findItem(p[2], cnt);
       if (item == null) {
         client.serverTransport.sendMsg("Error:Item not found:" + p[2]);
       } else {
+        item.var = (byte)var;
         Static.log("give:" + (int)item.id + ":" + cnt);
         client.addItem(item, true);
       }

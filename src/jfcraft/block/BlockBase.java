@@ -73,6 +73,10 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
   public boolean canSelect;
   public boolean canSpawnOn;
   public boolean clampAlpha;
+  public boolean regSlab;  //register as slab also
+  public String regSlabName;
+  public String[] regSlabNames;
+  public String[] regSlabImages;  //alt images when registering slab
   public char stepID;  //step to smooth block type
   public String stepBlock;
   public char dropID;
@@ -475,6 +479,28 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     renderAsItem = true;
     return this;
   }
+  public BlockBase addSlab() {
+    regSlab = true;
+    return this;
+  }
+  public BlockBase addSlab(String slab_name) {
+    regSlab = true;
+    regSlabName = slab_name;
+    return this;
+  }
+  public BlockBase addSlab(String slab_name, String[] slab_names) {
+    regSlab = true;
+    regSlabName = slab_name;
+    regSlabNames = slab_names;
+    return this;
+  }
+  public BlockBase addSlab(String slab_name, String[] slab_names, String[] alt_images) {
+    regSlab = true;
+    regSlabName = slab_name;
+    regSlabNames = slab_names;
+    regSlabImages = alt_images;
+    return this;
+  }
 
   /** Returns all bounding boxes.  Override if block changes with direction. */
   public ArrayList<Box> getBoxes(Coords c, Type type) {
@@ -540,6 +566,13 @@ public class BlockBase extends ItemBase implements BlockHitTest, RenderSource {
     this.hardness = hardness;
     this.preferedTool = preferedTool;
     this.cls = cls;
+    return this;
+  }
+
+  public BlockBase setHardness(BlockBase block) {
+    this.hardness = block.hardness;
+    this.preferedTool = block.preferedTool;
+    this.cls = block.cls;
     return this;
   }
 
