@@ -337,7 +337,7 @@ public class GeneratorPhase2Mario implements GeneratorPhase2Base {
     int var = Blocks.VAR_WHITE;
     for(int x = 0;x < 16;x++) {
       for(int z = 0;z < 16;z++) {
-        setBlock(x, elev, z, Blocks.BRICK, var);
+        setBlock(x, elev, z, Blocks.BRICKS, var);
       }
     }
     setBlock(0,elev,0, BlockCoinBlock.COIN_BLOCK, 0);

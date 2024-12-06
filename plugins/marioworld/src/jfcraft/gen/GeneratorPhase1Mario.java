@@ -230,7 +230,7 @@ public class GeneratorPhase1Mario implements GeneratorPhase1Base {
       c = r.nextInt(5) + 5;
       for(int b=0;b<c;b++) {
         p = x + y * 256 + z * 16;
-        if (blocks[p] == Blocks.STONE) blocks[p] = Blocks.COALORE;
+        if (blocks[p] == Blocks.STONE) blocks[p] = Blocks.COAL_ORE;
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -250,7 +250,7 @@ public class GeneratorPhase1Mario implements GeneratorPhase1Base {
       c = r.nextInt(2) + 4;
       for(int b=0;b<c;b++) {
         p = x + y * 256 + z * 16;
-        if (blocks[p] == Blocks.STONE) blocks[p] = Blocks.IRONORE;
+        if (blocks[p] == Blocks.STONE) blocks[p] = Blocks.IRON_ORE;
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -270,7 +270,7 @@ public class GeneratorPhase1Mario implements GeneratorPhase1Base {
       c = r.nextInt(2) + 2;
       for(int b=0;b<c;b++) {
         p = x + y * 256 + z * 16;
-        if (blocks[p] == Blocks.STONE) blocks[p] = Blocks.GOLDORE;
+        if (blocks[p] == Blocks.STONE) blocks[p] = Blocks.GOLD_ORE;
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
