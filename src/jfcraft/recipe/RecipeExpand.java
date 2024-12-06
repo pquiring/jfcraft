@@ -21,7 +21,7 @@ public class RecipeExpand extends Recipe {
     if (items[0].id == Blocks.IRON_BLOCK) return new Item(Items.IRON_INGOT, (byte)0, (byte)9);
     if (items[0].id == Blocks.GOLD_BLOCK) return new Item(Items.GOLD_INGOT, (byte)0, (byte)9);
     if (items[0].id == Blocks.DIAMOND_BLOCK) return new Item(Items.DIAMOND, (byte)0, (byte)9);
-    if (items[0].id == Blocks.QUARTZ_BLOCK) return new Item(Items.QUARTZ, (byte)0, (byte)4);
+    if (items[0].id == Blocks.NETHER_QUARTZ_BLOCK) return new Item(Items.QUARTZ, (byte)0, (byte)4);
     if (items[0].id == Blocks.HAYBALE) return new Item(Items.WHEAT_ITEM, (byte)0, (byte)9);
     return null;
   }

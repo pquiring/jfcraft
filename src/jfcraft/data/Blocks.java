@@ -241,9 +241,10 @@ public class Blocks {
   public static char REDSTONE_COMPARATOR;
   public static char SOLAR_PANEL;
   public static char REDSTONE_BLOCK;
-  public static char QUARTZ_ORE;
+  public static char NETHER_QUARTZ_ORE;
+  public static char NETHER_QUARTZ_BLOCK;
+  public static char NETHER_GOLD_ORE;
   public static char HOPPER;
-  public static char QUARTZ_BLOCK;
   public static char RAIL_ACTIVATOR;
   public static char DROPPER;
   public static char GLASS_PANE_COLOR;
@@ -410,9 +411,10 @@ public class Blocks {
     REDSTONE_COMPARATOR = world.getBlockID("REDSTONE_COMPARATOR");
     SOLAR_PANEL = world.getBlockID("SOLAR_PANEL");
     REDSTONE_BLOCK = world.getBlockID("REDSTONE_BLOCK");
-    QUARTZ_ORE = world.getBlockID("QUARTZ_ORE");
+    NETHER_QUARTZ_ORE = world.getBlockID("NETHER_QUARTZ_ORE");
+    NETHER_QUARTZ_BLOCK = world.getBlockID("NETHER_QUARTZ_BLOCK");
+    NETHER_GOLD_ORE = world.getBlockID("NETHER_GOLD_ORE");
     HOPPER = world.getBlockID("HOPPER");
-    QUARTZ_BLOCK = world.getBlockID("QUARTZ_BLOCK");
     RAIL_ACTIVATOR = world.getBlockID("RAIL_ACTIVATOR");
     DROPPER = world.getBlockID("DROPPER");
     GLASS_PANE_COLOR = world.getBlockID("GLASS_PANE_COLOR");
@@ -823,9 +825,10 @@ public class Blocks {
     registerBlock(new BlockDaylightSensor("SOLAR_PANEL", new String[] {"Daylight Sensor"}, new String[] {"daylight_detector_top", "daylight_detector_side"}).setHardness(0.2f, TOOL_AXE, CLS_NONE));
     registerBlock(new BlockOpaque("REDSTONE_BLOCK", new String[] {"Redstone Block"}, new String[] {"redstone_block"}).setHardness(5f, TOOL_PICKAXE, CLS_WOOD));
 
-    registerBlock(new BlockOpaque("QUARTZ_ORE", new String[] {"Quartz"}, new String[] {"nether_quartz_ore"}).setDrop("QUARTZ").setHardness(3f, TOOL_PICKAXE, CLS_WOOD));
+    registerBlock(new BlockOpaque("NETHER_QUARTZ_ORE", new String[] {"Nether Quartz Ore"}, new String[] {"nether_quartz_ore"}).setDrop("QUARTZ").setHardness(3f, TOOL_PICKAXE, CLS_WOOD));
+    registerBlock(new BlockOpaque("NETHER_QUARTZ_BLOCK", new String[] {"Nether Quartz Block"}, new String[] {"quartz_block_top"}).setHardness(0.8f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("NETHER_GOLD_ORE", new String[] {"Nether Gold Ore"}, new String[] {"nether_gold_ore"}).setBake("GOLD_INGOT").setHardness(3f, TOOL_PICKAXE, CLS_WOOD));
     registerBlock(new BlockHopper("HOPPER", new String[] {"-item-"}, new String[] {"hopper_top", "hopper_inside", "hopper_outside"}).setHardness(3f, TOOL_PICKAXE, CLS_NONE));
-    registerBlock(new BlockOpaque("QUARTZ_BLOCK", new String[] {"Quartz Block"}, new String[] {"quartz_block_top"}).setHardness(0.8f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockStairs("STAIRS_QUARTZ", new String[] {"Quartz Stairs"}, new String[] {"quartz_block_top"}).setHardness(0.8f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockRail("RAIL_ACTIVATOR", new String[] {"Rail Activator"}, new String[] {"activator_rail", "activator_rail_on"}).setRedstone().setHardness(0.7f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockDropper("DROPPER", new String[] {"Dropper"}, new String[] {"dropper_front", "dropper_front_vertical", "piston_bottom"}).setHardness(3.5f, TOOL_PICKAXE, CLS_NONE));

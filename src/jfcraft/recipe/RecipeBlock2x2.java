@@ -22,7 +22,7 @@ public class RecipeBlock2x2 extends Recipe {
       if (items[a].id != id) return null;
       if (items[a].var != 0) return null;
     }
-    if (id == Items.QUARTZ) return new Item(Blocks.QUARTZ_BLOCK);
+    if (id == Items.QUARTZ) return new Item(Blocks.NETHER_QUARTZ_BLOCK);
     if (id == Items.CLAY_BALL) return new Item(Blocks.CLAY);
     return null;
   }

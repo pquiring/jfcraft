@@ -96,7 +96,7 @@ public class GeneratorPhase1Nether implements GeneratorPhase1Base {
       for(int b=0;b<c;b++) {
         p = x + y * 256 + z * 16;
         if (chunk.getBlock(x,y,z) == Blocks.NETHER_RACK) {
-          chunk.setBlock(x,y,z, Blocks.QUARTZ_ORE, 0);
+          chunk.setBlock(x,y,z, Blocks.NETHER_QUARTZ_ORE, 0);
         }
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
