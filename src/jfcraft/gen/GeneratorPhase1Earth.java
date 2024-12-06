@@ -247,7 +247,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       z = r.nextInt(16);
       c = r.nextInt(5) + 5;
       for(int b=0;b<c;b++) {
-        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.COALORE, 0);
+        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.COAL_ORE, 0);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -267,7 +267,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       z = r.nextInt(16);
       c = r.nextInt(2) + 4;
       for(int b=0;b<c;b++) {
-        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.IRONORE, 0);
+        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.IRON_ORE, 0);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -287,7 +287,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       z = r.nextInt(16);
       c = r.nextInt(2) + 4;
       for(int b=0;b<c;b++) {
-        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.COPPERORE, 0);
+        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.COPPER_ORE, 0);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
@@ -307,7 +307,7 @@ public class GeneratorPhase1Earth implements GeneratorPhase1Base {
       z = r.nextInt(16);
       c = r.nextInt(2) + 2;
       for(int b=0;b<c;b++) {
-        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.GOLDORE, 0);
+        if (chunk.getBlock(x,y,z) == Blocks.STONE) chunk.setBlock(x,y,z, Blocks.GOLD_ORE, 0);
         x += r.nextInt(3)-1;
         if (x < 0) x = 0;
         if (x > 15) x = 15;
