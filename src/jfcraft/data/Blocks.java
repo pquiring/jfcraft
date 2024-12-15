@@ -137,6 +137,20 @@ public class Blocks {
   public static char CRACKED_POLISHED_BLACKSTONE_BRICKS_SLAB;
   public static char CHISELED_STONE_BRICKS;
   public static char CHISELED_STONE_BRICKS_SLAB;
+  public static char CHISELED_DEEPSLATE;
+  public static char CHISELED_DEEPSLATE_SLAB;
+  public static char CHISELED_NETHER_BRICKS;
+  public static char CHISELED_NETHER_BRICKS_SLAB;
+  public static char CHISELED_QUARTZ_BLOCK;
+  public static char CHISELED_QUARTZ_BLOCK_SLAB;
+  public static char CHISELED_SANDSTONE;
+  public static char CHISELED_SANDSTONE_SLAB;
+  public static char CHISELED_RED_SANDSTONE;
+  public static char CHISELED_RED_SANDSTONE_SLAB;
+  public static char CHISELED_POLISHED_BLACKSTONE;
+  public static char CHISELED_POLISHED_BLACKSTONE_SLAB;
+  public static char CHISELED_COPPER;
+  public static char CHISELED_COPPER_SLAB;
   public static char BRICKS;
   public static char BRICKS_SLAB;
   public static char DEEPSLATE;
@@ -315,6 +329,20 @@ public class Blocks {
     CRACKED_POLISHED_BLACKSTONE_BRICKS_SLAB = world.getBlockID("CRACKED_POLISHED_BLACKSTONE_BRICKS_SLAB");
     CHISELED_STONE_BRICKS = world.getBlockID("CHISELED_STONE_BRICKS");
     CHISELED_STONE_BRICKS_SLAB = world.getBlockID("CHISELED_STONE_BRICKS_SLAB");
+    CHISELED_DEEPSLATE = world.getBlockID("CHISELED_DEEPSLATE");
+    CHISELED_DEEPSLATE_SLAB = world.getBlockID("CHISELED_DEEPSLATE_SLAB");
+    CHISELED_NETHER_BRICKS = world.getBlockID("CHISELED_NETHER_BRICKS");
+    CHISELED_NETHER_BRICKS_SLAB = world.getBlockID("CHISELED_NETHER_BRICKS_SLAB");
+    CHISELED_QUARTZ_BLOCK = world.getBlockID("CHISELED_QUARTZ_BLOCK");
+    CHISELED_QUARTZ_BLOCK_SLAB = world.getBlockID("CHISELED_QUARTZ_BLOCK_SLAB");
+    CHISELED_SANDSTONE = world.getBlockID("CHISELED_SANDSTONE");
+    CHISELED_SANDSTONE_SLAB = world.getBlockID("CHISELED_SANDSTONE_SLAB");
+    CHISELED_RED_SANDSTONE = world.getBlockID("CHISELED_RED_SANDSTONE");
+    CHISELED_RED_SANDSTONE_SLAB = world.getBlockID("CHISELED_RED_SANDSTONE_SLAB");
+    CHISELED_POLISHED_BLACKSTONE = world.getBlockID("CHISELED_POLISHED_BLACKSTONE");
+    CHISELED_POLISHED_BLACKSTONE_SLAB = world.getBlockID("CHISELED_POLISHED_BLACKSTONE_SLAB");
+    CHISELED_COPPER = world.getBlockID("CHISELED_COPPER");
+    CHISELED_COPPER_SLAB = world.getBlockID("CHISELED_COPPER_SLAB");
     BRICKS = world.getBlockID("BRICKS");
     BRICKS_SLAB = world.getBlockID("BRICKS_SLAB");
     DEEPSLATE = world.getBlockID("DEEPSLATE");
@@ -468,11 +496,6 @@ public class Blocks {
   public static final byte VAR_ACACIA = 4;
   public static final byte VAR_DARK_OAK = 5;
 
-  //stone vars
-  public static final byte VAR_NORMAL_STONE = 0;
-  public static final byte VAR_CHISELED_STONE = 1;
-  //etc...
-
   //button vars
   public static final byte VAR_BUTTON_WOOD = 0;
   public static final byte VAR_BUTTON_STONE = 1;
@@ -560,6 +583,7 @@ public class Blocks {
     registerBlock(new BlockOpaque("MOSSY_STONE_BRICKS", new String[] {"Mossy Stone Bricks"}, new String[] {"mossy_stone_bricks"})
       .addSlab().setDrop("MOSSY_STONE_BRICKS").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("CRACKED_STONE_BRICKS", new String[] {"Cracked Stone Bricks"}, new String[] {"cracked_stone_bricks"})
+
       .addSlab().setDrop("CRACKED_STONE_BRICKS").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("CRACKED_DEEPSLATE_BRICKS", new String[] {"Cracked DeepSlate Bricks"}, new String[] {"cracked_deepslate_bricks"})
       .addSlab().setDrop("CRACKED_DEEPSLATE_BRICKS").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
@@ -569,8 +593,24 @@ public class Blocks {
       .addSlab().setDrop("CRACKED_NETHER_BRICKS").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaque("CRACKED_POLISHED_BLACKSTONE_BRICKS", new String[] {"Cracked Polished Blackstone Bricks"}, new String[] {"cracked_polished_blackstone_bricks"})
       .addSlab().setDrop("CRACKED_POLISHED_BLACKSTONE_BRICKS").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+
     registerBlock(new BlockOpaque("CHISELED_STONE_BRICKS", new String[] {"Chiseled Stone Bricks"}, new String[] {"chiseled_stone_bricks"})
       .addSlab().setDrop("CHISELED_STONE_BRICKS").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("CHISELED_DEEPSLATE", new String[] {"Chiseled Deepslate"}, new String[] {"chiseled_deepslate"})
+      .addSlab().setDrop("CHISELED_DEEPSLATE").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("CHISELED_NETHER_BRICKS", new String[] {"Chiseled Nether Bricks"}, new String[] {"chiseled_nether_bricks"})
+      .addSlab().setDrop("CHISELED_NETHER_BRICKS").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("CHISELED_QUARTZ_BLOCK", new String[] {"Chiseled Quartz Block"}, new String[] {"chiseled_quartz_block", "chiseled_quartz_block_top"})
+      .addSlab().setDrop("CHISELED_QUARTZ_BLOCK").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("CHISELED_SANDSTONE", new String[] {"Chiseled Sandstone"}, new String[] {"chiseled_sandstone"})
+      .addSlab().setDrop("CHISELED_SANDSTONE").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("CHISELED_RED_SANDSTONE", new String[] {"Chiseled Red Sandstone"}, new String[] {"chiseled_red_sandstone"})
+      .addSlab().setDrop("CHISELED_RED_SANDSTONE").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("CHISELED_POLISHED_BLACKSTONE", new String[] {"Chiseled Polished Blackstone"}, new String[] {"chiseled_polished_blackstone"})
+      .addSlab().setDrop("CHISELED_POLISHED_BLACKSTONE").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+    registerBlock(new BlockOpaque("CHISELED_COPPER", new String[] {"Chiseled Copper"}, new String[] {"chiseled_copper"})
+      .addSlab().setDrop("CHISELED_COPPER").setHardness(2f, TOOL_PICKAXE, CLS_NONE));
+
     registerBlock(new BlockOpaque("BRICKS", new String[] {"Bricks"}, new String[] {"bricks"}).setHardness(2f, TOOL_PICKAXE, CLS_NONE));
     registerBlock(new BlockOpaqueVar("PLANKS"
       , new String[] {"Oak Wood Planks", "Spruce Wood Planks", "Birch Wood Planks", "Jungle Wood Planks", "Acacia Wood Planks", "Dark Oak Wood Planks"}
