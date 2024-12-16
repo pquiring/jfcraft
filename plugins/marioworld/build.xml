@@ -17,7 +17,7 @@
     <!-- Compile the java code from ${src} into ${build} -->
     <mkdir dir="${build}"/>
     <echo message="plugin=${build}"/>
-    <javac srcdir="${src}" destdir="${build}" target="${jdkver}" source="${jdkver}" debug="true" includeantruntime="false">
+    <javac srcdir="${src}" destdir="${build}" release="${jdkver}" debug="true" includeantruntime="false">
       <classpath path="${classpath}"/>
       <classpath path="${jfcraft}"/>
     </javac>
