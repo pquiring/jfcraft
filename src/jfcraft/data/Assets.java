@@ -166,7 +166,7 @@ public class Assets {
             audio.samples = new short[0];
           } else {
             wav.readAllSamples();
-            audio.samples = wav.samples16;
+            audio.samples = wav.getSamples16();
           }
         } else if (filename.endsWith(".mp3") || filename.endsWith(".ogg")) {
           if (!Static.optionMedia) return null;
