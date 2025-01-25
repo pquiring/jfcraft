@@ -18,7 +18,6 @@ public class MediaReader implements MediaIO {
   private JFArrayShort buffer = new JFArrayShort();
   private InputStream is;
 
-
   public int read(MediaCoder mc, byte[] bytes) {
     try {
       return is.read(bytes);
