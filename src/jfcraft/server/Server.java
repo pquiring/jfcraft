@@ -876,6 +876,7 @@ public class Server {
 
   private int bedticks;
 
+  /** Server side tick. */
   private void doTick() {
     world.time++;
     if (world.time == 24000) world.time = 0; //midnight

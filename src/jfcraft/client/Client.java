@@ -287,6 +287,7 @@ public class Client {
     }
   }
 
+  /** Client tick (moves player) */
   public void tick() {
     if (player == null) return;
     if (chatTime > 0) {

@@ -348,6 +348,68 @@ public class Player extends HumaniodBase {
     pos.y = chunk.elev[8 * 16 + 8];
   }
 
+  /** Player move. */
+  public void move(boolean up, boolean dn, boolean lt, boolean rt,
+    boolean jump, boolean sneak, boolean run, boolean b1, boolean b2,
+    boolean fup, boolean fdn)
+  {
+    float speed = 0;
+    boolean flying = mode == MODE_FLYING;
+    if (inWater || inLava) {
+      mode = EntityBase.MODE_SWIM;
+      speed = swimSpeed;
+    }
+    else if (sneak || b2) {
+      mode = EntityBase.MODE_SNEAK;
+      speed = sneakSpeed;
+    }
+    else if (run) {
+      mode = EntityBase.MODE_RUN;
+      speed = runSpeed;
+    }
+    else {
+      mode = EntityBase.MODE_WALK;
+      speed = walkSpeed;
+    }
+    if (lt || rt || up || dn) {
+      synchronized(move_vectors) {
+        calcVectors(speed / 20.0f, move_vectors);
+        float x = 0, z = 0;
+        if (lt) {
+          x += move_vectors.left.v[0];
+          z += move_vectors.left.v[2];
+        }
+        if (rt) {
+          x += -move_vectors.left.v[0];
+          z += -move_vectors.left.v[2];
+        }
+        if (up) {
+          x += move_vectors.forward.v[0];
+          z += move_vectors.forward.v[2];
+        }
+        if (dn) {
+          x += -move_vectors.forward.v[0];
+          z += -move_vectors.forward.v[2];
+        }
+        if (x != 0) setXVel(x);
+        if (z != 0) setZVel(z);
+      }
+    } else {
+      mode = EntityBase.MODE_IDLE;
+    }
+    if (jump) {
+      jump();
+    }
+    if (flying) mode = MODE_FLYING;  //reset flying mode (creative)
+    if (mode == MODE_FLYING && fup) {
+      pos.y += 1.0f;
+    }
+    if (mode == MODE_FLYING && fdn) {
+      pos.y -= 1.0f;
+    }
+    move(sneak, false, false, -1, AVOID_NONE);
+  }
+
   private static final byte ver = 0;
 
   @Override
