@@ -80,6 +80,10 @@ public class NPCMenu extends RenderScreen {
 
   public void setup() {
     setCursor(true);
+    npc = (NPC)Static.entities.entities[Entities.NPC];
+    if (npc != null) {
+      //TODO : setup npc
+    }
   }
 
   private static final int eyes_x = 104;
