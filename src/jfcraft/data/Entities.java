@@ -81,6 +81,7 @@ public class Entities implements SerialCreator {
     LEVER = world.getEntityID("LEVER");
     ENDER_CHEST = world.getEntityID("ENDER_CHEST");
     SHIELD = world.getEntityID("SHIELD");
+    NPC = world.getEntityID("NPC");
   }
 
   public int entityCount;
@@ -125,6 +126,7 @@ public class Entities implements SerialCreator {
     registerEntity(new Minecart());
     registerEntity(new Horse());
     registerEntity(new Shield());
+    registerEntity(new NPC());
   }
 
   public void initStatic() {

@@ -18,7 +18,7 @@ public class Packets implements SerialCreator {
   private byte nextID = 0;
 
   public void registerPacket(Packet p, String name) {
-    if (nextID < 0) {
+    if (nextID == packets.length) {
       JFAWT.showError("Error", "Too many packets registered!");
       System.exit(1);
     }
