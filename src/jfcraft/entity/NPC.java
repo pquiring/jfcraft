@@ -78,7 +78,7 @@ public class NPC extends HumaniodBase {
 
   public void initStatic() {
     super.initStatic();
-    textureName = "entity/steve";
+    textureName = "entity/player/wide/alex";
     dest = new RenderDest(parts.length);
     model = loadModel("steve");
   }
@@ -242,7 +242,7 @@ public class NPC extends HumaniodBase {
     client.npc = this;
     client.serverTransport.sendNPC(this);
     client.serverTransport.enterMenu(Client.NPC);
-    client.menu = Client.VILLAGER;
+    client.menu = Client.NPC;
   }
 
   public boolean useTool(Client client, Coords c) {

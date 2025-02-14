@@ -87,7 +87,7 @@ public class Player extends HumaniodBase {
 
   public void initStaticGL() {
     super.initStaticGL();  //HumanoidBase
-    texture = Textures.getTexture("entity/steve", 0);
+    texture = Textures.getTexture("entity/player/slim/steve", 0);
     dest = new RenderDest(parts.length);
   }
 
