@@ -16,7 +16,7 @@ import javaforce.gl.*;
 import jfcraft.entity.*;
 import jfcraft.extra.*;
 import jfcraft.opengl.*;
-import static jfcraft.extra.Extras.MAX_ID;
+import static jfcraft.data.Extras.MAX_ID;
 
 public class Entities implements SerialCreator {
   public static final short MAX_ID = 8192;

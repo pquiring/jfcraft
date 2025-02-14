@@ -1,4 +1,4 @@
-package jfcraft.extra;
+package jfcraft.data;
 
 /**
  *
@@ -8,6 +8,7 @@ package jfcraft.extra;
 import java.lang.reflect.*;
 
 import jfcraft.data.*;
+import jfcraft.extra.*;
 
 public class Extras implements SerialCreator {
   public static final int MAX_ID = 128;
