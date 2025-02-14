@@ -105,6 +105,7 @@ public class Client {
   public Exception error;  //error to quit game
   public int spawnAreaDonePercent;
   public Villager villager;
+  public NPC npc;
   public int villager_trade_index;
 
   public Item hand;  //item in hand in menus

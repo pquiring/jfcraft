@@ -108,6 +108,7 @@ public class Packets implements SerialCreator {
     registerPacket(new PacketVillager(), "VILLAGER");
     registerPacket(new PacketTrashHand(), "TRASHHAND");
     registerPacket(new PacketCreativeGetItem(), "CREATIVEGETITEM");
+    registerPacket(new PacketNPC(), "NPC");
   }
 
   public static byte RIDING;
@@ -189,6 +190,7 @@ public class Packets implements SerialCreator {
   public static byte VILLAGER;
   public static byte TRASHHAND;
   public static byte CREATIVEGETITEM;
+  public static byte NPC;
 
   public void setID(String name, byte cmd) {
     switch (name) {
@@ -271,6 +273,7 @@ public class Packets implements SerialCreator {
       case "VILLAGER": VILLAGER = cmd; break;
       case "TRASHHAND": TRASHHAND = cmd; break;
       case "CREATIVEGETITEM": CREATIVEGETITEM = cmd; break;
+      case "NPC": NPC = cmd; break;
       default: Static.log("ERROR:Packet Name Unknown:" + name); break;
     }
   }

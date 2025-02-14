@@ -15,6 +15,7 @@ import static javaforce.gl.GL.*;
 import jfcraft.opengl.*;
 import jfcraft.data.*;
 import jfcraft.extra.*;
+import jfcraft.entity.*;
 import jfcraft.block.*;
 import jfcraft.item.*;
 
@@ -26,6 +27,7 @@ public class HorseMenu extends RenderScreen {
   private Sprite o_saddle_slot;
   private int mx, my;
   private Slot slots[];
+  private Horse horse;
 
   public HorseMenu() {
     id = Client.HORSE;

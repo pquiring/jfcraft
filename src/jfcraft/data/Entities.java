@@ -33,6 +33,7 @@ public class Entities implements SerialCreator {
 
   //npcs
   public static int VILLAGER;
+  public static int NPC;
 
   //animals (spawn with world generator)
   public static int PIG;

@@ -20,6 +20,7 @@ import static javaforce.gl.GL.*;
 
 import jfcraft.opengl.*;
 import jfcraft.data.*;
+import jfcraft.entity.*;
 import jfcraft.extra.*;
 import jfcraft.block.*;
 import jfcraft.item.*;
@@ -30,6 +31,7 @@ public class NPCMenu extends RenderScreen {
   private Sprite o_backpack_slot;
   private int mx, my;
   private Slot slots[];
+  private HumaniodBase npc;
 
   public NPCMenu() {
     id = Client.NPC;
@@ -80,6 +82,9 @@ public class NPCMenu extends RenderScreen {
     setCursor(true);
   }
 
+  private static final int eyes_x = 104;
+  private static final int eyes_y = 85;
+
   public void render(int width, int height) {
     Static.game.render(width, height);
     depth(false);
@@ -93,7 +98,7 @@ public class NPCMenu extends RenderScreen {
     }
 
     if (o_backpack_slot == null) {
-      o_backpack_slot = new Sprite("gui/sprites/container/horse/saddle_slot", 14,36, 36,36);
+      o_backpack_slot = new Sprite("gui/sprites/container/slot", 14,36, 36,36);
     }
 
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
@@ -104,11 +109,47 @@ public class NPCMenu extends RenderScreen {
     setOrtho();
     setViewportMenu();
 
+    //render menu
     t_menu.bind();
     o_menu.bindBuffers();
     o_menu.render();
 
-    //inventory blocks
+    //render NPC
+    if (npc != null) {
+      setOrthoPlayer();
+      setViewportPlayer(52,36+104, 104,104);
+
+      depth(true);
+
+      glClear(GL_DEPTH_BUFFER_BIT);
+      npc.bindTexture();
+      //rotate player to point head towards mouse coords
+      float ey = my - eyes_y;
+      ey /= 2.0f;
+      if (ey < -45.0f) {
+        ey = -45.0f;
+      } else if (ey > 45.0f) {
+        ey = 45.0f;
+      }
+      npc.ang.x = ey;
+      float ex = mx - eyes_x;
+      ex /= 2.0f;
+      if (ex < -45.0f) {
+        ex = -45.0f;
+      } else if (ex > 45.0f) {
+        ex = 45.0f;
+      }
+      npc.ang.y = 180.0f - ex;
+      npc.activeSlot = 0;
+      npc.render();
+
+      glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
+
+      setOrtho();
+   }
+
+     //inventory blocks
     int p = 0;
     for(int a=9;a<4*9;a++) {
       slots[p++].item = Static.client.player.items[a];
