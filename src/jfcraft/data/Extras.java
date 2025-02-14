@@ -22,6 +22,7 @@ public class Extras implements SerialCreator {
   public static byte REDSTONE;
   public static byte SIGN;
   public static byte HORSE;
+  public static byte BACKPACK;
 
   public static void getIDs(World world) {
     DROPPER = world.getExtraID("dropper");
@@ -32,6 +33,7 @@ public class Extras implements SerialCreator {
     REDSTONE = world.getExtraID("redstone");
     SIGN = world.getExtraID("sign");
     HORSE = world.getExtraID("horse");
+    BACKPACK = world.getExtraID("backpack");
   }
 
   public void registerExtra(ExtraBase eb) {
@@ -56,6 +58,7 @@ public class Extras implements SerialCreator {
     registerExtra(new ExtraDropper());
     registerExtra(new ExtraSign());
     registerExtra(new ExtraHorse());
+    registerExtra(new ExtraBackpack());
   }
 
   public SerialClass create(SerialBuffer buffer, ExtraBase[] extras) {

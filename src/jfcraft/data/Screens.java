@@ -48,6 +48,7 @@ public class Screens {
     registerScreen(new HorseMenu());
     registerScreen(new VillagerMenu());
     registerScreen(new CreativeMenu());
+    registerScreen(new NPCMenu());
   }
 
   public void init() {

@@ -92,6 +92,7 @@ public class Client {
   public static byte HORSE = 24;
   public static byte VILLAGER = 25;
   public static byte CREATIVE = 26;
+  public static byte NPC = 27;
 
   public byte menu = GAME;  //current menu
 
