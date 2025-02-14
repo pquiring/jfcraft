@@ -7,6 +7,7 @@ package jfcraft.packet;
 
 import jfcraft.client.*;
 import jfcraft.data.*;
+import jfcraft.extra.*;
 
 public class PacketSetContainer extends Packet {
   public int cx, cz;

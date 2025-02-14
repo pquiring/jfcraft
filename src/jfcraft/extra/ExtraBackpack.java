@@ -1,4 +1,4 @@
-package jfcraft.data;
+package jfcraft.extra;
 
 /** NPC Backpack items.
  *

@@ -1,10 +1,11 @@
-package jfcraft.data;
+package jfcraft.extra;
 
 /** Furnace items
  *
  * @author pquiring
  */
 
+import jfcraft.data.*;
 import jfcraft.client.Client;
 import jfcraft.item.*;
 import jfcraft.server.Server;

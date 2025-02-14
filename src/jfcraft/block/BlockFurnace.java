@@ -11,6 +11,7 @@ import javaforce.*;
 
 import jfcraft.client.*;
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.item.*;
 
 public class BlockFurnace extends BlockOpaque {

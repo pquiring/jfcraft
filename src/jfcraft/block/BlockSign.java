@@ -12,6 +12,7 @@ import javaforce.gl.*;
 import static jfcraft.block.BlockBase.boxListEmpty;
 
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.client.*;
 import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;

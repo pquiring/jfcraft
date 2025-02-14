@@ -10,6 +10,7 @@ import javaforce.gl.*;
 
 import jfcraft.client.*;
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.entity.*;
 import jfcraft.opengl.*;
 

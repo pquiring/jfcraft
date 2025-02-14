@@ -10,6 +10,7 @@ package jfcraft.block;
 import javaforce.*;
 
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.entity.*;
 
 public class BlockPressurePlate extends BlockCarpet {

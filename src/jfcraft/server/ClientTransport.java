@@ -14,6 +14,7 @@ import javaforce.*;
 import jfcraft.client.*;
 import jfcraft.entity.*;
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.packet.*;
 import jfcraft.plugin.PluginLoader;
 
@@ -21,7 +22,7 @@ public abstract class ClientTransport extends Transport {
   //put client commands here
   public Client client;
   private ArrayList<Packet> packets = new ArrayList<Packet>();
-  
+
   public static boolean debug = true;
 
   public void init(Client client) {

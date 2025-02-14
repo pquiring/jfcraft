@@ -12,6 +12,7 @@ import javaforce.gl.*;
 
 import jfcraft.client.*;
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.opengl.*;
 
 public class BlockRedStoneComparator extends BlockBase {

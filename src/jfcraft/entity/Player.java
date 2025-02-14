@@ -16,6 +16,7 @@ import static javaforce.gl.GL.*;
 import jfcraft.client.*;
 import jfcraft.item.*;
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.opengl.*;
 
 public class Player extends HumaniodBase {

@@ -8,6 +8,7 @@ package jfcraft.packet;
 import jfcraft.client.Client;
 import jfcraft.server.Server;
 import jfcraft.data.*;
+import jfcraft.extra.*;
 
 public class PacketSetExtra extends Packet {
   public int cx, cz;

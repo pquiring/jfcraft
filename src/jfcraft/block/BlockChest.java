@@ -7,6 +7,7 @@ package jfcraft.block;
 
 import jfcraft.client.Client;
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.item.*;
 import jfcraft.entity.*;
 import jfcraft.opengl.*;

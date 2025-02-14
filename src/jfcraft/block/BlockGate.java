@@ -13,6 +13,7 @@ import javaforce.gl.*;
 import jfcraft.audio.*;
 import jfcraft.client.*;
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.opengl.*;
 import static jfcraft.data.Direction.*;
 

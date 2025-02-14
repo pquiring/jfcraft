@@ -14,6 +14,7 @@ import javaforce.*;
 import javaforce.gl.*;
 
 import jfcraft.audio.*;
+import jfcraft.extra.*;
 import jfcraft.item.*;
 import jfcraft.client.*;
 import jfcraft.opengl.*;

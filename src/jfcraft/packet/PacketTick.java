@@ -6,6 +6,7 @@ package jfcraft.packet;
  */
 
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.client.*;
 import jfcraft.server.Server;
 

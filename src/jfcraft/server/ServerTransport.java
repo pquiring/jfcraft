@@ -12,6 +12,7 @@ import java.util.*;
 import jfcraft.client.*;
 //import jfcraft.entity.*;
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.item.*;
 import jfcraft.entity.*;
 import jfcraft.packet.*;

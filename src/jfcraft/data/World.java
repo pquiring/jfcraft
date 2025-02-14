@@ -17,6 +17,7 @@ import javaforce.awt.*;
 import jfcraft.block.*;
 import jfcraft.item.*;
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.dim.*;
 import jfcraft.entity.*;
 import jfcraft.plugin.PluginLoader;

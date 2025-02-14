@@ -13,6 +13,7 @@ import static javaforce.gl.GL.*;
 
 import jfcraft.opengl.*;
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.block.*;
 import jfcraft.item.*;
 

@@ -10,6 +10,7 @@ import javaforce.*;
 import static jfcraft.audio.Sounds.*;
 import jfcraft.client.Client;
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.item.*;
 import jfcraft.entity.*;
 import jfcraft.opengl.*;

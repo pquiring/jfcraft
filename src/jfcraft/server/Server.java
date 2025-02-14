@@ -19,6 +19,7 @@ import jfcraft.item.*;
 import jfcraft.client.*;
 import jfcraft.dim.*;
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.entity.*;
 import jfcraft.packet.*;
 import static jfcraft.data.Direction.*;

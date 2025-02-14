@@ -17,6 +17,7 @@ import jfcraft.block.*;
 import jfcraft.item.*;
 import jfcraft.entity.*;
 import jfcraft.data.*;
+import jfcraft.extra.*;
 import jfcraft.opengl.*;
 import jfcraft.server.*;
 import jfcraft.packet.*;

@@ -1,4 +1,4 @@
-package jfcraft.data;
+package jfcraft.extra;
 
 /** Horse items.
  *
@@ -10,6 +10,7 @@ package jfcraft.data;
  */
 
 import jfcraft.client.Client;
+import jfcraft.data.*;
 import jfcraft.item.*;
 import jfcraft.entity.*;
 import jfcraft.server.Server;

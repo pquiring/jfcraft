@@ -1,4 +1,4 @@
-package jfcraft.data;
+package jfcraft.extra;
 
 /** Crack
  *
@@ -6,6 +6,8 @@ package jfcraft.data;
  *
  * @author pquiring
  */
+
+import jfcraft.data.*;
 
 public class ExtraCrack extends ExtraBase {
   public float dmg;  //percentage

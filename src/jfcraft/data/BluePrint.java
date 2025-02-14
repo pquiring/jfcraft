@@ -14,6 +14,7 @@ import javaforce.JF;
 
 import jfcraft.data.*;
 import jfcraft.block.*;
+import jfcraft.extra.*;
 import jfcraft.entity.*;
 import static jfcraft.data.Direction.*;
 
