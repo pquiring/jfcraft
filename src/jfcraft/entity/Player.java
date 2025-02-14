@@ -10,6 +10,8 @@ package jfcraft.entity;
  * Created : Mar 24, 2014
  */
 
+import java.util.*;
+
 import javaforce.gl.*;
 import static javaforce.gl.GL.*;
 
@@ -31,6 +33,8 @@ public class Player extends HumaniodBase {
 
   public float walkAngle;  //angle of legs/arms as walking
   public float walkAngleDelta;
+
+  public HashMap<String, Event> events = new HashMap<>();
 
   //would like to move Render Assets to Entity, but it's static!!!
   //render assets
@@ -411,7 +415,17 @@ public class Player extends HumaniodBase {
     move(sneak, false, false, -1, AVOID_NONE);
   }
 
-  private static final byte ver = 0;
+  public String getEvent(String key) {
+    Event event = events.get(key);
+    if (event == null) return null;
+    return event.value;
+  }
+
+  public void setEvent(String key, String value) {
+    events.put(key, new Event(key, value));
+  }
+
+  private static final byte ver = 1;
 
   @Override
   public boolean write(SerialBuffer buffer, boolean file) {
@@ -420,6 +434,13 @@ public class Player extends HumaniodBase {
     if (file) {
       for(int a=0;a<9*3;a++) {
         enderChest.items[a].write(buffer, file);
+      }
+      if (ver >= 1) {
+        Event[] ea = events.entrySet().toArray(Event.array);
+        buffer.writeInt(ea.length);
+        for(Event e : ea) {
+          e.write(buffer, file);
+        }
       }
     }
     byte nameBytes[] = name.getBytes();
@@ -436,6 +457,15 @@ public class Player extends HumaniodBase {
     if (file) {
       for(int a=0;a<9*3;a++) {
         enderChest.items[a].read(buffer, file);
+      }
+      events.clear();
+      if (ver >= 1) {
+        int cnt = buffer.readInt();
+        for(int a=0;a<cnt;a++) {
+          Event event = new Event();
+          event.read(buffer, file);
+          events.put(event.key, event);
+        }
       }
     }
     byte nameLength = buffer.readByte();

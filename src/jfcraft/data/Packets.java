@@ -109,6 +109,8 @@ public class Packets implements SerialCreator {
     registerPacket(new PacketTrashHand(), "TRASHHAND");
     registerPacket(new PacketCreativeGetItem(), "CREATIVEGETITEM");
     registerPacket(new PacketNPC(), "NPC");
+    registerPacket(new PacketNPCDialogPage(), "NPCDIALOGPAGE");
+    registerPacket(new PacketNPCDialogAction(), "NPCDIALOGACTION");
   }
 
   public static byte RIDING;
@@ -191,6 +193,8 @@ public class Packets implements SerialCreator {
   public static byte TRASHHAND;
   public static byte CREATIVEGETITEM;
   public static byte NPC;
+  public static byte NPCDIALOGPAGE;
+  public static byte NPCDIALOGACTION;
 
   public void setID(String name, byte cmd) {
     switch (name) {
@@ -274,6 +278,8 @@ public class Packets implements SerialCreator {
       case "TRASHHAND": TRASHHAND = cmd; break;
       case "CREATIVEGETITEM": CREATIVEGETITEM = cmd; break;
       case "NPC": NPC = cmd; break;
+      case "NPCDIALOGPAGE": NPCDIALOGPAGE = cmd; break;
+      case "NPCDIALOGACTION": NPCDIALOGACTION = cmd; break;
       default: Static.log("ERROR:Packet Name Unknown:" + name); break;
     }
   }

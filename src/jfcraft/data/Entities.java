@@ -34,6 +34,7 @@ public class Entities implements SerialCreator {
   //npcs
   public static int VILLAGER;
   public static int NPC;
+  public static int NPCALEX;
 
   //animals (spawn with world generator)
   public static int PIG;
@@ -82,6 +83,7 @@ public class Entities implements SerialCreator {
     ENDER_CHEST = world.getEntityID("ENDER_CHEST");
     SHIELD = world.getEntityID("SHIELD");
     NPC = world.getEntityID("NPC");
+    NPCALEX = world.getEntityID("NPCALEX");
   }
 
   public int entityCount;
@@ -127,6 +129,7 @@ public class Entities implements SerialCreator {
     registerEntity(new Horse());
     registerEntity(new Shield());
     registerEntity(new NPC());
+    registerEntity(new NPCAlex());
   }
 
   public void initStatic() {

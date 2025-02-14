@@ -162,6 +162,11 @@ public abstract class ServerTransport extends Transport {
     addUpdate(packet);
   }
 
+  public void sendNPCPage(Page page) {
+    Packet packet = new PacketNPCDialogPage(Packets.NPC, page);
+    addUpdate(packet);
+  }
+
   public void sendHealth(Player player) {
     Packet packet = new PacketHealth(Packets.HEALTH, player.uid, player.health);
     addUpdate(packet);

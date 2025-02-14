@@ -66,6 +66,11 @@ public class SerialBuffer {
     writeBytes(v, 0, len);
   }
 
+  public void writeString(String str) {
+    writeInt(str.length());
+    writeBytes(str.getBytes());
+  }
+
   public void writeChar(char v) {
     checkSize(2);
     LE.setuint16(data, pos, v);
@@ -170,6 +175,13 @@ public class SerialBuffer {
     System.arraycopy(data, pos, v, vpos, len);
     pos += len;
     return len;
+  }
+
+  public String readString() {
+    int len = readInt();
+    byte[] bytes = new byte[len];
+    readBytes(bytes);
+    return new String(bytes);
   }
 
   public short readShort() {

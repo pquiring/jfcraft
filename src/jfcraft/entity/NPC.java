@@ -199,7 +199,7 @@ public class NPC extends HumaniodBase {
         && (world.canSpawnOn(chunk.dim,px,py-2,pz)))
       {
         py -= 1.0f;
-        NPC e = new NPC();
+        NPC e = new NPCAlex();
         e.init(world);
         e.dim = chunk.dim;
         e.health = initHealth;
@@ -243,10 +243,19 @@ public class NPC extends HumaniodBase {
     client.serverTransport.sendNPC(this);
     client.serverTransport.enterMenu(Client.NPC);
     client.menu = Client.NPC;
+    client.pages = getPages(client.player);
+    client.pageIndex = 0;
+    if (client.pages != null) {
+      client.serverTransport.sendNPCPage(client.pages[client.pageIndex]);
+    }
   }
 
   public boolean useTool(Client client, Coords c) {
     useEntity(client, false);
     return true;
+  }
+
+  public Page[] getPages(Player player) {
+    return null;
   }
 }

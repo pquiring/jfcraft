@@ -151,7 +151,28 @@ public class NPCMenu extends RenderScreen {
       glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
       setOrtho();
-   }
+    }
+
+    Page page = Static.client.page;
+    if (page != null) {
+      //render page (text)
+      t_text.bind();
+      int tx = 130;
+      int ty = 36;
+      for(String text : page.text) {
+        if (text.startsWith("#")) {
+          //#choice(actions)...
+          int idx = text.indexOf(')');
+          if (idx != -1) {
+            text = text.substring(idx + 1).trim();
+          } else {
+            text = "";
+          }
+        }
+        renderText(tx, ty, text);
+        ty += 8;
+      }
+    }
 
      //inventory blocks
     int p = 0;

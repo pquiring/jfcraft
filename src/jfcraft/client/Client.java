@@ -104,9 +104,15 @@ public class Client {
   public boolean active;  //LOGIN/LOGOUT
   public Exception error;  //error to quit game
   public int spawnAreaDonePercent;
+
   public Villager villager;
-  public NPC npc;
   public int villager_trade_index;
+
+  public NPC npc;
+  public Page[] pages;  //server side
+  public int pageIndex;
+
+  public Page page;  //client side
 
   public Item hand;  //item in hand in menus
   public Item craft[] = new Item[9], crafted;  //crafting table slots
