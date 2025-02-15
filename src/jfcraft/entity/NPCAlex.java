@@ -25,7 +25,8 @@ public class NPCAlex extends NPC {
       return new Page[] {
         new Page(new String[] {
           "Hi, there!",
-          "My name is Alex.",
+          "My name is",
+          "  Alex.",
         })
       };
     } else {
