@@ -23,9 +23,11 @@ package jfcraft.data;
 public class Page implements SerialClass {
   public String[] text;
 
-  //0-5 = select #choice line
-  public static final int EXIT = 10;
-  public static final int NEXT = 11;
+  //0-5 = action : select choice
+  public static final byte ACTION_EXIT = 10;
+  public static final byte ACTION_NEXT = 11;
+
+  public Page() {}
 
   public Page(String[] text) {
     this.text = text;
@@ -37,6 +39,10 @@ public class Page implements SerialClass {
       if (txt.startsWith("#choice")) cnt++;
     }
     return cnt;
+  }
+
+  public String toString() {
+    return "Page:" + text.length;
   }
 
   public boolean write(SerialBuffer buffer, boolean file) {

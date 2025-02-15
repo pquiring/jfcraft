@@ -26,9 +26,13 @@ public class PacketNPC extends Packet {
   //process on client side
   public void process(Client client) {
     int uid = i1;
+    Static.log("NPC Talk:" + uid);
     CreatureBase e;
     e = (CreatureBase)client.world.getEntity(uid);
-    if (e == null) return;
+    if (e == null) {
+      Static.log("NPC not found:" + uid);
+      return;
+    }
     client.npc = (NPC)e;
   }
 

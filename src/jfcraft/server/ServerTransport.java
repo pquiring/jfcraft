@@ -163,7 +163,7 @@ public abstract class ServerTransport extends Transport {
   }
 
   public void sendNPCPage(Page page) {
-    Packet packet = new PacketNPCDialogPage(Packets.NPC, page);
+    Packet packet = new PacketNPCDialogPage(Packets.NPCDIALOGPAGE, page);
     addUpdate(packet);
   }
 

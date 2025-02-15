@@ -276,4 +276,10 @@ public abstract class ClientTransport extends Transport {
       packets.add(packet);
     }
   }
+  public void sendDialogAction(byte action) {
+    Packet packet = new PacketNPCDialogAction(Packets.NPCDIALOGACTION, action);
+    synchronized(packets) {
+      packets.add(packet);
+    }
+  }
 }

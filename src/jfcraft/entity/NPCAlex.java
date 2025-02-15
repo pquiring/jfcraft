@@ -9,6 +9,10 @@ import jfcraft.data.*;
 
 public class NPCAlex extends NPC {
 
+  public NPCAlex() {
+    id = Entities.NPCALEX;
+  }
+
   public String getName() {
     return "NPCAlex";
   }

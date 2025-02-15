@@ -199,7 +199,7 @@ public class NPC extends HumaniodBase {
         && (world.canSpawnOn(chunk.dim,px,py-2,pz)))
       {
         py -= 1.0f;
-        NPC e = new NPCAlex();
+        NPCAlex e = new NPCAlex();
         e.init(world);
         e.dim = chunk.dim;
         e.health = initHealth;
@@ -225,7 +225,7 @@ public class NPC extends HumaniodBase {
     super.hit();
     if (sound == 0) {
       sound = 2 * 20;
-//      Static.server.broadcastSound(dim, pos.x, pos.y, pos.z, Sounds.SOUND_VILLAGER, 1);
+//      Static.server.broadcastSound(dim, pos.x, pos.y, pos.z, Sounds.SOUND_NPC, 1);
     }
   }
   public int[] getSpawnDims() {
@@ -237,8 +237,8 @@ public class NPC extends HumaniodBase {
   }
 
   public void useEntity(Client client, boolean sneak) {
-    Static.log("Villager.useEntity():trade");
-    //open villager menu
+    Static.log("NPC.useEntity()");
+    //open NPC menu
     client.npc = this;
     client.serverTransport.sendNPC(this);
     client.serverTransport.enterMenu(Client.NPC);
@@ -256,6 +256,7 @@ public class NPC extends HumaniodBase {
   }
 
   public Page[] getPages(Player player) {
+    Static.log("NPC:Error:getPages() invoked");
     return null;
   }
 }

@@ -26,14 +26,20 @@ public class PacketNPCDialogAction extends Packet {
 
   //process on server side
   public void process(Server server, Client client) {
-    if (client.pages == null || action == Page.EXIT) {
+    if (client.pages == null) {
+      Static.log("PacketNPCDialogAction:Error:client.pages == null");
+      client.serverTransport.leaveMenu();
+      return;
+    }
+    if (action == Page.ACTION_EXIT) {
       client.serverTransport.leaveMenu();
       return;
     }
     Page page = client.pages[client.pageIndex];
-    if (action == Page.NEXT) {
+    if (action == Page.ACTION_NEXT) {
       if (page.choices() > 0) {
         //should not happen
+        Static.log("PacketNPCDialogAction:Error:action == ACTION_NEXT but there are choices");
         client.serverTransport.leaveMenu();
         return;
       }

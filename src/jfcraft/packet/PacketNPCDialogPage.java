@@ -25,6 +25,7 @@ public class PacketNPCDialogPage extends Packet {
 
   //process on client side
   public void process(Client client) {
+    Static.log("NPCDialogPage:" + page);
     client.page = page;
   }
 
@@ -38,7 +39,7 @@ public class PacketNPCDialogPage extends Packet {
   @Override
   public boolean read(SerialBuffer buffer, boolean file) {
     super.read(buffer, file);
-    page = new Page(null);
+    page = new Page();
     page.read(buffer, file);
     return true;
   }
