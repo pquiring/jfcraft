@@ -245,7 +245,6 @@ public class NPCMenu extends RenderScreen {
         leaveMenu();
         break;
       case KeyCode.VK_E:
-      case KeyCode.VK_D:
         if (cnt == 0) {
           Static.client.clientTransport.sendDialogAction(Page.ACTION_NEXT);
         } else {
