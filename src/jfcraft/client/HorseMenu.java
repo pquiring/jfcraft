@@ -95,8 +95,12 @@ public class HorseMenu extends RenderScreen {
     slots[p].renderName = true;
   }
 
+  private static final int eyes_x = 104;
+  private static final int eyes_y = 85;
+
   public void setup() {
     setCursor(true);
+    horse = (Horse)Static.entities.entities[Entities.HORSE];
   }
 
   public void render(int width, int height) {
@@ -145,6 +149,41 @@ public class HorseMenu extends RenderScreen {
         o_armor_slot.render();
       }
       o_saddle_slot.render();
+    }
+
+    //render NPC
+    if (horse != null) {
+      setOrthoPlayer();
+      setViewportPlayer(52,36+104, 104,104);
+
+      depth(true);
+
+      glClear(GL_DEPTH_BUFFER_BIT);
+      horse.bindTexture();
+      //rotate player to point head towards mouse coords
+      float ey = my - eyes_y;
+      ey /= 2.0f;
+      if (ey < -45.0f) {
+        ey = -45.0f;
+      } else if (ey > 45.0f) {
+        ey = 45.0f;
+      }
+      horse.ang.x = ey;
+      float ex = mx - eyes_x;
+      ex /= 2.0f;
+      if (ex < -45.0f) {
+        ex = -45.0f;
+      } else if (ex > 45.0f) {
+        ex = 45.0f;
+      }
+      horse.ang.y = 180.0f - ex;
+      horse.render();
+
+      glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
+
+      setOrtho();
+      setViewportMenu();
     }
 
     //inventory blocks
