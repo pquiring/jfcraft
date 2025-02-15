@@ -83,10 +83,13 @@ public class PacketNPCDialogAction extends Packet {
       String value = action.substring(idx + 1);
       switch (key) {
         case "event":
-          //TODO
+          idx = value.indexOf('=');
+          String e_key = value.substring(0, idx);
+          String e_value = value.substring(idx + 1);
+          client.player.setEvent(e_key, e_value);
           break;
         case "goto":
-          //TODO
+          client.pageIndex = Integer.valueOf(value);
           break;
       }
     }
