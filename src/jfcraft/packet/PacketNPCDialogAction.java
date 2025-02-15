@@ -75,7 +75,8 @@ public class PacketNPCDialogAction extends Packet {
           client.serverTransport.leaveMenu();
           break;
         case "reload":
-          //TODO
+          client.pages = client.npc.getPages(client.player);
+          client.pageIndex = 0;
           break;
       }
     } else {
