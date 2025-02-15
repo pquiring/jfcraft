@@ -417,7 +417,7 @@ public class Player extends HumaniodBase {
 
   public String getEvent(String key) {
     Event event = events.get(key);
-    if (event == null) return null;
+    if (event == null) return "";
     return event.value;
   }
 

@@ -776,5 +776,6 @@ public class Client {
     villager = null;
     villager_trade_index = -1;
     crafted = null;
+    Static.game.enterMenu(GAME);
   }
 }

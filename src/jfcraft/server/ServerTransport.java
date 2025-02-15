@@ -43,7 +43,7 @@ public abstract class ServerTransport extends Transport {
     send(coder.encodeObject(packet, false));
   }
   public void logout() {
-    Packet packet = new Packet(Packets.LOGOUT);
+    Packet packet = new PacketLogout(Packets.LOGOUT);
     send(coder.encodeObject(packet, false));
   }
   public void respawn(float x, float y, float z) {
@@ -128,7 +128,7 @@ public abstract class ServerTransport extends Transport {
   }
 
   public void leaveMenu() {
-    Packet packet = new Packet(Packets.MENULEAVE);
+    Packet packet = new PacketMenuLeave(Packets.MENULEAVE);
     addUpdate(packet);
   }
 

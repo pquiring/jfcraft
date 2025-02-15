@@ -33,6 +33,12 @@ public class Page implements SerialClass {
     this.text = text;
   }
 
+  public int count() {
+    int cnt = text.length;
+    if (cnt > 6) cnt = 6;
+    return cnt;
+  }
+
   public int choicesCount() {
     int cnt = 0;
     for(String txt : text) {
@@ -46,7 +52,7 @@ public class Page implements SerialClass {
   public boolean[] getChoices() {
     for(int a=0;a<6;a++) {
       if (a < text.length) {
-        choices[a] = text[a].startsWith("#");
+        choices[a] = text[a].startsWith("#choice");
       } else {
         choices[a] = false;
       }
@@ -64,7 +70,7 @@ public class Page implements SerialClass {
   }
 
   public String toString() {
-    return "Page:" + text.length;
+    return "Page:" + text.length + " lines";
   }
 
   public boolean write(SerialBuffer buffer, boolean file) {

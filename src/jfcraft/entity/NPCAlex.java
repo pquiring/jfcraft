@@ -20,7 +20,7 @@ public class NPCAlex extends NPC {
   public static String event_hello = "npc.alex.hello";
 
   public Page[] getPages(Player player) {
-    if (player.getEvent(event_hello) == null) {
+    if (player.getEvent(event_hello).equals("")) {
       player.setEvent(event_hello, "true");
       return new Page[] {
         new Page(new String[] {
@@ -35,7 +35,7 @@ public class NPCAlex extends NPC {
           "#choice(exit) Fox ready!",
           "#choice(exit) Falco ready!",
           "#choice(exit) Toad ready!",
-          "#choice(exit) Hare ready!",
+          "#choice(event:" + event_hello + "=,exit) Hare ready!",
           "Good luck!",
         })
       };

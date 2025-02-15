@@ -59,7 +59,12 @@ public class PacketNPCDialogAction extends Packet {
         doAction(server, client, act);
       }
     }
+    if (client.pages == null) {
+      client.serverTransport.leaveMenu();
+      return;
+    }
     if (client.pageIndex >= client.pages.length) {
+      client.pages = null;
       client.serverTransport.leaveMenu();
       return;
     }
@@ -87,6 +92,7 @@ public class PacketNPCDialogAction extends Packet {
           idx = value.indexOf('=');
           String e_key = value.substring(0, idx);
           String e_value = value.substring(idx + 1);
+          Static.log("Player:event:" + e_key + "=" + e_value);
           client.player.setEvent(e_key, e_value);
           break;
         case "goto":
