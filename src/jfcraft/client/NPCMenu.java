@@ -157,8 +157,8 @@ public class NPCMenu extends RenderScreen {
     if (page != null) {
       //render page (text)
       t_text.bind();
-      int tx = 130;
-      int ty = 36;
+      int tx = 160 + 3;
+      int ty = 36 + fontSize + 3;
       for(String text : page.text) {
         if (text.startsWith("#")) {
           //#choice(actions)...
@@ -170,7 +170,7 @@ public class NPCMenu extends RenderScreen {
           }
         }
         renderText(tx, ty, text);
-        ty += 8;
+        ty += fontSize + 3;
       }
     }
 
