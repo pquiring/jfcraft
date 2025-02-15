@@ -176,6 +176,7 @@ public class NPCMenu extends RenderScreen {
       int tx = 160 + 3;
       int ty = 36 + fontSize + 3;
       for(String text : page.text) {
+        int ox = 0;
         if (text.startsWith("#")) {
           //#choice(actions)...
           int idx = text.indexOf(')');
@@ -184,8 +185,9 @@ public class NPCMenu extends RenderScreen {
           } else {
             text = "";
           }
+          ox = 24;
         }
-        renderText(tx, ty, text);
+        renderText(tx + ox, ty, text);
         ty += fontSize + 3;
       }
       //render arrow on choices or down arrow

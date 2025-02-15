@@ -15,7 +15,7 @@ package jfcraft.data;
  *  event:key=value  //set event if choice selected
  *  goto:index  //go to page (must be last action per choice)
  *  exit //exit dialog if choice selected (must be last action per choice)
- *  reload  //invoke NPC.getPages() again again and go to page 0 if choice selected (must be last action per choice)
+ *  reload  //invoke NPC.getPages() again and go to page 0 if choice selected (must be last action per choice)
  *
  * @author pquiring
  */
