@@ -40,14 +40,14 @@
     </javac>
   </target>
 
-  <target name="jfassets">
+  <target name="zip-jfassets">
     <!-- zip jfassets into jfassets.zip -->
     <zip destfile="jfassets.zip">
       <fileset dir="jfassets" includes="**/*"/>
     </zip>
   </target>
 
-  <target name="jar" depends="compile,depjars,jfassets,get-base,get-audio" description="build jar file">
+  <target name="jar" depends="compile,depjars,zip-jfassets,get-base,get-audio" description="build jar file">
     <!-- Build jar file from class files -->
     <jar destfile="jfcraft.jar" includes="**/*.class" basedir="${build}">
       <fileset dir="." includes="jfcraft.png"/>
