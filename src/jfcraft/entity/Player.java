@@ -436,7 +436,7 @@ public class Player extends HumaniodBase {
         enderChest.items[a].write(buffer, file);
       }
       if (ver >= 1) {
-        Event[] ea = events.entrySet().toArray(Event.array);
+        Event[] ea = events.values().toArray(Event.array);
         buffer.writeInt(ea.length);
         for(Event e : ea) {
           e.write(buffer, file);
