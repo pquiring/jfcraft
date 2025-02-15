@@ -33,12 +33,34 @@ public class Page implements SerialClass {
     this.text = text;
   }
 
-  public int choices() {
+  public int choicesCount() {
     int cnt = 0;
     for(String txt : text) {
       if (txt.startsWith("#choice")) cnt++;
     }
     return cnt;
+  }
+
+  private static boolean[] choices = new boolean[6];
+
+  public boolean[] getChoices() {
+    for(int a=0;a<6;a++) {
+      if (a < text.length) {
+        choices[a] = text[a].startsWith("#");
+      } else {
+        choices[a] = false;
+      }
+    }
+    return choices;
+  }
+
+  public byte firstChoice() {
+    byte off = 0;
+    for(String txt : text) {
+      if (txt.startsWith("#choice")) return off;
+      off++;
+    }
+    return -1;
   }
 
   public String toString() {

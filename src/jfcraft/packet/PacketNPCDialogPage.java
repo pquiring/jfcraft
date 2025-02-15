@@ -27,6 +27,7 @@ public class PacketNPCDialogPage extends Packet {
   public void process(Client client) {
     Static.log("NPCDialogPage:" + page);
     client.page = page;
+    client.choiceIndex = page.firstChoice();
   }
 
   @Override

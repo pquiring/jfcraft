@@ -32,10 +32,10 @@ public class NPCAlex extends NPC {
       return new Page[] {
         new Page(new String[] {
           "Welcome back!",
-          "Fox ready!",
-          "Falco ready!",
-          "Toad ready!",
-          "Hare ready!",
+          "#choice(exit) Fox ready!",
+          "#choice(exit) Falco ready!",
+          "#choice(exit) Toad ready!",
+          "#choice(exit) Hare ready!",
           "Good luck!",
         })
       };

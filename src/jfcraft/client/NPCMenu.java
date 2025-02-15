@@ -29,6 +29,8 @@ public class NPCMenu extends RenderScreen {
   private TextureMap t_menu;
   private RenderBuffers o_menu;
   private Sprite o_backpack_slot;
+  private Sprite o_down_arrow;
+  private Sprite[] o_choices;
   private int mx, my;
   private Slot slots[];
   private HumaniodBase npc;
@@ -105,6 +107,20 @@ public class NPCMenu extends RenderScreen {
       o_backpack_slot = new Sprite("gui/sprites/container/slot", 14,36, 36,36);
     }
 
+    if (o_down_arrow == null) {
+      o_down_arrow = new Sprite("gui/sprites/arrow_down", 14,36, 18,20);
+    }
+
+    if (o_choices == null) {
+      o_choices = new Sprite[6];
+      int x = 160;
+      int y = 36;
+      for(int a=0;a<6;a++) {
+        o_choices[a] = new Sprite("gui/sprites/arrow_right", x,y, 20,18);
+        y += fontSize + 3;
+      }
+    }
+
     glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
     glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
@@ -172,6 +188,18 @@ public class NPCMenu extends RenderScreen {
         renderText(tx, ty, text);
         ty += fontSize + 3;
       }
+      //render arrow on choices or down arrow
+      boolean blink = (Static.client.world.time & 0x10) == 0;
+      int cnt = page.choicesCount();
+      if (cnt == 0) {
+        //render down arrow on blinker
+        if (blink) {
+          o_down_arrow.render();
+        }
+      } else {
+        //render choice arrow
+        o_choices[Static.client.choiceIndex].render();
+      }
     }
 
      //inventory blocks
@@ -194,25 +222,43 @@ public class NPCMenu extends RenderScreen {
     renderItems(slots);
   }
 
-  private byte action = 0;
-
   public void keyPressed(int vk) {
     super.keyPressed(vk);
+    if (Static.client.page == null) return;
+    int cnt = Static.client.page.choicesCount();
+    byte cnt_1 = (byte)(cnt - 1);
+    boolean choices[] = Static.client.page.getChoices();
     switch (vk) {
       case KeyCode.VK_ESCAPE:
         Static.client.clientTransport.leaveMenu();
         leaveMenu();
         break;
-      case KeyCode.VK_E:
       case KeyCode.VK_SPACE:
-        //TODO
-        Static.client.clientTransport.sendDialogAction(Page.ACTION_NEXT);
+        if (cnt == 0) {
+          Static.client.clientTransport.sendDialogAction(Page.ACTION_NEXT);
+        } else {
+          Static.client.clientTransport.sendDialogAction(Static.client.choiceIndex);
+        }
         break;
       case KeyCode.VK_UP:
-        //TODO
+        if (Static.client.choiceIndex == -1) break;
+        do {
+          if (Static.client.choiceIndex == 0) {
+            Static.client.choiceIndex = cnt_1;
+          } else {
+            Static.client.choiceIndex--;
+          }
+        } while (!choices[Static.client.choiceIndex]);
         break;
       case KeyCode.VK_DOWN:
-        //TODO
+        if (Static.client.choiceIndex == -1) break;
+        do {
+          if (Static.client.choiceIndex == cnt_1) {
+            Static.client.choiceIndex = 0;
+          } else {
+            Static.client.choiceIndex++;
+          }
+        } while (!choices[Static.client.choiceIndex]);
         break;
     }
   }

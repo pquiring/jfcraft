@@ -113,6 +113,7 @@ public class Client {
   public int pageIndex;
 
   public Page page;  //client side
+  public byte choiceIndex;
 
   public Item hand;  //item in hand in menus
   public Item craft[] = new Item[9], crafted;  //crafting table slots
