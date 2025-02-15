@@ -2,7 +2,7 @@ package jfcraft.data;
 
 /** Page - a page of text (dialog) with NPC.
  *
- * max 6 lines.
+ * max 6 lines of 14 chars.
  *
  * Special tokens:
  *
