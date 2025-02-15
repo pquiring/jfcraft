@@ -1205,10 +1205,10 @@ public class Blocks {
         }
         st.x1 = x / texture.sx;
         st.y1 = y / texture.sy;
-        st.x2 = (x + w - 1) / texture.sx;
-        st.y2 = (y + h - 1) / texture.sy;
-        st.width = st.x2 - st.x1 + (1.0f/texture.sx);
-        st.height = st.y2 - st.y1 + (1.0f/texture.sy);
+        st.x2 = (x + w) / texture.sx;
+        st.y2 = (y + h) / texture.sy;
+        st.width = w / texture.sx;
+        st.height = h / texture.sy;
         if (isFlow) {
           //calc 45 degree coords
           //this is why the flow's are 2x2 of the same subimage

@@ -829,10 +829,10 @@ public class Items {
           st.texture = stitched;
           st.x1 = ((float)ai.x) / ((float)stitched.sx);
           st.y1 = ((float)ai.y) / ((float)stitched.sy);
-          st.x2 = ((float)(ai.x + ai.w - 1)) / ((float)stitched.sx);
-          st.y2 = ((float)(ai.y + ai.h - 1)) / ((float)stitched.sy);
-          st.width = st.x2 - st.x1 + (1.0f/stitched.sx);
-          st.height = st.y2 - st.y1 + (1.0f/stitched.sy);
+          st.x2 = ((float)(ai.x + ai.w)) / ((float)stitched.sx);
+          st.y2 = ((float)(ai.y + ai.h)) / ((float)stitched.sy);
+          st.width = ai.w / stitched.sx;
+          st.height = ai.h / stitched.sy;
         } else {
           st.isAnimated = ai.isAnimated;
           st.x1s = new float[ai.noFrames];
@@ -842,11 +842,11 @@ public class Items {
           for(int c=0;c<ai.noFrames;c++) {
             st.x1s[c] = ((float)ai.xs[c]) / ((float)stitched.sx);
             st.y1s[c] = ((float)ai.ys[c]) / ((float)stitched.sy);
-            st.x2s[c] = ((float)(ai.xs[c] + ai.w - 1)) / ((float)stitched.sx);
-            st.y2s[c] = ((float)(ai.ys[c] + ai.h - 1)) / ((float)stitched.sy);
+            st.x2s[c] = ((float)(ai.xs[c] + ai.w)) / ((float)stitched.sx);
+            st.y2s[c] = ((float)(ai.ys[c] + ai.h)) / ((float)stitched.sy);
           }
-          st.width = st.x2 - st.x1;
-          st.height = st.y2 - st.y1;
+          st.width = ai.w / stitched.sx;
+          st.height = ai.h / stitched.sy;
         }
         item.textures[b] = st;
       }
