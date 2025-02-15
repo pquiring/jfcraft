@@ -341,7 +341,7 @@ public class CreativeMenu extends RenderScreen {
   public void keyPressed(int vk) {
     super.keyPressed(vk);
     switch (vk) {
-//      case KeyCode.VK_E:
+      case KeyCode.VK_E:
       case KeyCode.VK_ESCAPE:
         Static.client.clientTransport.leaveMenu();
         leaveMenu();
