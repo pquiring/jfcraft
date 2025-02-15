@@ -151,8 +151,12 @@ public class HorseMenu extends RenderScreen {
       o_saddle_slot.render();
     }
 
-    //render NPC
+    //render horse
     if (horse != null) {
+      Horse real = (Horse)Static.client.player.vehicle;
+      if (real != null) {
+        horse.flags = real.flags;  //update SADDLE, ARMOR flags
+      }
       setOrthoPlayer();
       setViewportPlayer(52,36+104, 104,104);
 
