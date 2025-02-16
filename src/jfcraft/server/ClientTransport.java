@@ -133,7 +133,7 @@ public abstract class ClientTransport extends Transport {
     }
   }
   public void enterMenu(byte menu) {
-    //TODO : remove this packet - do on server side
+    //only used for InventoryMenu and CreativeMenu
     Packet packet = new PacketMenuEnter(Packets.MENUENTER, menu);
     synchronized(packets) {
       packets.add(packet);

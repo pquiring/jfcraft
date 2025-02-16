@@ -30,6 +30,8 @@ public class Client {
   public String name, pass;
   public boolean auth = false;
   public boolean isLocal = false;
+  public boolean isClient = false;
+  public boolean isServer = false;
 
   public Player player;
   public XYZ ang = new XYZ();  //mouse angle (copied to player in tick)
@@ -140,13 +142,17 @@ public class Client {
     Static.initClientThread(name, stdout, true);
   }
 
+  /** Create Client for server side. */
   public Client(ServerTransport transport) {
     this.serverTransport = transport;
+    isServer = true;
     init();
   }
 
+  /** Create Client for client side. */
   public Client(ClientTransport transport) {
     this.clientTransport = transport;
+    isClient = true;
     init();
   }
 
@@ -768,7 +774,7 @@ public class Client {
     }
   }
 
-  public void leaveMenuReset() {
+  public void leaveMenu() {
     chunk = null;
     bedtime = 0;
     leavebed = true;
@@ -776,6 +782,8 @@ public class Client {
     villager = null;
     villager_trade_index = -1;
     crafted = null;
-    Static.game.enterMenu(GAME);
+    if (isClient) {
+      Static.game.leaveMenu();
+    }
   }
 }
