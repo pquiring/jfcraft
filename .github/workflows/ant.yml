@@ -32,5 +32,6 @@ jobs:
     - name: Build JavaForce with Ant
       run: ant -noinput -buildfile build.xml
     - name: Build jfCraft with Ant
-      run: ant -noinput -buildfile build.xml
-			working-directory: games/jfcraft
+      run: |
+        cd games/jfcraft
+        ant -noinput -buildfile build.xml
