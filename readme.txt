@@ -1,5 +1,5 @@
-jfCraft/0.38
-============
+jfCraft
+=======
 
 Yet another implementation of the MineCraft game.
 Written in Java.

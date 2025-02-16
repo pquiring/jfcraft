@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+Feb 15, 2025 : v0.39 released!
+  - added NPC - you can talk to them
+    try "/spawn npcalex" and right click on character
+  - render horse in HorseMenu
+  - many bug fixes
+
 Jan 25, 2025 : v0.38 released!
   - added many new blocks + slam variant
 
