@@ -1,6 +1,8 @@
 package jfcraft.block;
 
-/**
+/** Stairs
+ *
+ * https://minecraft.fandom.com/wiki/Stairs
  *
  * @author pquiring
  *
@@ -181,37 +183,88 @@ public class BlockStairs extends BlockBase {
   public boolean place(Client client, Coords c) {
     //check if creating corner stairs and change dir as required
     World world = Static.server.world;
+    int _N = N << 4, _E = E << 4, _S = S << 4, _W = W << 4;
+    if (c.face_y == A) {
+      _N |= VAR_UPPER;
+      _E |= VAR_UPPER;
+      _S |= VAR_UPPER;
+      _W |= VAR_UPPER;
+    }
     char id_n = world.getID(client.player.dim, c.x, c.y, c.z - 1);
+    int bits_n = world.getBits(client.player.dim, c.x, c.y, c.z - 1) & 0xf8;
     char id_e = world.getID(client.player.dim, c.x + 1, c.y, c.z);
+    int bits_e = world.getBits(client.player.dim, c.x + 1, c.y, c.z) & 0xf8;
     char id_s = world.getID(client.player.dim, c.x, c.y, c.z + 1);
+    int bits_s = world.getBits(client.player.dim, c.x, c.y, c.z + 1) & 0xf8;
     char id_w = world.getID(client.player.dim, c.x - 1, c.y, c.z);
+    int bits_w = world.getBits(client.player.dim, c.x - 1, c.y, c.z) & 0xf8;
     switch (c.dir_xz) {
       case N:
-        if (id_e == id) {
-          c.dir_xz = NE2;
-        } else if (id_w == id) {
-          c.dir_xz = NW2;
+        if (id_s == id) {
+          //inner corner
+          if (bits_s == _E) {
+            c.dir_xz = NE;
+          } else if (bits_s == _W) {
+            c.dir_xz = NW;
+          }
+        } else if (id_n == id) {
+          //outer corner
+          if (bits_n == _E) {
+            c.dir_xz = NE2;
+          } else if (bits_n == _W) {
+            c.dir_xz = NW2;
+          }
         }
         break;
       case E:
-        if (id_n == id) {
-          c.dir_xz = NE2;
-        } else if (id_s == id) {
-          c.dir_xz = SE2;
+        if (id_w == id) {
+          //inner corner
+          if (bits_w == _N) {
+            c.dir_xz = NE;
+          } else if (bits_w == _S) {
+            c.dir_xz = SE;
+          }
+        } else if (id_e == id) {
+          //outer corner
+          if (bits_e == _N) {
+            c.dir_xz = NE2;
+          } else if (bits_e == _S) {
+            c.dir_xz = SE2;
+          }
         }
         break;
       case S:
-        if (id_e == id) {
-          c.dir_xz = SE2;
-        } else if (id_w == id) {
-          c.dir_xz = SW2;
+        if (id_n == id) {
+          //inner corner
+          if (bits_n == _E) {
+            c.dir_xz = SE;
+          } else if (bits_n == _W) {
+            c.dir_xz = SW;
+          }
+        } else if (id_s == id) {
+          //outer corner
+          if (bits_s == _E) {
+            c.dir_xz = SE2;
+          } else if (bits_s == _W) {
+            c.dir_xz = SW2;
+          }
         }
         break;
       case W:
-        if (id_n == id) {
-          c.dir_xz = NW2;
-        } else if (id_s == id) {
-          c.dir_xz = SW2;
+        if (id_e == id) {
+          //inner corner
+          if (bits_e == _N) {
+            c.dir_xz = NW;
+          } else if (bits_e == _S) {
+            c.dir_xz = SW;
+          }
+        } else if (id_w == id) {
+          //outer corner
+          if (bits_w == _N) {
+            c.dir_xz = NW2;
+          } else if (bits_w == _S) {
+            c.dir_xz = SW2;
+          }
         }
         break;
     }
