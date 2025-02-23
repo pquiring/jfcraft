@@ -230,6 +230,17 @@ public class World implements SerialClass, SerialCreator {
     if (z < 0 && gz != 0) gz = 16 + gz;
     return chunk.isEmpty(gx,gy,gz);
   }
+  public boolean isEmpty1(int dim, float x, float y, float z) {
+    int cx = Static.floor(x / 16.0f);
+    int cz = Static.floor(z / 16.0f);
+    Chunk chunk = chunks.getChunk(dim, cx, cz);
+    int gx = Static.floor(x % 16.0f);
+    if (x < 0 && gx != 0) gx = 16 + gx;
+    int gy = Static.floor(y);
+    int gz = Static.floor(z % 16.0f);
+    if (z < 0 && gz != 0) gz = 16 + gz;
+    return chunk.isEmpty1(gx,gy,gz);
+  }
 
   public boolean canSpawnOn(int dim, float x, float y, float z) {
     int cx = Static.floor(x / 16.0f);

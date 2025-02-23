@@ -1505,6 +1505,10 @@ public class Chunk /*extends ClientServer*/ implements SerialClass, SerialCreato
     return (getBlock(x,y,z) == 0 && getBlock2(x,y,z) == 0);
   }
 
+  public boolean isEmpty1(int x,int y,int z) {
+    return (getBlock(x,y,z) == 0);
+  }
+
   public boolean canSpawnOn(int x,int y,int z) {
     if (getBlock2(x,y,z) != 0) return false;
     BlockBase base = getBlockType(x, y, z);

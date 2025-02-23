@@ -901,7 +901,7 @@ public class Game extends RenderScreen {
       Static.camera_pos.x += forward.v[0];
       Static.camera_pos.y += forward.v[1];
       Static.camera_pos.z += forward.v[2];
-      if (!world.isEmpty(dim, Static.camera_pos.x, Static.camera_pos.y, Static.camera_pos.z)) {
+      if (!world.isEmpty1(dim, Static.camera_pos.x, Static.camera_pos.y, Static.camera_pos.z)) {
         Static.camera_pos.x -= forward.v[0];
         Static.camera_pos.y -= forward.v[1];
         Static.camera_pos.z -= forward.v[2];
