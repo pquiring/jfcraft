@@ -879,6 +879,7 @@ public abstract class RenderScreen {
       }
       txt.insert(cpos, ch);
       cpos++;
+      findCursor();
     }
     public void keyPressed(int code) {
       switch (code) {
@@ -948,6 +949,34 @@ public abstract class RenderScreen {
     public void delete() {
       if (cpos == txt.length()) return;
       txt.deleteCharAt(cpos);
+    }
+    public void render(boolean focus) {
+      if (back != null) {
+        renderBar(x1, y1 + fontSize + 4, width, fontSize + 4, back);
+      }
+      int x = x1;
+      int y = y1;
+      int sl = txt.length();
+      int xp = 0;
+      if (center) {
+        x += (width - sl * fontSize * scale) / 2;
+        xp = x;
+      }
+      t_text.bind();
+      int cnt = 0;
+      for(int p=dpos;p<txt.length() && cnt < chars;p++) {
+        renderChar(x+1,y+1,txt.charAt(p),Static.white4, scale);
+        x += fontSize * scale;
+        cnt++;
+      }
+      if (showCursor && focus) {
+        if (center) {
+          renderChar(x, y,'<', Static.white, scale);
+          renderChar(xp - fontSize * scale, y,'>', Static.white, scale);
+        } else {
+          renderChar(xp + ((cpos - dpos) * fontSize), y,(char)219, Static.white, scale);
+        }
+      }
     }
   }
 
@@ -1065,30 +1094,7 @@ public abstract class RenderScreen {
     setOrtho();
     for(int a=0;a<fields.size();a++) {
       TextField field = fields.get(a);
-      if (field.back != null) {
-        renderBar(field.x1, field.y1 + fontSize + 4, field.width, fontSize + 4, field.back);
-      }
-      int x = field.x1;
-      int y = field.y1;
-      int sl = field.txt.length();
-      int x1 = 0;
-      if (field.center) {
-        x += (field.width - sl * fontSize * field.scale) / 2;
-        x1 = x;
-      }
-      t_text.bind();
-      for(int p=field.dpos;p<field.txt.length();p++) {
-        renderChar(x+1,y+1,field.txt.charAt(p),Static.white4, field.scale);
-        x += fontSize * field.scale;
-      }
-      if (showCursor && focus == field) {
-        if (field.center) {
-          renderChar(x, y,'<', Static.white, field.scale);
-          renderChar(x1 - fontSize * field.scale, y,'>', Static.white, field.scale);
-        } else {
-          renderChar(field.x1 + ((field.cpos - field.dpos) * fontSize), y,(char)219, Static.white, field.scale);
-        }
-      }
+      field.render(focus == field);
     }
   }
 
