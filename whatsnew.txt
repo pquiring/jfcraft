@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+Mar 1, 2025 : v0.40 released!
+  - fix stairs corners
+  - fix flowers
+
 Feb 15, 2025 : v0.39 released!
   - added NPC - you can talk to them
     try "/spawn npcalex" and right click on character

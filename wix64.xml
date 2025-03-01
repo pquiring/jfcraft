@@ -1,5 +1,5 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
-  <Package UpgradeCode="{809FD072-8BEC-488F-BFB0-DB05C98E17BA}" Version="0.39" Language="1033" Name="jfCraft" Manufacturer="Peter Quiring" InstallerVersion="300">
+  <Package UpgradeCode="{809FD072-8BEC-488F-BFB0-DB05C98E17BA}" Version="0.40" Language="1033" Name="jfCraft" Manufacturer="Peter Quiring" InstallerVersion="300">
     <Media Id="1" Cabinet="files.cab" EmbedCab="yes" />
     <ui:WixUI Id="WixUI_Minimal" />
     <MajorUpgrade DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." />
