@@ -68,6 +68,11 @@ public class Item implements java.lang.Cloneable, SerialClass, SerialCreator {
   public final boolean isEmpty() {
     return id == 0;
   }
+
+  public ItemBase getItemBase() {
+    return Static.items.items[id];
+  }
+
   public final String toString() {
     return "item:" + (int)id + "," + var + "," + count + "," + dmg;
   }

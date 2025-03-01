@@ -1178,16 +1178,27 @@ public class Server {
         cnt = JF.atoi(p[3]);
         if (cnt < 1 || cnt > 64) cnt = 1;
       }
-      int var = 0;
+      int var = -1;
       if (p.length >= 5) {
         var = JF.atoi(p[4]);
-        if (var < 0 || var > 7) var = 0;
+        if (var < 0 || var > 7) var = -1;
       }
       Item item = findItem(p[2], cnt);
       if (item == null) {
         client.serverTransport.sendMsg("Error:Item not found:" + p[2]);
       } else {
-        item.var = (byte)var;
+        if (var != -1) {
+          //validate var
+          ItemBase itembase = item.getItemBase();
+          if (itembase.isVar) {
+            if (var >= itembase.names.length) {
+              var = -1;
+            }
+            if (var != -1) {
+              item.var = (byte)var;
+            }
+          }
+        }
         Static.log("give:" + (int)item.id + ":" + cnt);
         client.addItem(item, true);
       }
