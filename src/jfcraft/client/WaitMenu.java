@@ -57,8 +57,8 @@ public class WaitMenu extends RenderScreen {
     o_menu.bindBuffers();
     o_menu.render();
 
-    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     int x1 = (512 - msg1.length() * fontSize) / 2;
     renderText(x1, 50, msg1);

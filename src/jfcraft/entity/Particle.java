@@ -108,7 +108,7 @@ public class Particle extends EntityBase {
     up.v[2] = 0;
     mat.lookAt(eye, at, up);
     mat.addScale(scale, scale, scale);
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
     RenderBuffers buf = getDest().getBuffers(0);
     buf.bindBuffers();
     buf.render();

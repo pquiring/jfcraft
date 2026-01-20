@@ -42,11 +42,12 @@ public class RenderBuffers implements Cloneable {
     }
   }
   public static void freeBuffers() {
+    GL gl = GL.getInstance();
     synchronized(freeList) {
       while(freeList.size() > 0) {
         int ids[] = freeList.remove(0);
 //        Static.log("Free GL IDs:" + ids.length);
-        glDeleteBuffers(ids.length, ids);
+        gl.glDeleteBuffers(ids.length, ids);
       }
     }
   }
@@ -695,9 +696,10 @@ public class RenderBuffers implements Cloneable {
   }
 
   public void alloc() {
+    GL gl = GL.getInstance();
     if (alloced) return;
     int ids[] = new int[7];
-    glGenBuffers(ids.length, ids);
+    gl.glGenBuffers(ids.length, ids);
     vpb = ids[0];
     uvb1 = ids[1];
     uvb2 = ids[2];
@@ -709,14 +711,16 @@ public class RenderBuffers implements Cloneable {
   }
 
   public void free() {
+    GL gl = GL.getInstance();
     if (!alloced) return;
     int ids[] = new int[] {vpb, uvb1, uvb2, vib, lcb, slb, blb};
-    glDeleteBuffers(ids.length, ids);
+    gl.glDeleteBuffers(ids.length, ids);
     alloced = false;
   }
 
   /** Copies stored vertex/poly data to GL buffers */
   public void copyBuffers() {
+    GL gl = GL.getInstance();
     float fa[];
     int ia[];
 
@@ -724,65 +728,67 @@ public class RenderBuffers implements Cloneable {
       alloc();
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, vpb);
+    gl.glBindBuffer(GL_ARRAY_BUFFER, vpb);
     fa = vpl.getBuffer();  //warning getBuffer() may be larger than toArray()
-    glBufferData(GL_ARRAY_BUFFER, vpl.size() * 4, fa, GL_STATIC_DRAW);
+    gl.glBufferData(GL_ARRAY_BUFFER, vpl.size() * 4, fa, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, uvb1);
+    gl.glBindBuffer(GL_ARRAY_BUFFER, uvb1);
     fa = uvl1.getBuffer();
-    glBufferData(GL_ARRAY_BUFFER, uvl1.size() * 4, fa, GL_STATIC_DRAW);
+    gl.glBufferData(GL_ARRAY_BUFFER, uvl1.size() * 4, fa, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, uvb2);
+    gl.glBindBuffer(GL_ARRAY_BUFFER, uvb2);
     fa = uvl2.getBuffer();
-    glBufferData(GL_ARRAY_BUFFER, uvl2.size() * 4, fa, GL_STATIC_DRAW);
+    gl.glBufferData(GL_ARRAY_BUFFER, uvl2.size() * 4, fa, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vib);
+    gl.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vib);
     ia = vil.getBuffer();
     idxCnt = vil.size();
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, vil.size() * 4, ia, GL_STREAM_DRAW);
+    gl.glBufferData(GL_ELEMENT_ARRAY_BUFFER, vil.size() * 4, ia, GL_STREAM_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, lcb);
+    gl.glBindBuffer(GL_ARRAY_BUFFER, lcb);
     fa = lcl.getBuffer();
-    glBufferData(GL_ARRAY_BUFFER, lcl.size() * 4, fa, GL_STATIC_DRAW);
+    gl.glBufferData(GL_ARRAY_BUFFER, lcl.size() * 4, fa, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, slb);
+    gl.glBindBuffer(GL_ARRAY_BUFFER, slb);
     fa = sll.getBuffer();
-    glBufferData(GL_ARRAY_BUFFER, sll.size() * 4, fa, GL_STATIC_DRAW);
+    gl.glBufferData(GL_ARRAY_BUFFER, sll.size() * 4, fa, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, blb);
+    gl.glBindBuffer(GL_ARRAY_BUFFER, blb);
     fa = bll.getBuffer();
-    glBufferData(GL_ARRAY_BUFFER, bll.size() * 4, fa, GL_STATIC_DRAW);
+    gl.glBufferData(GL_ARRAY_BUFFER, bll.size() * 4, fa, GL_STATIC_DRAW);
   }
 
   public void bindBuffers() {
+    GL gl = GL.getInstance();
     if (idxCnt == 0) {
       //Static.logTrace("Error:RenderBuffer.bindBuffers() but buffers are empty");
       return;
     }
-    glBindBuffer(GL_ARRAY_BUFFER, vpb);
-    glVertexAttribPointer(Static.attribVertex, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    gl.glBindBuffer(GL_ARRAY_BUFFER, vpb);
+    gl.glVertexAttribPointer(Static.attribVertex, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, uvb1);
-    glVertexAttribPointer(Static.attribTextureCoords, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    gl.glBindBuffer(GL_ARRAY_BUFFER, uvb1);
+    gl.glVertexAttribPointer(Static.attribTextureCoords, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, uvb2);
-    glVertexAttribPointer(Static.attribTextureCoords2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    gl.glBindBuffer(GL_ARRAY_BUFFER, uvb2);
+    gl.glVertexAttribPointer(Static.attribTextureCoords2, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, lcb);
-    glVertexAttribPointer(Static.attribColor, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    gl.glBindBuffer(GL_ARRAY_BUFFER, lcb);
+    gl.glVertexAttribPointer(Static.attribColor, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, slb);
-    glVertexAttribPointer(Static.attribSunLight, 1, GL_FLOAT, GL_FALSE, 0, 0);
+    gl.glBindBuffer(GL_ARRAY_BUFFER, slb);
+    gl.glVertexAttribPointer(Static.attribSunLight, 1, GL_FLOAT, GL_FALSE, 0, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, blb);
-    glVertexAttribPointer(Static.attribBlockLight, 1, GL_FLOAT, GL_FALSE, 0, 0);
+    gl.glBindBuffer(GL_ARRAY_BUFFER, blb);
+    gl.glVertexAttribPointer(Static.attribBlockLight, 1, GL_FLOAT, GL_FALSE, 0, 0);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vib);
+    gl.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vib);
   }
 
   public void render() {
+    GL gl = GL.getInstance();
     if (idxCnt == 0) return;
-    glDrawElements(type, idxCnt, GL_UNSIGNED_INT, 0);
+    gl.glDrawElements(type, idxCnt, GL_UNSIGNED_INT, 0);
   }
 
   /** Adjust UV coords for a stitched texture */

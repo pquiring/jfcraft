@@ -118,7 +118,7 @@ public class Boat extends VehicleBase {
     mat.setIdentity();
     mat.addRotate(-ang.y, 0, 1, 0);
     mat.addTranslate(pos.x, pos.y, pos.z);
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
   public void render() {
@@ -129,7 +129,7 @@ public class Boat extends VehicleBase {
       buf.bindBuffers();
       buf.render();
     }
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
   }
 
   public boolean canUse() {

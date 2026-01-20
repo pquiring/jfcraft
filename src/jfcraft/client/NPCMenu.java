@@ -122,8 +122,8 @@ public class NPCMenu extends RenderScreen {
       }
     }
 
-    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     renderShade();
 
@@ -142,7 +142,7 @@ public class NPCMenu extends RenderScreen {
 
       depth(true);
 
-      glClear(GL_DEPTH_BUFFER_BIT);
+      gl.glClear(GL_DEPTH_BUFFER_BIT);
       npc.bindTexture();
       //rotate player to point head towards mouse coords
       float ey = my - eyes_y;
@@ -164,8 +164,8 @@ public class NPCMenu extends RenderScreen {
       npc.activeSlot = 0;
       npc.render();
 
-      glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
-      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
+      gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
       setOrtho();
       setViewportMenu();

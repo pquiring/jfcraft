@@ -25,9 +25,10 @@ public class AssetImage extends Asset {
   //block animation
   int curFrame;
   public void nextFrame() {
+    GL gl = GL.getInstance();
     curFrame++;
     if (curFrame == noFrames) curFrame = 0;
-    glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_BGRA, GL_UNSIGNED_BYTE, images[curFrame].getBuffer());
+    gl.glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_BGRA, GL_UNSIGNED_BYTE, images[curFrame].getBuffer());
   }
 
   private void init2() {
@@ -38,11 +39,12 @@ public class AssetImage extends Asset {
   }
 
   public void reload(boolean alpha) {
+    GL gl = GL.getInstance();
     if (alpha) {
-      glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_BGRA, GL_UNSIGNED_BYTE, image.getBuffer());
+      gl.glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_BGRA, GL_UNSIGNED_BYTE, image.getBuffer());
     } else {
       init2();
-      glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_BGRA, GL_UNSIGNED_BYTE, image2.getBuffer());
+      gl.glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, w, h, GL_BGRA, GL_UNSIGNED_BYTE, image2.getBuffer());
     }
   }
 

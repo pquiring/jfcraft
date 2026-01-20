@@ -42,24 +42,25 @@ public class EnvironmentNether implements EnvironmentBase {
   private Matrix view = new Matrix();
 
   public void preRender(int time, float sunLight, Client client, XYZ camera, Chunk[] chunks) {
+    GL gl = GL.getInstance();
     float zAngle = time;
     zAngle /= (24000f / 360f);
 
     view.setIdentity();
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, view.m);  //model matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, view.m);  //model matrix
     view.addRotate(Static.camera_ang.x, 1, 0, 0);
     view.addRotate(Static.camera_ang.y, 0, 1, 0);
     view.addRotate(zAngle, 0, 0, 1);
-    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
 
     depth(false);
 
-    glUniform1f(Static.uniformAlphaFactor, sunLight);
+    gl.glUniform1f(Static.uniformAlphaFactor, sunLight);
     redSky.bind();
     skybox.bindBuffers();
     skybox.render();
 
-    glUniform1f(Static.uniformAlphaFactor, 1.0f);
+    gl.glUniform1f(Static.uniformAlphaFactor, 1.0f);
 
     depth(true);
   }

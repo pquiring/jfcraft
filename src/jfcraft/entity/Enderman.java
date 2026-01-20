@@ -155,7 +155,7 @@ public class Enderman extends HumaniodBase {
         break;
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
   public void ctick() {

@@ -120,38 +120,41 @@ public class TextureMap {
   }
 
   public void load(JFImage image) {
+    GL gl = GL.getInstance();
     int ids[] = new int[1];
     ids[0] = -1;
-    glGenTextures(1, ids);
+    gl.glGenTextures(1, ids);
     if (ids[0] == -1) {
       JFAWT.showError("Error", "glGenTextures failed");
       System.exit(0);
     }
     glid = ids[0];
-    glActiveTexture(GL_TEXTURE0 + unit);
-    glBindTexture(GL_TEXTURE_2D, glid);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    gl.glActiveTexture(GL_TEXTURE0 + unit);
+    gl.glBindTexture(GL_TEXTURE_2D, glid);
+    gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     if (mipmaps) {
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+      gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+      gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     } else {
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+      gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+      gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     }
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(), 0, GL_BGRA
+    gl.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(), 0, GL_BGRA
       , GL_UNSIGNED_BYTE, image.getBuffer());
   }
 
   public void unload() {
+    GL gl = GL.getInstance();
     int ids[] = new int[1];
     ids[0] = glid;
-    glDeleteTextures(1, ids);
+    gl.glDeleteTextures(1, ids);
   }
 
   public void bind() {
-    glActiveTexture(GL_TEXTURE0 + unit);
-    glBindTexture(GL_TEXTURE_2D, glid);
+    GL gl = GL.getInstance();
+    gl.glActiveTexture(GL_TEXTURE0 + unit);
+    gl.glBindTexture(GL_TEXTURE_2D, glid);
   }
 
   /** Returns a SubTexture that is part of this texture. */

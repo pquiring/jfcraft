@@ -308,19 +308,19 @@ public class Horse extends VehicleBase {
     textures[type].bind();
     if (pattern != PATTERN_NONE) {
       textures[pattern].bind();
-      glUniform1i(Static.uniformEnableHorsePattern, 1);
+      gl.glUniform1i(Static.uniformEnableHorsePattern, 1);
     }
     if (haveArmor(FLAG_ARMOR_IRON)) {
       textures[ARMOR_IRON].bind();
-      glUniform1i(Static.uniformEnableHorseArmor, 1);
+      gl.glUniform1i(Static.uniformEnableHorseArmor, 1);
     }
     else if (haveArmor(FLAG_ARMOR_GOLD)) {
       textures[ARMOR_GOLD].bind();
-      glUniform1i(Static.uniformEnableHorseArmor, 1);
+      gl.glUniform1i(Static.uniformEnableHorseArmor, 1);
     }
     else if (haveArmor(FLAG_ARMOR_DIAMOND)) {
       textures[ARMOR_DIAMOND].bind();
-      glUniform1i(Static.uniformEnableHorseArmor, 1);
+      gl.glUniform1i(Static.uniformEnableHorseArmor, 1);
     }
   }
 
@@ -423,7 +423,7 @@ public class Horse extends VehicleBase {
         break;
     }
     mat.addTranslate(pos.x, pos.y, pos.z);
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
   private void renderPart(int part) {
@@ -444,8 +444,8 @@ public class Horse extends VehicleBase {
     for(int a=0;a<cnt;a++) {
       renderPart(ep[a]);
     }
-    glUniform1i(Static.uniformEnableHorsePattern, 0);
-    glUniform1i(Static.uniformEnableHorseArmor, 0);
+    gl.glUniform1i(Static.uniformEnableHorsePattern, 0);
+    gl.glUniform1i(Static.uniformEnableHorseArmor, 0);
     if (haveChest() && enable_chest) {
       //v1
       renderPart(CHEST);

@@ -28,6 +28,8 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
   public XYZ ang = new XYZ();  //angle
   public XYZ vel = new XYZ();  //velocity
 
+  public static GL gl;
+
 //  public boolean debug = false;
 
   //the position represent the entities center position at the bottom (feet)
@@ -87,8 +89,11 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     scale = 1.0f;
   }
 
-  public void initStatic() {}
-  public void initStaticGL() {}
+  public void initStatic() {
+  }
+  public void initStaticGL() {
+    gl = GL.getInstance();
+  }
   public void initInstance() {
     instanceInited = true;
   }
@@ -1073,7 +1078,7 @@ public abstract class EntityBase implements EntityHitTest, RenderSource, SerialC
     float sl = ((float)world.getSunLight(dim, pos.x, pos.y + height2, pos.z)) / 15.0f * sunLight;
     float lvl;
     if (sl > bl) lvl = sl; else lvl = bl;
-    glUniform1f(Static.uniformSunLight, lvl);
+    gl.glUniform1f(Static.uniformSunLight, lvl);
   }
 
   /** Returns items entity drops on death. */

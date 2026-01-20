@@ -201,7 +201,7 @@ public class Game extends RenderScreen {
       perspective.perspective(fov, ratio, zNear, zFar);
       frustum.setPerspecive(fov, ratio, zNear, zFar);
     }
-    glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, perspective.m);  //perspective matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, perspective.m);  //perspective matrix
 
     Static.camera_pos.x = Static.client.player.pos.x;
     Static.camera_pos.y = Static.client.player.pos.y + Static.client.player.eyeHeight;
@@ -255,12 +255,12 @@ public class Game extends RenderScreen {
       Static.camera_ang.y -= Static.debugY;
     }
 
-    glUniform1f(Static.uniformSunLight, 1.0f);
-    if (!Static.debugDisableFog) glUniform1i(Static.uniformEnableFog, 0);
+    gl.glUniform1f(Static.uniformSunLight, 1.0f);
+    if (!Static.debugDisableFog) gl.glUniform1i(Static.uniformEnableFog, 0);
     Static.dims.dims[dim].getEnvironment().preRender(world.time, sunLight, Static.client, Static.camera_pos, chunks);
-    if (!Static.debugDisableFog) glUniform1i(Static.uniformEnableFog, 1);
+    if (!Static.debugDisableFog) gl.glUniform1i(Static.uniformEnableFog, 1);
 
-    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
 
     //setup frustum culling
     p3.set(Static.camera_pos.x, Static.camera_pos.y, Static.camera_pos.z);
@@ -348,7 +348,7 @@ public class Game extends RenderScreen {
       if (!chunk.inRange) continue;
       obj = chunk.dest.getBuffers(Chunk.DEST_NORMAL);
       if (obj.isBufferEmpty()) continue;
-      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, chunk.mat.m);  //model matrix
+      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, chunk.mat.m);  //model matrix
       obj.bindBuffers();
       obj.render();
       cnt++;
@@ -386,11 +386,11 @@ public class Game extends RenderScreen {
       }
       o_box.copyBuffers();
       o_box.mat.setTranslate(Static.client.selection.x, Static.client.selection.y, Static.client.selection.z);
-      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, o_box.mat.m);  //model matrix
+      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, o_box.mat.m);  //model matrix
       o_box.bindBuffers();
-      glUniform1i(Static.uniformEnableTextures, 0);
+      gl.glUniform1i(Static.uniformEnableTextures, 0);
       o_box.render();
-      glUniform1i(Static.uniformEnableTextures, 1);
+      gl.glUniform1i(Static.uniformEnableTextures, 1);
     }
     //render box around selected entity
     if (Static.client.selection.entity != null) {
@@ -424,11 +424,11 @@ public class Game extends RenderScreen {
       o_box.addPoly(boxPoly);
       o_box.copyBuffers();
       o_box.mat.setTranslate(0,0,0);
-      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, o_box.mat.m);  //model matrix
+      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, o_box.mat.m);  //model matrix
       o_box.bindBuffers();
-      glUniform1i(Static.uniformEnableTextures, 0);
+      gl.glUniform1i(Static.uniformEnableTextures, 0);
       o_box.render();
-      glUniform1i(Static.uniformEnableTextures, 1);
+      gl.glUniform1i(Static.uniformEnableTextures, 1);
     }
 
     pro.next();
@@ -451,10 +451,10 @@ public class Game extends RenderScreen {
       EntityBase entity = Static.client.player;
       renderEntity(entity);
     }
-    glUniform1f(Static.uniformSunLight, sunLight);
+    gl.glUniform1f(Static.uniformSunLight, sunLight);
 
     //reset view matrix (entities can change it)
-    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
 
     pro.next();
 
@@ -465,13 +465,13 @@ public class Game extends RenderScreen {
       if (!chunk.dest.exists(Chunk.DEST_TEXT)) continue;
       obj = chunk.dest.getBuffers(Chunk.DEST_TEXT);
       if (obj.isBufferEmpty()) continue;
-      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, chunk.mat.m);  //model matrix
+      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, chunk.mat.m);  //model matrix
       obj.bindBuffers();
       obj.render();
     }
 
     //now render alpha stuff
-    glDepthMask(false);  //turn off depth buffer updates (but keep depth_test on)
+    gl.glDepthMask(false);  //turn off depth buffer updates (but keep depth_test on)
     Static.blocks.stitched.bind();
 
     pro.next();
@@ -482,7 +482,7 @@ public class Game extends RenderScreen {
       if (!chunk.dest.exists(Chunk.DEST_ALPHA)) continue;
       obj = chunk.dest.getBuffers(Chunk.DEST_ALPHA);
       if (obj.isBufferEmpty()) continue;
-      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, chunk.mat.m);  //model matrix
+      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, chunk.mat.m);  //model matrix
       obj.bindBuffers();
       obj.render();
     }
@@ -490,7 +490,7 @@ public class Game extends RenderScreen {
     //TODO : render particles, etc.
     pro.next();
 
-    glDepthMask(true);  //turn on depth buffer updates
+    gl.glDepthMask(true);  //turn on depth buffer updates
 
     //render environment post stage
     Static.dims.dims[dim].getEnvironment().postRender(world.time, sunLight, Static.client, Static.camera_pos, chunks);
@@ -503,14 +503,14 @@ public class Game extends RenderScreen {
         Static.client.player.renderPlayer();
       }
 
-      glUniform1f(Static.uniformSunLight, 1.0f);
+      gl.glUniform1f(Static.uniformSunLight, 1.0f);
 
       //now render slots at bottom
       gui_position = BOTTOM;
       setOrtho();
       setViewportMenu();
-      glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, Static.identity.m);  //view matrix
-      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
+      gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, Static.identity.m);  //view matrix
+      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
 
       depth(false);
       t_widgets.bind();  //TODO : remove this - use individual images
@@ -717,7 +717,7 @@ public class Game extends RenderScreen {
     gui_position = CENTER;
 
 //    pro.print();
-    if (!Static.debugDisableFog) glUniform1i(Static.uniformEnableFog, 0);
+    if (!Static.debugDisableFog) gl.glUniform1i(Static.uniformEnableFog, 0);
   }
 
   public void keyPressed(int vk) {
@@ -928,6 +928,6 @@ public class Game extends RenderScreen {
   }
 
   public void setViewMatrix() {
-    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
   }
 }

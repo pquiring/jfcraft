@@ -63,7 +63,7 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
     if (Static.optionMedia) {
       MediaCoder.init();
     }
-    GL.init();
+    GL.getInstance();
   }
 
   private Window createWindow(int style, int x,int y,Window shared) {

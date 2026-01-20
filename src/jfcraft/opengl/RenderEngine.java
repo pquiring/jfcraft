@@ -36,26 +36,28 @@ public class RenderEngine {
   }
 
   public void loadProgram() {
+    GL gl = GL.getInstance();
     //TODO : delete old program
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, new String[] {VertexShader.source}, null);
-    glCompileShader(vertexShader);
-    Static.log("vertex log=" + glGetShaderInfoLog(vertexShader));
+    vertexShader = gl.glCreateShader(GL_VERTEX_SHADER);
+    gl.glShaderSource(vertexShader, 1, new String[] {VertexShader.source}, null);
+    gl.glCompileShader(vertexShader);
+    Static.log("vertex log=" + gl.glGetShaderInfoLog(vertexShader));
 
-    fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragShader, 1, new String[] {FragmentShader.source}, null);
-    glCompileShader(fragShader);
-    Static.log("fragment log=" + glGetShaderInfoLog(fragShader));
+    fragShader = gl.glCreateShader(GL_FRAGMENT_SHADER);
+    gl.glShaderSource(fragShader, 1, new String[] {FragmentShader.source}, null);
+    gl.glCompileShader(fragShader);
+    Static.log("fragment log=" + gl.glGetShaderInfoLog(fragShader));
 
-    program = glCreateProgram();
-    glAttachShader(program, vertexShader);
-    glAttachShader(program, fragShader);
-    glLinkProgram(program);
-    Static.log("program log=" + glGetProgramInfoLog(program));
-    glUseProgram(program);
+    program = gl.glCreateProgram();
+    gl.glAttachShader(program, vertexShader);
+    gl.glAttachShader(program, fragShader);
+    gl.glLinkProgram(program);
+    Static.log("program log=" + gl.glGetProgramInfoLog(program));
+    gl.glUseProgram(program);
   }
 
   public void init() {
+    GL gl = GL.getInstance();
     Static.initClientThread("EventThread", true, false);  //actually EDT
 
     Static.log("JVM.version=" + System.getProperty("java.version"));
@@ -64,7 +66,7 @@ public class RenderEngine {
 
     Static.log("JF.version=" + JF.getVersion());
 
-    Static.log("GL Version=" + glGetString(GL_VERSION));
+    Static.log("GL Version=" + gl.glGetString(GL_VERSION));
 
     Static.glver = getVersion();
     if (Static.glver[0] < 2) {
@@ -73,76 +75,76 @@ public class RenderEngine {
     }
 
     int max[] = new int[1];
-    glGetIntegerv(GL_MAX_TEXTURE_SIZE, max);
+    gl.glGetIntegerv(GL_MAX_TEXTURE_SIZE, max);
     Static.log("max texture size=" + max[0]);
     Static.max_texture_size = max[0];
 
-    glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, max);
+    gl.glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, max);
     Static.log("max texture units=" + max[0]);
 
     resize(Static.INIT_X, Static.INIT_Y);
 
     //setup opengl
-    glFrontFace(GL_CCW);  //3DS uses GL_CCW
-    glEnable(GL_CULL_FACE);  //don't draw back sides
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glEnable(GL_TEXTURE_2D);
-    glActiveTexture(GL_TEXTURE0);
+    gl.glFrontFace(GL_CCW);  //3DS uses GL_CCW
+    gl.glEnable(GL_CULL_FACE);  //don't draw back sides
+    gl.glEnable(GL_DEPTH_TEST);
+    gl.glDepthFunc(GL_LESS);
+    gl.glEnable(GL_BLEND);
+    gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    gl.glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    gl.glEnable(GL_TEXTURE_2D);
+    gl.glActiveTexture(GL_TEXTURE0);
 
     loadProgram();
 
-    Static.attribTextureCoords = glGetAttribLocation(program, "aTextureCoord");
-    glEnableVertexAttribArray(Static.attribTextureCoords);
-    Static.attribTextureCoords2 = glGetAttribLocation(program, "aTextureCoord2");
-    glEnableVertexAttribArray(Static.attribTextureCoords2);
-    Static.attribVertex = glGetAttribLocation(program, "aVertexPosition");
-    glEnableVertexAttribArray(Static.attribVertex);
-    Static.attribColor = glGetAttribLocation(program, "aLightColor");
-    glEnableVertexAttribArray(Static.attribColor);
-    Static.attribSunLight = glGetAttribLocation(program, "aSunLightPercent");
-    glEnableVertexAttribArray(Static.attribSunLight);
-    Static.attribBlockLight = glGetAttribLocation(program, "aBlockLightPercent");
-    glEnableVertexAttribArray(Static.attribBlockLight);
+    Static.attribTextureCoords = gl.glGetAttribLocation(program, "aTextureCoord");
+    gl.glEnableVertexAttribArray(Static.attribTextureCoords);
+    Static.attribTextureCoords2 = gl.glGetAttribLocation(program, "aTextureCoord2");
+    gl.glEnableVertexAttribArray(Static.attribTextureCoords2);
+    Static.attribVertex = gl.glGetAttribLocation(program, "aVertexPosition");
+    gl.glEnableVertexAttribArray(Static.attribVertex);
+    Static.attribColor = gl.glGetAttribLocation(program, "aLightColor");
+    gl.glEnableVertexAttribArray(Static.attribColor);
+    Static.attribSunLight = gl.glGetAttribLocation(program, "aSunLightPercent");
+    gl.glEnableVertexAttribArray(Static.attribSunLight);
+    Static.attribBlockLight = gl.glGetAttribLocation(program, "aBlockLightPercent");
+    gl.glEnableVertexAttribArray(Static.attribBlockLight);
 
-    Static.uniformMatrixPerspective = glGetUniformLocation(program, "uPMatrix");
-    Static.uniformMatrixModel = glGetUniformLocation(program, "uMMatrix");
-    Static.uniformMatrixView = glGetUniformLocation(program, "uVMatrix");
+    Static.uniformMatrixPerspective = gl.glGetUniformLocation(program, "uPMatrix");
+    Static.uniformMatrixModel = gl.glGetUniformLocation(program, "uMMatrix");
+    Static.uniformMatrixView = gl.glGetUniformLocation(program, "uVMatrix");
 
-    Static.uniformSunLight = glGetUniformLocation(program, "uSunLightNow");
-    Static.uniformAlphaFactor = glGetUniformLocation(program, "uAlphaFactor");
-    Static.uniformEnableTextures = glGetUniformLocation(program, "uUseTextures");
-    Static.uniformEnableHorsePattern = glGetUniformLocation(program, "uUseHorsePattern");
-    Static.uniformEnableHorseArmor = glGetUniformLocation(program, "uUseHorseArmor");
-    Static.uniformEnableFog = glGetUniformLocation(program, "uUseFog");
-    Static.uniformFogColor = glGetUniformLocation(program, "uFogColor");
-    Static.uniformFogNear = glGetUniformLocation(program, "uFogNear");
-    Static.uniformFogFar = glGetUniformLocation(program, "uFogFar");
-    Static.uniformEnableTint = glGetUniformLocation(program, "uUseTint");
-    Static.uniformTintColor = glGetUniformLocation(program, "uTintColor");
-    Static.uniformTexture = glGetUniformLocation(program, "uTexture");
-    Static.uniformCrack = glGetUniformLocation(program, "uCrack");
-    Static.uniformHorsePattern = glGetUniformLocation(program, "uHorsePattern");
-    Static.uniformHorseArmor = glGetUniformLocation(program, "uHorseArmor");
+    Static.uniformSunLight = gl.glGetUniformLocation(program, "uSunLightNow");
+    Static.uniformAlphaFactor = gl.glGetUniformLocation(program, "uAlphaFactor");
+    Static.uniformEnableTextures = gl.glGetUniformLocation(program, "uUseTextures");
+    Static.uniformEnableHorsePattern = gl.glGetUniformLocation(program, "uUseHorsePattern");
+    Static.uniformEnableHorseArmor = gl.glGetUniformLocation(program, "uUseHorseArmor");
+    Static.uniformEnableFog = gl.glGetUniformLocation(program, "uUseFog");
+    Static.uniformFogColor = gl.glGetUniformLocation(program, "uFogColor");
+    Static.uniformFogNear = gl.glGetUniformLocation(program, "uFogNear");
+    Static.uniformFogFar = gl.glGetUniformLocation(program, "uFogFar");
+    Static.uniformEnableTint = gl.glGetUniformLocation(program, "uUseTint");
+    Static.uniformTintColor = gl.glGetUniformLocation(program, "uTintColor");
+    Static.uniformTexture = gl.glGetUniformLocation(program, "uTexture");
+    Static.uniformCrack = gl.glGetUniformLocation(program, "uCrack");
+    Static.uniformHorsePattern = gl.glGetUniformLocation(program, "uHorsePattern");
+    Static.uniformHorseArmor = gl.glGetUniformLocation(program, "uHorseArmor");
 
-    glUniform1f(Static.uniformSunLight, 1.0f);
-    glUniform1f(Static.uniformAlphaFactor, 1.0f);
-    glUniform1i(Static.uniformEnableTextures, 1);
-    glUniform1i(Static.uniformEnableFog, 0);
-    glUniform1f(Static.uniformFogNear, Settings.current.loadRange * 16f);
-    glUniform1f(Static.uniformFogFar, Settings.current.loadRange * 16f + 16f);
-    glUniform1i(Static.uniformEnableHorsePattern, 0);
-    glUniform1i(Static.uniformEnableHorseArmor, 0);
-    glUniform4fv(Static.uniformFogColor, 1, Static.skyblue4);
-    glUniform1i(Static.uniformTexture, 0);
-    glUniform1i(Static.uniformCrack, 1);
-    glUniform1i(Static.uniformHorsePattern, 2);
-    glUniform1i(Static.uniformHorseArmor, 3);
-    glUniform1i(Static.uniformEnableTint, 0);
-    glUniform4fv(Static.uniformFogColor, 1, Static.white4);
+    gl.glUniform1f(Static.uniformSunLight, 1.0f);
+    gl.glUniform1f(Static.uniformAlphaFactor, 1.0f);
+    gl.glUniform1i(Static.uniformEnableTextures, 1);
+    gl.glUniform1i(Static.uniformEnableFog, 0);
+    gl.glUniform1f(Static.uniformFogNear, Settings.current.loadRange * 16f);
+    gl.glUniform1f(Static.uniformFogFar, Settings.current.loadRange * 16f + 16f);
+    gl.glUniform1i(Static.uniformEnableHorsePattern, 0);
+    gl.glUniform1i(Static.uniformEnableHorseArmor, 0);
+    gl.glUniform4fv(Static.uniformFogColor, 1, Static.skyblue4);
+    gl.glUniform1i(Static.uniformTexture, 0);
+    gl.glUniform1i(Static.uniformCrack, 1);
+    gl.glUniform1i(Static.uniformHorsePattern, 2);
+    gl.glUniform1i(Static.uniformHorseArmor, 3);
+    gl.glUniform1i(Static.uniformEnableTint, 0);
+    gl.glUniform4fv(Static.uniformFogColor, 1, Static.white4);
 
     //setup timers
     if (Settings.current.FPS != -1) {

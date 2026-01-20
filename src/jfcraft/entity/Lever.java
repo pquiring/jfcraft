@@ -125,7 +125,7 @@ public class Lever extends BlockEntity {
     if (scale != 1.0f) {
       mat.addScale(scale, scale, scale);
     }
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
   public void render() {
@@ -135,7 +135,7 @@ public class Lever extends BlockEntity {
       buf.bindBuffers();
       buf.render();
     }
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, Static.identity.m);  //model matrix
   }
   public Item[] drop() {
     return new Item[] {new Item(Blocks.LEVER)};

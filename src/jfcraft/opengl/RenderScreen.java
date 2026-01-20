@@ -35,6 +35,8 @@ public abstract class RenderScreen {
 
   public static boolean debug = false;
 
+  public static GL gl;
+
   public static TextureMap t_widgets;
   public static TextureMap t_icons;
   public static TextureMap t_text;
@@ -122,6 +124,7 @@ public abstract class RenderScreen {
   }
 
   public static void initStaticGL() {
+    gl = GL.getInstance();
     //ortho(left, right, bottom, top, near, far)
     orthoItem.ortho(0, 1, 1, 0, 0, 1);
     orthoBlock.ortho(-0.15f, 1.60f, -0.50f, 1.35f, -2, 2);  //trial and error
@@ -273,15 +276,18 @@ public abstract class RenderScreen {
 
   /** Sets a standard 0,0-1,1 ortho matrix for gui_width/gui_height. */
   public void setOrtho() {
-    glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, orthoItem.m);  //perspective matrix
+    GL gl = GL.getInstance();
+    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, orthoItem.m);  //perspective matrix
   }
 
   public void setViewportFull() {
-    glViewport(0, 0, (int)Static.width, (int)Static.height);
+    GL gl = GL.getInstance();
+    gl.glViewport(0, 0, (int)Static.width, (int)Static.height);
   }
 
   /** Sets viewport for a menu screen. */
   public void setViewportMenu() {
+    GL gl = GL.getInstance();
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
     float vpy = 0;
@@ -290,7 +296,7 @@ public abstract class RenderScreen {
       case CENTER: vpy = offsetY; break;
       case BOTTOM: vpy = 0; break;
     }
-    glViewport((int)offsetX, (int)vpy, (int)(gui_width * Static.scale), (int)(gui_height * Static.scale));
+    gl.glViewport((int)offsetX, (int)vpy, (int)(gui_width * Static.scale), (int)(gui_height * Static.scale));
   }
 
   public static final int tab_width = 52;
@@ -301,22 +307,25 @@ public abstract class RenderScreen {
 
   /** Sets viewport for tabs row on top. */
   public void setViewportTabTop() {
+    GL gl = GL.getInstance();
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
     offsetY += (gui_height * Static.scale);
-    glViewport((int)offsetX, (int)offsetY, (int)(gui_width * Static.scale), (int)(tab_height * Static.scale));
+    gl.glViewport((int)offsetX, (int)offsetY, (int)(gui_width * Static.scale), (int)(tab_height * Static.scale));
   }
 
   /** Sets viewport for tabs row on bottom. */
   public void setViewportTabBottom() {
+    GL gl = GL.getInstance();
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
     offsetY -= (tab_height * Static.scale);
-    glViewport((int)offsetX, (int)offsetY, (int)(gui_width * Static.scale), (int)(tab_height * Static.scale));
+    gl.glViewport((int)offsetX, (int)offsetY, (int)(gui_width * Static.scale), (int)(tab_height * Static.scale));
   }
 
   /** Sets a viewport for a single char. */
   public void setViewportChar(int x, int y, int fontSize) {
+    GL gl = GL.getInstance();
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
     y += fontSize;
@@ -326,12 +335,13 @@ public abstract class RenderScreen {
       case CENTER: vpy = (int)(offsetY + (gui_height - y) * Static.scale); break;
       case BOTTOM: vpy = (int)((gui_height - y) * Static.scale); break;
     }
-    glViewport((int)(offsetX + ((float)x) * Static.scale), (int)vpy
+    gl.glViewport((int)(offsetX + ((float)x) * Static.scale), (int)vpy
       , (int)(fontSize * Static.scale), (int)(fontSize * Static.scale));
   }
 
   /** Sets a standard 0,0-1,1 ortho matrix for item/text. */
   public void setViewportItem(int x, int y) {
+    GL gl = GL.getInstance();
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
     float vpy = 0;
@@ -340,7 +350,7 @@ public abstract class RenderScreen {
       case CENTER: vpy = (int)(offsetY + (gui_height - y) * Static.scale); break;
       case BOTTOM: vpy = (int)((gui_height - y) * Static.scale); break;
     }
-    glViewport(
+    gl.glViewport(
       (int)(offsetX + ((float)x) * Static.scale),
       (int)vpy,
       (int)(36 * Static.scale),
@@ -350,6 +360,7 @@ public abstract class RenderScreen {
 
   /** Sets a viewport for a box. */
   public void setViewportBox(int x, int y, int w, int h) {
+    GL gl = GL.getInstance();
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
     float vpy = 0;
@@ -358,7 +369,7 @@ public abstract class RenderScreen {
       case CENTER: vpy = (offsetY + (gui_height - y) * Static.scale); break;
       case BOTTOM: vpy = ((gui_height - y) * Static.scale); break;
     }
-    glViewport(
+    gl.glViewport(
       (int)(offsetX + ((float)x) * Static.scale),
       (int)vpy,
       (int)(w * Static.scale),
@@ -368,16 +379,19 @@ public abstract class RenderScreen {
 
   /** Sets a standard 0,0-1,1 ortho matrix for block. */
   public void setOrthoBlock() {
+    GL gl = GL.getInstance();
     //left right bottom top near far
-    glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoBlock.m);  //perspective matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoBlock.m);  //perspective matrix
   }
 
   /** Sets an ortho matrix to display player in inventory menu */
   public void setOrthoPlayer() {
-    glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, orthoPlayer.m);  //perspective matrix
+    GL gl = GL.getInstance();
+    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, orthoPlayer.m);  //perspective matrix
   }
 
   public void setViewportPlayer(int x,int y,int w,int h) {
+    GL gl = GL.getInstance();
     //left right bottom top near far
     float offsetX = (Static.width - (gui_width * Static.scale)) / 2.0f;
     float offsetY = (Static.height - (gui_height * Static.scale)) / 2.0f;
@@ -387,7 +401,7 @@ public abstract class RenderScreen {
       case CENTER: vpy = (int)(offsetY + (gui_height - y) * Static.scale); break;
       case BOTTOM: vpy = (int)((gui_height - y) * Static.scale); break;
     }
-    glViewport((int)(offsetX + x * Static.scale), (int)vpy, (int)(w * Static.scale), (int)(h * Static.scale));
+    gl.glViewport((int)(offsetX + x * Static.scale), (int)vpy, (int)(w * Static.scale), (int)(h * Static.scale));
   }
 
   /** Creates a 0,0-1,1 menu object. */
@@ -566,6 +580,7 @@ public abstract class RenderScreen {
   }
 
   public void renderText(int x,int y,String text, float clr[]) {
+    GL gl = GL.getInstance();
     setOrtho();
     t_text.bind();
     char ca[] = text.toCharArray();
@@ -577,15 +592,15 @@ public abstract class RenderScreen {
       } else {
         clr4 = new float[] {clr[0], clr[1], clr[2], 1.0f};
       }
-      glUniform1i(Static.uniformEnableTint, 1);
-      glUniform4fv(Static.uniformTintColor, 1, clr4);
+      gl.glUniform1i(Static.uniformEnableTint, 1);
+      gl.glUniform4fv(Static.uniformTintColor, 1, clr4);
     }
     for(int a=0;a<ca.length;a++) {
       renderChar(x, y, ca[a], clr, 1);
       x += fontSize;
     }
     if (clr != null) {
-      glUniform1i(Static.uniformEnableTint, 0);
+      gl.glUniform1i(Static.uniformEnableTint, 0);
     }
   }
 
@@ -595,6 +610,7 @@ public abstract class RenderScreen {
 
   /** Adds an items damage bar. */
   public void renderDmg(int x,int y, float dmg) {
+    GL gl = GL.getInstance();
     //render bar (36x2)
     int length = (int)(36.0f * dmg);
     float clr[] = Static.red4;
@@ -604,20 +620,21 @@ public abstract class RenderScreen {
       clr = Static.yellow4;
     }
     o_box.bindBuffers();
-    glUniform1i(Static.uniformEnableTint, 1);
+    gl.glUniform1i(Static.uniformEnableTint, 1);
     setViewportBox(x,y,36,2);
-    glUniform4fv(Static.uniformTintColor, 1, Static.grey4);
+    gl.glUniform4fv(Static.uniformTintColor, 1, Static.grey4);
     o_box.render();
     setViewportBox(x,y,length,2);
-    glUniform4fv(Static.uniformTintColor, 1, clr);
+    gl.glUniform4fv(Static.uniformTintColor, 1, clr);
     o_box.render();
-    glUniform1i(Static.uniformEnableTint, 0);
+    gl.glUniform1i(Static.uniformEnableTint, 0);
   }
 
   /** Adds a simple bar (rectangle). */
   public void renderBar(int x,int y,int width,int height, float clr[]) {
+    GL gl = GL.getInstance();
     t_white.bind();
-    glUniform1i(Static.uniformEnableTint, 1);
+    gl.glUniform1i(Static.uniformEnableTint, 1);
     setOrtho();
     setViewportBox(x,y,width,height);
     float clr4[];
@@ -626,16 +643,17 @@ public abstract class RenderScreen {
     } else {
       clr4 = new float[] {clr[0], clr[1], clr[2], 1.0f};
     }
-    glUniform4fv(Static.uniformTintColor, 1, clr4);
+    gl.glUniform4fv(Static.uniformTintColor, 1, clr4);
     o_box.bindBuffers();
     o_box.render();
-    glUniform1i(Static.uniformEnableTint, 0);
+    gl.glUniform1i(Static.uniformEnableTint, 0);
   }
 
   /** Adds a simple bar (rectangle) 50% transparent. */
   public void renderBar50(int x,int y,int width,int height, float clr[]) {
+    GL gl = GL.getInstance();
     t_white50.bind();
-    glUniform1i(Static.uniformEnableTint, 1);
+    gl.glUniform1i(Static.uniformEnableTint, 1);
     setOrtho();
     setViewportBox(x,y,width,height);
     float clr4[];
@@ -644,10 +662,10 @@ public abstract class RenderScreen {
     } else {
       clr4 = new float[] {clr[0], clr[1], clr[2], 1.0f};
     }
-    glUniform4fv(Static.uniformTintColor, 1, clr4);
+    gl.glUniform4fv(Static.uniformTintColor, 1, clr4);
     o_box.bindBuffers();
     o_box.render();
-    glUniform1i(Static.uniformEnableTint, 0);
+    gl.glUniform1i(Static.uniformEnableTint, 0);
   }
 
   /** Render an item in an inventory slot. */
@@ -793,8 +811,9 @@ public abstract class RenderScreen {
    * Assumes view/model matrix are set to identity.
    */
   public void renderShade(int x, int y, int w, int h) {
-    glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoItem.m);
-    glViewport(x, y, w, h);
+    GL gl = GL.getInstance();
+    gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL.GL_FALSE, orthoItem.m);
+    gl.glViewport(x, y, w, h);
     if (o_shade == null) {
       o_shade = new RenderBuffers();
       o_shade.addVertex(new float[]{0, 0, 0}, new float[]{0, 0});
@@ -1155,23 +1174,26 @@ public abstract class RenderScreen {
   }
 
   public static void depth(boolean on) {
+    GL gl = GL.getInstance();
     if (on) {
-      glDepthMask(true);
-      glEnable(GL.GL_DEPTH_TEST);
+      gl.glDepthMask(true);
+      gl.glEnable(GL.GL_DEPTH_TEST);
     } else {
-      glDepthMask(false);
-      glDisable(GL.GL_DEPTH_TEST);
+      gl.glDepthMask(false);
+      gl.glDisable(GL.GL_DEPTH_TEST);
     }
   }
 
   public static void clear(int x, int y, int width, int height) {
-    glViewport(x, y, width, height);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    GL gl = GL.getInstance();
+    gl.glViewport(x, y, width, height);
+    gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
   }
 
   public static void clearZBuffer(int x, int y, int width, int height) {
-    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    GL gl = GL.getInstance();
+    gl.glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
   }
 
   public String toString() {

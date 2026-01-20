@@ -118,8 +118,8 @@ public class FurnaceMenu extends RenderScreen {
     }
     o_arrow.recreate(160,67, arrow_width,32, 0,0, arrow_width * 100 / 48,100f);
 
-    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     renderShade();
 

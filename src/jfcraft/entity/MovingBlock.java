@@ -57,7 +57,7 @@ public class MovingBlock extends EntityBase {
   public void render() {
     mat.setIdentity();
     mat.addTranslate(pos.x, pos.y, pos.z);
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);
     obj.getBuffers(buffersIdx).bindBuffers();
     obj.getBuffers(buffersIdx).render();
   }

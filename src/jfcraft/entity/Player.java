@@ -311,7 +311,7 @@ public class Player extends HumaniodBase {
       mat.addScale(scale, scale, scale);
       mat.addTranslate2(-buf.center.x, -buf.center.y, -buf.center.z);
     }
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
   }
 
   public float getBuoyant() {

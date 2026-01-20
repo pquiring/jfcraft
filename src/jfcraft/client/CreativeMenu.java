@@ -201,8 +201,8 @@ public class CreativeMenu extends RenderScreen {
       tab_7 = new Sprite("gui/sprites/container/creative_inventory/tab_top_selected_7", (int)gui_width - tab_width,0, tab_width,tab_height);
     }
 
-    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     renderShade();
 
@@ -248,7 +248,7 @@ public class CreativeMenu extends RenderScreen {
     setOrthoPlayer();
     setViewportPlayer(146,12+86, 64,86);
     depth(true);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    gl.glClear(GL_DEPTH_BUFFER_BIT);
     player.bindTexture();
     //rotate player to point head towards mouse coords
     float ey = my - eyes_y;
@@ -270,8 +270,8 @@ public class CreativeMenu extends RenderScreen {
     player.activeSlot = Static.client.player.activeSlot;
     player.render();
 
-    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, identity.m);  //view matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, identity.m);  //model matrix
 
     setOrtho();
   }

@@ -158,28 +158,29 @@ public class EnvironmentEarth implements EnvironmentBase {
   private Matrix view = new Matrix();
 
   public void preRender(int time, float sunLight, Client client, XYZ camera, Chunk[] chunks) {
+    GL gl = GL.getInstance();
     float zAngle = time;
     zAngle /= (24000f / 360f);
 
     view.setIdentity();
-    glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, view.m);  //model matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, view.m);  //model matrix
     view.addRotate(Static.camera_ang.x, 1, 0, 0);
     view.addRotate(Static.camera_ang.y, 0, 1, 0);
     view.addRotate(zAngle, 0, 0, 1);
-    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
+    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
 
     depth(false);
 
-    glUniform1f(Static.uniformAlphaFactor, 1.0f - sunLight);
+    gl.glUniform1f(Static.uniformAlphaFactor, 1.0f - sunLight);
     stars.bind();
     skybox.bindBuffers();
     skybox.render();
 
-    glUniform1f(Static.uniformAlphaFactor, sunLight);
+    gl.glUniform1f(Static.uniformAlphaFactor, sunLight);
     blueSky.bind();
     skybox.render();
 
-    glUniform1f(Static.uniformAlphaFactor, 1.0f);
+    gl.glUniform1f(Static.uniformAlphaFactor, 1.0f);
 
     //render sun and moon
     sun.bind();
@@ -195,8 +196,8 @@ public class EnvironmentEarth implements EnvironmentBase {
     view.addRotate(Static.camera_ang.x, 1, 0, 0);
     view.addRotate(Static.camera_ang.y, 0, 1, 0);
     //no z rotation
-    glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
-    glUniform1f(Static.uniformSunLight, sunLight);
+    gl.glUniformMatrix4fv(Static.uniformMatrixView, 1, GL_FALSE, view.m);  //view matrix
+    gl.glUniform1f(Static.uniformSunLight, sunLight);
     if (client.player.pos.y < 0) {
       black.bind();
     } else {
@@ -273,6 +274,7 @@ public class EnvironmentEarth implements EnvironmentBase {
   private Cloud clouds[] = new Cloud[0];
 
   private void renderClouds(XYZ camera) {
+    GL gl = GL.getInstance();
     //cam x/z
     float cx = camera.x;
     float cz = camera.z;
@@ -324,13 +326,13 @@ public class EnvironmentEarth implements EnvironmentBase {
     for(int a=0;a<cc;a++) {
       Cloud cloud = clouds[a];
       mat.setTranslate(cloud.pos.x, cloud.pos.y, cloud.pos.z);
-      glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
-      glCullFace(GL_BACK);
+      gl.glUniformMatrix4fv(Static.uniformMatrixModel, 1, GL_FALSE, mat.m);  //model matrix
+      gl.glCullFace(GL_BACK);
       o_clouds.render();  //render outside faces
-      glCullFace(GL_FRONT);
+      gl.glCullFace(GL_FRONT);
       o_clouds.render();  //render inside faces
     }
-    glCullFace(GL_BACK);
+    gl.glCullFace(GL_BACK);
   }
 
   public void tick() {
