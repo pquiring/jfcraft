@@ -18,7 +18,7 @@ public class MediaReader implements MediaIO {
   private JFArrayShort buffer = new JFArrayShort();
   private InputStream is;
 
-  public int read(MediaCoder mc, byte[] bytes) {
+  public int read(byte[] bytes) {
     try {
       return is.read(bytes);
     } catch (Exception e) {
@@ -26,11 +26,11 @@ public class MediaReader implements MediaIO {
     }
   }
 
-  public int write(MediaCoder mc, byte[] bytes) {
+  public int write(byte[] bytes) {
     return 0;
   }
 
-  public long seek(MediaCoder mc, long pos, int from) {
+  public long seek(long pos, int from) {
     return 0;
   }
 

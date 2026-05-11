@@ -87,7 +87,7 @@ public class Main implements KeyEvents, MouseEvents, WindowEvents {
     while (true) {
       Static.video.render();
       // Poll for window events.
-      Window.pollEvents();
+      current.pollEvents();
       if (toggleFullscreenMode) {
         toggleFullscreenMode = false;
         if (fullscreenMode) {
