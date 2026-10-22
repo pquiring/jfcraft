@@ -36,37 +36,45 @@ public class RenderEngine {
   }
 
   public void loadProgram() {
+    int[] status = new int[1];
+    int[] loglength = new int[1];
     GL gl = GL.getInstance();
     //TODO : delete old program
     vertexShader = gl.glCreateShader(GL_VERTEX_SHADER);
     gl.glShaderSource(vertexShader, 1, new String[] {VertexShader.source}, null);
     gl.glCompileShader(vertexShader);
-    {
-      byte[] log = new byte[1024];
+    gl.glGetShaderiv(vertexShader, GL_COMPILE_STATUS, status);
+    if (status[0] != GL_TRUE) {
+      gl.glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, loglength);
+      byte[] log = new byte[loglength[0]];
       int[] len = new int[1];
-      gl.glGetShaderInfoLog(vertexShader, 1024, len, log);
-      if (debug) JFLog.log("vertex log=" + new String(log, 0, len[0]));
+      gl.glGetShaderInfoLog(vertexShader, loglength[0], len, log);
+      JFLog.log("vertex log=" + new String(log, 0, len[0]));
     }
 
     fragShader = gl.glCreateShader(GL_FRAGMENT_SHADER);
     gl.glShaderSource(fragShader, 1, new String[] {FragmentShader.source}, null);
     gl.glCompileShader(fragShader);
-    {
-      byte[] log = new byte[1024];
+    gl.glGetShaderiv(fragShader, GL_COMPILE_STATUS, status);
+    if (status[0] != GL_TRUE) {
+      gl.glGetShaderiv(fragShader, GL_INFO_LOG_LENGTH, loglength);
+      byte[] log = new byte[loglength[0]];
       int[] len = new int[1];
-      gl.glGetShaderInfoLog(fragShader, 1024, len, log);
-      if (debug) JFLog.log("fragment log=" + new String(log, 0, len[0]));
+      gl.glGetShaderInfoLog(fragShader, loglength[0], len, log);
+      JFLog.log("frag log=" + new String(log, 0, len[0]));
     }
 
     program = gl.glCreateProgram();
     gl.glAttachShader(program, vertexShader);
     gl.glAttachShader(program, fragShader);
     gl.glLinkProgram(program);
-    {
-      byte[] log = new byte[1024];
+    gl.glGetProgramiv(program, GL_LINK_STATUS, status);
+    if (status[0] != GL_TRUE) {
+      gl.glGetProgramiv(program, GL_INFO_LOG_LENGTH, loglength);
+      byte[] log = new byte[loglength[0]];
       int[] len = new int[1];
-      gl.glGetProgramInfoLog(program, 1024, len, log);
-      if (debug) JFLog.log("program log=" + new String(log, 0, len[0]));
+      gl.glGetProgramInfoLog(program, loglength[0], len, log);
+      JFLog.log("program log=" + new String(log, 0, len[0]));
     }
     gl.glUseProgram(program);
   }
