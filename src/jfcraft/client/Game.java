@@ -24,6 +24,8 @@ import jfcraft.server.*;
 
 public class Game extends RenderScreen {
   private Matrix perspective, view;
+  private boolean ortho = false;
+  private float ortho_dist = 7.0f;
   private float fov = 70.0f;
   private float zNear = 0.1f;  //do NOT use zero!
   private float zFar = 10000.0f;
@@ -197,9 +199,13 @@ public class Game extends RenderScreen {
     if (perspective == null) {
       perspective = new Matrix();
       perspective.setIdentity();
-      float ratio = ((float)width) / ((float)height);
-      perspective.perspective(fov, ratio, zNear, zFar);
-      frustum.setPerspecive(fov, ratio, zNear, zFar);
+      if (ortho) {
+        perspective.ortho(-ortho_dist, ortho_dist, -ortho_dist, ortho_dist, -ortho_dist * 10f, ortho_dist * 10f);
+      } else {
+        float ratio = ((float)width) / ((float)height);
+        perspective.perspective(fov, ratio, zNear, zFar);
+        frustum.setPerspecive(fov, ratio, zNear, zFar);
+      }
     }
     gl.glUniformMatrix4fv(Static.uniformMatrixPerspective, 1, GL_FALSE, perspective.m);  //perspective matrix
 
@@ -208,6 +214,12 @@ public class Game extends RenderScreen {
     Static.camera_pos.z = Static.client.player.pos.z;
     float ax, ay;
     synchronized(Static.client.ang) {
+      if (ortho) {
+        //clamp view
+        if (Static.client.player.ang.x < 10f) {
+          Static.client.player.ang.x = 10f;
+        }
+      }
       ax = Static.client.player.ang.x;
       ay = Static.client.player.ang.y;
     }
@@ -313,6 +325,10 @@ public class Game extends RenderScreen {
       pts[6].v[2] = pz2;
       pts[7].v[0] = px1;
       pts[7].v[2] = pz2;
+      if (ortho) {
+        chunk.inRange = true;
+        continue;
+      }
       if (frustum.boxInside(pts) == Frustum.OUTSIDE) {
         //do not render chunk outside of view
         fcnt++;
@@ -780,6 +796,10 @@ public class Game extends RenderScreen {
         //inc fov
         fov += 1.0f;
         Static.log("fov=" + fov);
+        perspective = null;
+        break;
+      case KeyCode.VK_F9:
+        ortho = !ortho;
         perspective = null;
         break;
       case '/':
