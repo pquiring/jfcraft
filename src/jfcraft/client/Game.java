@@ -26,6 +26,7 @@ public class Game extends RenderScreen {
   private Matrix perspective, view;
   private boolean ortho = false;
   private float ortho_dist = 7.0f;
+  private float ortho_dist_10 = 70.0f;
   private float fov = 70.0f;
   private float zNear = 0.1f;  //do NOT use zero!
   private float zFar = 10000.0f;
@@ -200,7 +201,7 @@ public class Game extends RenderScreen {
       perspective = new Matrix();
       perspective.setIdentity();
       if (ortho) {
-        perspective.ortho(-ortho_dist, ortho_dist, -ortho_dist, ortho_dist, -ortho_dist * 10f, ortho_dist * 10f);
+        perspective.ortho(-ortho_dist, ortho_dist, -ortho_dist, ortho_dist, -ortho_dist_10, ortho_dist_10);
       } else {
         float ratio = ((float)width) / ((float)height);
         perspective.perspective(fov, ratio, zNear, zFar);
